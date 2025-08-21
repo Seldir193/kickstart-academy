@@ -77,12 +77,15 @@ export default function AdminBookingsPage() {
     }
   }
 
+
+
   async function resendBooking(id: string) {
-    // Variante A: eigener Proxy /resend-confirmation
-    // const r = await fetch(`/api/admin/bookings/${id}/resend-confirmation`, { method: 'POST' });
-    // Variante B (direkt confirm?resend=1) – nutzen wir hier:
-    return confirmBooking(id, { resend: true });
-  }
+  const r = await fetch(`/api/admin/bookings/${id}/resend-confirmation`, { method: 'POST' });
+  const d = await r.json().catch(() => ({}));
+  if (!r.ok || !d.ok) throw new Error(d.error || r.statusText);
+  alert('Bestätigung erneut gesendet.');
+}
+
 
   async function setStatus(id: string, status: Status) {
     setBusyId(id);
