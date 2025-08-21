@@ -1,3 +1,12 @@
+
+
+
+
+
+
+
+
+
 // Lauf sicher in Node (Buffer verfügbar) & ohne Cache
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -44,3 +53,8 @@ export async function POST(
 
   return NextResponse.json(data, { status: r.status });
 }
+
+
+
+
+

@@ -2,7 +2,6 @@
 
 import { useEffect, useMemo, useState } from 'react';
 
-/** ===== Typen ===== */
 type Status = 'pending' | 'processing' | 'confirmed' | 'cancelled' | 'deleted';
 
 type Booking = {
@@ -11,24 +10,28 @@ type Booking = {
   lastName: string;
   email: string;
   age: number;
-  date: string;        // yyyy-mm-dd
-  level: string;       // U8/U10/...
+  date: string;
+  level: string;
   message?: string;
-  createdAt: string;   // ISO
-  status?: Status;     // optional im Backend, deshalb coalescen
+  createdAt: string;
+  status?: Status;
   confirmationCode?: string;
 };
 
 const STATUSES: Status[] = ['pending', 'processing', 'confirmed', 'cancelled', 'deleted'];
 const asStatus = (s?: Booking['status']): Status => (s ?? 'pending') as Status;
 
-/** ===== Page ===== */
 export default function AdminBookingsPage() {
   const [all, setAll] = useState<Booking[]>([]);
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState('');
   const [active, setActive] = useState<Status>('pending');
   const [busyId, setBusyId] = useState<string>('');
+
+  // UI-Notice statt alert()
+  const [notice, setNotice] = useState<{type:'ok'|'error', msg:string} | null>(null);
+  const showOk = (msg:string) => { setNotice({ type:'ok', msg }); setTimeout(()=>setNotice(null), 4000); };
+  const showError = (msg:string) => { setNotice({ type:'error', msg }); setTimeout(()=>setNotice(null), 6000); };
 
   async function load() {
     setLoading(true);
@@ -48,9 +51,7 @@ export default function AdminBookingsPage() {
   useEffect(() => { load(); }, []);
 
   const counts = useMemo<Record<Status, number>>(() => {
-    const map: Record<Status, number> = {
-      pending: 0, processing: 0, confirmed: 0, cancelled: 0, deleted: 0,
-    };
+    const map: Record<Status, number> = { pending:0, processing:0, confirmed:0, cancelled:0, deleted:0 };
     for (const b of all) map[asStatus(b.status)] += 1;
     return map;
   }, [all]);
@@ -60,32 +61,46 @@ export default function AdminBookingsPage() {
     [all, active]
   );
 
-  /** ===== Actions ===== */
   async function confirmBooking(id: string, opts?: { resend?: boolean }) {
     setBusyId(id);
     try {
       const url = `/api/admin/bookings/${id}/confirm${opts?.resend ? '?resend=1' : ''}`;
       const r = await fetch(url, { method: 'POST' });
-      const d = await r.json().catch(() => ({}));
+      const d = await r.json().catch(() => ({} as any));
       if (!r.ok || !d.ok) throw new Error(d.error || r.statusText);
-      if (opts?.resend) alert('Bestätigung erneut gesendet.');
+
+      if (opts?.resend) {
+        if (typeof d.info === 'string' && d.info.includes('already confirmed')) {
+          showOk('Buchung war bereits bestätigt – E-Mail wurde nicht erneut gesendet.');
+        } else {
+          showOk('Bestätigung erneut gesendet.');
+        }
+      } else {
+        showOk('Buchung bestätigt und E-Mail versendet.');
+      }
+
       await load();
     } catch (e: any) {
-      alert(`Fehler beim Bestätigen: ${e?.message || e}`);
+      showError(`Fehler beim Bestätigen: ${e?.message || e}`);
     } finally {
       setBusyId('');
     }
   }
 
-
-
   async function resendBooking(id: string) {
-  const r = await fetch(`/api/admin/bookings/${id}/resend-confirmation`, { method: 'POST' });
-  const d = await r.json().catch(() => ({}));
-  if (!r.ok || !d.ok) throw new Error(d.error || r.statusText);
-  alert('Bestätigung erneut gesendet.');
-}
-
+    setBusyId(id);
+    try {
+      const r = await fetch(`/api/admin/bookings/${id}/resend-confirmation`, { method: 'POST' });
+      const d = await r.json().catch(() => ({}));
+      if (!r.ok || !d.ok) throw new Error(d.error || r.statusText);
+      showOk('Bestätigung erneut gesendet.');
+      await load();
+    } catch (e: any) {
+      showError(`Erneut senden fehlgeschlagen: ${e?.message || e}`);
+    } finally {
+      setBusyId('');
+    }
+  }
 
   async function setStatus(id: string, status: Status) {
     setBusyId(id);
@@ -97,9 +112,10 @@ export default function AdminBookingsPage() {
       });
       const d = await r.json().catch(() => ({}));
       if (!r.ok || !d.ok) throw new Error(d.error || r.statusText);
+      showOk('Status aktualisiert.');
       await load();
     } catch (e: any) {
-      alert(`Status-Update fehlgeschlagen: ${e?.message || e}`);
+      showError(`Status-Update fehlgeschlagen: ${e?.message || e}`);
     } finally {
       setBusyId('');
     }
@@ -112,15 +128,15 @@ export default function AdminBookingsPage() {
       const r = await fetch(`/api/admin/bookings/${id}`, { method: 'DELETE' });
       const d = await r.json().catch(() => ({}));
       if (!r.ok || !d.ok) throw new Error(d.error || r.statusText);
+      showOk('Buchung gelöscht (soft delete).');
       await load();
     } catch (e: any) {
-      alert(`Löschen fehlgeschlagen: ${e?.message || e}`);
+      showError(`Löschen fehlgeschlagen: ${e?.message || e}`);
     } finally {
       setBusyId('');
     }
   }
 
-  /** ===== Render ===== */
   if (loading) return <main className="container"><p>Loading…</p></main>;
   if (err)      return <main className="container"><p className="error">{err}</p></main>;
 
@@ -128,7 +144,15 @@ export default function AdminBookingsPage() {
     <main className="container">
       <h1>Bookings</h1>
 
-      {/* Tabs */}
+      {notice && (
+        <div
+          className={notice.type === 'ok' ? 'ok' : 'error'}
+          style={{ margin: '8px 0 12px' }}
+        >
+          {notice.msg}
+        </div>
+      )}
+
       <div className="actions" style={{ margin: '8px 0 16px', display: 'flex', gap: 8, flexWrap: 'wrap' }}>
         {STATUSES.map(s => (
           <button
@@ -142,7 +166,6 @@ export default function AdminBookingsPage() {
         ))}
       </div>
 
-      {/* List */}
       <div className="grid">
         {items.map(b => {
           const s = asStatus(b.status);
@@ -203,3 +226,23 @@ export default function AdminBookingsPage() {
     </main>
   );
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
