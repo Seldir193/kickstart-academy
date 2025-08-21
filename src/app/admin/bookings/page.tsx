@@ -1,6 +1,9 @@
 'use client';
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from 'react';
+
+/** ===== Typen ===== */
+type Status = 'pending' | 'processing' | 'confirmed' | 'cancelled' | 'deleted';
 
 type Booking = {
   _id: string;
@@ -8,35 +11,35 @@ type Booking = {
   lastName: string;
   email: string;
   age: number;
-  date: string;
-  level: string;
+  date: string;        // yyyy-mm-dd
+  level: string;       // U8/U10/...
   message?: string;
-  createdAt: string;
-  status?: "pending" | "processing" | "confirmed" | "cancelled" | "deleted";
+  createdAt: string;   // ISO
+  status?: Status;     // optional im Backend, deshalb coalescen
   confirmationCode?: string;
 };
 
+const STATUSES: Status[] = ['pending', 'processing', 'confirmed', 'cancelled', 'deleted'];
+const asStatus = (s?: Booking['status']): Status => (s ?? 'pending') as Status;
+
+/** ===== Page ===== */
 export default function AdminBookingsPage() {
-  const [items, setItems] = useState<Booking[]>([]);
+  const [all, setAll] = useState<Booking[]>([]);
   const [loading, setLoading] = useState(true);
-  const [err, setErr] = useState("");
-  const [busyId, setBusyId] = useState<string | null>(null);
+  const [err, setErr] = useState('');
+  const [active, setActive] = useState<Status>('pending');
+  const [busyId, setBusyId] = useState<string>('');
 
   async function load() {
     setLoading(true);
-    setErr("");
+    setErr('');
     try {
-      const r = await fetch(`/api/admin/bookings`, { cache: "no-store" });
-      if (r.status === 401) {
-        // kein useRouter nötig
-        window.location.assign(`/admin/login?next=${encodeURIComponent("/admin/bookings")}`);
-        return;
-      }
+      const r = await fetch(`/api/admin/bookings`, { cache: 'no-store' });
       if (!r.ok) throw new Error(`Failed to fetch bookings (${r.status})`);
       const data = await r.json();
-      setItems(data.bookings || []);
+      setAll(data.bookings || []);
     } catch (e: any) {
-      setErr(e.message || "Error");
+      setErr(e?.message || 'Load failed');
     } finally {
       setLoading(false);
     }
@@ -44,84 +47,156 @@ export default function AdminBookingsPage() {
 
   useEffect(() => { load(); }, []);
 
-  async function confirmBooking(id: string) {
-    if (busyId) return;
+  const counts = useMemo<Record<Status, number>>(() => {
+    const map: Record<Status, number> = {
+      pending: 0, processing: 0, confirmed: 0, cancelled: 0, deleted: 0,
+    };
+    for (const b of all) map[asStatus(b.status)] += 1;
+    return map;
+  }, [all]);
+
+  const items = useMemo(
+    () => all.filter(b => asStatus(b.status) === active),
+    [all, active]
+  );
+
+  /** ===== Actions ===== */
+  async function confirmBooking(id: string, opts?: { resend?: boolean }) {
     setBusyId(id);
-    setErr("");
-
-    // optimistic: sofort als confirmed markieren
-    setItems(prev =>
-      prev.map(b => b._id === id ? { ...b, status: "confirmed" } : b)
-    );
-
     try {
-      const r = await fetch(`/api/admin/bookings/${id}/confirm`, { method: "POST" });
-      if (r.status === 401) {
-        window.location.assign(`/admin/login?next=${encodeURIComponent("/admin/bookings")}`);
-        return;
-      }
-      const data = await r.json().catch(() => ({}));
-      if (!r.ok || !data?.ok) {
-        throw new Error(data?.error || `Confirm failed (${r.status})`);
-      }
-      // Antwort zurück in die Liste mergen (z. B. confirmationCode)
-      const updated = data.booking as Booking;
-      setItems(prev => prev.map(b => (b._id === id ? { ...b, ...updated } : b)));
-    } catch (e: any) {
-      // rollback falls nötig
+      const url = `/api/admin/bookings/${id}/confirm${opts?.resend ? '?resend=1' : ''}`;
+      const r = await fetch(url, { method: 'POST' });
+      const d = await r.json().catch(() => ({}));
+      if (!r.ok || !d.ok) throw new Error(d.error || r.statusText);
+      if (opts?.resend) alert('Bestätigung erneut gesendet.');
       await load();
-      alert(`Fehler: ${e.message || e}`);
+    } catch (e: any) {
+      alert(`Fehler beim Bestätigen: ${e?.message || e}`);
     } finally {
-      setBusyId(null);
+      setBusyId('');
     }
   }
 
+  async function resendBooking(id: string) {
+    // Variante A: eigener Proxy /resend-confirmation
+    // const r = await fetch(`/api/admin/bookings/${id}/resend-confirmation`, { method: 'POST' });
+    // Variante B (direkt confirm?resend=1) – nutzen wir hier:
+    return confirmBooking(id, { resend: true });
+  }
+
+  async function setStatus(id: string, status: Status) {
+    setBusyId(id);
+    try {
+      const r = await fetch(`/api/admin/bookings/${id}/status`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status }),
+      });
+      const d = await r.json().catch(() => ({}));
+      if (!r.ok || !d.ok) throw new Error(d.error || r.statusText);
+      await load();
+    } catch (e: any) {
+      alert(`Status-Update fehlgeschlagen: ${e?.message || e}`);
+    } finally {
+      setBusyId('');
+    }
+  }
+
+  async function deleteBooking(id: string) {
+    if (!confirm('Wirklich löschen (soft delete)?')) return;
+    setBusyId(id);
+    try {
+      const r = await fetch(`/api/admin/bookings/${id}`, { method: 'DELETE' });
+      const d = await r.json().catch(() => ({}));
+      if (!r.ok || !d.ok) throw new Error(d.error || r.statusText);
+      await load();
+    } catch (e: any) {
+      alert(`Löschen fehlgeschlagen: ${e?.message || e}`);
+    } finally {
+      setBusyId('');
+    }
+  }
+
+  /** ===== Render ===== */
   if (loading) return <main className="container"><p>Loading…</p></main>;
-  if (err) return <main className="container"><p className="error">{err}</p></main>;
+  if (err)      return <main className="container"><p className="error">{err}</p></main>;
 
   return (
     <main className="container">
-      <h1>Bookings (latest)</h1>
-      <div className="grid">
-        {items.map(b => (
-          <article key={b._id} className="card">
-            <header className="card-head">
-              <h3 className="card-title">{b.firstName} {b.lastName}</h3>
-              <span className="badge">{b.level}</span>
-            </header>
-            <ul className="card-list">
-              <li><strong>Date:</strong> {b.date}</li>
-              <li><strong>Age:</strong> {b.age}</li>
-              <li><strong>Email:</strong> {b.email}</li>
-              {b.message && <li><strong>Msg:</strong> {b.message}</li>}
-              {b.status && <li><strong>Status:</strong> {b.status}</li>}
-              {b.confirmationCode && <li><strong>Code:</strong> {b.confirmationCode}</li>}
-            </ul>
-            <div className="actions">
-              <button
-                disabled={b.status === "confirmed" || busyId === b._id}
-                onClick={() => confirmBooking(b._id)}
-              >
-                {busyId === b._id ? "Bitte warten…" : (b.status === "confirmed" ? "Bestätigt" : "Bestätigen")}
-              </button>
-            </div>
-            <small>Created: {new Date(b.createdAt).toLocaleString()}</small>
-          </article>
+      <h1>Bookings</h1>
+
+      {/* Tabs */}
+      <div className="actions" style={{ margin: '8px 0 16px', display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+        {STATUSES.map(s => (
+          <button
+            key={s}
+            className={`btn ${active === s ? 'btn-primary' : ''}`}
+            onClick={() => setActive(s)}
+            style={{ textTransform: 'capitalize' }}
+          >
+            {s} ({counts[s] || 0})
+          </button>
         ))}
+      </div>
+
+      {/* List */}
+      <div className="grid">
+        {items.map(b => {
+          const s = asStatus(b.status);
+          const isBusy = busyId === b._id;
+          return (
+            <article key={b._id} className="card">
+              <header className="card-head">
+                <h3 className="card-title">{b.firstName} {b.lastName}</h3>
+                <span className="badge">{b.level}</span>
+              </header>
+
+              <ul className="card-list">
+                <li><strong>Date:</strong> {b.date}</li>
+                <li><strong>Age:</strong> {b.age}</li>
+                <li><strong>Email:</strong> {b.email}</li>
+                {b.message && <li><strong>Msg:</strong> {b.message}</li>}
+                <li><strong>Status:</strong> {s}</li>
+                {b.confirmationCode && <li><strong>Code:</strong> {b.confirmationCode}</li>}
+              </ul>
+
+              <div className="actions" style={{ marginTop: 8, display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+                {s === 'pending' && (
+                  <button className="btn" disabled={isBusy} onClick={() => setStatus(b._id, 'processing')}>
+                    In Bearbeitung
+                  </button>
+                )}
+
+                {s !== 'confirmed' && s !== 'cancelled' && s !== 'deleted' && (
+                  <button className="btn btn-primary" disabled={isBusy} onClick={() => confirmBooking(b._id)}>
+                    Bestätigen
+                  </button>
+                )}
+
+                {s !== 'cancelled' && s !== 'deleted' && (
+                  <button className="btn" disabled={isBusy} onClick={() => setStatus(b._id, 'cancelled')}>
+                    Absagen
+                  </button>
+                )}
+
+                {s === 'confirmed' && (
+                  <button className="btn" disabled={isBusy} onClick={() => resendBooking(b._id)}>
+                    Erneut senden
+                  </button>
+                )}
+
+                {s !== 'deleted' && (
+                  <button className="btn" disabled={isBusy} onClick={() => deleteBooking(b._id)}>
+                    Löschen
+                  </button>
+                )}
+              </div>
+
+              <small>Created: {new Date(b.createdAt).toLocaleString('de-DE')}</small>
+            </article>
+          );
+        })}
       </div>
     </main>
   );
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
