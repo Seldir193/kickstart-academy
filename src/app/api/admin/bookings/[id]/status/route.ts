@@ -32,3 +32,17 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
   const text = await r.text(); let data: any; try { data = JSON.parse(text); } catch { data = { raw:text }; }
   return NextResponse.json(data, { status: r.status });
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+

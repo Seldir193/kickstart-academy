@@ -105,7 +105,7 @@ export default function AdminBookingsPage() {
   async function setStatus(id: string, status: Status) {
     setBusyId(id);
     try {
-      const r = await fetch(`/api/admin/bookings/${id}/status`, {
+      const r = await fetch(`/api/admin/bookings/${id}/status`,  {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status }),
