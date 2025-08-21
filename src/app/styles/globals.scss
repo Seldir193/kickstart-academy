@@ -1,39 +1,84 @@
-:root { color-scheme: light; }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+:root {
+  color-scheme: light;
+  --brand: #0ea5e9; /* WP/React Primärfarbe */
+}
+
 * { box-sizing: border-box; }
-html, body { margin: 0; padding: 0; }
+html, body { margin: 0; padding: 0; height: 100%; }
+
 body {
+  min-height: 100vh;
+  display: grid;                 /* Header | Main | Footer */
+  grid-template-rows: auto 1fr auto;
   font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, 'Helvetica Neue', Arial, 'Noto Sans', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
   background: #f5f5f5;
   color: #222;
 }
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 16px;
+
+/* ===== Layout / Container ===== */
+.container { max-width: 1200px; margin: 0 auto; padding: 16px; display: flex; gap:20px; justify-content: center; }
+
+/* Main verhält sich wie im WP-Theme (nur Main scrollt, Footer unten) */
+.site-main {
+  min-height: 0;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 24px 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
 }
+/* Scrollbar unauffällig/versteckt (optional) */
+.site-main { scrollbar-width: none; -ms-overflow-style: none; }
+.site-main::-webkit-scrollbar { width: 0; height: 0; }
 
-
-
-
-
-
+/* ===== Header (dein aktueller Markup .nav/.nav-link) ===== */
 .site-header {
   background: #ffffff;
   border-bottom: 1px solid #eaeaea;
-  position: sticky;
-  top: 0; z-index: 10;
+  position: sticky; top: 0; z-index: 10;
 }
-.header-inner {
-  display: flex; align-items: center; justify-content: space-between;
-  min-height: 64px;
-}
-.brand {
-  font-weight: 700; text-decoration: none; color: #111;
-}
+.header-inner { display: flex; align-items: center; justify-content: space-between; min-height: 64px; }
+.brand { font-weight: 700; text-decoration: none; color: #111; font-size: 20px; }
+
 .nav { display: flex; gap: 12px; }
-.nav-link { text-decoration: none; padding: 8px 12px; border-radius: 8px; color: #333; }
+.nav-link {
+  text-decoration: none;
+  padding: 8px 12px;
+  border-radius: 8px;
+  color: #333;
+}
+/* WP-Look: kein sichtbarer Hover, nur active ist schwarz/weiß */
+.nav-link:hover { color: #333; background: transparent; }
 .nav-link.active { background: #111; color: #fff; }
 
+/* ===== Hero / Sections ===== */
 .hero {
   background: linear-gradient(180deg, #111 0%, #222 100%);
   color: #fff; border-radius: 16px; padding: 48px; margin: 24px 0;
@@ -43,21 +88,34 @@ body {
 .hero p { opacity: 0.9; margin: 0 0 16px; }
 .hero-actions { display: flex; gap: 12px; flex-wrap: wrap; }
 
-.btn {
+/* ===== Buttons (WP-kompatible Klassen) ===== */
+.btn,
+.btn-primary,
+.angebot-button,
+.btn-book,
+button.btn-primary {
   display: inline-flex; align-items: center; justify-content: center;
-  padding: 10px 16px; border-radius: 10px; border: 1px solid transparent;
-  text-decoration: none; cursor: pointer; font-weight: 600;
+  padding: 10px 16px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  background: var(--brand);
+  color: #fff;
+  text-decoration: none;
 }
-.btn-primary { background: #0ea5e9; color: #fff; }
-.btn-ghost { background: transparent; color: #fff; border-color: #ffffff44; }
-.btn-secondary { background: #111; color: #fff; }
+/* Kein Hover-Farbwechsel – bleibt konstant wie im WP */
+.btn-primary:hover,
+.angebot-button:hover,
+.btn-book:hover,
+button.btn-primary:hover { background: var(--brand); color: #fff; }
 
+/* ===== Grid & Cards ===== */
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   gap: 16px; margin-top: 16px;
 }
-
 .card {
   background: #fff; border: 1px solid #eaeaea; border-radius: 12px;
   padding: 16px; display: flex; flex-direction: column; gap: 12px;
@@ -68,30 +126,28 @@ body {
 .badge { background: #f1f5f9; color: #0f172a; border-radius: 999px; padding: 4px 10px; font-size: 12px; }
 .card-actions { margin-top: 4px; }
 
-
-
-
-
-
-
-
-
-
-
-
+/* ===== Formulare ===== */
 .form { display: grid; gap: 16px; margin-top: 16px; }
-.grid {
-  display: grid; gap: 16px;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-}
+.form .grid { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
 .field { display: grid; gap: 6px; }
 .field--full { grid-column: 1 / -1; }
 label { font-weight: 600; }
 input, select, textarea {
-  border: 1px solid #e5e7eb; border-radius: 10px; padding: 10px 12px; background: #fff;
+  border: 1px solid #e5e7eb; border-radius: 10px; padding: 10px 12px; background: #fff; font-size: 16px;
 }
 .error { color: #b91c1c; font-size: 0.9rem; }
 .ok { color: #065f46; font-weight: 600; }
 .actions { display: flex; align-items: center; gap: 12px; }
 
-
+/* ===== Footer – identisch zum WP-Look ===== */
+.site-footer {
+  border-top: 1px solid #eaeaea;
+  padding: 20px 0;
+  margin-top: 40px;
+  text-align: center;
+  font-size: 14px;
+  color: #666;
+}
+/* Optional: kleiner Anbieter-Login rechts oder inline trennen */
+.site-footer__admin a { text-decoration: none; color:#666 }
+.site-footer__admin a:hover { text-decoration: underline; }
