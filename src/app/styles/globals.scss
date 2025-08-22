@@ -151,3 +151,286 @@ input, select, textarea {
 /* Optional: kleiner Anbieter-Login rechts oder inline trennen */
 .site-footer__admin a { text-decoration: none; color:#666 }
 .site-footer__admin a:hover { text-decoration: underline; }
+
+
+
+
+
+
+
+
+
+
+
+
+/* =========================================================
+   OFFERS UI – additions (append to existing globals.scss)
+   - Filters (search + selects)
+   - Chips/Tags
+   - Modal dialog (create offer)
+   - Switch (online active)
+   - Pager (pagination)
+========================================================= */
+
+/* Button aliases to match component classnames */
+.btn--primary { @extend .btn-primary; }  /* reuse your existing primary look */
+.btn--disabled { opacity: 0.6; cursor: not-allowed; }
+
+/* ----- Filters row (search + location + type) ----- */
+.filters {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  margin-bottom: 16px;
+
+  /* on wider screens: search wide + two selects on the right */
+  @media (min-width: 900px) {
+    grid-template-columns: 1fr 260px 260px;
+    align-items: end;
+  }
+
+  &__field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+
+    &--wide { grid-column: 1 / -1; } /* make search input full-width on mobile */
+  }
+}
+
+/* Reuse your existing inputs/labels:
+   .label { font-weight: 600; }
+   .input  -> you already style input/select/textarea globally
+   No duplication needed. If you want a class hook, you can alias: */
+.label { font-size: 13px; } /* tiny polish */
+
+/* ----- Chips (for Types & Days) ----- */
+.chip-row { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip {
+  border: 1px solid #e5e7eb;
+  background: #fff;
+  padding: 8px 12px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background 120ms ease, color 120ms ease, border-color 120ms ease;
+
+  &:hover { background: #fafafa; }
+}
+.chip--active {
+  background: #111; color: #fff; border-color: #111;
+}
+
+/* ----- Tags ribbon (static categories) ----- */
+.tag-row { display: flex; flex-wrap: wrap; gap: 8px; }
+.tag {
+  display: inline-block;
+  background: #fff;
+  border: 1px solid #eaeaea;
+  padding: 8px 12px;
+  border-radius: 999px;
+  box-shadow: 0 10px 25px rgba(17, 24, 39, 0.08);
+  font-size: 14px;
+}
+
+/* ----- Toggle Switch (Online active) ----- */
+.switch {
+  position: relative;
+  width: 44px; height: 24px;
+  border-radius: 999px;
+  background: #c7c7c7;
+  border: 1px solid #e5e7eb;
+  transition: background 120ms ease, border-color 120ms ease;
+}
+.switch__thumb {
+  position: absolute; top: 50%; left: 2px; transform: translateY(-50%);
+  width: 20px; height: 20px; background: #fff; border-radius: 999px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+  transition: left 120ms ease;
+}
+.switch--on { background: #10b981; border-color: #10b981; }
+.switch--on .switch__thumb { left: 22px; }
+
+/* ----- Modal (Create Offer Dialog) ----- */
+.modal { position: fixed; inset: 0; z-index: 40; }
+.modal__overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.4); }
+.modal__wrap {
+  position: absolute; inset: 0;
+  display: flex; align-items: flex-start; justify-content: center;
+  padding: 16px; overflow-y: auto;
+}
+.modal__panel {
+  position: relative; width: 100%; max-width: 760px;
+  background: #fff; border-radius: 12px; border: 1px solid #eaeaea;
+  box-shadow: 0 10px 25px rgba(17, 24, 39, 0.08);
+  padding: 22px; margin-top: 4vh;
+}
+.modal__title { font-size: 20px; font-weight: 600; margin: 0 0 10px; }
+.modal__close {
+  position: absolute; top: 10px; right: 10px;
+  border: 1px solid #eaeaea; background: #fff;
+  border-radius: 999px; padding: 6px 8px; cursor: pointer;
+}
+.modal__close:hover { background: #fafafa; }
+
+/* subtle motion (respects reduced motion) */
+@keyframes fade-in { from { opacity: 0 } to { opacity: 1 } }
+@keyframes zoom-in { from { transform: scale(0.98) } to { transform: scale(1) } }
+@media (prefers-reduced-motion: no-preference) {
+  .modal__overlay { animation: fade-in 120ms ease; }
+  .modal__panel { animation: zoom-in 120ms ease; }
+}
+
+/* ----- Form helper blocks inside modal ----- */
+.form { display: grid; gap: 16px; } /* you already have .form; this only ensures spacing in modal */
+.form .grid { gap: 16px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+.help { font-size: 12px; color: #666; }
+
+/* ----- Pager (pagination) ----- */
+.pager {
+  display: flex; align-items: center; justify-content: space-between; margin-top: 14px;
+}
+.pager__info { font-size: 13px; color: #666; }
+.pager__actions { display: flex; gap: 8px; }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* ================= Offers/Trainings UI (scoped) =================== */
+
+/* In diesem Bereich wollen wir vertikal stacken – Container darf kein Flex-Row sein */
+.ks > .container { 
+  display: block; 
+}
+
+/* Filters: Grid-Spacing */
+.ks .filters {
+  display: grid;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+/* Row 1: Quick-types (links) + Search (rechts, wächst) */
+.ks .filters__row {
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+  flex-wrap: wrap;      /* bricht sauber auf kleinen Screens */
+}
+
+/* Search-Container wächst */
+.ks .filters__field--grow {
+  flex: 1 1 360px;
+  min-width: 260px;
+}
+
+/* Label/Inputs harmonisieren */
+.ks .filters .label {
+  color: #475569;       /* slate-600 */
+  font-weight: 600;
+  margin-bottom: 4px;
+  display: block;
+}
+.ks .filters .input {
+  height: 40px;
+  line-height: 40px;
+  padding: 0 12px;
+}
+
+/* Quick-type Buttons als leichte Pills (nicht Branding-blau) */
+.ks .quick-types {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.ks .quick-types .btn {
+  background: #fff;
+  color: #0f172a;
+  border: 1px solid #e5e7eb;
+  padding: 8px 12px;
+  border-radius: 10px;
+  font-weight: 600;
+  height: 40px;         /* gleiche Höhe wie Input */
+}
+.ks .quick-types .btn:hover { background: #f8fafc; }
+
+/* Ergebnisliste */
+.ks .list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.ks .list__item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid #eef2f7;
+}
+.ks .list__item:last-child { border-bottom: 0; }
+.ks .list__title {
+  font-weight: 700;
+  font-size: 16px;
+  margin: 0 0 4px;
+}
+.ks .list__meta {
+  color: #64748b;       /* slate-500 */
+  font-size: 14px;
+  margin-top: 2px;
+}
+.ks .card__empty {
+  text-align: center;
+  color: #64748b;
+  padding: 20px 8px;
+}
+
+/* Pager */
+.ks .pager {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 12px;
+}
+.ks .pager__info { color: #475569; }
+.ks .pager__actions { display: flex; gap: 8px; }
+.ks .pager__actions .btn { min-width: 96px; }
+
+/* Dialog-Panel angenehm breit */
+.ks .modal__wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+.ks .modal__panel {
+  width: 100%;
+  max-width: 720px;
+}
+
+/* Mobile: schöner Umbruch */
+@media (max-width: 640px) {
+  .ks .filters__row { align-items: stretch; }
+  .ks .filters__field--grow { flex: 1 1 100%; min-width: 0; }
+  .ks .quick-types { width: 100%; }
+  .ks .quick-types .btn { flex: 1 1 auto; }
+  .ks .list__item { align-items: flex-start; }
+}
