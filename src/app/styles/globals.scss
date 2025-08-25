@@ -260,7 +260,7 @@ input, select, textarea {
 }
 .modal__panel {
   position: relative; width: 100%; max-width: 760px;
-  background: #fff; border-radius: 12px; border: 1px solid #eaeaea;
+  background: #fff; border-radius:12px; border: 1px solid #eaeaea;
   box-shadow: 0 10px 25px rgba(17, 24, 39, 0.08);
   padding: 22px; margin-top: 4vh;
 }
@@ -433,4 +433,263 @@ input, select, textarea {
   .ks .quick-types { width: 100%; }
   .ks .quick-types .btn { flex: 1 1 auto; }
   .ks .list__item { align-items: flex-start; }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Card padding variable (match your actual card padding) */
+.card {
+  --card-pad: 1rem; /* adjust to your .card's real padding if needed */
+}
+
+/* Full-bleed rows: extend background to card edges, no border */
+.list.list--bleed .list__item.chip.is-fullhover {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+
+  /* make hover background span the full card width */
+  margin-left: calc(var(--card-pad) * -1);
+  margin-right: calc(var(--card-pad) * -1);
+
+  /* keep content aligned with card's inner padding */
+  padding-left: calc(var(--card-pad) + 1rem);
+  padding-right: calc(var(--card-pad) + 1rem);
+
+  width: auto;          /* stretch via margins, not width calc */
+  border: 0 !important; /* no border on hover background */
+  box-shadow: none;     /* safety */
+}
+
+.is-interactive { cursor: pointer; }
+
+.list.list--bleed .list__item.chip.is-fullhover .list__body {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.list.list--bleed .list__item.chip.is-fullhover .list__actions {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: row-reverse;
+  gap: 8px;
+}
+
+/* Accessible focus */
+.list.list--bleed .list__item.chip.is-fullhover:focus {
+  outline: var(--focus-outline, 2px dotted currentColor);
+  outline-offset: 2px;
+}
+
+
+
+
+
+
+
+
+
+/* No rounded corners for full-bleed hover rows inside cards */
+.list.list--bleed .list__item.chip.is-fullhover,
+.list.list--bleed .list__item.chip.is-fullhover:hover,
+.list.list--bleed .list__item.chip.is-fullhover:focus {
+  border-radius: 0 !important;  /* square corners */
+  border: 0 !important;         /* ensure no border sneaks in */
+  box-shadow: none;             /* safety */
+}
+
+
+
+.form__actions{
+  display: flex;
+  gap:8px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Minimal, self-contained icon button */
+.icon-btn {
+  --icon-size: 3.1rem;
+  --btn-size: 2.25rem;
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--btn-size);
+  height: var(--btn-size);
+  padding: 0;
+  border: 0;               /* no border */
+  border-radius: 9999px;   /* circular background */
+  background: transparent; /* will be set by modifier */
+  line-height: 0;
+  cursor: pointer;
+}
+
+.icon-btn--danger {
+  background: var(--danger, #e53935); /* red bg; uses your var if present */
+  color: #fff;
+}
+.icon-btn--danger:hover,
+.icon-btn--danger:focus {
+  background: color-mix(in srgb, var(--danger, #e53935) 90%, #000 10%);
+  outline: none;
+}
+
+/* White icon using CSS mask so the PNG color doesn't matter */
+.icon {
+  display: block;
+  width: var(--icon-size);
+  height: var(--icon-size);
+  background-color: #fff; /* icon color */
+}
+
+.icon--close {
+  /* mask the PNG to paint it white */
+  -webkit-mask: url('/icons/close.png') no-repeat center / contain;
+          mask: url('/icons/close.png') no-repeat center / contain;
+}
+
+/* Screen-reader only text (if not already defined) */
+.sr-only {
+  position: absolute !important;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0, 0, 1px, 1px);
+  white-space: nowrap; border: 0;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Pager layout: arrows with centered numeric counter */
+.pager--arrows {
+  display: grid;
+  grid-template-columns: var(--icon-btn-size, 2.5rem) 1fr var(--icon-btn-size, 2.5rem);
+  align-items: center;
+}
+
+/* Icon buttons (reuse if already defined) */
+.pager__nav {
+  --icon-btn-size: 2.5rem; /* click area */
+  --icon-size: 1.2rem;     /* icon size */
+
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  width: var(--icon-btn-size);
+  height: var(--icon-btn-size);
+
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: currentColor;
+  cursor: pointer;
+  border-radius: 9999px; /* round hit area */
+  transition: transform 120ms ease, background-color 120ms ease;
+}
+
+/* Hover/focus effect for arrows */
+.pager__nav:hover,
+.pager__nav:focus-visible {
+  outline: none;
+  transform: scale(1.06);
+  background: color-mix(in srgb, currentColor 12%, transparent);   
+}
+
+.pager__nav[disabled] {
+  opacity: 0.35;
+  cursor: default;
+  pointer-events: none;
+  transform: none;
+  background: transparent;
+}
+
+/* Centered numbers */
+.pager__count {
+  text-align: center;
+  font-variant-numeric: tabular-nums; /* nicer aligned digits */
+  font-weight: 600;                   /* a bit stronger */
+  user-select: none;
+}
+
+/* Icon box (if not already present) */
+.icon {
+  display: block;
+  width: var(--icon-size, 1.2rem);
+  height: var(--icon-size, 1.2rem);
+}
+
+/* Right arrow from /public/icons/arrow_right_alt.svg (tint via currentColor) */
+.icon--arrow {
+  background-color: currentColor;
+  -webkit-mask: url('/icons/arrow_right_alt.svg') no-repeat center / contain;
+          mask: url('/icons/arrow_right_alt.svg') no-repeat center / contain;
+}
+
+/* Left arrow is mirrored */
+.icon--arrow-left {
+  transform: scaleX(-1);
 }
