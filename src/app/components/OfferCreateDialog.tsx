@@ -1,8 +1,44 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 'use client';
 
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 
-/* ===== Shared types/consts (export for reuse on the page) ===== */
 export type OfferType =
   | 'Camp'
   | 'Foerdertraining'
@@ -42,7 +78,6 @@ export type CreateOfferPayload = {
   onlineActive: boolean;
 };
 
-/* ===== Utilities ===== */
 function clsx(...xs: Array<string | false | undefined | null>) {
   return xs.filter(Boolean).join(' ');
 }
@@ -61,19 +96,25 @@ function useOnClickOutside<T extends HTMLElement>(ref: AnyRef<T>, handler: () =>
   }, [ref, handler]);
 }
 
-/* ===== Component ===== */
+/** NEW: support edit mode + initial values */
 export default function OfferCreateDialog({
   open,
+  mode = 'create',
   presetType,
+  initial, // when editing
   onClose,
   onCreate,
+  onSave,   // (id, payload) when editing
 }: {
   open: boolean;
+  mode?: 'create' | 'edit';
   presetType?: OfferType;
+  initial?: (Partial<CreateOfferPayload> & { _id?: string }) | null;
   onClose: () => void;
-  onCreate: (payload: CreateOfferPayload) => Promise<void> | void;
+  onCreate?: (payload: CreateOfferPayload) => Promise<void> | void;
+  onSave?: (id: string, payload: CreateOfferPayload) => Promise<void> | void;
 }) {
-  const [form, setForm] = useState<CreateOfferPayload>({
+  const blank: CreateOfferPayload = {
     type: '',
     location: '',
     price: '',
@@ -84,14 +125,50 @@ export default function OfferCreateDialog({
     ageTo: '',
     info: '',
     onlineActive: true,
-  });
+  };
+
+  const computeInitial = (): CreateOfferPayload => {
+    const base = { ...blank };
+    if (initial) {
+      return {
+        type: (initial.type as OfferType) ?? (presetType ?? ''),
+        location: initial.location ?? '',
+        price: (initial.price as number) ?? '',
+        days: (initial.days as DayKey[]) ?? [],
+        timeFrom: initial.timeFrom ?? '',
+        timeTo: initial.timeTo ?? '',
+        ageFrom:
+          initial.ageFrom === undefined || initial.ageFrom === null
+            ? ''
+            : Number(initial.ageFrom),
+        ageTo:
+          initial.ageTo === undefined || initial.ageTo === null
+            ? ''
+            : Number(initial.ageTo),
+        info: initial.info ?? '',
+        onlineActive:
+          typeof initial.onlineActive === 'boolean' ? initial.onlineActive : true,
+      };
+    }
+    if (presetType) base.type = presetType;
+    return base;
+  };
+
+  const [form, setForm] = useState<CreateOfferPayload>(computeInitial);
 
   const panelRef = useRef<HTMLDivElement | null>(null);
   useOnClickOutside(panelRef, onClose);
 
+  // Open/Close behavior + (re)prefill when switching mode/initial
   useEffect(() => {
-    if (open) setForm((f) => ({ ...f, type: presetType ?? f.type }));
-  }, [open, presetType]);
+    if (open) {
+      setForm(computeInitial());
+    } else {
+      // reset on close so "Create" starts clean next time
+      setForm({ ...blank, type: presetType ?? '' });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open, mode, JSON.stringify(initial), presetType]);
 
   useEffect(() => {
     function onKey(e: KeyboardEvent) { if (e.key === 'Escape') onClose(); }
@@ -122,12 +199,19 @@ export default function OfferCreateDialog({
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!canSubmit) return;
-    await onCreate({
+
+    const payload: CreateOfferPayload = {
       ...form,
       price: Number(form.price),
       ageFrom: form.ageFrom === '' ? '' : Number(form.ageFrom),
       ageTo: form.ageTo === '' ? '' : Number(form.ageTo),
-    });
+    };
+
+    if (mode === 'edit' && initial?._id && onSave) {
+      await onSave(initial._id, payload);
+    } else if (mode === 'create' && onCreate) {
+      await onCreate(payload);
+    }
   }
 
   if (!open) return null;
@@ -141,10 +225,10 @@ export default function OfferCreateDialog({
           className="modal__panel"
           role="dialog"
           aria-modal="true"
-          aria-label="Create offer dialog"
+          aria-label={mode === 'edit' ? 'Edit offer dialog' : 'Create offer dialog'}
         >
           <button type="button" onClick={onClose} className="modal__close" aria-label="Close">✕</button>
-          <h2 className="modal__title">Create offer</h2>
+          <h2 className="modal__title">{mode === 'edit' ? 'Edit offer' : 'Create offer'}</h2>
 
           <form onSubmit={handleSubmit} className="form">
             {/* Type */}
@@ -301,7 +385,7 @@ export default function OfferCreateDialog({
                 disabled={!canSubmit}
                 className={clsx('btn btn--primary', !canSubmit && 'btn--disabled')}
               >
-                Create offer
+                {mode === 'edit' ? 'Save changes' : 'Create offer'}
               </button>
             </div>
           </form>
