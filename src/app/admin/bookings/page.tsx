@@ -122,7 +122,7 @@ export default function AdminBookingsPage() {
   }
 
   async function deleteBooking(id: string) {
-    if (!confirm('Wirklich löschen (soft delete)?')) return;
+    
     setBusyId(id);
     try {
       const r = await fetch(`/api/admin/bookings/${id}`, { method: 'DELETE' });
