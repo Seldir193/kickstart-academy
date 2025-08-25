@@ -157,10 +157,28 @@ input, select, textarea {
 
 
 
+/* Abstand NUR wenn direkt auf ein Label eine chip-row folgt */
+.form__group .label + .chip-row {
+  margin-top: 8px; /* oder 12px, wie du magst */
+}
+
+/* optional: kleiner Abstand zwischen chip-row und Hilfe-Text */
+.form__group .chip-row + .help {
+  margin-top: 6px;
+}
 
 
+.form__group{
+  display: flex;
+  align-items: center;
+  gap:8px;
+}
 
 
+.form__group--stack {
+  display: block !important; /* force vertical */
+  align-items: initial;
+}
 
 
 /* =========================================================

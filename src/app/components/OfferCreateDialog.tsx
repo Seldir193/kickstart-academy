@@ -232,7 +232,7 @@ export default function OfferCreateDialog({
 
           <form onSubmit={handleSubmit} className="form">
             {/* Type */}
-            <div className="form__group">
+            <div className="form__group  form__group--stack" >
               <label className="label">All types</label>
               <div className="chip-row">
                 {OFFER_TYPES.map((t) => (
