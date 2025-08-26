@@ -1,30 +1,3 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 'use client';
 
 import Link from 'next/link';
@@ -32,12 +5,13 @@ import { usePathname } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 
 type Props = {
-  /** initial admin state determined on the server (HttpOnly cookies supported) */
+  /** Initial admin flag from server (reads HttpOnly cookie in HeaderServer) */
   isAdminInitial?: boolean;
 };
 
 const baseNav = [
   { href: '/', label: 'Home' },
+  // NOTE: 'Trainings' will be shown only if isAdmin === true (see render logic)
   { href: '/trainings', label: 'Trainings' },
   { href: '/book', label: 'Book' },
   { href: '/shop', label: 'Shop (Demo)' },
@@ -47,7 +21,7 @@ const WP_OFFERS_URL =
   process.env.NEXT_PUBLIC_WP_OFFERS_URL ||
   'http://localhost/wordpress/index.php/angebote/';
 
-// Optional client-side helpers (in case you mirror a non-HttpOnly UI cookie or session flag at login)
+// optional UI flag helper (not security-relevant)
 function hasUiAdminFlag(): boolean {
   if (typeof document === 'undefined') return false;
   const hasCookie = document.cookie.split(';').some(c => c.trim().startsWith('admin_ui=1'));
@@ -65,17 +39,14 @@ export default function Header({ isAdminInitial = false }: Props) {
   const [offersOpen, setOffersOpen] = useState(false);
   const offersRef = useRef<HTMLDivElement | null>(null);
 
-  // Optional: refresh admin flag on focus if you set a UI-visible flag at login
+  // optional: refresh admin flag when window regains focus
   useEffect(() => {
-    const check = () => {
-      // Only override if we detect a client-visible flag (does not affect HttpOnly server result)
-      if (hasUiAdminFlag()) setIsAdmin(true);
-    };
+    const check = () => { if (hasUiAdminFlag()) setIsAdmin(true); };
     window.addEventListener('focus', check);
     return () => window.removeEventListener('focus', check);
   }, []);
 
-  // Close dropdown on outside click / ESC
+  // close dropdown on outside click / ESC
   useEffect(() => {
     function onDown(e: MouseEvent | PointerEvent) {
       if (!offersRef.current) return;
@@ -98,9 +69,14 @@ export default function Header({ isAdminInitial = false }: Props) {
         <Link href="/" className="brand">KickStart Academy</Link>
 
         <nav className="nav">
-          {/* Regular nav items */}
+          {/* Public + Admin nav items (hide /trainings for public) */}
           {baseNav.map((item) => {
-            const active = pathname === item.href;
+            if (item.href === '/trainings' && !isAdmin) return null; // hide for public
+
+            const active =
+              pathname === item.href ||
+              (item.href === '/trainings' && pathname.startsWith('/trainings'));
+
             return (
               <Link
                 key={item.href}
@@ -112,7 +88,7 @@ export default function Header({ isAdminInitial = false }: Props) {
             );
           })}
 
-          {/* Offers dropdown */}
+          {/* Offers dropdown (public visible) */}
           <div
             className="nav-item nav-item--group"
             ref={offersRef}
@@ -159,7 +135,7 @@ export default function Header({ isAdminInitial = false }: Props) {
             )}
           </div>
 
-          {/* Admin-only link: shown only when logged in */}
+          {/* Admin-only link: Buchungen */}
           {isAdmin && (
             <Link
               href="/admin/bookings"
@@ -173,3 +149,25 @@ export default function Header({ isAdminInitial = false }: Props) {
     </header>
   );
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
