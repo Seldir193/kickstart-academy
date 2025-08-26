@@ -73,12 +73,18 @@ export default function BookPage() {
 
 
 
-
+useEffect(() => {
+  if (status === 'success') {
+    const t = setTimeout(() => setStatus('idle'), 5000);
+    return () => clearTimeout(t);
+  }
+}, [status]);
 
 
 
 useEffect(() => {
   // robustly read offerId from URL (supports ?offerId=... or ?id=...)
+ 
   const readOfferId = () => {
     // 1) try Next hook
     const fromHook =
@@ -93,6 +99,8 @@ useEffect(() => {
     }
     return '';
   };
+
+
 
   const id = readOfferId();
 
@@ -194,17 +202,6 @@ useEffect(() => {
       setStatus('error');
     }
   };
-
-
-
-
-
-
-
-
-
-
-  
 
   return (
     <section>
