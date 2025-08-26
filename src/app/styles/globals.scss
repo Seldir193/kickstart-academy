@@ -711,3 +711,116 @@ input, select, textarea {
 .icon--arrow-left {
   transform: scaleX(-1);
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Dropdown container (behält deinen Header-Stil unverändert) */
+
+
+/* Der Container um den Angebote-Button ist der Bezugspunkt */
+.nav-item--group {
+  position: relative;
+}
+
+/* Panel rechts unter dem Button ausrichten (nicht links) */
+.nav-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;   /* <- neu */
+  left: auto; /* <- wichtig: überschreibt left:0 */
+  z-index: 50;
+
+  display: flex;
+  gap: 8px;
+  padding: 8px 0;
+
+  background: #fff;
+  border-top: 1px solid #eaeaea;
+  border-right: 0; border-left: 0; border-bottom: 0;
+  border-radius: 0;
+  box-shadow: none;
+  white-space: nowrap;
+}
+
+
+
+
+
+
+.nav-link--button {
+  background: transparent;
+  border: 0;
+
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+
+
+/* Links nebeneinander – erben deinen .nav-link Stil */
+.nav-dropdown__link {
+  /* erbt von .nav-link durch die zusätzliche Klasse in JSX */
+  display: inline-block;
+}
+
+/* Dein Header-Hover bleibt: kein Farbwechsel; daher hier nichts setzen */
+.nav-dropdown__link:hover,
+.nav-dropdown__link:focus-visible {
+  outline: none;
+}
+
+/* Caret wie gehabt */
+.nav-link .caret { margin-left: .25rem; font-size: .85em; }
