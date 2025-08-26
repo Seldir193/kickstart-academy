@@ -1,17 +1,17 @@
 'use client';
 
+import React, { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useEffect, useRef, useState } from 'react';
 
 type Props = {
-  /** Initial admin flag from server (reads HttpOnly cookie in HeaderServer) */
+  /** Server truth from HeaderServer (reads HttpOnly admin cookie) */
   isAdminInitial?: boolean;
 };
 
 const baseNav = [
   { href: '/', label: 'Home' },
-  // NOTE: 'Trainings' will be shown only if isAdmin === true (see render logic)
+  // 'Trainings' is rendered only for admins (hidden for public)
   { href: '/trainings', label: 'Trainings' },
   { href: '/book', label: 'Book' },
   { href: '/shop', label: 'Shop (Demo)' },
@@ -21,32 +21,82 @@ const WP_OFFERS_URL =
   process.env.NEXT_PUBLIC_WP_OFFERS_URL ||
   'http://localhost/wordpress/index.php/angebote/';
 
-// optional UI flag helper (not security-relevant)
-function hasUiAdminFlag(): boolean {
-  if (typeof document === 'undefined') return false;
-  const hasCookie = document.cookie.split(';').some(c => c.trim().startsWith('admin_ui=1'));
-  const hasSession = (() => {
-    try { return sessionStorage.getItem('ks_admin') === '1'; } catch { return false; }
-  })();
-  return hasCookie || hasSession;
+
+
+
+
+
+
+
+
+
+
+
+function LogoutLink({
+  isLoggingOut,
+  setIsLoggingOut,
+}: {
+  isLoggingOut: boolean;
+  setIsLoggingOut: (v: boolean) => void;
+}) {
+  async function handleClick(e: React.MouseEvent<HTMLAnchorElement>) {
+    e.preventDefault();
+    // falls aus irgendeinem Grund noch nicht gesetzt
+    setIsLoggingOut(true);
+
+    try {
+      await fetch('/api/admin/auth/logout', {
+        method: 'POST',
+        credentials: 'include',
+        cache: 'no-store',
+      });
+    } catch {
+      // ignore
+    } finally {
+      window.location.replace('/admin/login?next=/admin/bookings');
+    }
+  }
+
+  // WICHTIG: sofort beim Pressen aktiv schalten, damit "Buchungen" die active-Klasse verliert
+  function handleMouseDown() { setIsLoggingOut(true); }
+  function handleTouchStart() { setIsLoggingOut(true); }
+  function handleKeyDown(e: React.KeyboardEvent<HTMLAnchorElement>) {
+    if (e.key === 'Enter' || e.key === ' ') setIsLoggingOut(true);
+  }
+
+  return (
+    <Link
+      href="/admin/logout"
+      className={`nav-link ${isLoggingOut ? 'active' : ''}`}
+      onMouseDown={handleMouseDown}
+      onTouchStart={handleTouchStart}
+      onKeyDown={handleKeyDown}
+      onClick={handleClick}
+    >
+      Logout
+    </Link>
+  );
 }
+
+
+
+
+
+
+
 
 export default function Header({ isAdminInitial = false }: Props) {
   const pathname = usePathname();
-  const [isAdmin, setIsAdmin] = useState(isAdminInitial);
+  const isAdmin = isAdminInitial;
 
-  // dropdown state
+  // Dropdown state
   const [offersOpen, setOffersOpen] = useState(false);
   const offersRef = useRef<HTMLDivElement | null>(null);
 
-  // optional: refresh admin flag when window regains focus
-  useEffect(() => {
-    const check = () => { if (hasUiAdminFlag()) setIsAdmin(true); };
-    window.addEventListener('focus', check);
-    return () => window.removeEventListener('focus', check);
-  }, []);
+  // Logout state: while true, only Logout shows 'active'
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
 
-  // close dropdown on outside click / ESC
+  // Close dropdown on outside click / ESC
   useEffect(() => {
     function onDown(e: MouseEvent | PointerEvent) {
       if (!offersRef.current) return;
@@ -69,26 +119,29 @@ export default function Header({ isAdminInitial = false }: Props) {
         <Link href="/" className="brand">KickStart Academy</Link>
 
         <nav className="nav">
-          {/* Public + Admin nav items (hide /trainings for public) */}
+          {/* Public + Admin nav items (hide /trainings for public).
+              While logging out, suppress 'active' on everything else. */}
           {baseNav.map((item) => {
-            if (item.href === '/trainings' && !isAdmin) return null; // hide for public
+            if (item.href === '/trainings' && !isAdmin) return null;
 
-            const active =
+            const isRouteActive =
               pathname === item.href ||
               (item.href === '/trainings' && pathname.startsWith('/trainings'));
+
+            const addActive = !isLoggingOut && isRouteActive;
 
             return (
               <Link
                 key={item.href}
                 href={item.href}
-                className={`nav-link ${active ? 'active' : ''}`}
+                className={`nav-link ${addActive ? 'active' : ''}`}
               >
                 {item.label}
               </Link>
             );
           })}
 
-          {/* Offers dropdown (public visible) */}
+          {/* Offers dropdown (visible for everyone) */}
           <div
             className="nav-item nav-item--group"
             ref={offersRef}
@@ -100,7 +153,7 @@ export default function Header({ isAdminInitial = false }: Props) {
               className={`nav-link nav-link--button ${offersOpen ? 'active' : ''}`}
               aria-haspopup="true"
               aria-expanded={offersOpen}
-              onClick={() => setOffersOpen(o => !o)}
+              onClick={() => setOffersOpen((o) => !o)}
             >
               Angebote <span className="caret" aria-hidden="true">▾</span>
             </button>
@@ -135,21 +188,28 @@ export default function Header({ isAdminInitial = false }: Props) {
             )}
           </div>
 
-          {/* Admin-only link: Buchungen */}
+          {/* Admin-only links: Buchungen + Logout */}
           {isAdmin && (
-            <Link
-              href="/admin/bookings"
-              className={`nav-link ${pathname.startsWith('/admin') ? 'active' : ''}`}
-            >
-              Buchungen
-            </Link>
+            <>
+              <Link
+                href="/admin/bookings"
+                className={`nav-link ${
+                  !isLoggingOut && pathname.startsWith('/admin') ? 'active' : ''
+                }`}
+              >
+                Buchungen
+              </Link>
+              <LogoutLink
+                isLoggingOut={isLoggingOut}
+                setIsLoggingOut={setIsLoggingOut}
+              />
+            </>
           )}
         </nav>
       </div>
     </header>
   );
 }
-
 
 
 
