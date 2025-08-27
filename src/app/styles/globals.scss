@@ -824,3 +824,47 @@ input, select, textarea {
 
 /* Caret wie gehabt */
 .nav-link .caret { margin-left: .25rem; font-size: .85em; }
+/* Reserve space under every input for inline errors to prevent layout shift */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Make the row gap configurable and cancel it just before the error line */
+.field {
+  --field-gap: 6px; /* matches your existing gap */
+  row-gap: var(--field-gap); /* explicit; equals your current gap */
+}
+
+/* Reserve space, but pull the error up by exactly the gap value → no vertical gap */
+.field .error-slot {
+  min-height: 18px;          /* one line */
+  margin-top: calc(-1 * var(--field-gap)); /* cancels the grid gap just above */
+}
+
+/* Error text styling (as you wanted) */
+.field .error {
+  color: #b91c1c;
+  font-size: 14px;
+  margin: 0;
+  display: flex;
+  font-weight: 400;
+  padding-left: 15px; /* keep if you like the indent */
+}
