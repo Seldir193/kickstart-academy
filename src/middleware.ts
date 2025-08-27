@@ -7,6 +7,7 @@ export function middleware(req: NextRequest) {
   // allowlist (keine Auth nötig)
   if (
     pathname.startsWith('/admin/login') ||
+    pathname.startsWith('/admin/signup') || 
     pathname === '/api/admin/auth/login' ||
     pathname === '/api/admin/auth/logout' // <-- behalten
   ) {
