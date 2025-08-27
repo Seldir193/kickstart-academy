@@ -1,28 +1,6 @@
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 import { NextResponse } from 'next/server';
+import { signAdminToken } from '@/app/api/lib/auth';
 
 function clean(v: unknown) {
   return String(v ?? '').trim().replace(/^['"]|['"]$/g, '');
@@ -44,14 +22,19 @@ export async function POST(req: Request) {
     const envEmail = clean(process.env.ADMIN_EMAIL || '').toLowerCase();
     const envPass  = clean(process.env.ADMIN_PASSWORD || '');
 
-    // 1) ENV-Admin zuerst prüfen
+    // 1) ENV admin (Superuser)
     if (envEmail && envPass && e === envEmail) {
       if (p === envPass) {
+        const token = await signAdminToken({
+          id: 'env-admin',
+          email: envEmail,
+          role: 'super',
+        });
         const res = NextResponse.json({
           ok: true,
           user: { id: 'env-admin', fullName: 'System Admin', email: envEmail },
         });
-        res.cookies.set('admin_token', 'env', {
+        res.cookies.set('admin_token', token, {
           httpOnly: true,
           sameSite: 'lax',
           path: '/',
@@ -63,7 +46,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ ok: false, error: 'Invalid credentials' }, { status: 401 });
     }
 
-    // 2) Sonst: an Backend-Login weiterleiten (DB-User)
+    // 2) DB login via backend
     const r = await fetch(`${apiBase()}/admin/auth/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -74,9 +57,14 @@ export async function POST(req: Request) {
     const text = await r.text();
     let data: any; try { data = JSON.parse(text); } catch { data = { ok: false, raw: text }; }
 
-    if (r.ok && data?.ok) {
-      const res = NextResponse.json(data, { status: 200 });
-      res.cookies.set('admin_token', 'db', {
+    if (r.ok && data?.ok && data?.user?.id && data?.user?.email) {
+      const token = await signAdminToken({
+        id: data.user.id,
+        email: data.user.email,
+        role: 'provider',
+      });
+      const res = NextResponse.json({ ok: true, user: data.user }, { status: 200 });
+      res.cookies.set('admin_token', token, {
         httpOnly: true,
         sameSite: 'lax',
         path: '/',
@@ -86,7 +74,7 @@ export async function POST(req: Request) {
       return res;
     }
 
-    // Fehler vom Backend 1:1 zurückgeben (z.B. 401)
+    // Fehler vom Backend 1:1 zurückgeben
     return NextResponse.json(data, { status: r.status || 500 });
   } catch (e: any) {
     console.error('Login error:', e);
@@ -96,3 +84,23 @@ export async function POST(req: Request) {
     );
   }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,19 +1,6 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 
 type Offer = {
@@ -62,94 +49,69 @@ export default function BookPage() {
   const [offerError, setOfferError] = useState<string | null>(null);
 
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const [status, setStatus] = useState<'idle'|'sending'|'success'|'error'>('idle');
+  const [status, setStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle');
 
-  const api = useMemo(() => process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:5000', []);
+  // Datum: heute als Mindestdatum (yyyy-mm-dd)
+  const today = new Date().toISOString().split('T')[0];
 
-
-
-
-
-
-
-
-useEffect(() => {
-  if (status === 'success') {
-    const t = setTimeout(() => setStatus('idle'), 5000);
-    return () => clearTimeout(t);
-  }
-}, [status]);
-
-
-
-useEffect(() => {
-  // robustly read offerId from URL (supports ?offerId=... or ?id=...)
- 
-  const readOfferId = () => {
-    // 1) try Next hook
-    const fromHook =
-      (params && (params.get('offerId') || params.get('id'))) || '';
-
-    if (fromHook) return fromHook;
-
-    // 2) fallback to direct window parse (SSR-safe guard)
-    if (typeof window !== 'undefined') {
-      const q = new URLSearchParams(window.location.search);
-      return q.get('offerId') || q.get('id') || '';
+  useEffect(() => {
+    if (status === 'success') {
+      const t = setTimeout(() => setStatus('idle'), 5000);
+      return () => clearTimeout(t);
     }
-    return '';
-  };
+  }, [status]);
 
-
-
-  const id = readOfferId();
-
-  setForm(f => ({ ...f, offerId: id }));
-
-  if (!id) {
-    setOffer(null);
-    setOfferError('Missing offerId in URL.');
-    setOfferLoading(false);
-    return;
-  }
-
-  let cancelled = false;
-  (async () => {
-    try {
-      setOfferLoading(true);
-      setOfferError(null);
-
-      // preferred detail endpoint: GET /api/offers/:id
-      const res = await fetch(`${api}/api/offers/${id}`);
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const data: Offer = await res.json();
-
-      if (!cancelled) setOffer(data);
-    } catch (e) {
-      if (!cancelled) {
-        setOffer(null);
-        setOfferError('Offer not found or API unreachable.');
+  useEffect(() => {
+    // offerId robust aus der URL lesen (?offerId=... oder ?id=...)
+    const readOfferId = () => {
+      const fromHook = params?.get('offerId') || params?.get('id') || '';
+      if (fromHook) return fromHook;
+      if (typeof window !== 'undefined') {
+        const q = new URLSearchParams(window.location.search);
+        return q.get('offerId') || q.get('id') || '';
       }
-    } finally {
-      if (!cancelled) setOfferLoading(false);
+      return '';
+    };
+
+    const id = readOfferId();
+    setForm((f) => ({ ...f, offerId: id }));
+
+    if (!id) {
+      setOffer(null);
+      setOfferError('Missing offerId in URL.');
+      setOfferLoading(false);
+      return;
     }
-  })();
 
-  return () => { cancelled = true; };
-}, [params, api]);
+    let cancelled = false;
+    (async () => {
+      try {
+        setOfferLoading(true);
+        setOfferError(null);
 
+        // Detail über Next-Proxy (gleiche Origin)
+        const res = await fetch(`/api/offers/${id}`, { cache: 'no-store' });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data: Offer = await res.json();
 
+        if (!cancelled) setOffer(data);
+      } catch {
+        if (!cancelled) {
+          setOffer(null);
+          setOfferError('Offer not found or API unreachable.');
+        }
+      } finally {
+        if (!cancelled) setOfferLoading(false);
+      }
+    })();
 
+    return () => {
+      cancelled = true;
+    };
+  }, [params]);
 
-
-
-
-
-
-
-
-  const onChange = (e: React.ChangeEvent<HTMLInputElement|HTMLTextAreaElement|HTMLSelectElement>) => {
-    setForm(prev => ({ ...prev, [e.target.name]: e.target.value }));
+  const onChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
   const validate = () => {
@@ -173,11 +135,12 @@ useEffect(() => {
     try {
       setStatus('sending');
 
-      const res = await fetch(`${api}/api/bookings`, {
+      // Public Booking via Next-Proxy
+      const res = await fetch(`/api/public/bookings`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          offerId: form.offerId,           // <-- important
+          offerId: form.offerId, // wichtig für Zuordnung / Duplikat-Check
           firstName: form.firstName,
           lastName: form.lastName,
           email: form.email,
@@ -190,18 +153,33 @@ useEffect(() => {
 
       if (!res.ok) {
         const data = await res.json().catch(() => ({}));
-        if (data?.errors) setErrors(data.errors);
+        // Feldfehler vom Backend (inkl. Duplicate-Case)
+        if (data?.errors) {
+          setErrors(data.errors);
+          // falls spezieller Duplicate-Code: User-freundliche Zusatzmeldung
+          if (data?.code === 'DUPLICATE') {
+            setErrors((prev) => ({
+              ...prev,
+              firstName: prev.firstName || 'A booking with this first/last name already exists for this offer.',
+              lastName: prev.lastName || 'Please use different names or contact us.',
+            }));
+          }
+        }
         setStatus('error');
         return;
       }
 
       setStatus('success');
-      // Optional: redirect or reset form
-      setForm(prev => ({ ...initialForm, offerId: prev.offerId }));
+      // optional: redirect nach Erfolg
+      // router.push('/thank-you');
+      setForm((prev) => ({ ...initialForm, offerId: prev.offerId }));
     } catch {
       setStatus('error');
     }
   };
+
+  const offerLine =
+    (offer?.title || `${offer?.type ?? ''} • ${offer?.location ?? ''}`).trim() || 'Selected offer';
 
   return (
     <section>
@@ -210,23 +188,25 @@ useEffect(() => {
 
       {/* Selected Offer Panel */}
       <div className="card" style={{ marginTop: 12 }}>
-        <h3 className="card-title" style={{ marginTop: 0 }}>Selected offer</h3>
+        <h3 className="card-title" style={{ marginTop: 0 }}>
+          Selected offer
+        </h3>
 
         {offerLoading && <p>Loading offer…</p>}
         {!offerLoading && offerError && (
           <>
             <p className="error">{offerError}</p>
             <div className="card-actions">
-              <a className="btn btn-primary" href="/trainings">Back to trainings</a>
+              <a className="btn btn-primary" href="/trainings">
+                Back to trainings
+              </a>
             </div>
           </>
         )}
 
         {!offerLoading && !offerError && offer && (
           <>
-            <div className="offer-meta">
-              {(offer.title || `${offer.type ?? ''} • ${offer.location ?? ''}`).trim()}
-            </div>
+            <div className="offer-meta">{offerLine}</div>
             <div className="offer-info">
               {typeof offer.price === 'number' ? `${offer.price} €` : null}
               {offer.timeFrom && offer.timeTo ? ` • ${offer.timeFrom} – ${offer.timeTo}` : null}
@@ -239,64 +219,77 @@ useEffect(() => {
 
       {/* Booking Form */}
       <form className="form" onSubmit={onSubmit} noValidate style={{ marginTop: 16 }}>
-        {/* keep offerId as hidden to submit as well */}
         <input type="hidden" name="offerId" value={form.offerId} />
 
         <div className="grid">
           <div className="field">
-            <label>First Name</label>
-            <input name="firstName" value={form.firstName} onChange={onChange} />
+            <label htmlFor="firstName">First Name</label>
+            <input id="firstName" name="firstName" value={form.firstName} onChange={onChange} />
             {errors.firstName && <span className="error">{errors.firstName}</span>}
           </div>
 
           <div className="field">
-            <label>Last Name</label>
-            <input name="lastName" value={form.lastName} onChange={onChange} />
+            <label htmlFor="lastName">Last Name</label>
+            <input id="lastName" name="lastName" value={form.lastName} onChange={onChange} />
             {errors.lastName && <span className="error">{errors.lastName}</span>}
           </div>
 
           <div className="field">
-            <label>Email</label>
-            <input name="email" type="email" value={form.email} onChange={onChange} />
+            <label htmlFor="email">Email</label>
+            <input id="email" name="email" type="email" value={form.email} onChange={onChange} />
             {errors.email && <span className="error">{errors.email}</span>}
           </div>
 
           <div className="field">
-            <label>Age</label>
-            <input name="age" type="number" min={5} max={19} value={form.age} onChange={onChange} />
+            <label htmlFor="age">Age</label>
+            <input id="age" name="age" type="number" min={5} max={19} value={form.age} onChange={onChange} />
             {errors.age && <span className="error">{errors.age}</span>}
           </div>
 
           <div className="field">
-            <label>Date</label>
-            <input name="date" type="date" value={form.date} onChange={onChange} />
+            <label htmlFor="date">Date</label>
+            <input id="date" name="date" type="date" min={today} value={form.date} onChange={onChange} />
             {errors.date && <span className="error">{errors.date}</span>}
           </div>
 
           <div className="field">
-            <label>Level</label>
-            <select name="level" value={form.level} onChange={onChange}>
-              <option>U8</option><option>U10</option><option>U12</option>
-              <option>U14</option><option>U16</option><option>U18</option>
+            <label htmlFor="level">Level</label>
+            <select id="level" name="level" value={form.level} onChange={onChange}>
+              <option>U8</option>
+              <option>U10</option>
+              <option>U12</option>
+              <option>U14</option>
+              <option>U16</option>
+              <option>U18</option>
             </select>
           </div>
 
           <div className="field field--full">
-            <label>Message (optional)</label>
-            <textarea name="message" rows={4} value={form.message} onChange={onChange} />
+            <label htmlFor="message">Message (optional)</label>
+            <textarea id="message" name="message" rows={4} value={form.message} onChange={onChange} />
           </div>
         </div>
 
         {errors.offerId && <p className="error">{errors.offerId}</p>}
 
         <div className="actions">
-          <button className="btn btn-primary" disabled={status==='sending' || !!offerError || !offer}>
-            Complete booking
+          <button className="btn btn-primary" disabled={status === 'sending' || !!offerError || !offer}>
+            {status === 'sending' ? 'Sending…' : 'Complete booking'}
           </button>
-          {status==='success' && <span className="ok">Booking sent!</span>}
-          {status==='error' && <span className="error">Something went wrong.</span>}
+          {status === 'success' && <span className="ok" style={{ marginLeft: 12 }}>Booking sent!</span>}
+          {status === 'error' && <span className="error" style={{ marginLeft: 12 }}>Something went wrong.</span>}
         </div>
       </form>
     </section>
   );
 }
+
+
+
+
+
+
+
+
+
+
