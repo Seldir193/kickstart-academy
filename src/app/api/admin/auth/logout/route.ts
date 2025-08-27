@@ -31,5 +31,9 @@ export async function GET(req: NextRequest) {
   return res;
 }
 
+
+
 // Optional POST auch erlauben
 export const POST = GET;
+
+
