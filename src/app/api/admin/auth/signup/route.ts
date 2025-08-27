@@ -1,3 +1,4 @@
+
 import { NextResponse } from 'next/server';
 
 function apiBase() {
@@ -6,30 +7,34 @@ function apiBase() {
 }
 
 export async function POST(req: Request) {
+  const ctl = new AbortController();
+  const to = setTimeout(() => ctl.abort(), 10000); // 10s Timeout
+
   try {
     const payload = await req.json().catch(() => ({}));
-    const r = await fetch(`${apiBase()}/admin/users/signup`, {
+
+    const r = await fetch(`${apiBase()}/admin/auth/signup`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload),
+      cache: 'no-store',
+      signal: ctl.signal,
     });
+
     const text = await r.text();
-    let data: any; try { data = JSON.parse(text); } catch { data = { raw: text }; }
-    return NextResponse.json(data, { status: r.status });
+    let data: any; try { data = JSON.parse(text); } catch { data = { ok: false, raw: text }; }
+
+    return new NextResponse(JSON.stringify(data), {
+      status: r.status,
+      headers: { 'Content-Type': 'application/json' },
+    });
   } catch (e: any) {
-    return NextResponse.json({ ok: false, error: 'Proxy failed' }, { status: 500 });
+    const msg = e?.name === 'AbortError' ? 'Upstream timeout' : (e?.message || 'Proxy failed');
+    return NextResponse.json({ ok: false, error: msg }, { status: 502 });
+  } finally {
+    clearTimeout(to);
   }
 }
-
-
-
-
-
-
-
-
-
-
 
 
 

@@ -1,113 +1,109 @@
+
 'use client';
 
 import { useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 
-type Form = {
-  fullName: string;
-  email: string;
-  password: string;
-  confirm: string;
-};
+type Form = { fullName: string; email: string; password: string; confirm: string; };
 
-function isValidEmail(s: string) {
-  return /^\S+@\S+\.\S+$/.test(s);
-}
+function isValidEmail(s: string) { return /^\S+@\S+\.\S+$/.test(s); }
 
 export default function AdminSignupPage() {
   const router = useRouter();
   const params = useSearchParams();
 
-  const [form, setForm] = useState<Form>({
-    fullName: '',
-    email: '',
-    password: '',
-    confirm: '',
-  });
+  const [form, setForm] = useState<Form>({ fullName: '', email: '', password: '', confirm: '' });
   const [errors, setErrors] = useState<Partial<Record<keyof Form, string>>>({});
+  const [formError, setFormError] = useState<string>(''); // ⬅️ statt alert
   const [status, setStatus] = useState<'idle' | 'sending' | 'done'>('idle');
 
   useEffect(() => {
     const email = params.get('email') || '';
-    if (email) setForm((f) => ({ ...f, email }));
+    if (email) setForm(f => ({ ...f, email }));
   }, [params]);
 
-  function validate(fields?: Partial<Form>) {
+  function validateAll(f: Form) {
     const e: Partial<Record<keyof Form, string>> = {};
-    const fullName = fields?.fullName ?? form.fullName;
-    const email    = fields?.email    ?? form.email;
-    const password = fields?.password ?? form.password;
-    const confirm  = fields?.confirm  ?? form.confirm;
-
-    if (!fullName.trim()) e.fullName = 'Please fill in this field';
-    if (!isValidEmail(email)) e.email = '*Please fill out the email field';
-
-    if (password.length < 6) e.password = 'Min. 6 characters';
-    if (confirm.length < 6) e.confirm = 'Min. 6 characters';
-    else if (password !== confirm) e.confirm = 'Passwords do not match';
-
+    if (!f.fullName.trim()) e.fullName = 'Please fill in this field';
+    if (!isValidEmail(f.email)) e.email = '*Please fill out the email field';
+    if (f.password.length < 6) e.password = 'Min. 6 characters';
+    if (f.confirm.length < 6) e.confirm = 'Min. 6 characters';
+    else if (f.password !== f.confirm) e.confirm = 'Passwords do not match';
     return e;
   }
 
   function setField<K extends keyof Form>(key: K, value: Form[K]) {
-    setForm((f) => ({ ...f, [key]: value }));
-
-    setErrors((prev) => {
-      const next = { ...prev };
-      const singleErr = validate({ [key]: value } as Partial<Form>);
-      next[key] = (singleErr as any)[key];
-
-      if (key === 'password') {
-        // confirm-Abgleich neu bewerten
-        const cf = validate({ confirm: form.confirm, password: value });
-        next.confirm = cf.confirm;
-      }
+    setForm(prev => {
+      const next = { ...prev, [key]: value };
+      setErrors(validateAll(next));
       return next;
     });
   }
 
   function handleBlur<K extends keyof Form>(key: K) {
-    const e = validate({ [key]: form[key] } as Partial<Form>);
-    setErrors((prev) => ({ ...prev, [key]: (e as any)[key] }));
+    const e = validateAll(form);
+    setErrors(prev => ({ ...prev, [key]: (e as any)[key] }));
   }
 
-  async function onSubmit(ev: React.FormEvent) {
-    ev.preventDefault();
-    const e = validate();
-    setErrors(e);
-    if (Object.keys(e).length) return;
+ 
 
 
 
 
 
+async function onSubmit(ev: React.FormEvent) {
+  ev.preventDefault();
+  setFormError('');
 
-    // in onSubmit() statt setTimeout:
-setStatus('sending');
-try {
-  const r = await fetch('/api/admin/auth/signup', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      fullName: form.fullName,
-      email: form.email,
+  const e = validateAll(form);
+  setErrors(e);
+  if (Object.keys(e).length) return;
+
+  setStatus('sending');
+  try {
+    const payload = {
+      fullName: form.fullName.trim(),
+      email: form.email.trim().toLowerCase(),
       password: form.password,
-    }),
-    credentials: 'include',
-  });
-  const d = await r.json().catch(() => ({}));
-  if (!r.ok || !d?.ok) {
-    // Feldfehler vom Backend anzeigen
-    if (d?.errors) setErrors((prev) => ({ ...prev, ...d.errors }));
-    else alert(d?.error || 'Signup failed'); // oder eigenes Fehlerfeld
+    };
+
+    const r = await fetch('/api/admin/auth/signup', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+      credentials: 'include',
+    });
+
+    const d = await r.json().catch(() => ({} as any));
+    console.debug('signup response', r.status, d);
+
+    // Erfolg toleranter erkennen: ok:true ODER user vorhanden
+    const success = r.status === 201 && (d?.ok === true || (d?.user && (d.user.id || d.user.email)));
+    if (!success) {
+      // Feldfehler direkt unter Inputs
+      if (d?.errors && typeof d.errors === 'object') {
+        setErrors(prev => ({ ...prev, ...d.errors }));
+        setFormError('Please fix the errors above.');
+      } else {
+        // sinnvolle Fehlermeldung ins Banner
+        const msg =
+          d?.error ||
+          d?.message ||
+          (typeof d?.raw === 'string' ? d.raw.slice(0, 200) : '') || // falls Proxy nur raw-Text hat
+          `Registration failed (${r.status}). Please try again.`;
+        setFormError(msg);
+      }
+      setStatus('idle');
+      return;
+    }
+
+    setStatus('done');
+    router.replace(`/admin/login?email=${encodeURIComponent(payload.email)}`);
+  } catch (err: any) {
+    console.error('signup network error', err);
+    setFormError('Network error. Please try again.');
     setStatus('idle');
-    return;
   }
-  // Erfolgreich → zur Login-Seite, E-Mail vorbefüllen
-  router.replace(`/admin/login?email=${encodeURIComponent(form.email)}`);
-} catch {
-  // Netzwerkfehler behandeln
-  setStatus('idle');
 }
 
 
@@ -117,17 +113,24 @@ try {
 
 
 
-  }
+
 
   return (
     <section>
       <h1>Provider Sign-up</h1>
       <p>Create your provider access. After registration you will be redirected to the login page.</p>
 
+      {/* Form-Fehlerbanner statt alert */}
+      {formError && (
+        <div role="alert" className="form-error" style={{ marginBottom: 12 }}>
+          {formError}
+        </div>
+      )}
+
       <form className="form" onSubmit={onSubmit} noValidate>
         <div className="grid">
           <div className="field">
-            <label htmlFor="fullName"></label>
+            <label htmlFor="fullName">Name</label>
             <input
               id="fullName"
               name="fullName"
@@ -145,7 +148,7 @@ try {
           </div>
 
           <div className="field">
-            <label htmlFor="email"></label>
+            <label htmlFor="email">E-Mail</label>
             <input
               id="email"
               name="email"
@@ -164,7 +167,7 @@ try {
           </div>
 
           <div className="field">
-            <label htmlFor="password"></label>
+            <label htmlFor="password">Passwort</label>
             <input
               id="password"
               name="password"
@@ -184,7 +187,7 @@ try {
           </div>
 
           <div className="field">
-            <label htmlFor="confirm"></label>
+            <label htmlFor="confirm">Passwort bestätigen</label>
             <input
               id="confirm"
               name="confirm"
@@ -205,12 +208,12 @@ try {
         </div>
 
         <div className="actions">
-          <button className="btn btn-primary" disabled={status === 'sending'}>
+          <button className="btn btn-primary" disabled={status === 'sending'} aria-busy={status === 'sending'}>
             {status === 'sending' ? 'Creating…' : 'Create account'}
           </button>
           <button
             type="button"
-            className="btn btn-primary"
+            className="btn"
             onClick={() => router.push('/admin/login')}
             disabled={status === 'sending'}
           >
@@ -221,10 +224,6 @@ try {
     </section>
   );
 }
-
-
-
-
 
 
 
