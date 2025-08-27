@@ -14,9 +14,9 @@ export default function Footer() {
 
         {showAdminLink && (
           <small className="site-footer__admin">
-            <Link href="/admin/login?next=/admin/bookings" rel="nofollow">
-              Anbieter-Login
-            </Link>
+            
+            <Link href="/admin/signup">Anbieter Login</Link>
+
           </small>
         )}
       </div>
