@@ -1,38 +1,3 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 'use client';
 
 import React, { useEffect, useState } from 'react';
@@ -64,8 +29,6 @@ function clsx(...xs: Array<string | false | undefined | null>) {
   return xs.filter(Boolean).join(' ');
 }
 
-const API = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:5000';
-
 export default function TrainingCard() {
   // Dialogs
   const [createOpen, setCreateOpen] = useState(false);
@@ -84,20 +47,19 @@ export default function TrainingCard() {
   const [loading, setLoading] = useState(false);
   const [refreshTick, setRefreshTick] = useState(0);
 
-  // keep whatever locations you like
+  // beliebige Locations
   const locations = ['Duisburg', 'Düsseldorf', 'Essen', 'Köln'];
 
   const openCreate = (t?: OfferType) => {
     setPresetType(t);
     setCreateOpen(true);
   };
-
   const startEdit = (o: Offer) => {
     setEditing(o);
     setEditOpen(true);
   };
 
-  // Fetch offers from API
+  // Admin-Offers laden (MANDANTEN-SCOPE via /api/admin/offers)
   useEffect(() => {
     const ctrl = new AbortController();
     const id = setTimeout(async () => {
@@ -110,7 +72,7 @@ export default function TrainingCard() {
         params.set('page', String(page));
         params.set('limit', String(limit));
 
-        const r = await fetch(`${API}/api/offers?${params.toString()}`, {
+        const r = await fetch(`/api/admin/offers?${params.toString()}`, {
           signal: ctrl.signal,
           cache: 'no-store',
         });
@@ -119,14 +81,15 @@ export default function TrainingCard() {
           setItems([]);
           setTotal(0);
         } else {
-          const raw = await r.json();
+          const raw = await r.json().catch(() => ({}));
           const d: OffersResponse = Array.isArray(raw)
-            ? { items: raw, total: raw.length }
+            ? { items: raw as Offer[], total: (raw as Offer[]).length }
             : { items: Array.isArray(raw.items) ? raw.items : [], total: Number(raw.total || 0) };
           setItems(d.items);
           setTotal(d.total);
         }
-      } catch {
+      } catch (e) {
+        console.error('fetch offers failed', e);
         setItems([]);
         setTotal(0);
       } finally {
@@ -144,20 +107,24 @@ export default function TrainingCard() {
 
   async function handleCreate(payload: CreateOfferPayload) {
     try {
-      await fetch(`${API}/api/offers`, {
+      const res = await fetch(`/api/admin/offers`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        cache: 'no-store',
         body: JSON.stringify({
           ...payload,
           ageFrom: payload.ageFrom === '' ? null : Number(payload.ageFrom),
           ageTo: payload.ageTo === '' ? null : Number(payload.ageTo),
-          price: Number(payload.price),
+          price: payload.price === '' ? 0 : Number(payload.price),
         }),
       });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        console.error('Create offer failed', err);
+      }
     } catch (e) {
       console.error('Create offer error', e);
     } finally {
-      // close + reset
       setCreateOpen(false);
       setPresetType(undefined);
       setPage(1);
@@ -168,16 +135,21 @@ export default function TrainingCard() {
 
   async function handleSave(id: string, payload: CreateOfferPayload) {
     try {
-      await fetch(`${API}/api/offers/${encodeURIComponent(id)}`, {
-        method: 'PUT',
+      const res = await fetch(`/api/admin/offers/${encodeURIComponent(id)}`, {
+        method: 'PATCH', // Proxy wandelt zu PUT fürs Backend
         headers: { 'Content-Type': 'application/json' },
+        cache: 'no-store',
         body: JSON.stringify({
           ...payload,
           ageFrom: payload.ageFrom === '' ? null : Number(payload.ageFrom),
           ageTo: payload.ageTo === '' ? null : Number(payload.ageTo),
-          price: Number(payload.price),
+          price: payload.price === '' ? 0 : Number(payload.price),
         }),
       });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        console.error('Update offer failed', err);
+      }
     } catch (e) {
       console.error('Update offer error', e);
     } finally {
@@ -191,8 +163,9 @@ export default function TrainingCard() {
     const ok = window.confirm(`Delete offer "${o.title ?? o.type}"?`);
     if (!ok) return;
     try {
-      const res = await fetch(`${API}/api/offers/${encodeURIComponent(o._id)}`, {
+      const res = await fetch(`/api/admin/offers/${encodeURIComponent(o._id)}`, {
         method: 'DELETE',
+        cache: 'no-store',
       });
       if (!res.ok) {
         const err = await res.json().catch(() => ({}));
@@ -274,151 +247,96 @@ export default function TrainingCard() {
           </div>
         </section>
 
+        {/* Results */}
+        <section className="card">
+          {loading ? (
+            <div className="card__empty">Loading…</div>
+          ) : items.length === 0 ? (
+            <div className="card__empty">No offers found.</div>
+          ) : (
+            <ul className="list list--bleed">
+              {items.map((it) => (
+                <li
+                  key={it._id}
+                  className="list__item chip is-fullhover is-interactive"
+                  onClick={() => startEdit(it)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      startEdit(it);
+                    }
+                  }}
+                  tabIndex={0}
+                  role="button"
+                  aria-label={`Edit offer ${it.title ?? it.type}`}
+                >
+                  <div className="list__body">
+                    <div className="list__title">{it.title ?? 'Offer'}</div>
+                    <div className="list__meta">
+                      {it.type} · {it.location}{' '}
+                      {typeof it.price === 'number' ? <>· {it.price} €</> : <>· Price on request</>}
+                    </div>
+                  </div>
 
+                  <div
+                    className="list__actions"
+                    onClick={(e) => e.stopPropagation()}
+                    onKeyDown={(e) => e.stopPropagation()}
+                  >
+                    <Link
+                      href={`/book?offerId=${encodeURIComponent(it._id)}`}
+                      className="btn"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      Book now
+                    </Link>
 
-
-
-
-{/* Results */}
-<section className="card">
-  {loading ? (
-    <div className="card__empty">Loading…</div>
-  ) : items.length === 0 ? (
-    <div className="card__empty">No offers found.</div>
-  ) : (
-    <ul className="list list--bleed">
-      {items.map((it) => (
-        <li
-          key={it._id}
-          className="list__item chip is-fullhover is-interactive"
-          onClick={() => startEdit(it)}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); startEdit(it); }
-          }}
-          tabIndex={0}
-          role="button"
-          aria-label={`Edit offer ${it.title ?? it.type}`}
-        >
-          <div className="list__body">
-            <div className="list__title">{it.title ?? 'Offer'}</div>
-            <div className="list__meta">
-              {it.type} · {it.location}{' '}
-              {typeof it.price === 'number' ? <>· {it.price} €</> : <>· Price on request</>}
-            </div>
-          </div>
-
-          
-
-
-
-
-
-<div
-  className="list__actions"
-  onClick={(e) => e.stopPropagation()}
-  onKeyDown={(e) => e.stopPropagation()}
->
-  <Link
-    href={`/book?offerId=${encodeURIComponent(it._id)}`}
-    className="btn"
-    onClick={(e) => e.stopPropagation()}
-  >
-    Book now
-  </Link>
-
-  {/* NEW: icon delete button */}
-  <button
-    className="icon-btn icon-btn--danger"
-    type="button"
-    title="Delete"
-    aria-label="Delete"
-    onClick={(e) => {
-      e.stopPropagation();
-      handleDelete(it);
-    }}
-  >
-    <span className="icon icon--close" aria-hidden="true"></span>
-    <span className="sr-only">Delete</span>
-  </button>
-</div>
-
-
-
-
-
-        </li>
-      ))}
-    </ul>
-  )}
-</section>
-
-
-
-
-
-
-
-
-
-
-
-
+                    <button
+                      className="icon-btn icon-btn--danger"
+                      type="button"
+                      title="Delete"
+                      aria-label="Delete"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleDelete(it);
+                      }}
+                    >
+                      <span className="icon icon--close" aria-hidden="true"></span>
+                      <span className="sr-only">Delete</span>
+                    </button>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          )}
+        </section>
 
         {/* Pagination */}
+        <div className="pager pager--arrows">
+          <button
+            type="button"
+            className="pager__nav pager__nav--prev"
+            aria-label="Previous page"
+            disabled={page <= 1}
+            onClick={() => setPage((p) => Math.max(1, p - 1))}
+          >
+            <span className="icon icon--arrow icon--arrow-left" aria-hidden="true" />
+          </button>
 
+          <div className="pager__count" aria-live="polite" aria-atomic="true">
+            {page} / {pageCount}
+          </div>
 
-
-{/* Pagination (icon-only arrows + centered numbers) */}
-<div className="pager pager--arrows">
-  <button
-    type="button"
-    className="pager__nav pager__nav--prev"
-    aria-label="Previous page"
-    disabled={page <= 1}
-    onClick={() => setPage((p) => Math.max(1, p - 1))}
-  >
-    <span className="icon icon--arrow icon--arrow-left" aria-hidden="true" />
-  </button>
-
-  <div className="pager__count" aria-live="polite" aria-atomic="true">
-    {page} / {pageCount}
-  </div>
-
-  <button
-    type="button"
-    className="pager__nav pager__nav--next"
-    aria-label="Next page"
-    disabled={page >= pageCount}
-    onClick={() => setPage((p) => Math.min(pageCount, p + 1))}
-  >
-    <span className="icon icon--arrow" aria-hidden="true" />
-  </button>
-</div>
-
-
-
-
-
-
-
-
-
-       
-      
-
-
-
-
-
-
-
-
-        
-
-
-
-
-
+          <button
+            type="button"
+            className="pager__nav pager__nav--next"
+            aria-label="Next page"
+            disabled={page >= pageCount}
+            onClick={() => setPage((p) => Math.min(pageCount, p + 1))}
+          >
+            <span className="icon icon--arrow" aria-hidden="true" />
+          </button>
+        </div>
       </main>
 
       {/* Create */}
@@ -461,3 +379,25 @@ export default function TrainingCard() {
     </div>
   );
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
