@@ -12,6 +12,12 @@
 
 
 
+/* Wenn embed-Modus aktiv ist, kein Header/Footer anzeigen */
+body.embed-mode .site-header,
+body.embed-mode .site-footer { display: none !important; }
+
+/* ggf. Padding korrigieren, falls dein Layout oben Platz für Header reserviert */
+body.embed-mode { padding-top: 0 !important; }
 
 
 
@@ -110,6 +116,7 @@ button.btn-primary {
   background: var(--brand);
   color: #fff;
   text-decoration: none;
+  
 }
 /* Kein Hover-Farbwechsel – bleibt konstant wie im WP */
 .btn-primary:hover,
@@ -276,7 +283,7 @@ input, select, textarea {
 .switch--on .switch__thumb { left: 22px; }
 
 /* ----- Modal (Create Offer Dialog) ----- */
-.modal { position: fixed; inset: 0; z-index: 40; }
+//.modal { position: fixed; inset: 0; z-index: 40; }
 .modal__overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.4); }
 .modal__wrap {
   position: absolute; inset: 0;
@@ -288,6 +295,8 @@ input, select, textarea {
   background: #fff; border-radius:12px; border: 1px solid #eaeaea;
   box-shadow: 0 10px 25px rgba(17, 24, 39, 0.08);
   padding: 22px; margin-top: 4vh;
+
+  margin-top: clamp(12px, 4vh, 48px);
 }
 .modal__title { font-size: 20px; font-weight: 600; margin: 0 0 10px; }
 .modal__close {
@@ -295,6 +304,23 @@ input, select, textarea {
   border: 1px solid #eaeaea; background: #fff;
   border-radius: 999px; padding: 6px 8px; cursor: pointer;
 }
+
+
+
+
+
+/* Header ist calc(var(--mega-z) + 1) -> Modal eine Stufe drüber */
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: calc(var(--mega-z) + 2); // vorher: 40
+}
+
+
+
+
+
+
 .modal__close:hover { background: #fafafa; }
 
 /* subtle motion (respects reduced motion) */
@@ -1050,6 +1076,123 @@ body { padding-top: var(--header-height); }
 }
 
 /* (keep your existing fixed header + mega styles as you already set) */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* ===================== */
+/* EMBED MODE – CORE     */
+/* ===================== */
+
+html.embed-mode,
+body.embed-mode { height: 100%; }
+
+body.embed-mode {
+  padding-top: 0 !important;     /* kein reserviertes Header-Padding */
+  display: flex;  
+  align-items: center;
+}
+
+body.embed-mode .site-header,
+body.embed-mode .site-footer {
+  display: none !important;       /* Header/Footer komplett ausblenden */
+}
+
+/* =============================== */
+/* Booking: zentriertes Single-UI  */
+/* =============================== */
+
+//.book-embed { min-height: 100dvh; }
+
+/* Der ganze Inhalt der Buchungsseite: zentriert, angenehme Breite */
+.book-grid {
+  width: 100%;
+  max-width: 760px;                       /* Lesebreite */
+  margin: 0 auto;                         /* horizontal zentriert */
+  padding: clamp(12px, 2vw, 24px);
+}
+
+/* Inhalt linksbündig lassen (keine Textzentrierung) */
+.book-main { min-width: 0; }
+.book-form { text-align: left; }
+
+/* Inline-"Selected offer" Karte direkt über den Feldern */
+.book-offer--inline {
+  background: linear-gradient(180deg, #111 0%, #222 100%);
+  border: 1px solid #eaeaea;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 12px;                    /* Abstand zu den Feldern */
+  text-align: center;
+  color:#fff;
+
+
+
+}
+
+    
+
+
+.book-offer__title { margin: 0 0 8px; font-weight: 700;font-size: clamp(28px, 4vw, 48px);  }
+.book-offer__line  { font-weight: 600;    opacity:0.9;}
+.book-offer__meta  { margin-top: 6px; color: #fff;    opacity:0.9;}
+.book-offer__info  { margin-top: 8px; }
+
+/* Formular-Grid: 2 Spalten (Desktop), mobil 1 Spalte */
+.book-form__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px 24px;
+}
+
+
+/* Volle Breite für breite Felder (z. B. Nachricht) */
+.field--full { grid-column: 1 / -1; }
+
+/* 20px Abstand zwischen letztem Feld-Grid und Button-Zeile */
+.book-form__grid + .book-actions { margin-top: 20px; display: flex; justify-content: center;}
+
+
+
+
+
+@media (max-width: 550px) {
+  .book-form__grid {
+    grid-template-columns: 1fr;
+  }
+
+  body.embed-mode{
+    align-items: unset !important;
+  }
+
+
+}
+
+
+
+
+
+
+
+
+
+
 
 
 

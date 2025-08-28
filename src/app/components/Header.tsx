@@ -4,6 +4,9 @@ import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
+
+
+
 type Props = {
   /** Server truth from HeaderServer (reads HttpOnly admin cookie) */
   isAdminInitial?: boolean;
@@ -127,6 +130,7 @@ function LogoutLink({
 export default function Header({ isAdminInitial = false }: Props) {
   const pathname = usePathname();
   const isAdmin = isAdminInitial;
+
 
   const [offersOpen, setOffersOpen] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
