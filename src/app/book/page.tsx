@@ -1,7 +1,8 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { useSearchParams, useRouter } from 'next/navigation';
+import { useEffect, useMemo, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
+import Script from 'next/script';
 
 type Offer = {
   _id: string;
@@ -41,18 +42,23 @@ const initialForm: FormState = {
 
 export default function BookPage() {
   const params = useSearchParams();
-  const router = useRouter();
 
   const [form, setForm] = useState<FormState>(initialForm);
   const [offer, setOffer] = useState<Offer | null>(null);
   const [offerLoading, setOfferLoading] = useState(true);
   const [offerError, setOfferError] = useState<string | null>(null);
-
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [status, setStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle');
 
-  // Datum: heute als Mindestdatum (yyyy-mm-dd)
-  const today = new Date().toISOString().split('T')[0];
+  const isEmbed = useMemo(() => params.get('embed') === '1', [params]);
+  
+
+
+const [today, setToday] = useState<string>('');
+useEffect(() => {
+  setToday(new Date().toISOString().split('T')[0]);
+}, []);
+  
 
   useEffect(() => {
     if (status === 'success') {
@@ -61,11 +67,11 @@ export default function BookPage() {
     }
   }, [status]);
 
+  // Offer laden
   useEffect(() => {
-    // offerId robust aus der URL lesen (?offerId=... oder ?id=...)
     const readOfferId = () => {
-      const fromHook = params?.get('offerId') || params?.get('id') || '';
-      if (fromHook) return fromHook;
+      const id = params?.get('offerId') || params?.get('id') || '';
+      if (id) return id;
       if (typeof window !== 'undefined') {
         const q = new URLSearchParams(window.location.search);
         return q.get('offerId') || q.get('id') || '';
@@ -88,12 +94,9 @@ export default function BookPage() {
       try {
         setOfferLoading(true);
         setOfferError(null);
-
-        // Detail über Next-Proxy (gleiche Origin)
         const res = await fetch(`/api/offers/${id}`, { cache: 'no-store' });
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data: Offer = await res.json();
-
         if (!cancelled) setOffer(data);
       } catch {
         if (!cancelled) {
@@ -105,9 +108,7 @@ export default function BookPage() {
       }
     })();
 
-    return () => {
-      cancelled = true;
-    };
+    return () => { cancelled = true; };
   }, [params]);
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -134,13 +135,11 @@ export default function BookPage() {
 
     try {
       setStatus('sending');
-
-      // Public Booking via Next-Proxy
       const res = await fetch(`/api/public/bookings`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          offerId: form.offerId, // wichtig für Zuordnung / Duplikat-Check
+          offerId: form.offerId,
           firstName: form.firstName,
           lastName: form.lastName,
           email: form.email,
@@ -153,10 +152,8 @@ export default function BookPage() {
 
       if (!res.ok) {
         const data = await res.json().catch(() => ({}));
-        // Feldfehler vom Backend (inkl. Duplicate-Case)
         if (data?.errors) {
           setErrors(data.errors);
-          // falls spezieller Duplicate-Code: User-freundliche Zusatzmeldung
           if (data?.code === 'DUPLICATE') {
             setErrors((prev) => ({
               ...prev,
@@ -170,8 +167,6 @@ export default function BookPage() {
       }
 
       setStatus('success');
-      // optional: redirect nach Erfolg
-      // router.push('/thank-you');
       setForm((prev) => ({ ...initialForm, offerId: prev.offerId }));
     } catch {
       setStatus('error');
@@ -182,114 +177,127 @@ export default function BookPage() {
     (offer?.title || `${offer?.type ?? ''} • ${offer?.location ?? ''}`).trim() || 'Selected offer';
 
   return (
-    <section>
-      <h1>Book a Training</h1>
-      <p>Reserve your spot — no account required.</p>
+    <>
+      {/* Verhindert Header-/Footer-Flash vor dem ersten Paint */}
+      <Script
+        id="embed-mode-class"
+        strategy="beforeInteractive"
+        dangerouslySetInnerHTML={{
+          __html: `
+  (function(d){
+    try {
+      var isEmbed = location.search.indexOf('embed=1') > -1;
+      if (!isEmbed) return;
+      function apply(){ d.body && d.body.classList.add('embed-mode'); }
+      if (d.body) apply(); else d.addEventListener('DOMContentLoaded', apply);
+    } catch(e){}
+  })(document);
+`
 
-      {/* Selected Offer Panel */}
-      <div className="card" style={{ marginTop: 12 }}>
-        <h3 className="card-title" style={{ marginTop: 0 }}>
-          Selected offer
-        </h3>
 
-        {offerLoading && <p>Loading offer…</p>}
-        {!offerLoading && offerError && (
-          <>
-            <p className="error">{offerError}</p>
-            <div className="card-actions">
-              <a className="btn btn-primary" href="/trainings">
-                Back to trainings
-              </a>
-            </div>
-          </>
-        )}
+        }}
+      />
 
-        {!offerLoading && !offerError && offer && (
-          <>
-            <div className="offer-meta">{offerLine}</div>
-            <div className="offer-info">
-              {typeof offer.price === 'number' ? `${offer.price} €` : null}
-              {offer.timeFrom && offer.timeTo ? ` • ${offer.timeFrom} – ${offer.timeTo}` : null}
-              {offer.ageFrom != null && offer.ageTo != null ? ` • Ages ${offer.ageFrom}–${offer.ageTo}` : null}
-            </div>
-            {offer.info ? <p style={{ marginTop: 8 }}>{offer.info}</p> : null}
-          </>
-        )}
-      </div>
+      <section className={`book-embed ${isEmbed ? 'is-embed' : ''}`}>
+        {/* zentrierter, einspaltiger Wrapper im Embed */}
+        <div className="book-grid book-grid--single">
+          <div className="book-main">
+            <form className="book-form" onSubmit={onSubmit} noValidate>
+              <input type="hidden" name="offerId" value={form.offerId} />
 
-      {/* Booking Form */}
-      <form className="form" onSubmit={onSubmit} noValidate style={{ marginTop: 16 }}>
-        <input type="hidden" name="offerId" value={form.offerId} />
+              {/* Selected offer – inline im Formular, über den Feldern */}
+              <div className="book-offer book-offer--inline field--full">
+                <h3 className="book-offer__title">Selected offer</h3>
 
-        <div className="grid">
-          <div className="field">
-            <label htmlFor="firstName">First Name</label>
-            <input id="firstName" name="firstName" value={form.firstName} onChange={onChange} />
-            {errors.firstName && <span className="error">{errors.firstName}</span>}
-          </div>
+                {offerLoading && <p>Loading offer…</p>}
+                {!offerLoading && offerError && (
+                  <>
+                    <p className="error">{offerError}</p>
+                    <div className="book-offer__actions">
+                      <a className="btn btn-primary" href="/trainings">Back to trainings</a>
+                    </div>
+                  </>
+                )}
 
-          <div className="field">
-            <label htmlFor="lastName">Last Name</label>
-            <input id="lastName" name="lastName" value={form.lastName} onChange={onChange} />
-            {errors.lastName && <span className="error">{errors.lastName}</span>}
-          </div>
+                {!offerLoading && !offerError && offer && (
+                  <>
+                    <div className="book-offer__line">{offerLine}</div>
+                    <div className="book-offer__meta">
+                      {typeof offer.price === 'number' ? `${offer.price} €` : null}
+                      {offer.timeFrom && offer.timeTo ? ` • ${offer.timeFrom} – ${offer.timeTo}` : null}
+                      {offer.ageFrom != null && offer.ageTo != null ? ` • Ages ${offer.ageFrom}–${offer.ageTo}` : null}
+                    </div>
+                    {offer.info ? <p className="book-offer__info">{offer.info}</p> : null}
+                  </>
+                )}
+              </div>
 
-          <div className="field">
-            <label htmlFor="email">Email</label>
-            <input id="email" name="email" type="email" value={form.email} onChange={onChange} />
-            {errors.email && <span className="error">{errors.email}</span>}
-          </div>
+              {/* Felder */}
+              <div className="book-form__grid">
+                <div className="field">
+                  <label htmlFor="firstName">First Name</label>
+                  <input id="firstName" name="firstName" value={form.firstName} onChange={onChange} />
+                  {errors.firstName && <span className="error">{errors.firstName}</span>}
+                </div>
 
-          <div className="field">
-            <label htmlFor="age">Age</label>
-            <input id="age" name="age" type="number" min={5} max={19} value={form.age} onChange={onChange} />
-            {errors.age && <span className="error">{errors.age}</span>}
-          </div>
+                <div className="field">
+                  <label htmlFor="lastName">Last Name</label>
+                  <input id="lastName" name="lastName" value={form.lastName} onChange={onChange} />
+                  {errors.lastName && <span className="error">{errors.lastName}</span>}
+                </div>
 
-          <div className="field">
-            <label htmlFor="date">Date</label>
-            <input id="date" name="date" type="date" min={today} value={form.date} onChange={onChange} />
-            {errors.date && <span className="error">{errors.date}</span>}
-          </div>
+                <div className="field">
+                  <label htmlFor="email">Email</label>
+                  <input id="email" name="email" type="email" value={form.email} onChange={onChange} />
+                  {errors.email && <span className="error">{errors.email}</span>}
+                </div>
 
-          <div className="field">
-            <label htmlFor="level">Level</label>
-            <select id="level" name="level" value={form.level} onChange={onChange}>
-              <option>U8</option>
-              <option>U10</option>
-              <option>U12</option>
-              <option>U14</option>
-              <option>U16</option>
-              <option>U18</option>
-            </select>
-          </div>
+                <div className="field">
+                  <label htmlFor="age">Age</label>
+                  <input id="age" name="age" type="number" min={5} max={19} value={form.age} onChange={onChange} />
+                  {errors.age && <span className="error">{errors.age}</span>}
+                </div>
 
-          <div className="field field--full">
-            <label htmlFor="message">Message (optional)</label>
-            <textarea id="message" name="message" rows={4} value={form.message} onChange={onChange} />
+                <div className="field">
+                  <label htmlFor="date">Date</label>
+                  
+                  <input id="date" name="date" type="date" min={today || undefined} value={form.date} onChange={onChange} />
+
+                  {errors.date && <span className="error">{errors.date}</span>}
+                </div>
+
+                <div className="field">
+                  <label htmlFor="level">Level</label>
+                  <select id="level" name="level" value={form.level} onChange={onChange}>
+                    <option>U8</option>
+                    <option>U10</option>
+                    <option>U12</option>
+                    <option>U14</option>
+                    <option>U16</option>
+                    <option>U18</option>
+                  </select>
+                </div>
+
+                <div className="field field--full">
+                  <label htmlFor="message">Message (optional)</label>
+                  <textarea id="message" name="message" rows={4} value={form.message} onChange={onChange} />
+                </div>
+              </div>
+
+              {errors.offerId && <p className="error">{errors.offerId}</p>}
+
+              {/* 20px Abstand zum Button-Block wird im SCSS geregelt */}
+              <div className="book-actions">
+                <button className="btn btn-primary" disabled={status === 'sending' || !!offerError || !offer}>
+                  {status === 'sending' ? 'Sending…' : 'Complete booking'}
+                </button>
+                {status === 'success' && <span className="ok">Booking sent!</span>}
+                {status === 'error' && <span className="error">Something went wrong.</span>}
+              </div>
+            </form>
           </div>
         </div>
-
-        {errors.offerId && <p className="error">{errors.offerId}</p>}
-
-        <div className="actions">
-          <button className="btn btn-primary" disabled={status === 'sending' || !!offerError || !offer}>
-            {status === 'sending' ? 'Sending…' : 'Complete booking'}
-          </button>
-          {status === 'success' && <span className="ok" style={{ marginLeft: 12 }}>Booking sent!</span>}
-          {status === 'error' && <span className="error" style={{ marginLeft: 12 }}>Something went wrong.</span>}
-        </div>
-      </form>
-    </section>
+      </section>
+    </>
   );
 }
-
-
-
-
-
-
-
-
-
-
