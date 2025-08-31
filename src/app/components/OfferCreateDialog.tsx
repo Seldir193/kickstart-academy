@@ -1,40 +1,4 @@
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 'use client';
 
 import React, { useEffect, useMemo, useRef, useState } from 'react';
@@ -76,12 +40,16 @@ export type CreateOfferPayload = {
   ageTo: number | '';
   info: string;
   onlineActive: boolean;
+
+  // NEU: Coach-Felder (werden im Frontend/WordPress angezeigt)
+  coachName: string;
+  coachEmail: string;
+  coachImage: string; // Dateiname oder /api/uploads/coach/...
 };
 
 function clsx(...xs: Array<string | false | undefined | null>) {
   return xs.filter(Boolean).join(' ');
 }
-
 type AnyRef<T extends HTMLElement> =
   React.RefObject<T> | React.MutableRefObject<T | null>;
 
@@ -96,15 +64,25 @@ function useOnClickOutside<T extends HTMLElement>(ref: AnyRef<T>, handler: () =>
   }, [ref, handler]);
 }
 
-/** NEW: support edit mode + initial values */
+// Hilfsfunktion: Normalisiert was wir speichern (Dateiname vs. API-URL)
+const normalizeCoachSrc = (src: string) => {
+  if (!src) return '';
+  if (/^https?:\/\//i.test(src)) return src;
+  if (src.startsWith('/api/uploads/coach/')) return src;
+  if (/^\/?uploads\/coach\//i.test(src)) return src.startsWith('/') ? `/api${src}` : `/api/${src}`;
+  if (/^[\w.\-]+\.(png|jpe?g|webp|gif)$/i.test(src)) return `/api/uploads/coach/${src}`;
+  return src;
+};
+
+/** VOLLSTÄNDIGER Dialog (Create/Edit) mit Upload */
 export default function OfferCreateDialog({
   open,
   mode = 'create',
   presetType,
-  initial, // when editing
+  initial, // wenn bearbeiten
   onClose,
   onCreate,
-  onSave,   // (id, payload) when editing
+  onSave,
 }: {
   open: boolean;
   mode?: 'create' | 'edit';
@@ -125,6 +103,9 @@ export default function OfferCreateDialog({
     ageTo: '',
     info: '',
     onlineActive: true,
+    coachName: '',
+    coachEmail: '',
+    coachImage: '', // <- wichtig!
   };
 
   const computeInitial = (): CreateOfferPayload => {
@@ -148,6 +129,10 @@ export default function OfferCreateDialog({
         info: initial.info ?? '',
         onlineActive:
           typeof initial.onlineActive === 'boolean' ? initial.onlineActive : true,
+
+        coachName: initial.coachName ?? '',
+        coachEmail: initial.coachEmail ?? '',
+        coachImage: initial.coachImage ?? '', // kommt vom Server, bleibt erhalten
       };
     }
     if (presetType) base.type = presetType;
@@ -156,16 +141,28 @@ export default function OfferCreateDialog({
 
   const [form, setForm] = useState<CreateOfferPayload>(computeInitial);
 
+  // Upload-Status
+  const [uploading, setUploading] = useState(false);
+  const [uploadError, setUploadError] = useState<string | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string>(''); // zeigt live die hochgeladene Datei
+
   const panelRef = useRef<HTMLDivElement | null>(null);
   useOnClickOutside(panelRef, onClose);
 
-  // Open/Close behavior + (re)prefill when switching mode/initial
+  // beim Öffnen (re)befüllen
   useEffect(() => {
     if (open) {
-      setForm(computeInitial());
+      const init = computeInitial();
+      setForm(init);
+      setPreviewUrl(normalizeCoachSrc(init.coachImage));
+      setUploading(false);
+      setUploadError(null);
     } else {
-      // reset on close so "Create" starts clean next time
+      // reset auf close
       setForm({ ...blank, type: presetType ?? '' });
+      setPreviewUrl('');
+      setUploading(false);
+      setUploadError(null);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, mode, JSON.stringify(initial), presetType]);
@@ -183,8 +180,7 @@ export default function OfferCreateDialog({
     }));
 
   const canSubmit = useMemo(() => {
-    return (
-      !!form.type &&
+    const basicOk = !!form.type &&
       form.location.trim().length > 0 &&
       form.price !== '' &&
       Number(form.price) >= 0 &&
@@ -192,9 +188,39 @@ export default function OfferCreateDialog({
       form.timeTo &&
       (form.ageFrom === '' ||
         form.ageTo === '' ||
-        Number(form.ageFrom) <= Number(form.ageTo))
-    );
-  }, [form]);
+        Number(form.ageFrom) <= Number(form.ageTo));
+    return basicOk && !uploading; // blocken während Upload
+  }, [form, uploading]);
+
+  // ====== Upload-Handler ======
+  async function handleCoachFileChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploadError(null);
+    setUploading(true);
+    try {
+      const fd = new FormData();
+      fd.append('file', file, file.name);
+      // optional: eigener dateiname
+      fd.append('filename', file.name);
+
+      const res = await fetch('/api/uploads/coach', { method: 'POST', body: fd });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok || !data?.ok) {
+        throw new Error(data?.error || `Upload failed (${res.status})`);
+      }
+
+      // Merken, damit es nach Close/Reopen bleibt:
+      // Wir speichern die "API-URL" (funktioniert überall)
+      const url: string = data.url || '';
+      setForm((f) => ({ ...f, coachImage: url }));
+      setPreviewUrl(url);
+    } catch (err: any) {
+      setUploadError(err?.message || 'Upload error');
+    } finally {
+      setUploading(false);
+    }
+  }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -205,6 +231,7 @@ export default function OfferCreateDialog({
       price: Number(form.price),
       ageFrom: form.ageFrom === '' ? '' : Number(form.ageFrom),
       ageTo: form.ageTo === '' ? '' : Number(form.ageTo),
+      // coachImage ist bereits eine persistente URL (z.B. /api/uploads/coach/xyz.png)
     };
 
     if (mode === 'edit' && initial?._id && onSave) {
@@ -364,6 +391,53 @@ export default function OfferCreateDialog({
               />
             </div>
 
+            {/* COACH: Name / Email / Bild */}
+            <div className="grid grid--2">
+              <div className="form__group">
+                <label className="label">Coach name</label>
+                <input
+                  className="input"
+                  placeholder="z. B. Noah Example"
+                  value={form.coachName}
+                  onChange={(e) => setForm((f) => ({ ...f, coachName: e.target.value }))}
+                />
+              </div>
+              <div className="form__group">
+                <label className="label">Coach E-Mail</label>
+                <input
+                  className="input"
+                  type="email"
+                  placeholder="coach@example.com"
+                  value={form.coachEmail}
+                  onChange={(e) => setForm((f) => ({ ...f, coachEmail: e.target.value }))}
+                />
+              </div>
+            </div>
+
+            <div className="form__group">
+              <label className="label">Coach Bild</label>
+              <div className="upload-row">
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleCoachFileChange}
+                />
+                {uploading && <span className="uploading">Uploading…</span>}
+                {uploadError && <span className="error">{uploadError}</span>}
+              </div>
+              {previewUrl ? (
+                <div className="preview">
+                  <img src={previewUrl} alt="Coach preview" />
+                </div>
+              ) : null}
+              {/* Speichere intern die URL/den Dateinamen */}
+              <input
+                type="hidden"
+                value={form.coachImage}
+                onChange={() => {}}
+              />
+            </div>
+
             {/* Online toggle */}
             <div className="form__group form__group--inline">
               <label className="label">Online active</label>
@@ -391,6 +465,66 @@ export default function OfferCreateDialog({
           </form>
         </div>
       </div>
+
+      <style jsx>{`
+        .upload-row { display:flex; gap:12px; align-items:center; }
+        .uploading { color:#0ea5e9; font-weight:600; }
+        .error { color:#b91c1c; }
+        .preview { margin-top:8px; }
+        .preview img { width:88px; height:88px; object-fit:cover; border-radius:999px; border:1px solid #e5e7eb; }
+      `}</style>
     </div>
   );
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
