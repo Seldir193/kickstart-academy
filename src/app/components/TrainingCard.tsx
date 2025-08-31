@@ -1,3 +1,4 @@
+// components/TrainingsCard.tsx
 'use client';
 
 import React, { useEffect, useState } from 'react';
@@ -6,7 +7,7 @@ import OfferCreateDialog, {
   OFFER_TYPES,
   OfferType,
   CreateOfferPayload,
-} from '@/app/components/OfferCreateDialog';
+} from '@/app/components/OfferCreateDialog'; // ← dieser Dialog muss coachName/coachEmail/coachImage unterstützen
 
 type Offer = {
   _id: string;
@@ -21,6 +22,11 @@ type Offer = {
   ageTo?: number | null;
   info?: string;
   onlineActive?: boolean;
+
+  // NEU – damit Bild & Ansprechpartner dynamisch funktionieren:
+  coachName?: string;
+  coachEmail?: string;
+  coachImage?: string; // z.B. "/api/uploads/coach/coach-...jpg"
 };
 
 type OffersResponse = { items: Offer[]; total: number };
@@ -107,6 +113,7 @@ export default function TrainingCard() {
 
   async function handleCreate(payload: CreateOfferPayload) {
     try {
+      // Achtung: payload enthält coachName/coachEmail/coachImage – bleibt erhalten
       const res = await fetch(`/api/admin/offers`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -135,6 +142,7 @@ export default function TrainingCard() {
 
   async function handleSave(id: string, payload: CreateOfferPayload) {
     try {
+      // coachName/coachEmail/coachImage sind im payload enthalten
       const res = await fetch(`/api/admin/offers/${encodeURIComponent(id)}`, {
         method: 'PATCH', // Proxy wandelt zu PUT fürs Backend
         headers: { 'Content-Type': 'application/json' },
@@ -178,6 +186,12 @@ export default function TrainingCard() {
       console.error('Delete error', e);
     }
   }
+
+  // kleine Helper für Avatar
+  const avatarSrc = (o: Offer) =>
+    o.coachImage
+      ? o.coachImage // idealerweise /api/uploads/coach/....
+      : '';
 
   return (
     <div className="ks">
@@ -270,11 +284,28 @@ export default function TrainingCard() {
                   role="button"
                   aria-label={`Edit offer ${it.title ?? it.type}`}
                 >
+                  {/* Avatar (falls vorhanden) */}
+                  {avatarSrc(it) ? (
+                    <img
+                      src={avatarSrc(it)}
+                      alt={it.coachName ? `Coach ${it.coachName}` : 'Coach avatar'}
+                      className="list__avatar"
+                    />
+                  ) : (
+                    <div className="list__avatar list__avatar--ph" aria-hidden="true" />
+                  )}
+
                   <div className="list__body">
                     <div className="list__title">{it.title ?? 'Offer'}</div>
+
+
+
+
                     <div className="list__meta">
                       {it.type} · {it.location}{' '}
                       {typeof it.price === 'number' ? <>· {it.price} €</> : <>· Price on request</>}
+                      {it.coachName ? <> · Coach: {it.coachName}</> : null}
+                      {it.coachEmail ? <> · {it.coachEmail}</> : null}
                     </div>
                   </div>
 
@@ -367,6 +398,11 @@ export default function TrainingCard() {
                 info: editing.info ?? '',
                 onlineActive:
                   typeof editing.onlineActive === 'boolean' ? editing.onlineActive : true,
+
+                // WICHTIG: Coach-Felder reinreichen, damit der Dialog sie zeigt:
+                coachName: editing.coachName ?? '',
+                coachEmail: editing.coachEmail ?? '',
+                coachImage: editing.coachImage ?? '',
               }
             : null
         }
@@ -376,9 +412,46 @@ export default function TrainingCard() {
         }}
         onSave={handleSave}
       />
+
+      <style jsx>{`
+        .list__avatar {
+          width: 36px;
+          height: 36px;
+          border-radius: 999px;
+          object-fit: cover;
+          border: 1px solid #e5e7eb;
+          margin-right: 10px;
+        }
+        .list__avatar--ph {
+          background: #f1f5f9;
+          width: 36px;
+          height: 36px;
+          border-radius: 999px;
+          margin-right: 10px;
+          border: 1px solid #e5e7eb;
+        }
+        .list__item {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+        }
+        .list__body {
+          flex: 1;
+          min-width: 0;
+        }
+      `}</style>
     </div>
   );
 }
+
+
+
+
+
+
+
+
+
 
 
 
