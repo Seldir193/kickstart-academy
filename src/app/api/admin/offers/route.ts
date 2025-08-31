@@ -1,3 +1,14 @@
+
+
+
+
+
+
+
+
+
+
+
 import { NextResponse } from 'next/server';
 import { getProviderIdFromCookies } from '@/app/api/lib/auth'; // <— Alias empfohlen
 

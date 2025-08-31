@@ -10,8 +10,6 @@
 
 
 
-
-
 /* Wenn embed-Modus aktiv ist, kein Header/Footer anzeigen */
 body.embed-mode .site-header,
 body.embed-mode .site-footer { display: none !important; }
@@ -20,6 +18,12 @@ body.embed-mode .site-footer { display: none !important; }
 body.embed-mode { padding-top: 0 !important; }
 
 
+
+
+.book-grid--single{
+  padding:unset !important;
+
+}
 
 
 
@@ -42,12 +46,12 @@ body {
   display: grid;                 /* Header | Main | Footer */
   grid-template-rows: auto 1fr auto;
   font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, 'Helvetica Neue', Arial, 'Noto Sans', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
-  background: #f5f5f5;
+  //background: #f5f5f5;
   color: #222;
 }
 
 /* ===== Layout / Container ===== */
-.container { max-width: 1200px; margin: 0 auto; padding: 16px; display: flex; gap:20px; justify-content: center; }
+.container { max-width: 1200px; margin: 0 auto;   display: flex; gap:20px; justify-content: center; }
 
 /* Main verhält sich wie im WP-Theme (nur Main scrollt, Footer unten) */
 .site-main {
@@ -1102,12 +1106,12 @@ body { padding-top: var(--header-height); }
 
 html.embed-mode,
 body.embed-mode { height: 100%; }
-
 body.embed-mode {
   padding-top: 0 !important;     /* kein reserviertes Header-Padding */
-  display: flex;  
-  align-items: center;
+  //display: flex;  
+  //align-items: center;
 }
+
 
 body.embed-mode .site-header,
 body.embed-mode .site-footer {
@@ -1125,7 +1129,7 @@ body.embed-mode .site-footer {
   width: 100%;
   max-width: 760px;                       /* Lesebreite */
   margin: 0 auto;                         /* horizontal zentriert */
-  padding: clamp(12px, 2vw, 24px);
+  //padding: clamp(12px, 2vw, 24px);
 }
 
 /* Inhalt linksbündig lassen (keine Textzentrierung) */
@@ -1158,7 +1162,7 @@ body.embed-mode .site-footer {
 .book-form__grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 16px 24px;
+  //gap: 16px 24px;
 }
 
 
@@ -1187,6 +1191,116 @@ body.embed-mode .site-footer {
 
 
 
+
+
+
+
+
+
+
+
+.dob { display: grid; grid-template-columns: 1fr 1fr 1.5fr; gap: 8px; }
+.dob select {
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 10px 12px;
+  background: #fff;
+}
+
+
+
+
+
+
+
+
+
+.book-sub{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:end}
+.book-sub__left{display:flex;gap:10px;align-items:flex-end}
+.book-sub__titles{display:grid;gap:4px}
+.book-back{appearance:none;background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:6px 10px;cursor:pointer}
+.book-back img{display:block;width:18px;height:18px}
+.book-back:hover{background:#f5faff}
+@media (max-width:560px){.book-sub{grid-template-columns:1fr}}
+
+
+
+
+
+
+
+
+
+
+
+
+/* Ansprechpartner: immer in einer Zeile (Bild | Name | Email) */
+.contact-coach{
+  display: grid;
+  grid-template-columns: auto 1fr auto; /* Bild | Name flex | Email */
+  align-items: center;
+  column-gap: 14px;
+}
+.contact-coach__avatar{
+  width:56px; height:56px;
+  border-radius:999px;
+  object-fit:cover;
+  background:#f1f5f9;
+  border:1px solid #eaeaea;
+}
+.contact-coach__name{
+  font-weight:700;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  min-width:0; /* wichtig: erlaubt ellipsis innerhalb grid */
+}
+.contact-coach__email{
+  white-space:nowrap;
+}
+.contact-coach__email a{
+  color:#0ea5e9; text-decoration:none;
+}
+.contact-coach__email a:hover{ text-decoration:underline; }
+
+/* Wenn extrem schmal, darf es umbrechen */
+@media (max-width: 420px){
+  .contact-coach{
+    grid-template-columns: auto 1fr; /* Bild | Textblock */
+    row-gap: 8px;
+  }
+  .contact-coach__email{ grid-column: 2; } /* Email unter den Namen, aber linksbündig */
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.book-contact .contact{display:flex;align-items:center;gap:12px}
+.book-contact .contact__avatar{border-radius:999px;object-fit:cover;border:1px solid #e5e7eb}
+.book-contact .contact__body{display:flex;flex-direction:column;gap:2px;min-width:0}
+.book-contact .contact__name{font-weight:700}
+.book-contact .contact__email{color:#0ea5e9;text-decoration:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.book-contact .contact__email:hover{text-decoration:underline}
 
 
 
