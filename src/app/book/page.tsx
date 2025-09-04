@@ -173,6 +173,7 @@ export default function BookPage() {
 
   const isEmbed = useMemo(() => params.get('embed') === '1', [params]);
 
+
   const [today, setToday] = useState<string>('');
   useEffect(() => { setToday(new Date().toISOString().split('T')[0]); }, []);
 
