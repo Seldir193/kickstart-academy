@@ -16,7 +16,7 @@ const baseNav = [
   { href: '/', label: 'Home' },
   // 'Trainings' is rendered only for admins (hidden for public)
   { href: '/trainings', label: 'Trainings' },
-  { href: '/book', label: 'Book' },
+  { href: '/customers', label: 'Customers' },
   { href: '/shop', label: 'Shop (demo)' },
 ];
 
