@@ -29,6 +29,7 @@ export default function AdminBookingsTable({ bookings }: { bookings: Booking[] }
     try {
       const r = await fetch("/api/admin/bookings/list", { cache: "no-store" });
       const d = await r.json();
+      
       if (!r.ok) throw new Error(d?.error || `Reload failed (${r.status})`);
       setRows(d.bookings || []);
     } catch (e: any) {
@@ -37,6 +38,7 @@ export default function AdminBookingsTable({ bookings }: { bookings: Booking[] }
   }
 
   async function confirmBooking(id: string) {
+   
     setErr("");
     setLoadingId(id);
     try {
