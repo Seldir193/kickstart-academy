@@ -3,6 +3,9 @@
 
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 
+
+
+
 type DocItem = {
   id: string;
   bookingId: string;
@@ -30,6 +33,15 @@ function qs(params: Record<string, any>) {
   }
   return sp.toString();
 }
+
+
+
+
+
+
+
+
+
 
 export default function DocumentsDialog({ customerId, onClose }: Props) {
   // filters
@@ -65,6 +77,36 @@ export default function DocumentsDialog({ customerId, onClose }: Props) {
   }, [typeParticipation, typeCancellation, typeStorno]);
 
   const totalPages = Math.max(1, Math.ceil(total / Math.max(1, limit)));
+
+
+
+
+
+  const csvHref = useMemo(() => {
+  const query = qs({
+    type: selectedTypes.join(','),
+    from, to, q,
+    sort: 'issuedAt:desc',
+  });
+  return `/api/admin/customers/${encodeURIComponent(customerId)}/documents.csv?${query}`;
+}, [customerId, selectedTypes, from, to, q]);
+
+const zipHref = useMemo(() => {
+  const query = qs({
+    type: selectedTypes.join(','),
+    from, to, q,
+    sort: 'issuedAt:desc',
+  });
+  return `/api/admin/customers/${encodeURIComponent(customerId)}/documents.zip?${query}`;
+}, [customerId, selectedTypes, from, to, q]);
+
+
+
+
+
+
+
+
 
   function computePos() {
     if (!triggerRef.current) return;
@@ -133,45 +175,7 @@ function openPdf(item: DocItem) {
   window.open(url, '_blank', 'noopener,noreferrer');
 }
 
-  function downloadCsv() {
-    const query = qs({
-      type: selectedTypes.join(','),
-      from, to, q,
-      sort: 'issuedAt:desc',
-    });
-    const url = `/api/admin/customers/${encodeURIComponent(customerId)}/documents.csv?${query}`;
-    // CSV darf gern im neuen Tab starten (Browser lädt die Datei)
-    window.open(url, '_blank', 'noopener,noreferrer');
-  }
 
-  // NEU: ZIP wird direkt heruntergeladen (kein neuer Tab)
-  async function downloadZip() {
-    try {
-      const query = qs({
-        type: selectedTypes.join(','),
-        from, to, q,
-        sort: 'issuedAt:desc',
-      });
-      const url = `/api/admin/customers/${encodeURIComponent(customerId)}/documents.zip?${query}`;
-      const res = await fetch(url, { method: 'GET', credentials: 'include' });
-      if (!res.ok) {
-        const t = await res.text().catch(()=> '');
-        throw new Error(`ZIP download failed (${res.status}) ${t}`);
-      }
-      const blob = await res.blob();
-      const href = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = href;
-      a.download = `customer-${customerId}-documents.zip`;
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      URL.revokeObjectURL(href);
-    } catch (e) {
-      console.error(e);
-      alert('ZIP download failed.');
-    }
-  }
 
   return (
     <div className="ks-modal-root ks-modal-root--top">
@@ -277,11 +281,14 @@ function openPdf(item: DocItem) {
         </div>
 
         {/* Actions */}
+       
+
         <div className="flex justify-end gap-2 mt-4">
-          <button className="btn" onClick={downloadCsv}>Download CSV</button>
-          <button className="btn btn-primary" onClick={downloadZip}>Download ZIP</button>
-          <button className="btn" onClick={onClose}>Close</button>
-        </div>
+  <a href={csvHref} className="btn">Download CSV</a>
+  <a href={zipHref} className="btn btn-primary">Download ZIP</a>
+  <button className="btn" onClick={onClose}>Close</button>
+</div>
+
 
         {err && <div className="mt-2 text-red-600">{err}</div>}
       </div>
