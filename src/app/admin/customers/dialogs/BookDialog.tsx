@@ -102,54 +102,77 @@ export default function BookDialog({ customerId, onClose, onBooked }: Props) {
   // Pro-rata calculation (updates when date or offer changes)
   const pro = useMemo(() => prorateForStart(selectedDate, isNum(selectedOffer?.price) ? selectedOffer!.price : null), [selectedDate, selectedOffer?.price]);
 
-  async function submit() {
-    if (!customerId || !selectedOfferId || !selectedDate) return;
-    setSaving(true); setErr(null);
 
-    try {
-      const pid = (typeof window !== 'undefined' && localStorage.getItem('providerId')) || '';
+     
 
-      // 1) Create booking
-      const res = await fetch(`/api/admin/customers/${encodeURIComponent(customerId)}/bookings`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          ...(pid ? { 'x-provider-id': pid } : {}),
-        },
-        cache: 'no-store',
-        body: JSON.stringify({ offerId: selectedOfferId, date: selectedDate }),
-      });
-      if (!res.ok) throw new Error(`Create booking failed (${res.status})`);
-      const payload = await res.json();
-      const newBooking = payload?.booking;
 
-      // 2) Send participation confirmation (server attaches PDF)
-      if (newBooking?._id) {
-        const r2 = await fetch(
-          `/api/admin/customers/${encodeURIComponent(customerId)}/bookings/${encodeURIComponent(newBooking._id)}/email/confirmation`,
-          { method: 'POST', headers: { 'Content-Type': 'application/json' } }
-        );
-        // 409 means already sent (idempotent) → ignore
-        if (!r2.ok && r2.status !== 409) {
-          const t = await r2.text().catch(() => '');
-          console.warn('confirmation email failed', r2.status, t);
+
+
+
+async function submit() {
+  if (!customerId || !selectedOfferId || !selectedDate) return;
+  setSaving(true); setErr(null);
+
+  try {
+    const pid = (typeof window !== 'undefined' && localStorage.getItem('providerId')) || '';
+
+    // 1) Create booking
+    const res = await fetch(`/api/admin/customers/${encodeURIComponent(customerId)}/bookings`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        ...(pid ? { 'x-provider-id': pid } : {}),
+      },
+      cache: 'no-store',
+      body: JSON.stringify({ offerId: selectedOfferId, date: selectedDate }),
+    });
+    if (!res.ok) throw new Error(`Create booking failed (${res.status})`);
+    const payload = await res.json();
+    const newBooking = payload?.booking;
+
+    // 2) Send participation confirmation (server attaches PDF)
+    if (newBooking?._id) {
+      const r2 = await fetch(
+        `/api/admin/customers/${encodeURIComponent(customerId)}/bookings/${encodeURIComponent(newBooking._id)}/email/confirmation`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            ...(pid ? { 'x-provider-id': pid } : {}), // ← WICHTIG hinzugefügt
+          },
         }
+      );
+      if (!r2.ok && r2.status !== 409) {
+        const t = await r2.text().catch(() => '');
+        console.warn('confirmation email failed', r2.status, t);
       }
-
-      // 3) Refresh customer to reflect new booking
-      const r3 = await fetch(`/api/admin/customers/${encodeURIComponent(customerId)}`, {
-        cache: 'no-store',
-        headers: { ...(pid ? { 'x-provider-id': pid } : {}) },
-      });
-      const fresh = r3.ok ? await r3.json() : null;
-      if (fresh) onBooked(fresh);
-      onClose();
-    } catch (e: any) {
-      setErr(e?.message || 'Booking failed');
-    } finally {
-      setSaving(false);
     }
+
+    // 3) Refresh customer
+    const r3 = await fetch(`/api/admin/customers/${encodeURIComponent(customerId)}`, {
+      cache: 'no-store',
+      headers: { ...(pid ? { 'x-provider-id': pid } : {}) },
+    });
+    const fresh = r3.ok ? await r3.json() : null;
+    if (fresh) onBooked(fresh);
+    onClose();
+  } catch (e: any) {
+    setErr(e?.message || 'Booking failed');
+  } finally {
+    setSaving(false);
   }
+}
+
+
+
+
+
+
+
+
+
+
+
 
   return (
     <div className="ks-modal-root ks-modal-root--top">
@@ -254,7 +277,7 @@ export default function BookDialog({ customerId, onClose, onBooked }: Props) {
 }
 
 
-
+  
 
 
 
