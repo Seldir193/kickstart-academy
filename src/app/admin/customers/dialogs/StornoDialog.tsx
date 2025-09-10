@@ -133,15 +133,104 @@ export default function StornoDialog({ customer, onClose, onChanged }: Props) {
   const isCancelled = selected?.status === 'cancelled';
   const disabled = saving || !selected || isCancelled; // cannot storno cancelled again
 
-  async function submit() {
-    if (!customer._id || !selected?._id) return;
-    setSaving(true); setErr(null);
-    try {
-      const pid = (typeof window !== 'undefined' && localStorage.getItem('providerId')) || '';
 
-      // 1) Mark booking as cancelled (status update in backend)
+
+
+
+
+async function submit() {
+  if (!customer._id || !selected?._id) return;
+  setSaving(true);
+  setErr(null);
+
+  try {
+    const pid =
+      (typeof window !== 'undefined' && localStorage.getItem('providerId')) || '';
+
+    // --- 1) Kunde frisch laden, um aktuelle invoice-Felder zu bekommen
+    const rGet1 = await fetch(
+      `/api/admin/customers/${encodeURIComponent(customer._id)}`,
+      {
+        cache: 'no-store',
+        headers: { ...(pid ? { 'x-provider-id': pid } : {}) },
+      }
+    );
+    if (!rGet1.ok) {
+      const t = await rGet1.text().catch(() => '');
+      throw new Error(`Kunde laden fehlgeschlagen (${rGet1.status}). ${t}`);
+    }
+    let fresh: Customer = await rGet1.json();
+    let freshBooking = (fresh.bookings || []).find(
+      (b) => String(b._id) === String(selected._id)
+    );
+    if (!freshBooking) throw new Error('Buchung nicht gefunden.');
+
+    // --- 2) Falls keine Referenz-Rechnung existiert: Bestätigung senden -> erzeugt invoice
+    let refInvoiceNo: string =
+      (freshBooking as any).invoiceNumber ||
+      (freshBooking as any).invoiceNo ||
+      '';
+    let refInvoiceDate: any = (freshBooking as any).invoiceDate || null;
+
+    if (!refInvoiceNo) {
+      const rConf = await fetch(
+        `/api/admin/customers/${encodeURIComponent(customer._id)}/bookings/${encodeURIComponent(
+          freshBooking._id as any
+        )}/email/confirmation`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            ...(pid ? { 'x-provider-id': pid } : {}),
+          },
+          cache: 'no-store',
+          body: JSON.stringify({}), // nichts nötig; Server erzeugt invoiceNumber/-Date
+        }
+      );
+      if (!rConf.ok) {
+        const t = await rConf.text().catch(() => '');
+        throw new Error(
+          `Rechnungs-Erzeugung (Bestätigung) fehlgeschlagen (${rConf.status}). ${t}`
+        );
+      }
+
+      // nach Erzeugung nochmal frisch laden
+      const rGet2 = await fetch(
+        `/api/admin/customers/${encodeURIComponent(customer._id)}`,
+        {
+          cache: 'no-store',
+          headers: { ...(pid ? { 'x-provider-id': pid } : {}) },
+        }
+      );
+      if (!rGet2.ok) {
+        const t = await rGet2.text().catch(() => '');
+        throw new Error(`Kunde reload fehlgeschlagen (${rGet2.status}). ${t}`);
+      }
+      fresh = await rGet2.json();
+      freshBooking = (fresh.bookings || []).find(
+        (b) => String(b._id) === String(selected._id)
+      );
+      if (!freshBooking) throw new Error('Buchung nach Reload nicht gefunden.');
+
+      refInvoiceNo =
+        (freshBooking as any).invoiceNumber ||
+        (freshBooking as any).invoiceNo ||
+        '';
+      refInvoiceDate = (freshBooking as any).invoiceDate || null;
+
+      if (!refInvoiceNo) {
+        throw new Error(
+          'Konnte trotz Bestätigung keine Rechnungsnummer ermitteln.'
+        );
+      }
+    }
+
+    // --- 3) Buchung als cancelled markieren (409 = bereits cancelled -> ok)
+    {
       const r1 = await fetch(
-        `/api/admin/customers/${encodeURIComponent(customer._id)}/bookings/${encodeURIComponent(selected._id)}/storno`,
+        `/api/admin/customers/${encodeURIComponent(customer._id)}/bookings/${encodeURIComponent(
+          freshBooking._id as any
+        )}/storno`,
         {
           method: 'POST',
           headers: {
@@ -152,14 +241,18 @@ export default function StornoDialog({ customer, onClose, onChanged }: Props) {
           body: JSON.stringify({ note }),
         }
       );
-      if (!r1.ok && r1.status !== 409) { // 409 = already cancelled (idempotent)
+      if (!r1.ok && r1.status !== 409) {
         const t = await r1.text().catch(() => '');
-        throw new Error(`Storno status failed (${r1.status}) ${t}`);
+        throw new Error(`Storno-Status fehlgeschlagen (${r1.status}). ${t}`);
       }
+    }
 
-      // 2) Send storno email with PDF
+    // --- 4) Storno-Mail mit PDF und Referenzdaten schicken
+    {
       const r2 = await fetch(
-        `/api/admin/customers/${encodeURIComponent(customer._id)}/bookings/${encodeURIComponent(selected._id)}/email/storno`,
+        `/api/admin/customers/${encodeURIComponent(customer._id)}/bookings/${encodeURIComponent(
+          freshBooking._id as any
+        )}/email/storno`,
         {
           method: 'POST',
           headers: {
@@ -167,28 +260,44 @@ export default function StornoDialog({ customer, onClose, onChanged }: Props) {
             ...(pid ? { 'x-provider-id': pid } : {}),
           },
           cache: 'no-store',
-          body: JSON.stringify({ note }),
+          body: JSON.stringify({
+            currency: 'EUR',
+            note,
+            refInvoiceNo,
+            refInvoiceDate, // ISO- oder Date-String genügt
+          }),
         }
       );
       if (!r2.ok) {
         const t = await r2.text().catch(() => '');
-        throw new Error(`Storno email failed (${r2.status}) ${t}`);
+        throw new Error(`Storno-E-Mail fehlgeschlagen (${r2.status}). ${t}`);
       }
+    }
 
-      // 3) Refresh the customer so UI shows grey/cancelled
-      const r3 = await fetch(`/api/admin/customers/${encodeURIComponent(customer._id)}`, {
+    // --- 5) UI aktualisieren
+    const rGet3 = await fetch(
+      `/api/admin/customers/${encodeURIComponent(customer._id)}`,
+      {
         cache: 'no-store',
         headers: { ...(pid ? { 'x-provider-id': pid } : {}) },
-      });
-      const fresh = r3.ok ? await r3.json() : null;
-      if (fresh) onChanged(fresh);
-      onClose();
-    } catch (e: any) {
-      setErr(e?.message || 'Storno failed');
-    } finally {
-      setSaving(false);
-    }
+      }
+    );
+    const fresh2 = rGet3.ok ? await rGet3.json() : null;
+    if (fresh2) onChanged(fresh2);
+    onClose();
+  } catch (e: any) {
+    setErr(e?.message || 'Storno fehlgeschlagen');
+  } finally {
+    setSaving(false);
   }
+}
+
+
+
+
+
+
+
 
   return (
     <div className="ks-modal-root ks-modal-root--top">
