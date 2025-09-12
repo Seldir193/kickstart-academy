@@ -72,14 +72,32 @@ export default function AdminLoginPage() {
     if (Object.keys(eObj).length) return;
 
     setLoading(true);
-    try {
-      const r = await fetch('/api/admin/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
-        credentials: 'include',
-        cache: 'no-store',
-      });
+ 
+
+      // app/admin/login/page.tsx (Ausschnitt in onSubmit)
+try {
+  // providerId aus localStorage holen oder via prompt erfragen (oder eigenes Input-Feld hinzufügen)
+  let providerId = localStorage.getItem('providerId') || '';
+  if (!providerId) {
+    providerId = window.prompt('Bitte Provider-ID eingeben (Mongo ObjectId):', '') || '';
+  }
+  if (providerId) {
+    // UI-Helfer: im LS & Cookie behalten (praktisch für ZIP/CSV-Links)
+    localStorage.setItem('providerId', providerId);
+    document.cookie = `providerId=${providerId}; path=/`;
+  }
+
+  const r = await fetch('/api/admin/auth/login', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email, password, providerId }),
+    credentials: 'include',
+    cache: 'no-store',
+  });
+ 
+
+
+
       if (r.ok) {
         window.location.assign(next);
         return;
