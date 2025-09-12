@@ -1,22 +1,14 @@
-
 'use client';
 
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 
+/* ===== Backend-basics (bleiben gleich) ===== */
 export type OfferType =
   | 'Camp'
   | 'Foerdertraining'
   | 'Kindergarten'
   | 'PersonalTraining'
   | 'AthleticTraining';
-
-export const OFFER_TYPES: OfferType[] = [
-  'Camp',
-  'Foerdertraining',
-  'Kindergarten',
-  'PersonalTraining',
-  'AthleticTraining',
-];
 
 type DayKey = 'mon' | 'tue' | 'wed' | 'thu' | 'fri' | 'sat' | 'sun';
 const DAYS: { key: DayKey; label: string }[] = [
@@ -29,8 +21,57 @@ const DAYS: { key: DayKey; label: string }[] = [
   { key: 'sun', label: 'Sunday' },
 ];
 
+/* ===== Neue Klassifikation ===== */
+export type CategoryKey = 'Holiday' | 'Weekly' | 'Individual' | 'ClubPrograms' | 'RentACoach';
+
+type CourseOption = {
+  label: string;
+  value: string;           // Schlüssel für die Course-Select
+  type: OfferType;         // verpflichtend fürs Backend
+  category: CategoryKey;   // zu welcher Spalte gehört der Kurs
+  sub_type?: string;       // optionaler Feintyp (ASCII, ohne Umlaute)
+};
+
+/** Alle Kurse – enthält sowohl frühere „Base Types“ als auch neue Sub-Varianten */
+const COURSES: CourseOption[] = [
+  // Holiday
+  { label: 'Camps (Indoor/Outdoor)', value: 'camp', type: 'Camp', category: 'Holiday' },
+  { label: 'Power Training', value: 'powertraining', type: 'AthleticTraining', category: 'Holiday', sub_type: 'Powertraining' },
+
+  // Weekly
+  { label: 'Foerdertraining', value: 'foerdertraining', type: 'Foerdertraining', category: 'Weekly' },
+  { label: 'Soccer Kindergarten', value: 'kindergarten', type: 'Kindergarten', category: 'Weekly' },
+  { label: 'Goalkeeper Training', value: 'torwarttraining', type: 'Foerdertraining', category: 'Weekly', sub_type: 'Torwarttraining' },
+  { label: 'Development Training · Athletik', value: 'foerder_athletik', type: 'Foerdertraining', category: 'Weekly', sub_type: 'Foerdertraining_Athletik' },
+
+  // Individual
+  { label: '1:1 Training', value: 'personal', type: 'PersonalTraining', category: 'Individual' },
+  { label: '1:1 Training Athletik', value: 'personal_athletik', type: 'PersonalTraining', category: 'Individual', sub_type: 'Einzeltraining_Athletik' },
+  { label: '1:1 Training Torwart', value: 'personal_torwart', type: 'PersonalTraining', category: 'Individual', sub_type: 'Einzeltraining_Torwart' },
+
+  // Club programs
+  { label: 'Training Camps', value: 'club_program', type: 'Camp', category: 'ClubPrograms', sub_type: 'ClubProgram_Generic' },
+  { label: 'Coach Education', value: 'coach_education', type: 'Foerdertraining', category: 'ClubPrograms', sub_type: 'CoachEducation' },
+
+  // Rent-a-Coach (eigene Kategorie)
+  { label: 'Rent-a-Coach', value: 'rent_a_coach', type: 'Foerdertraining', category: 'RentACoach', sub_type: 'RentACoach_Generic' },
+];
+
+const CATEGORY_LABEL: Record<CategoryKey, string> = {
+  Holiday: 'Holiday',
+  Weekly: 'Weekly',
+  Individual: 'Individual',
+  ClubPrograms: 'ClubPrograms',
+  RentACoach: 'RentACoach',
+};
+
 export type CreateOfferPayload = {
+  // vom Dialog gesetzt (aus Course ableitbar)
   type: OfferType | '';
+  category?: CategoryKey | '';
+  sub_type?: string;
+
+  // rest wie gehabt
   location: string;
   price: number | '';
   days: DayKey[];
@@ -41,10 +82,9 @@ export type CreateOfferPayload = {
   info: string;
   onlineActive: boolean;
 
-  // NEU: Coach-Felder (werden im Frontend/WordPress angezeigt)
   coachName: string;
   coachEmail: string;
-  coachImage: string; // Dateiname oder /api/uploads/coach/...
+  coachImage: string;
 };
 
 function clsx(...xs: Array<string | false | undefined | null>) {
@@ -64,7 +104,7 @@ function useOnClickOutside<T extends HTMLElement>(ref: AnyRef<T>, handler: () =>
   }, [ref, handler]);
 }
 
-// Hilfsfunktion: Normalisiert was wir speichern (Dateiname vs. API-URL)
+// Bild-URL normalisieren
 const normalizeCoachSrc = (src: string) => {
   if (!src) return '';
   if (/^https?:\/\//i.test(src)) return src;
@@ -74,19 +114,18 @@ const normalizeCoachSrc = (src: string) => {
   return src;
 };
 
-/** VOLLSTÄNDIGER Dialog (Create/Edit) mit Upload */
+/** =========== Dialog =========== */
 export default function OfferCreateDialog({
   open,
   mode = 'create',
-  presetType,
-  initial, // wenn bearbeiten
+  // presetType entfernt: Auswahl läuft über Course
+  initial,
   onClose,
   onCreate,
   onSave,
 }: {
   open: boolean;
   mode?: 'create' | 'edit';
-  presetType?: OfferType;
   initial?: (Partial<CreateOfferPayload> & { _id?: string }) | null;
   onClose: () => void;
   onCreate?: (payload: CreateOfferPayload) => Promise<void> | void;
@@ -94,6 +133,8 @@ export default function OfferCreateDialog({
 }) {
   const blank: CreateOfferPayload = {
     type: '',
+    category: '',
+    sub_type: '',
     location: '',
     price: '',
     days: [],
@@ -105,14 +146,16 @@ export default function OfferCreateDialog({
     onlineActive: true,
     coachName: '',
     coachEmail: '',
-    coachImage: '', // <- wichtig!
+    coachImage: '',
   };
 
   const computeInitial = (): CreateOfferPayload => {
     const base = { ...blank };
     if (initial) {
       return {
-        type: (initial.type as OfferType) ?? (presetType ?? ''),
+        type: (initial.type as OfferType) ?? '',
+        category: (initial.category as CategoryKey) ?? '',
+        sub_type: initial.sub_type ?? '',
         location: initial.location ?? '',
         price: (initial.price as number) ?? '',
         days: (initial.days as DayKey[]) ?? [],
@@ -132,19 +175,22 @@ export default function OfferCreateDialog({
 
         coachName: initial.coachName ?? '',
         coachEmail: initial.coachEmail ?? '',
-        coachImage: initial.coachImage ?? '', // kommt vom Server, bleibt erhalten
+        coachImage: initial.coachImage ?? '',
       };
     }
-    if (presetType) base.type = presetType;
     return base;
   };
 
   const [form, setForm] = useState<CreateOfferPayload>(computeInitial);
 
+  // Ausgewählte Category/Course (nur UI-Status)
+  const [categoryUI, setCategoryUI] = useState<CategoryKey | ''>('');
+  const [courseUI, setCourseUI] = useState<string>(''); // value aus COURSES
+
   // Upload-Status
   const [uploading, setUploading] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
-  const [previewUrl, setPreviewUrl] = useState<string>(''); // zeigt live die hochgeladene Datei
+  const [previewUrl, setPreviewUrl] = useState<string>('');
 
   const panelRef = useRef<HTMLDivElement | null>(null);
   useOnClickOutside(panelRef, onClose);
@@ -155,17 +201,33 @@ export default function OfferCreateDialog({
       const init = computeInitial();
       setForm(init);
       setPreviewUrl(normalizeCoachSrc(init.coachImage));
+
+      // UI selects vorbelegen, falls aus initial vorhanden
+      if (init.category) setCategoryUI(init.category as CategoryKey);
+      if (init.type) {
+        const found = COURSES.find(c =>
+          c.type === init.type &&
+          (init.sub_type ? c.sub_type === init.sub_type : true) &&
+          (init.category ? c.category === init.category : true)
+        );
+        if (found) setCourseUI(found.value);
+      } else {
+        setCourseUI('');
+      }
+
       setUploading(false);
       setUploadError(null);
     } else {
       // reset auf close
-      setForm({ ...blank, type: presetType ?? '' });
+      setForm({ ...blank });
       setPreviewUrl('');
+      setCategoryUI('');
+      setCourseUI('');
       setUploading(false);
       setUploadError(null);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [open, mode, JSON.stringify(initial), presetType]);
+  }, [open, mode, JSON.stringify(initial)]);
 
   useEffect(() => {
     function onKey(e: KeyboardEvent) { if (e.key === 'Escape') onClose(); }
@@ -189,10 +251,34 @@ export default function OfferCreateDialog({
       (form.ageFrom === '' ||
         form.ageTo === '' ||
         Number(form.ageFrom) <= Number(form.ageTo));
-    return basicOk && !uploading; // blocken während Upload
+    return basicOk && !uploading;
   }, [form, uploading]);
 
-  // ====== Upload-Handler ======
+  // ===== Auswahl-Handler =====
+  function handleCategoryChange(next: CategoryKey | '') {
+    setCategoryUI(next);
+    setCourseUI('');
+    // Category in Payload mitschreiben, sub_type zurücksetzen
+    setForm(f => ({ ...f, category: next, sub_type: '' }));
+  }
+
+  function handleCourseChange(value: string) {
+    setCourseUI(value);
+    const def = COURSES.find(c => c.value === value);
+    if (!def) return;
+    // falls Category leer, aus Course ableiten
+    const cat = (categoryUI || def.category) as CategoryKey;
+    setCategoryUI(cat);
+
+    setForm(f => ({
+      ...f,
+      type: def.type,
+      category: cat,
+      sub_type: def.sub_type || '',
+    }));
+  }
+
+  // ===== Upload =====
   async function handleCoachFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -201,17 +287,12 @@ export default function OfferCreateDialog({
     try {
       const fd = new FormData();
       fd.append('file', file, file.name);
-      // optional: eigener dateiname
       fd.append('filename', file.name);
 
       const res = await fetch('/api/uploads/coach', { method: 'POST', body: fd });
       const data = await res.json().catch(() => ({}));
-      if (!res.ok || !data?.ok) {
-        throw new Error(data?.error || `Upload failed (${res.status})`);
-      }
+      if (!res.ok || !data?.ok) throw new Error(data?.error || `Upload failed (${res.status})`);
 
-      // Merken, damit es nach Close/Reopen bleibt:
-      // Wir speichern die "API-URL" (funktioniert überall)
       const url: string = data.url || '';
       setForm((f) => ({ ...f, coachImage: url }));
       setPreviewUrl(url);
@@ -231,7 +312,6 @@ export default function OfferCreateDialog({
       price: Number(form.price),
       ageFrom: form.ageFrom === '' ? '' : Number(form.ageFrom),
       ageTo: form.ageTo === '' ? '' : Number(form.ageTo),
-      // coachImage ist bereits eine persistente URL (z.B. /api/uploads/coach/xyz.png)
     };
 
     if (mode === 'edit' && initial?._id && onSave) {
@@ -240,6 +320,9 @@ export default function OfferCreateDialog({
       await onCreate(payload);
     }
   }
+
+  // Helper: Kurse nach Category filtern (UI)
+  const visibleCourses = COURSES.filter(c => !categoryUI || c.category === categoryUI);
 
   if (!open) return null;
 
@@ -258,23 +341,39 @@ export default function OfferCreateDialog({
           <h2 className="modal__title">{mode === 'edit' ? 'Edit offer' : 'Create offer'}</h2>
 
           <form onSubmit={handleSubmit} className="form">
-            {/* Type */}
-            <div className="form__group  form__group--stack" >
-              <label className="label">All types</label>
-              <div className="chip-row">
-                {OFFER_TYPES.map((t) => (
-                  <button
-                    key={t}
-                    type="button"
-                    onClick={() => setForm((f) => ({ ...f, type: t }))}
-                    className={clsx('chip', form.type === t && 'chip--active')}
-                  >
-                    {t}
-                  </button>
-                ))}
+            {/* ===== Category & Course (NEU) ===== */}
+            <div className="grid grid--2">
+              <div className="form__group">
+                <label className="label">Category</label>
+                <select
+                  className="input"
+                  value={categoryUI}
+                  onChange={(e) => handleCategoryChange((e.target.value || '') as CategoryKey | '')}
+                >
+                  <option value="">— Select category —</option>
+                  {(['Holiday','Weekly','Individual','ClubPrograms','RentACoach'] as CategoryKey[]).map(k => (
+                    <option key={k} value={k}>{CATEGORY_LABEL[k]}</option>
+                  ))}
+                </select>
               </div>
-              <p className="help">Pick one type.</p>
+
+              <div className="form__group">
+                <label className="label">Course</label>
+                <select
+                  className="input"
+                  value={courseUI}
+                  onChange={(e) => handleCourseChange(e.target.value)}
+                >
+                  <option value="">— Select course —</option>
+                  {visibleCourses.map(c => (
+                    <option key={c.value} value={c.value}>
+                      {c.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
             </div>
+            <p className="help" style={{marginTop: -6}}>Die Kurswahl füllt <code>type</code> automatisch; optional wird <code>sub_type</code> gesetzt.</p>
 
             {/* Location + Price */}
             <div className="grid grid--2">
@@ -391,7 +490,7 @@ export default function OfferCreateDialog({
               />
             </div>
 
-            {/* COACH: Name / Email / Bild */}
+            {/* Coach */}
             <div className="grid grid--2">
               <div className="form__group">
                 <label className="label">Coach name</label>
@@ -417,11 +516,7 @@ export default function OfferCreateDialog({
             <div className="form__group">
               <label className="label">Coach Bild</label>
               <div className="upload-row">
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleCoachFileChange}
-                />
+                <input type="file" accept="image/*" onChange={handleCoachFileChange} />
                 {uploading && <span className="uploading">Uploading…</span>}
                 {uploadError && <span className="error">{uploadError}</span>}
               </div>
@@ -430,12 +525,7 @@ export default function OfferCreateDialog({
                   <img src={previewUrl} alt="Coach preview" />
                 </div>
               ) : null}
-              {/* Speichere intern die URL/den Dateinamen */}
-              <input
-                type="hidden"
-                value={form.coachImage}
-                onChange={() => {}}
-              />
+              <input type="hidden" value={form.coachImage} onChange={() => {}}/>
             </div>
 
             {/* Online toggle */}
@@ -476,55 +566,4 @@ export default function OfferCreateDialog({
     </div>
   );
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
