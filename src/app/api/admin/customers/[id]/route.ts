@@ -1,4 +1,7 @@
 
+
+
+
 // src/app/api/admin/customers/[id]/route.ts
 import { NextResponse } from 'next/server';
 import { getProviderIdFromCookies } from '@/app/api/lib/auth';
@@ -53,3 +56,13 @@ export async function DELETE(_req: Request, { params }: { params: { id: string }
   let data: any; try { data = JSON.parse(text); } catch { data = { raw: text }; }
   return NextResponse.json(data, { status: r.status });
 }
+
+
+
+
+
+
+
+
+
+
