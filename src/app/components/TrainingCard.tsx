@@ -1,18 +1,19 @@
-// components/TrainingsCard.tsx
+// src/app/components/TrainingCard.tsx
 'use client';
 
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
-import OfferCreateDialog, {
-  OFFER_TYPES,
-  OfferType,
-  CreateOfferPayload,
-} from '@/app/components/OfferCreateDialog'; // ← dieser Dialog muss coachName/coachEmail/coachImage unterstützen
+import OfferCreateDialog, { CreateOfferPayload } from '@/app/components/OfferCreateDialog';
 
+/** Category keys used by sub_type filters */
+type CategoryKey = 'Holiday' | 'Weekly' | 'Individual' | 'ClubPrograms' | 'RentACoach';
+
+/** For the list we don’t need strict typing of Offer.type anymore,
+ * because some filters use category/sub_type. Keep it as string. */
 type Offer = {
   _id: string;
   title?: string;
-  type: OfferType;
+  type: string; // base type value (e.g., Foerdertraining)
   location: string;
   price?: number;
   days?: string[];
@@ -23,10 +24,13 @@ type Offer = {
   info?: string;
   onlineActive?: boolean;
 
-  // NEU – damit Bild & Ansprechpartner dynamisch funktionieren:
   coachName?: string;
   coachEmail?: string;
-  coachImage?: string; // z.B. "/api/uploads/coach/coach-...jpg"
+  coachImage?: string;
+
+  category?: string;
+  sub_type?: string;
+  legacy_type?: string;
 };
 
 type OffersResponse = { items: Offer[]; total: number };
@@ -35,17 +39,44 @@ function clsx(...xs: Array<string | false | undefined | null>) {
   return xs.filter(Boolean).join(' ');
 }
 
+/** Build a flat “All courses” list (for the Types dropdown) */
+const ALL_COURSE_OPTIONS: Array<
+  { label: string; value: string; mode: 'type' } |
+  { label: string; value: string; mode: 'subtype'; category: CategoryKey }
+> = (() => {
+  const base = [
+    { label: 'AthleticTraining', value: 'AthleticTraining', mode: 'type' as const },
+    { label: 'Camp', value: 'Camp', mode: 'type' as const },
+    { label: 'Foerdertraining', value: 'Foerdertraining', mode: 'type' as const },
+    { label: 'Kindergarten', value: 'Kindergarten', mode: 'type' as const },
+    { label: 'PersonalTraining', value: 'PersonalTraining', mode: 'type' as const },
+  ];
+  const extra = [
+    // Weekly
+    { label: 'Torwarttraining', value: 'Torwarttraining', mode: 'subtype' as const, category: 'Weekly' as CategoryKey },
+    { label: 'Foerdertraining_Athletik', value: 'Foerdertraining_Athletik', mode: 'subtype' as const, category: 'Weekly' as CategoryKey },
+    // Individual
+    { label: 'Einzeltraining_Athletik', value: 'Einzeltraining_Athletik', mode: 'subtype' as const, category: 'Individual' as CategoryKey },
+    { label: 'Einzeltraining_Torwart', value: 'Einzeltraining_Torwart', mode: 'subtype' as const, category: 'Individual' as CategoryKey },
+    // Holiday
+    { label: 'Powertraining', value: 'Powertraining', mode: 'subtype' as const, category: 'Holiday' as CategoryKey },
+    // Club
+    { label: 'RentACoach_Generic', value: 'RentACoach_Generic', mode: 'subtype' as const, category: 'RentACoach' as CategoryKey },
+    { label: 'ClubProgram_Generic', value: 'ClubProgram_Generic', mode: 'subtype' as const, category: 'ClubPrograms' as CategoryKey },
+    { label: 'CoachEducation', value: 'CoachEducation', mode: 'subtype' as const, category: 'ClubPrograms' as CategoryKey },
+  ];
+  return [...base, ...extra];
+})();
+
 export default function TrainingCard() {
   // Dialogs
   const [createOpen, setCreateOpen] = useState(false);
-  const [presetType, setPresetType] = useState<OfferType | undefined>(undefined);
   const [editOpen, setEditOpen] = useState(false);
   const [editing, setEditing] = useState<Offer | null>(null);
 
   // Filters / list
   const [q, setQ] = useState('');
-  const [typeFilter, setTypeFilter] = useState<'' | OfferType>('');
-  const [locationFilter, setLocationFilter] = useState<string>('');
+  const [courseFilter, setCourseFilter] = useState<string>(''); // holds value from ALL_COURSE_OPTIONS OR ''
   const [page, setPage] = useState(1);
   const [limit] = useState(10);
   const [items, setItems] = useState<Offer[]>([]);
@@ -55,15 +86,29 @@ export default function TrainingCard() {
 
   // beliebige Locations
   const locations = ['Duisburg', 'Düsseldorf', 'Essen', 'Köln'];
+  const [locationFilter, setLocationFilter] = useState<string>('');
 
-  const openCreate = (t?: OfferType) => {
-    setPresetType(t);
-    setCreateOpen(true);
-  };
-  const startEdit = (o: Offer) => {
-    setEditing(o);
-    setEditOpen(true);
-  };
+  const startEdit = (o: Offer) => { setEditing(o); setEditOpen(true); };
+
+  /** Build query according to our courseFilter selection. */
+  function buildQueryParams() {
+    const params = new URLSearchParams();
+    if (q.trim().length >= 2) params.set('q', q.trim());
+    if (locationFilter) params.set('location', locationFilter);
+    params.set('page', String(page));
+    params.set('limit', String(limit));
+
+    const chosen = ALL_COURSE_OPTIONS.find((x) => x.value === courseFilter);
+    if (chosen) {
+      if (chosen.mode === 'type') {
+        params.set('type', chosen.value);
+      } else {
+        params.set('category', chosen.category);
+        params.set('sub_type', chosen.value);
+      }
+    }
+    return params;
+  }
 
   // Admin-Offers laden (MANDANTEN-SCOPE via /api/admin/offers)
   useEffect(() => {
@@ -71,49 +116,36 @@ export default function TrainingCard() {
     const id = setTimeout(async () => {
       setLoading(true);
       try {
-        const params = new URLSearchParams();
-        if (q.trim().length >= 2) params.set('q', q.trim());
-        if (typeFilter) params.set('type', typeFilter);
-        if (locationFilter) params.set('location', locationFilter);
-        params.set('page', String(page));
-        params.set('limit', String(limit));
-
+        const params = buildQueryParams();
         const r = await fetch(`/api/admin/offers?${params.toString()}`, {
           signal: ctrl.signal,
           cache: 'no-store',
         });
 
         if (!r.ok) {
-          setItems([]);
-          setTotal(0);
+          setItems([]); setTotal(0);
         } else {
           const raw = await r.json().catch(() => ({}));
           const d: OffersResponse = Array.isArray(raw)
             ? { items: raw as Offer[], total: (raw as Offer[]).length }
             : { items: Array.isArray(raw.items) ? raw.items : [], total: Number(raw.total || 0) };
-          setItems(d.items);
-          setTotal(d.total);
+          setItems(d.items); setTotal(d.total);
         }
       } catch (e) {
         console.error('fetch offers failed', e);
-        setItems([]);
-        setTotal(0);
+        setItems([]); setTotal(0);
       } finally {
         setLoading(false);
       }
     }, 200);
 
-    return () => {
-      clearTimeout(id);
-      ctrl.abort();
-    };
-  }, [q, typeFilter, locationFilter, page, limit, refreshTick]);
+    return () => { clearTimeout(id); ctrl.abort(); };
+  }, [q, courseFilter, locationFilter, page, limit, refreshTick]);
 
   const pageCount = Math.max(1, Math.ceil(total / limit));
 
   async function handleCreate(payload: CreateOfferPayload) {
     try {
-      // Achtung: payload enthält coachName/coachEmail/coachImage – bleibt erhalten
       const res = await fetch(`/api/admin/offers`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -133,7 +165,6 @@ export default function TrainingCard() {
       console.error('Create offer error', e);
     } finally {
       setCreateOpen(false);
-      setPresetType(undefined);
       setPage(1);
       setQ('');
       setRefreshTick((x) => x + 1);
@@ -142,9 +173,8 @@ export default function TrainingCard() {
 
   async function handleSave(id: string, payload: CreateOfferPayload) {
     try {
-      // coachName/coachEmail/coachImage sind im payload enthalten
       const res = await fetch(`/api/admin/offers/${encodeURIComponent(id)}`, {
-        method: 'PATCH', // Proxy wandelt zu PUT fürs Backend
+        method: 'PATCH', // proxy translates to PUT for backend
         headers: { 'Content-Type': 'application/json' },
         cache: 'no-store',
         body: JSON.stringify({
@@ -187,34 +217,25 @@ export default function TrainingCard() {
     }
   }
 
-  // kleine Helper für Avatar
-  const avatarSrc = (o: Offer) =>
-    o.coachImage
-      ? o.coachImage // idealerweise /api/uploads/coach/....
-      : '';
+  const avatarSrc = (o: Offer) => (o.coachImage ? o.coachImage : '');
 
   return (
     <div className="ks">
       <main className="container">
-        {/* Row 1: Quick create + Search */}
+        {/* Row 1: Create + Search */}
         <section className="filters">
           <div className="filters__row">
-            <div className="quick-types" aria-label="Quick create types">
-              {OFFER_TYPES.map((t) => (
-                <button key={t} className="btn" onClick={() => openCreate(t)}>
-                  {t}
-                </button>
-              ))}
+            <div className="filters__field">
+              <button className="btn btn--primary" onClick={() => setCreateOpen(true)}>
+                Create new offer
+              </button>
             </div>
 
             <div className="filters__field filters__field--grow">
               <label className="label">Search offers (min. 2 letters)</label>
               <input
                 value={q}
-                onChange={(e) => {
-                  setQ(e.target.value);
-                  setPage(1);
-                }}
+                onChange={(e) => { setQ(e.target.value); setPage(1); }}
                 className="input"
                 placeholder="e.g., Summer Camp"
               />
@@ -227,36 +248,36 @@ export default function TrainingCard() {
             <select
               className="input"
               value={locationFilter}
-              onChange={(e) => {
-                setLocationFilter(e.target.value);
-                setPage(1);
-              }}
+              onChange={(e) => { setLocationFilter(e.target.value); setPage(1); }}
             >
               <option value="">All locations</option>
               {locations.map((loc) => (
-                <option key={loc} value={loc}>
-                  {loc}
-                </option>
+                <option key={loc} value={loc}>{loc}</option>
               ))}
             </select>
           </div>
 
           <div className="filters__field">
-            <label className="label">Types</label>
+            <label className="label">Courses</label>
             <select
               className="input"
-              value={typeFilter}
-              onChange={(e) => {
-                setTypeFilter(e.target.value as OfferType | '');
-                setPage(1);
-              }}
+              value={courseFilter}
+              onChange={(e) => { setCourseFilter(e.target.value); setPage(1); }}
             >
-              <option value="">All types</option>
-              {OFFER_TYPES.map((t) => (
-                <option key={t} value={t}>
-                  {t}
-                </option>
-              ))}
+              <option value="">All courses</option>
+              {/* group visually: base types */}
+              <optgroup label="Base types">
+                {ALL_COURSE_OPTIONS.filter(o => o.mode === 'type').map(o => (
+                  <option key={o.value} value={o.value}>{o.label}</option>
+                ))}
+              </optgroup>
+              <optgroup label="Extra courses">
+                {ALL_COURSE_OPTIONS.filter(o => o.mode === 'subtype').map(o => (
+                  <option key={o.value} value={o.value}>
+                    {o.label}
+                  </option>
+                ))}
+              </optgroup>
             </select>
           </div>
         </section>
@@ -284,7 +305,6 @@ export default function TrainingCard() {
                   role="button"
                   aria-label={`Edit offer ${it.title ?? it.type}`}
                 >
-                  {/* Avatar (falls vorhanden) */}
                   {avatarSrc(it) ? (
                     <img
                       src={avatarSrc(it)}
@@ -297,15 +317,13 @@ export default function TrainingCard() {
 
                   <div className="list__body">
                     <div className="list__title">{it.title ?? 'Offer'}</div>
-
-
-
-
                     <div className="list__meta">
                       {it.type} · {it.location}{' '}
                       {typeof it.price === 'number' ? <>· {it.price} €</> : <>· Price on request</>}
                       {it.coachName ? <> · Coach: {it.coachName}</> : null}
                       {it.coachEmail ? <> · {it.coachEmail}</> : null}
+                      {it.category ? <> · {it.category}</> : null}
+                      {it.sub_type ? <> · {it.sub_type}</> : null}
                     </div>
                   </div>
 
@@ -374,7 +392,6 @@ export default function TrainingCard() {
       <OfferCreateDialog
         open={createOpen}
         mode="create"
-        presetType={presetType}
         onClose={() => setCreateOpen(false)}
         onCreate={handleCreate}
       />
@@ -387,7 +404,7 @@ export default function TrainingCard() {
           editing
             ? {
                 _id: editing._id,
-                type: editing.type,
+                type: (editing.type as any) ?? '',
                 location: editing.location,
                 price: editing.price ?? '',
                 days: (editing.days as any) ?? [],
@@ -398,11 +415,11 @@ export default function TrainingCard() {
                 info: editing.info ?? '',
                 onlineActive:
                   typeof editing.onlineActive === 'boolean' ? editing.onlineActive : true,
-
-                // WICHTIG: Coach-Felder reinreichen, damit der Dialog sie zeigt:
                 coachName: editing.coachName ?? '',
                 coachEmail: editing.coachEmail ?? '',
                 coachImage: editing.coachImage ?? '',
+                category: (editing.category as any) ?? '',
+                sub_type: (editing.sub_type as any) ?? '',
               }
             : null
         }
@@ -430,37 +447,12 @@ export default function TrainingCard() {
           margin-right: 10px;
           border: 1px solid #e5e7eb;
         }
-        .list__item {
-          display: flex;
-          align-items: center;
-          gap: 8px;
-        }
-        .list__body {
-          flex: 1;
-          min-width: 0;
-        }
+        .list__item { display: flex; align-items: center; gap: 8px; }
+        .list__body { flex: 1; min-width: 0; }
       `}</style>
     </div>
   );
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
