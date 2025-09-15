@@ -1,6 +1,5 @@
 
 
-
 'use client';
 
 import React, { useEffect, useState } from 'react';
@@ -19,6 +18,7 @@ const WP_CONTACT_URL =
 
 const adminNav = [
   { href: '/', label: 'Home' },
+  { href: '/orte', label: 'Places' }, 
   { href: '/trainings', label: 'Trainings' },
   { href: '/admin/invoices', label: 'Rechnungen' }, 
   { href: '/customers', label: 'Customers' },
@@ -92,6 +92,7 @@ export default function Header({ isAdminInitial = false }: Props) {
                   pathname === item.href ||
                   (item.href === '/trainings' && pathname.startsWith('/trainings')) ||
                   (item.href === '/customers' && pathname.startsWith('/customers'));
+                   (item.href === '/orte' && pathname.startsWith('/orte')); // NEW
 
                 const addActive =
                   !isLoggingOut && isRouteActive && !navigatingTopLink;
@@ -159,12 +160,6 @@ export default function Header({ isAdminInitial = false }: Props) {
     </header>
   );
 }
-
-
-
-
-
-
 
 
 
