@@ -1,21 +1,3 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // app/admin/customers/types.ts
 export type Address = { street?: string; houseNo?: string; zip?: string; city?: string };
 export type ParentInfo = { salutation?: 'Frau'|'Herr'|''; firstName?: string; lastName?: string; email?: string; phone?: string; phone2?: string };
@@ -60,6 +42,11 @@ export type Offer = {
   ageFrom?: number;
   ageTo?: number;
   onlineActive?: boolean;
+
+  // ---- added to match backend fields (used by Book/Cancel/Storno) ----
+  category?: string;     // e.g. 'Weekly' | 'Holiday' | 'Individual' | 'ClubPrograms' | 'RentACoach'
+  sub_type?: string;     // e.g. 'Torwarttraining', 'Foerdertraining_Athletik', ...
+  legacy_type?: string;  // mirrors old 'type' if present
 };
 
 export type DocumentItem = {
@@ -110,3 +97,20 @@ export const API_ENDPOINTS = {
   exportDocumentsCsv: (customerId: string, qs: string) =>
     `/api/admin/customers/${encodeURIComponent(customerId)}/documents.csv${qs ? `?${qs}` : ''}`,
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
