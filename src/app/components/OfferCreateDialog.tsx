@@ -1,8 +1,8 @@
 'use client';
 
 import React, { useEffect, useMemo, useRef, useState } from 'react';
+import type { Place } from '@/types/place';
 
-/* ===== Backend-basics (bleiben gleich) ===== */
 export type OfferType =
   | 'Camp'
   | 'Foerdertraining'
@@ -21,39 +21,32 @@ const DAYS: { key: DayKey; label: string }[] = [
   { key: 'sun', label: 'Sunday' },
 ];
 
-/* ===== Neue Klassifikation ===== */
 export type CategoryKey = 'Holiday' | 'Weekly' | 'Individual' | 'ClubPrograms' | 'RentACoach';
 
 type CourseOption = {
   label: string;
-  value: string;           // Schlüssel für die Course-Select
-  type: OfferType;         // verpflichtend fürs Backend
-  category: CategoryKey;   // zu welcher Spalte gehört der Kurs
-  sub_type?: string;       // optionaler Feintyp (ASCII, ohne Umlaute)
+  value: string;
+  type: OfferType;
+  category: CategoryKey;
+  sub_type?: string;
 };
 
-/** Alle Kurse – enthält sowohl frühere „Base Types“ als auch neue Sub-Varianten */
 const COURSES: CourseOption[] = [
-  // Holiday
   { label: 'Camps (Indoor/Outdoor)', value: 'camp', type: 'Camp', category: 'Holiday' },
   { label: 'Power Training', value: 'powertraining', type: 'AthleticTraining', category: 'Holiday', sub_type: 'Powertraining' },
 
-  // Weekly
   { label: 'Foerdertraining', value: 'foerdertraining', type: 'Foerdertraining', category: 'Weekly' },
   { label: 'Soccer Kindergarten', value: 'kindergarten', type: 'Kindergarten', category: 'Weekly' },
   { label: 'Goalkeeper Training', value: 'torwarttraining', type: 'Foerdertraining', category: 'Weekly', sub_type: 'Torwarttraining' },
   { label: 'Development Training · Athletik', value: 'foerder_athletik', type: 'Foerdertraining', category: 'Weekly', sub_type: 'Foerdertraining_Athletik' },
 
-  // Individual
   { label: '1:1 Training', value: 'personal', type: 'PersonalTraining', category: 'Individual' },
   { label: '1:1 Training Athletik', value: 'personal_athletik', type: 'PersonalTraining', category: 'Individual', sub_type: 'Einzeltraining_Athletik' },
   { label: '1:1 Training Torwart', value: 'personal_torwart', type: 'PersonalTraining', category: 'Individual', sub_type: 'Einzeltraining_Torwart' },
 
-  // Club programs
   { label: 'Training Camps', value: 'club_program', type: 'Camp', category: 'ClubPrograms', sub_type: 'ClubProgram_Generic' },
   { label: 'Coach Education', value: 'coach_education', type: 'Foerdertraining', category: 'ClubPrograms', sub_type: 'CoachEducation' },
 
-  // Rent-a-Coach (eigene Kategorie)
   { label: 'Rent-a-Coach', value: 'rent_a_coach', type: 'Foerdertraining', category: 'RentACoach', sub_type: 'RentACoach_Generic' },
 ];
 
@@ -66,13 +59,14 @@ const CATEGORY_LABEL: Record<CategoryKey, string> = {
 };
 
 export type CreateOfferPayload = {
-  // vom Dialog gesetzt (aus Course ableitbar)
   type: OfferType | '';
   category?: CategoryKey | '';
   sub_type?: string;
 
-  // rest wie gehabt
-  location: string;
+  // NEW: place linkage
+  placeId?: string;        // selected place
+  location: string;        // city; auto-filled from place
+
   price: number | '';
   days: DayKey[];
   timeFrom: string;
@@ -104,7 +98,6 @@ function useOnClickOutside<T extends HTMLElement>(ref: AnyRef<T>, handler: () =>
   }, [ref, handler]);
 }
 
-// Bild-URL normalisieren
 const normalizeCoachSrc = (src: string) => {
   if (!src) return '';
   if (/^https?:\/\//i.test(src)) return src;
@@ -114,11 +107,9 @@ const normalizeCoachSrc = (src: string) => {
   return src;
 };
 
-/** =========== Dialog =========== */
 export default function OfferCreateDialog({
   open,
   mode = 'create',
-  // presetType entfernt: Auswahl läuft über Course
   initial,
   onClose,
   onCreate,
@@ -135,6 +126,7 @@ export default function OfferCreateDialog({
     type: '',
     category: '',
     sub_type: '',
+    placeId: '',
     location: '',
     price: '',
     days: [],
@@ -156,23 +148,19 @@ export default function OfferCreateDialog({
         type: (initial.type as OfferType) ?? '',
         category: (initial.category as CategoryKey) ?? '',
         sub_type: initial.sub_type ?? '',
+        placeId: initial.placeId ?? '',
         location: initial.location ?? '',
         price: (initial.price as number) ?? '',
         days: (initial.days as DayKey[]) ?? [],
         timeFrom: initial.timeFrom ?? '',
         timeTo: initial.timeTo ?? '',
         ageFrom:
-          initial.ageFrom === undefined || initial.ageFrom === null
-            ? ''
-            : Number(initial.ageFrom),
+          initial.ageFrom === undefined || initial.ageFrom === null ? '' : Number(initial.ageFrom),
         ageTo:
-          initial.ageTo === undefined || initial.ageTo === null
-            ? ''
-            : Number(initial.ageTo),
+          initial.ageTo === undefined || initial.ageTo === null ? '' : Number(initial.ageTo),
         info: initial.info ?? '',
         onlineActive:
           typeof initial.onlineActive === 'boolean' ? initial.onlineActive : true,
-
         coachName: initial.coachName ?? '',
         coachEmail: initial.coachEmail ?? '',
         coachImage: initial.coachImage ?? '',
@@ -183,26 +171,40 @@ export default function OfferCreateDialog({
 
   const [form, setForm] = useState<CreateOfferPayload>(computeInitial);
 
-  // Ausgewählte Category/Course (nur UI-Status)
   const [categoryUI, setCategoryUI] = useState<CategoryKey | ''>('');
-  const [courseUI, setCourseUI] = useState<string>(''); // value aus COURSES
+  const [courseUI, setCourseUI] = useState<string>('');
 
-  // Upload-Status
   const [uploading, setUploading] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string>('');
 
+  const [places, setPlaces] = useState<Place[]>([]);
+
   const panelRef = useRef<HTMLDivElement | null>(null);
   useOnClickOutside(panelRef, onClose);
 
-  // beim Öffnen (re)befüllen
+  // load places once
+  useEffect(() => {
+    const ctrl = new AbortController();
+    (async () => {
+      try {
+        const r = await fetch('/api/admin/places?page=1&pageSize=500', { cache: 'no-store', signal: ctrl.signal });
+        const j = await r.json().catch(() => ({}));
+        const arr: Place[] = Array.isArray(j?.items) ? j.items : [];
+        setPlaces(arr);
+      } catch {
+        setPlaces([]);
+      }
+    })();
+    return () => ctrl.abort();
+  }, []);
+
+  // when dialog opens, seed values
   useEffect(() => {
     if (open) {
       const init = computeInitial();
       setForm(init);
       setPreviewUrl(normalizeCoachSrc(init.coachImage));
-
-      // UI selects vorbelegen, falls aus initial vorhanden
       if (init.category) setCategoryUI(init.category as CategoryKey);
       if (init.type) {
         const found = COURSES.find(c =>
@@ -214,11 +216,9 @@ export default function OfferCreateDialog({
       } else {
         setCourseUI('');
       }
-
       setUploading(false);
       setUploadError(null);
     } else {
-      // reset auf close
       setForm({ ...blank });
       setPreviewUrl('');
       setCategoryUI('');
@@ -242,7 +242,9 @@ export default function OfferCreateDialog({
     }));
 
   const canSubmit = useMemo(() => {
-    const basicOk = !!form.type &&
+    const basicOk =
+      !!form.type &&
+      !!form.placeId &&
       form.location.trim().length > 0 &&
       form.price !== '' &&
       Number(form.price) >= 0 &&
@@ -254,11 +256,9 @@ export default function OfferCreateDialog({
     return basicOk && !uploading;
   }, [form, uploading]);
 
-  // ===== Auswahl-Handler =====
   function handleCategoryChange(next: CategoryKey | '') {
     setCategoryUI(next);
     setCourseUI('');
-    // Category in Payload mitschreiben, sub_type zurücksetzen
     setForm(f => ({ ...f, category: next, sub_type: '' }));
   }
 
@@ -266,19 +266,20 @@ export default function OfferCreateDialog({
     setCourseUI(value);
     const def = COURSES.find(c => c.value === value);
     if (!def) return;
-    // falls Category leer, aus Course ableiten
     const cat = (categoryUI || def.category) as CategoryKey;
     setCategoryUI(cat);
+    setForm(f => ({ ...f, type: def.type, category: cat, sub_type: def.sub_type || '' }));
+  }
 
+  function onPlaceChange(placeId: string) {
+    const p = places.find(x => x._id === placeId);
     setForm(f => ({
       ...f,
-      type: def.type,
-      category: cat,
-      sub_type: def.sub_type || '',
+      placeId,
+      location: p?.city ? p.city : '',
     }));
   }
 
-  // ===== Upload =====
   async function handleCoachFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -288,11 +289,9 @@ export default function OfferCreateDialog({
       const fd = new FormData();
       fd.append('file', file, file.name);
       fd.append('filename', file.name);
-
       const res = await fetch('/api/uploads/coach', { method: 'POST', body: fd });
       const data = await res.json().catch(() => ({}));
       if (!res.ok || !data?.ok) throw new Error(data?.error || `Upload failed (${res.status})`);
-
       const url: string = data.url || '';
       setForm((f) => ({ ...f, coachImage: url }));
       setPreviewUrl(url);
@@ -321,71 +320,60 @@ export default function OfferCreateDialog({
     }
   }
 
-  // Helper: Kurse nach Category filtern (UI)
   const visibleCourses = COURSES.filter(c => !categoryUI || c.category === categoryUI);
-
   if (!open) return null;
 
   return (
     <div className="modal">
       <div className="modal__overlay" />
       <div className="modal__wrap">
-        <div
-          ref={panelRef}
-          className="modal__panel"
-          role="dialog"
-          aria-modal="true"
-          aria-label={mode === 'edit' ? 'Edit offer dialog' : 'Create offer dialog'}
-        >
+        <div ref={panelRef} className="modal__panel" role="dialog" aria-modal="true">
           <button type="button" onClick={onClose} className="modal__close" aria-label="Close">✕</button>
           <h2 className="modal__title">{mode === 'edit' ? 'Edit offer' : 'Create offer'}</h2>
 
           <form onSubmit={handleSubmit} className="form">
-            {/* ===== Category & Course (NEU) ===== */}
+            {/* Category & Course */}
             <div className="grid grid--2">
               <div className="form__group">
                 <label className="label">Category</label>
-                <select
-                  className="input"
-                  value={categoryUI}
-                  onChange={(e) => handleCategoryChange((e.target.value || '') as CategoryKey | '')}
-                >
+                <select className="input" value={categoryUI}
+                        onChange={(e) => handleCategoryChange((e.target.value || '') as CategoryKey | '')}>
                   <option value="">— Select category —</option>
                   {(['Holiday','Weekly','Individual','ClubPrograms','RentACoach'] as CategoryKey[]).map(k => (
                     <option key={k} value={k}>{CATEGORY_LABEL[k]}</option>
                   ))}
                 </select>
               </div>
-
               <div className="form__group">
                 <label className="label">Course</label>
+                <select className="input" value={courseUI} onChange={(e) => handleCourseChange(e.target.value)}>
+                  <option value="">— Select course —</option>
+                  {visibleCourses.map(c => (<option key={c.value} value={c.value}>{c.label}</option>))}
+                </select>
+              </div>
+            </div>
+            <p className="help" style={{marginTop: -6}}>
+              Selecting a course fills <code>type</code> automatically; <code>sub_type</code> is optional.
+            </p>
+
+            {/* Place (only) + Price */}
+            <div className="grid grid--2">
+              <div className="form__group">
+                <label className="label">Place</label>
                 <select
                   className="input"
-                  value={courseUI}
-                  onChange={(e) => handleCourseChange(e.target.value)}
+                  value={form.placeId || ''}
+                  onChange={(e) => onPlaceChange(e.target.value)}
                 >
-                  <option value="">— Select course —</option>
-                  {visibleCourses.map(c => (
-                    <option key={c.value} value={c.value}>
-                      {c.label}
+                  <option value="">— Select place —</option>
+                  {places.map(p => (
+                    <option key={p._id} value={p._id}>
+                      {p.name} • {p.city}
                     </option>
                   ))}
                 </select>
               </div>
-            </div>
-            <p className="help" style={{marginTop: -6}}>Die Kurswahl füllt <code>type</code> automatisch; optional wird <code>sub_type</code> gesetzt.</p>
 
-            {/* Location + Price */}
-            <div className="grid grid--2">
-              <div className="form__group">
-                <label className="label">Location</label>
-                <input
-                  className="input"
-                  placeholder="e.g., Duisburg"
-                  value={form.location}
-                  onChange={(e) => setForm((f) => ({ ...f, location: e.target.value }))}
-                />
-              </div>
               <div className="form__group">
                 <label className="label">Price (€)</label>
                 <input
@@ -394,27 +382,18 @@ export default function OfferCreateDialog({
                   placeholder="e.g., 49"
                   min={0}
                   value={form.price}
-                  onChange={(e) =>
-                    setForm((f) => ({
-                      ...f,
-                      price: e.target.value === '' ? '' : Number(e.target.value),
-                    }))
-                  }
+                  onChange={(e) => setForm((f) => ({ ...f, price: e.target.value === '' ? '' : Number(e.target.value) }))}
                 />
               </div>
             </div>
 
             {/* Days */}
-            <div className="form__group">
+            <div className="form__group form__group--stack">
               <label className="label">Day(s)</label>
               <div className="chip-row">
                 {DAYS.map((d) => (
-                  <button
-                    key={d.key}
-                    type="button"
-                    onClick={() => toggleDay(d.key)}
-                    className={clsx('chip', form.days.includes(d.key) && 'chip--active')}
-                  >
+                  <button key={d.key} type="button" onClick={() => toggleDay(d.key)}
+                          className={clsx('chip', form.days.includes(d.key) && 'chip--active')}>
                     {d.label}
                   </button>
                 ))}
@@ -425,21 +404,13 @@ export default function OfferCreateDialog({
             <div className="grid grid--2">
               <div className="form__group">
                 <label className="label">Time from</label>
-                <input
-                  type="time"
-                  className="input"
-                  value={form.timeFrom}
-                  onChange={(e) => setForm((f) => ({ ...f, timeFrom: e.target.value }))}
-                />
+                <input type="time" className="input" value={form.timeFrom}
+                       onChange={(e) => setForm((f) => ({ ...f, timeFrom: e.target.value }))}/>
               </div>
               <div className="form__group">
                 <label className="label">Time to</label>
-                <input
-                  type="time"
-                  className="input"
-                  value={form.timeTo}
-                  onChange={(e) => setForm((f) => ({ ...f, timeTo: e.target.value }))}
-                />
+                <input type="time" className="input" value={form.timeTo}
+                       onChange={(e) => setForm((f) => ({ ...f, timeTo: e.target.value }))}/>
               </div>
             </div>
 
@@ -447,96 +418,53 @@ export default function OfferCreateDialog({
             <div className="grid grid--2">
               <div className="form__group">
                 <label className="label">Age from</label>
-                <input
-                  type="number"
-                  className="input"
-                  placeholder="e.g., 6"
-                  min={0}
-                  value={form.ageFrom}
-                  onChange={(e) =>
-                    setForm((f) => ({
-                      ...f,
-                      ageFrom: e.target.value === '' ? '' : Number(e.target.value),
-                    }))
-                  }
-                />
+                <input type="number" className="input" placeholder="e.g., 6" min={0} value={form.ageFrom}
+                       onChange={(e) => setForm((f) => ({ ...f, ageFrom: e.target.value === '' ? '' : Number(e.target.value) }))}/>
               </div>
               <div className="form__group">
                 <label className="label">Age to</label>
-                <input
-                  type="number"
-                  className="input"
-                  placeholder="e.g., 14"
-                  min={0}
-                  value={form.ageTo}
-                  onChange={(e) =>
-                    setForm((f) => ({
-                      ...f,
-                      ageTo: e.target.value === '' ? '' : Number(e.target.value),
-                    }))
-                  }
-                />
+                <input type="number" className="input" placeholder="e.g., 14" min={0} value={form.ageTo}
+                       onChange={(e) => setForm((f) => ({ ...f, ageTo: e.target.value === '' ? '' : Number(e.target.value) }))}/>
               </div>
             </div>
 
             {/* Info */}
             <div className="form__group">
               <label className="label">Info text</label>
-              <textarea
-                className="input input--textarea"
-                placeholder="Additional information…"
-                value={form.info}
-                onChange={(e) => setForm((f) => ({ ...f, info: e.target.value }))}
-              />
+              <textarea className="input input--textarea" placeholder="Additional information…"
+                        value={form.info} onChange={(e) => setForm((f) => ({ ...f, info: e.target.value }))}/>
             </div>
 
             {/* Coach */}
             <div className="grid grid--2">
               <div className="form__group">
                 <label className="label">Coach name</label>
-                <input
-                  className="input"
-                  placeholder="z. B. Noah Example"
-                  value={form.coachName}
-                  onChange={(e) => setForm((f) => ({ ...f, coachName: e.target.value }))}
-                />
+                <input className="input" placeholder="e.g., Noah Example" value={form.coachName}
+                       onChange={(e) => setForm((f) => ({ ...f, coachName: e.target.value }))}/>
               </div>
               <div className="form__group">
                 <label className="label">Coach E-Mail</label>
-                <input
-                  className="input"
-                  type="email"
-                  placeholder="coach@example.com"
-                  value={form.coachEmail}
-                  onChange={(e) => setForm((f) => ({ ...f, coachEmail: e.target.value }))}
-                />
+                <input className="input" type="email" placeholder="coach@example.com" value={form.coachEmail}
+                       onChange={(e) => setForm((f) => ({ ...f, coachEmail: e.target.value }))}/>
               </div>
             </div>
 
             <div className="form__group">
-              <label className="label">Coach Bild</label>
+              <label className="label">Coach image</label>
               <div className="upload-row">
                 <input type="file" accept="image/*" onChange={handleCoachFileChange} />
                 {uploading && <span className="uploading">Uploading…</span>}
                 {uploadError && <span className="error">{uploadError}</span>}
               </div>
-              {previewUrl ? (
-                <div className="preview">
-                  <img src={previewUrl} alt="Coach preview" />
-                </div>
-              ) : null}
+              {previewUrl ? <div className="preview"><img src={previewUrl} alt="Coach preview" /></div> : null}
               <input type="hidden" value={form.coachImage} onChange={() => {}}/>
             </div>
 
             {/* Online toggle */}
             <div className="form__group form__group--inline">
               <label className="label">Online active</label>
-              <button
-                type="button"
-                className={clsx('switch', form.onlineActive && 'switch--on')}
-                onClick={() => setForm((f) => ({ ...f, onlineActive: !f.onlineActive }))}
-                aria-pressed={form.onlineActive}
-              >
+              <button type="button" className={clsx('switch', form.onlineActive && 'switch--on')}
+                      onClick={() => setForm((f) => ({ ...f, onlineActive: !f.onlineActive }))} aria-pressed={form.onlineActive}>
                 <span className="switch__thumb" />
               </button>
             </div>
@@ -544,11 +472,7 @@ export default function OfferCreateDialog({
             {/* Actions */}
             <div className="form__actions">
               <button type="button" className="btn" onClick={onClose}>Close</button>
-              <button
-                type="submit"
-                disabled={!canSubmit}
-                className={clsx('btn btn--primary', !canSubmit && 'btn--disabled')}
-              >
+              <button type="submit" disabled={!canSubmit} className={clsx('btn btn--primary', !canSubmit && 'btn--disabled')}>
                 {mode === 'edit' ? 'Save changes' : 'Create offer'}
               </button>
             </div>
@@ -566,4 +490,18 @@ export default function OfferCreateDialog({
     </div>
   );
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
