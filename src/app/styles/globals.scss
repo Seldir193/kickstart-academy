@@ -1,4 +1,31 @@
 
+/* Mobile: eine Spalte */
+.ks .filters {
+  display: grid;
+  gap: 12px;
+  margin-top: 8px;
+  grid-template-columns: 1fr;
+}
+
+/* Desktop: 3 Spalten -> [Button+Search] | [Locations] | [Courses] */
+@media (min-width: 900px) {
+  .ks .filters {
+    grid-template-columns: 1fr 260px 260px;
+    align-items: end;
+  }
+}
+
+/* In Spalte 1: Button + Search nebeneinander */
+.ks .filters__row {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 12px;
+  align-items: end;
+}
+
+/* Kleine Politur */
+.ks .filters .label { margin-bottom: 4px; display: block; }
+.ks .filters .input { width: 100%; height: 40px; line-height: 40px; padding: 0 12px; }
 
 
 
@@ -6,6 +33,13 @@
 
 
 
+
+
+
+.list__actions{
+  display: flex;
+  flex-direction: row-reverse;
+}
 
 
 
