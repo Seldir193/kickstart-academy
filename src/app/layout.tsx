@@ -9,7 +9,7 @@
 import './styles/globals.scss';
 import type { Metadata } from 'next';
 
-
+import 'leaflet/dist/leaflet.css';
 import Header from './components/HeaderServer';
 
 import Footer from './components/Footer';
