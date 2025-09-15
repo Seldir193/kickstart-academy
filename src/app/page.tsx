@@ -11,7 +11,7 @@ export default function HomePage() {
         </p>
         <div className="hero-actions">
           <Link href="/trainings" className="btn btn-primary">View Trainings</Link>
-          <Link href="/#contact" className="btn btn-ghost">Contact</Link>
+          <Link href="http://localhost/wordpress/index.php/home/" className="btn btn-ghost">Contact</Link>
         </div>
       </div>
     </section>
