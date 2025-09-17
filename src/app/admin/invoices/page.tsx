@@ -63,7 +63,7 @@ export default function AdminInvoicesPage() {
 
   // Paging (fest auf 10)
   const [page, setPage] = useState(1);
-  const [limit] = useState(10); // <-- FIX: immer 10
+  const [limit] = useState(10); // immer 10
   const [total, setTotal] = useState(0);
 
   // Data + UI
@@ -133,37 +133,13 @@ export default function AdminInvoicesPage() {
     [page, limit, selectedTypes, from, to, q]
   );
 
-  // --- CSV/ZIP Links: SSR-stabil (ohne providerId), optional nach Mount anreichern
+  // CSV/ZIP Links gehen über eigene API-Routen (Cookies werden vom Browser automatisch mitgesendet)
   const [csvHref, setCsvHref] = useState(`/api/admin/invoices/csv?${baseQuery}`);
   const [zipHref, setZipHref] = useState(`/api/admin/invoices/zip?${baseQuery}`);
 
-  // Wenn Filter/Seite ändern, Basis-Links neu setzen
   useEffect(() => {
     setCsvHref(`/api/admin/invoices/csv?${baseQuery}`);
     setZipHref(`/api/admin/invoices/zip?${baseQuery}`);
-  }, [baseQuery]);
-
-  // OPTIONAL: providerId erst NACH MOUNT aus localStorage ergänzen
-  useEffect(() => {
-    const pid = typeof window !== 'undefined' ? localStorage.getItem('providerId') || '' : '';
-    if (!pid) return;
-
-    try {
-      const u1 = new URL(csvHref, typeof window !== 'undefined' ? window.location.origin : 'http://localhost:3000');
-      if (!u1.searchParams.get('providerId')) {
-        u1.searchParams.set('providerId', pid);
-        setCsvHref(u1.pathname + '?' + u1.searchParams.toString());
-      }
-    } catch {}
-
-    try {
-      const u2 = new URL(zipHref, typeof window !== 'undefined' ? window.location.origin : 'http://localhost:3000');
-      if (!u2.searchParams.get('providerId')) {
-        u2.searchParams.set('providerId', pid);
-        setZipHref(u2.pathname + '?' + u2.searchParams.toString());
-      }
-    } catch {}
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [baseQuery]);
 
   // Daten laden
@@ -173,7 +149,11 @@ export default function AdminInvoicesPage() {
       setLoading(true);
       setErr(null);
       try {
-        const res = await fetch(`${BASE_PATH}?${baseQuery}`, { cache: 'no-store' });
+        const res = await fetch(`${BASE_PATH}?${baseQuery}`, {
+          method: 'GET',
+          credentials: 'include', // <— wichtig: JWT-Cookie mitsenden
+          cache: 'no-store',
+        });
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data = (await res.json()) as ListResponse;
         if (!cancelled) {
@@ -196,9 +176,39 @@ export default function AdminInvoicesPage() {
     };
   }, [baseQuery]);
 
-  function openPdf(item: DocItem) {
-    window.open(item.href, '_blank', 'noopener,noreferrer');
+
+
+function openPdf(item: DocItem) {
+  const href = item.href || '';
+  const publicApi = (process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_BACKEND_API_BASE || 'http://127.0.0.1:5000/api').replace(/\/$/, '');
+  let target = href;
+
+  try {
+    // A) absolute Backend-URL → auf /api mappen
+    if (href.startsWith(`${publicApi}/`)) {
+      target = href.replace(publicApi, '/api'); // z.B. http://127.0.0.1:5000/api/admin/... -> /api/admin/...
+    }
+    // B) relative Backend-URL (/admin/...) → /api voranstellen
+    else if (href.startsWith('/admin/')) {
+      target = `/api${href}`; // /admin/... -> /api/admin/...
+    }
+    // C) schon Proxy-Pfad (/api/admin/...) → unverändert
+    // D) Fallback: falls gar kein Slash/Protokoll, konservativ präfixen
+    else if (!href.startsWith('http') && !href.startsWith('/')) {
+      target = `/api/${href.replace(/^\/+/, '')}`;
+    }
+  } catch {
+    // ignore
   }
+
+  window.open(target, '_blank', 'noopener,noreferrer');
+
+}
+
+
+
+
+
 
   return (
     <div className="ks invoices">
@@ -431,7 +441,6 @@ export default function AdminInvoicesPage() {
     </div>
   );
 }
-
 
 
 
