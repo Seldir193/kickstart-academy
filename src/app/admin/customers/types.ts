@@ -1,3 +1,5 @@
+
+
 // app/admin/customers/types.ts
 export type Address = { street?: string; houseNo?: string; zip?: string; city?: string };
 export type ParentInfo = { salutation?: 'Frau'|'Herr'|''; firstName?: string; lastName?: string; email?: string; phone?: string; phone2?: string };
@@ -97,6 +99,8 @@ export const API_ENDPOINTS = {
   exportDocumentsCsv: (customerId: string, qs: string) =>
     `/api/admin/customers/${encodeURIComponent(customerId)}/documents.csv${qs ? `?${qs}` : ''}`,
 };
+
+
 
 
 
