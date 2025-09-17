@@ -1,28 +1,11 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // app/api/admin/invoices/route.ts
 import { NextRequest, NextResponse } from 'next/server';
+import { getProviderId } from '@/app/api/lib/auth';
 
-// Wichtig: Node-Laufzeit & keine statische Vor-Render-Optimierung
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
 function baseFromEnv() {
-  // Fallback nutzt NEXT_PUBLIC_API_URL oder defaultet auf 127.0.0.1
   const raw =
     process.env.NEXT_BACKEND_API_BASE ||
     process.env.NEXT_PUBLIC_API_URL ||
@@ -30,52 +13,36 @@ function baseFromEnv() {
   return raw.replace(/\/$/, '');
 }
 
-function getProviderId(req: NextRequest): string | null {
-  // 1) Header (falls der Client ihn mitsendet)
-  const h = req.headers.get('x-provider-id');
-  if (h && h.trim()) return h.trim();
-
-  // 2) Cookies (vom Admin-Login)
-  const c =
-    req.cookies.get('providerId')?.value ||
-    req.cookies.get('adminProviderId')?.value ||
-    req.cookies.get('aid')?.value;
-  if (c && String(c).trim()) return String(c).trim();
-
-  // 3) Query (?providerId=...)
-  const q = req.nextUrl.searchParams.get('providerId');
-  if (q && q.trim()) return q.trim();
-
-  return null;
-}
-
 export async function GET(req: NextRequest) {
   const BASE = baseFromEnv();
   if (!BASE) {
-    // Extra-Log hilft dir beim Debuggen im Terminal
-    console.error('[invoices-proxy] NEXT_BACKEND_API_BASE ist leer/undefiniert');
+    console.error('[invoices-proxy] NEXT_BACKEND_API_BASE is missing');
     return NextResponse.json(
       { ok: false, error: 'Server misconfigured: NEXT_BACKEND_API_BASE is missing' },
       { status: 500 }
     );
   }
 
+  // 🔐 providerId ausschließlich aus JWT (HttpOnly) — keine Header/Query/Cookie vom Client akzeptieren
+  const providerId = await getProviderId(req);
+  if (!providerId) {
+    return NextResponse.json({ ok: false, error: 'Unauthorized' }, { status: 401 });
+  }
+
   // Query 1:1 durchreichen
   const qs = req.nextUrl.searchParams.toString();
   const url = `${BASE}/admin/invoices${qs ? `?${qs}` : ''}`;
 
-  // Provider-ID ermitteln (Header/Cookie/Query)
-  const providerId = getProviderId(req);
-  const headers: Record<string, string> = {};
-  if (providerId) headers['x-provider-id'] = providerId;
-
   try {
     const r = await fetch(url, {
-      headers,
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'x-provider-id': providerId, // ← aus JWT, nicht vom Client
+      },
       cache: 'no-store',
     });
 
-    // Body einfach durchreichen (Text reicht hier)
     const body = await r.text();
     return new NextResponse(body, {
       status: r.status,
@@ -91,6 +58,10 @@ export async function GET(req: NextRequest) {
     );
   }
 }
+
+
+
+
 
 
 
