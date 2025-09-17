@@ -37,7 +37,7 @@ export default function BookDialog({ customerId, onClose, onBooked }: Props) {
   const [loadingOffers, setLoadingOffers] = useState(false);
   const [err, setErr] = useState<string | null>(null);
 
-  // NEW: grouped course selection (matches TrainingCard)
+  // grouped course selection (matches TrainingCard)
   const [courseValue, setCourseValue] = useState<string>(''); // '' = All courses
   const [selectedOfferId, setSelectedOfferId] = useState<string>('');
   const [selectedDate, setSelectedDate] = useState<string>(() => new Date().toISOString().slice(0, 10));
@@ -47,8 +47,10 @@ export default function BookDialog({ customerId, onClose, onBooked }: Props) {
     (async () => {
       try {
         setLoadingOffers(true); setErr(null);
-        const pid = (typeof window !== 'undefined' && localStorage.getItem('providerId')) || '';
-        const res = await fetch(`/api/admin/offers?limit=500`, { cache: 'no-store', headers: { ...(pid ? { 'x-provider-id': pid } : {}) } });
+        const res = await fetch(`/api/admin/offers?limit=500`, {
+          cache: 'no-store',
+          credentials: 'include', // 🔐 JWT-Cookie mitsenden
+        });
         if (!res.ok) throw new Error(`Failed to load offers (${res.status})`);
         const data = await res.json();
         const list = Array.isArray(data.items) ? data.items : (Array.isArray(data) ? data : []);
@@ -61,14 +63,11 @@ export default function BookDialog({ customerId, onClose, onBooked }: Props) {
     })();
   }, []);
 
-  // Filter offers by selected course value
   const filteredOffers = useMemo(
     () => offers.filter(o => offerMatchesCourse(courseValue, o)),
     [offers, courseValue]
   );
 
-
-  // keep valid selection
   useEffect(() => {
     if (!filteredOffers.length) { setSelectedOfferId(''); return; }
     const still = filteredOffers.some(o => o._id === selectedOfferId);
@@ -89,11 +88,11 @@ export default function BookDialog({ customerId, onClose, onBooked }: Props) {
     if (!customerId || !selectedOfferId || !selectedDate) return;
     setSaving(true); setErr(null);
     try {
-      const pid = (typeof window !== 'undefined' && localStorage.getItem('providerId')) || '';
       // 1) Create booking
       const res = await fetch(`/api/admin/customers/${encodeURIComponent(customerId)}/bookings`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', ...(pid ? { 'x-provider-id': pid } : {}) },
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',   // 🔐
         cache: 'no-store',
         body: JSON.stringify({ offerId: selectedOfferId, date: selectedDate }),
       });
@@ -105,14 +104,22 @@ export default function BookDialog({ customerId, onClose, onBooked }: Props) {
       if (newBooking?._id) {
         const r2 = await fetch(
           `/api/admin/customers/${encodeURIComponent(customerId)}/bookings/${encodeURIComponent(newBooking._id)}/email/confirmation`,
-          { method: 'POST', headers: { 'Content-Type': 'application/json', ...(pid ? { 'x-provider-id': pid } : {}) } }
+          {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',   // 🔐
+            cache: 'no-store',
+          }
         );
-        if (!r2.ok && r2.status !== 409) console.warn('confirmation email failed', r2.status, await r2.text().catch(()=> ''));
+        if (!r2.ok && r2.status !== 409) {
+          console.warn('confirmation email failed', r2.status, await r2.text().catch(()=> ''));
+        }
       }
 
       // 3) Refresh customer
       const r3 = await fetch(`/api/admin/customers/${encodeURIComponent(customerId)}`, {
-        cache: 'no-store', headers: { ...(pid ? { 'x-provider-id': pid } : {}) },
+        cache: 'no-store',
+        credentials: 'include',   // 🔐
       });
       const fresh = r3.ok ? await r3.json() : null;
       if (fresh) onBooked(fresh);
@@ -157,11 +164,15 @@ export default function BookDialog({ customerId, onClose, onBooked }: Props) {
         <div className="grid gap-2 mb-2">
           <div>
             <label className="lbl">Offer</label>
-            <select className="input" value={selectedOfferId} onChange={(e)=> setSelectedOfferId(e.target.value)} disabled={!filteredOffers.length}>
+            <select
+              className="input"
+              value={selectedOfferId}
+              onChange={(e)=> setSelectedOfferId(e.target.value)}
+              disabled={!filteredOffers.length}
+            >
               {filteredOffers.map(o => {
                 const parts = [
                   o.title || '—',
-                  [o.type, o.location].filter(Boolean).join(' • ') || undefined,
                   isNum(o.price) ? fmtEUR(o.price) : undefined,
                 ].filter(Boolean);
                 return <option key={o._id} value={o._id}>{parts.join(' — ')}</option>;
@@ -202,15 +213,3 @@ export default function BookDialog({ customerId, onClose, onBooked }: Props) {
     </div>
   );
 }
-
-
-
-
-
-
-
-
-
-
-
-
