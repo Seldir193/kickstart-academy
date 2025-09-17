@@ -3,16 +3,13 @@
 
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 
-
-
-
 type DocItem = {
   id: string;
   bookingId: string;
   type: 'participation'|'cancellation'|'storno'|string;
   title: string;
   issuedAt?: string;
-  href: string;           // POST endpoint that returns a PDF (Next proxy)
+  href: string;           // Next-Proxy-Endpoint, der ein PDF liefert
   status?: string;
   offerTitle?: string;
   offerType?: string;
@@ -34,17 +31,25 @@ function qs(params: Record<string, any>) {
   return sp.toString();
 }
 
-
-
-
-
-
-
-
-
+/** Falls das Backend mal einen Pfad ohne /api schickt, hier angleichen */
+function normalizePdfHref(rawHref: string): string {
+  try {
+    const u = new URL(rawHref, typeof window !== 'undefined' ? window.location.origin : 'http://localhost:3000');
+    // Wenn bereits ein /api-Proxy genutzt wird, so lassen
+    if (u.pathname.startsWith('/api/')) return u.pathname + u.search;
+    // Häufige Backoffice-Pfade in unseren Next-Proxy (/api/admin/...) spiegeln
+    if (u.pathname.startsWith('/admin/')) return '/api' + u.pathname + u.search;
+    if (u.pathname.startsWith('/customers/') || u.pathname.startsWith('/bookings/')) {
+      return '/api/admin' + u.pathname + u.search;
+    }
+    return u.pathname + u.search;
+  } catch {
+    return rawHref;
+  }
+}
 
 export default function DocumentsDialog({ customerId, onClose }: Props) {
-  // filters
+  // Filter
   const [typeParticipation, setTypeParticipation] = useState(true);
   const [typeCancellation,  setTypeCancellation]  = useState(true);
   const [typeStorno,        setTypeStorno]        = useState(true);
@@ -52,17 +57,17 @@ export default function DocumentsDialog({ customerId, onClose }: Props) {
   const [from, setFrom] = useState<string>('');
   const [to,   setTo]   = useState<string>('');
 
-  // paging
+  // Paging
   const [page, setPage]   = useState(1);
   const [limit, setLimit] = useState(20);
   const [total, setTotal] = useState(0);
 
-  // data
+  // Data
   const [items, setItems] = useState<DocItem[]>([]);
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useState<string|null>(null);
 
-  // Dropdown overlay (wie in Cancel/Storno)
+  // Dropdown overlay
   const triggerRef = useRef<HTMLButtonElement|null>(null);
   const menuRef = useRef<HTMLDivElement|null>(null);
   const [open, setOpen] = useState(false);
@@ -78,35 +83,23 @@ export default function DocumentsDialog({ customerId, onClose }: Props) {
 
   const totalPages = Math.max(1, Math.ceil(total / Math.max(1, limit)));
 
-
-
-
-
   const csvHref = useMemo(() => {
-  const query = qs({
-    type: selectedTypes.join(','),
-    from, to, q,
-    sort: 'issuedAt:desc',
-  });
-  return `/api/admin/customers/${encodeURIComponent(customerId)}/documents.csv?${query}`;
-}, [customerId, selectedTypes, from, to, q]);
+    const query = qs({
+      type: selectedTypes.join(','),
+      from, to, q,
+      sort: 'issuedAt:desc',
+    });
+    return `/api/admin/customers/${encodeURIComponent(customerId)}/documents.csv?${query}`;
+  }, [customerId, from, q, selectedTypes.join(','), to]);
 
-const zipHref = useMemo(() => {
-  const query = qs({
-    type: selectedTypes.join(','),
-    from, to, q,
-    sort: 'issuedAt:desc',
-  });
-  return `/api/admin/customers/${encodeURIComponent(customerId)}/documents.zip?${query}`;
-}, [customerId, selectedTypes, from, to, q]);
-
-
-
-
-
-
-
-
+  const zipHref = useMemo(() => {
+    const query = qs({
+      type: selectedTypes.join(','),
+      from, to, q,
+      sort: 'issuedAt:desc',
+    });
+    return `/api/admin/customers/${encodeURIComponent(customerId)}/documents.zip?${query}`;
+  }, [customerId, from, q, selectedTypes.join(','), to]);
 
   function computePos() {
     if (!triggerRef.current) return;
@@ -131,25 +124,28 @@ const zipHref = useMemo(() => {
     };
   }, [open]);
 
-  // fetch list
+  // Liste laden
   useEffect(() => {
     let cancelled = false;
     (async () => {
       setLoading(true); setErr(null);
       try {
-        const pid = (typeof window !== 'undefined' && localStorage.getItem('providerId')) || '';
         const query = qs({
           page, limit,
           type: selectedTypes.join(','),
           from, to, q,
           sort: 'issuedAt:desc',
         });
-        const res = await fetch(`/api/admin/customers/${encodeURIComponent(customerId)}/documents?${query}`, {
-          cache: 'no-store',
-          headers: { ...(pid ? { 'x-provider-id': pid } : {}) },
-        });
+        const res = await fetch(
+          `/api/admin/customers/${encodeURIComponent(customerId)}/documents?${query}`,
+          {
+            method: 'GET',
+            credentials: 'include', // 🔐 JWT-Cookie mitsenden
+            cache: 'no-store',
+          }
+        );
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const data = await res.json() as ListResponse;
+        const data = (await res.json()) as ListResponse;
         if (!cancelled) {
           setItems(Array.isArray(data.items) ? data.items : []);
           setTotal(Number(data.total || 0));
@@ -161,21 +157,17 @@ const zipHref = useMemo(() => {
       }
     })();
     return () => { cancelled = true; };
-  }, [customerId, page, limit, selectedTypes, from, to, q]);
+  }, [customerId, page, limit, from, to, q, selectedTypes.join(',')]);
 
   function openDropdown() {
     computePos();
     setOpen(true);
   }
 
-
-function openPdf(item: DocItem) {
-  // Neuer Tab als GET (Proxy akzeptiert jetzt GET und forwarded als POST)
-  const url = item.href; // z. B. /api/admin/customers/:id/bookings/:bid/documents/cancellation
-  window.open(url, '_blank', 'noopener,noreferrer');
-}
-
-
+  function openPdf(item: DocItem) {
+    const url = normalizePdfHref(item.href);
+    window.open(url, '_blank', 'noopener,noreferrer');
+  }
 
   return (
     <div className="ks-modal-root ks-modal-root--top">
@@ -281,21 +273,17 @@ function openPdf(item: DocItem) {
         </div>
 
         {/* Actions */}
-       
-
         <div className="flex justify-end gap-2 mt-4">
-  <a href={csvHref} className="btn">Download CSV</a>
-  <a href={zipHref} className="btn btn-primary">Download ZIP</a>
-  <button className="btn" onClick={onClose}>Close</button>
-</div>
-
+          <a href={csvHref} className="btn">Download CSV</a>
+          <a href={zipHref} className="btn btn-primary">Download ZIP</a>
+          <button className="btn" onClick={onClose}>Close</button>
+        </div>
 
         {err && <div className="mt-2 text-red-600">{err}</div>}
       </div>
     </div>
   );
 }
-
 
 
 
