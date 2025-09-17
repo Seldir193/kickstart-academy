@@ -1,5 +1,6 @@
 // app/api/admin/customers/route.ts
 import { NextRequest, NextResponse } from 'next/server';
+import { getProviderIdFromCookies } from '@/app/api/lib/auth';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -8,48 +9,37 @@ function baseFromEnv() {
   const raw =
     process.env.NEXT_BACKEND_API_BASE ||
     process.env.NEXT_PUBLIC_API_URL ||
-    '';
-  return (raw || '').replace(/\/$/, ''); // z.B. http://127.0.0.1:5000/api
-}
-
-function getProviderId(req: NextRequest): string | null {
-  // 1) Header (falls gesetzt)
-  const h = req.headers.get('x-provider-id');
-  if (h && h.trim()) return h.trim();
-
-  // 2) Cookies (vom Admin-Login)
-  const c =
-    req.cookies.get('providerId')?.value ||
-    req.cookies.get('adminProviderId')?.value ||
-    req.cookies.get('aid')?.value;
-  if (c && String(c).trim()) return String(c).trim();
-
-  // 3) Optional: ?providerId=... (für lokale Tests)
-  const q = req.nextUrl.searchParams.get('providerId');
-  if (q && q.trim()) return q.trim();
-
-  return null;
+    'http://127.0.0.1:5000/api';
+  return raw.replace(/\/$/, ''); // z.B. http://127.0.0.1:5000/api
 }
 
 export async function GET(req: NextRequest) {
   const BASE = baseFromEnv();
   if (!BASE) {
     console.error('[customers-proxy] NEXT_BACKEND_API_BASE missing');
-    return NextResponse.json({ ok:false, error:'NEXT_BACKEND_API_BASE missing' }, { status: 500 });
+    return NextResponse.json(
+      { ok: false, error: 'NEXT_BACKEND_API_BASE missing' },
+      { status: 500 }
+    );
   }
 
-  const providerId = getProviderId(req);
+  // 🔐 Nur aus HttpOnly-JWT lesen (keine Query/Client-Header/Klartext-Cookies)
+  const providerId = await getProviderIdFromCookies();
   if (!providerId) {
-    return NextResponse.json({ ok:false, error:'Missing provider id' }, { status: 401 });
+    return NextResponse.json({ ok: false, error: 'Unauthorized' }, { status: 401 });
   }
 
+  // Query 1:1 durchreichen
   const qs = req.nextUrl.searchParams.toString(); // ?q=&page=&limit=&sort=...
   const url = `${BASE}/customers${qs ? `?${qs}` : ''}`;
-  console.log('[customers-proxy] →', url, 'pid=', providerId);
 
   try {
     const r = await fetch(url, {
-      headers: { 'x-provider-id': providerId, 'accept': 'application/json' },
+      method: 'GET',
+      headers: {
+        Accept: 'application/json',
+        'x-provider-id': providerId, // ← aus JWT
+      },
       cache: 'no-store',
     });
 
@@ -60,7 +50,7 @@ export async function GET(req: NextRequest) {
     });
   } catch (e: any) {
     console.error('[customers-proxy] error:', e?.message || e);
-    return NextResponse.json({ ok:false, error: e?.message || 'Proxy error' }, { status: 500 });
+    return NextResponse.json({ ok: false, error: e?.message || 'Proxy error' }, { status: 500 });
   }
 }
 
@@ -68,12 +58,16 @@ export async function POST(req: NextRequest) {
   const BASE = baseFromEnv();
   if (!BASE) {
     console.error('[customers-proxy] NEXT_BACKEND_API_BASE missing');
-    return NextResponse.json({ ok:false, error:'NEXT_BACKEND_API_BASE missing' }, { status: 500 });
+    return NextResponse.json(
+      { ok: false, error: 'NEXT_BACKEND_API_BASE missing' },
+      { status: 500 }
+    );
   }
 
-  const providerId = getProviderId(req);
+  // 🔐 Nur JWT
+  const providerId = await getProviderIdFromCookies();
   if (!providerId) {
-    return NextResponse.json({ ok:false, error:'Missing provider id' }, { status: 401 });
+    return NextResponse.json({ ok: false, error: 'Unauthorized' }, { status: 401 });
   }
 
   let body: any = {};
@@ -84,8 +78,8 @@ export async function POST(req: NextRequest) {
       method: 'POST',
       headers: {
         'content-type': 'application/json',
+        Accept: 'application/json',
         'x-provider-id': providerId,
-        'accept': 'application/json',
       },
       body: JSON.stringify(body),
       cache: 'no-store',
@@ -98,15 +92,6 @@ export async function POST(req: NextRequest) {
     });
   } catch (e: any) {
     console.error('[customers-proxy:POST] error:', e?.message || e);
-    return NextResponse.json({ ok:false, error: e?.message || 'Proxy error' }, { status: 500 });
+    return NextResponse.json({ ok: false, error: e?.message || 'Proxy error' }, { status: 500 });
   }
 }
-
-
-
-
-
-
-
-
-
