@@ -68,15 +68,16 @@ export default function AdminLoginPage() {
 
     try {
       // Für ENV-Admin-Login (nur DEV): providerId abfragen
-      let providerId = '';
-      if (process.env.NODE_ENV !== 'production') {
-        providerId = window.prompt('Bitte Provider-ID eingeben (Mongo ObjectId):', '') || '';
-      }
+    //  let providerId = '';
+      //if (process.env.NODE_ENV !== 'production') {
+      //  providerId = window.prompt('Bitte Provider-ID eingeben (Mongo ObjectId):', '') || '';
+     // }
 
       const r = await fetch('/api/admin/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password, providerId }),
+        //body: JSON.stringify({ email, password, providerId }),
+         body: JSON.stringify({ email, password }),
         credentials: 'include',
         cache: 'no-store',
       });
