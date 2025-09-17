@@ -1,6 +1,9 @@
-"use client";
 
-import { useEffect, useState } from "react";
+'use client';
+
+import { useEffect, useState } from 'react';
+
+type Status = 'pending' | 'processing' | 'confirmed' | 'cancelled' | 'deleted';
 
 type Booking = {
   _id: string;
@@ -12,7 +15,7 @@ type Booking = {
   level: string;
   message?: string;
   createdAt: string;
-  status?: "pending" | "processing" | "confirmed" | "cancelled" | "deleted";
+  status?: Status;
   confirmationCode?: string;
 };
 
@@ -20,45 +23,59 @@ export default function AdminBookingsTable({ bookings }: { bookings: Booking[] }
   // lokale, editierbare Kopie der Liste
   const [rows, setRows] = useState<Booking[]>(bookings);
   const [loadingId, setLoadingId] = useState<string | null>(null);
-  const [err, setErr] = useState<string>("");
+  const [err, setErr] = useState<string>('');
 
   // wenn Server neue props liefert (SSR-Refresh), Liste übernehmen
   useEffect(() => setRows(bookings), [bookings]);
 
   async function reloadList() {
     try {
-      const r = await fetch("/api/admin/bookings/list", { cache: "no-store" });
-      const d = await r.json();
-      
+      setErr('');
+      const r = await fetch('/api/admin/bookings', {
+        method: 'GET',
+        credentials: 'include',   // 🔐 JWT-Cookie mitsenden
+        cache: 'no-store',
+      });
+      const d = await r.json().catch(() => ({}));
       if (!r.ok) throw new Error(d?.error || `Reload failed (${r.status})`);
-      setRows(d.bookings || []);
+
+      // erwartete Form: { bookings: [...] }
+      const next: Booking[] =
+        Array.isArray(d) ? d :
+        Array.isArray(d.bookings) ? d.bookings :
+        Array.isArray(d.items) ? d.items :
+        [];
+      setRows(next);
     } catch (e: any) {
-      setErr(e.message || "Reload failed");
+      setErr(e?.message || 'Reload failed');
     }
   }
 
   async function confirmBooking(id: string) {
-   
-    setErr("");
+    setErr('');
     setLoadingId(id);
     try {
-      const r = await fetch(`/api/admin/bookings/${id}/confirm`, { method: "POST" });
+      const r = await fetch(`/api/admin/bookings/${id}/confirm`, {
+        method: 'POST',
+        credentials: 'include',   // 🔐
+        cache: 'no-store',
+      });
       const d = await r.json().catch(() => ({}));
-      if (!r.ok || !d.ok) throw new Error(d?.error || `Confirm failed (${r.status})`);
+      if (!r.ok || !d?.ok) throw new Error(d?.error || r.statusText);
 
-      // Optimistic Update (sofort anzeigen) …
+      // Optimistic Update
       setRows(prev =>
         prev.map(b =>
           b._id === id
-            ? { ...b, status: "confirmed", confirmationCode: d.booking?.confirmationCode ?? b.confirmationCode }
+            ? { ...b, status: 'confirmed', confirmationCode: d.booking?.confirmationCode ?? b.confirmationCode }
             : b
         )
       );
 
-      // … und optional echte Liste nachladen
+      // echte Liste nachladen
       await reloadList();
     } catch (e: any) {
-      setErr(e.message || "Fehler beim Bestätigen");
+      setErr(e?.message || 'Fehler beim Bestätigen');
     } finally {
       setLoadingId(null);
     }
@@ -90,21 +107,29 @@ export default function AdminBookingsTable({ bookings }: { bookings: Booking[] }
 
             <div className="actions">
               <button
-                disabled={loadingId === b._id || b.status === "confirmed"}
+                disabled={loadingId === b._id || b.status === 'confirmed'}
                 onClick={() => confirmBooking(b._id)}
               >
-                {b.status === "confirmed"
-                  ? "Bestätigt"
+                {b.status === 'confirmed'
+                  ? 'Bestätigt'
                   : loadingId === b._id
-                  ? "Bitte warten…"
-                  : "Bestätigen"}
+                  ? 'Bitte warten…'
+                  : 'Bestätigen'}
               </button>
             </div>
 
-            <small>Created: {new Date(b.createdAt).toLocaleString()}</small>
+            <small>Created: {new Date(b.createdAt).toLocaleString('de-DE')}</small>
           </article>
         ))}
       </div>
     </main>
   );
 }
+
+
+
+
+
+
+
+
