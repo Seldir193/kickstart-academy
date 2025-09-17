@@ -12,12 +12,33 @@ function rawType(b?: Partial<BookingRef> | null) { return (b?.type || (b as any)
 function norm(s: string) { return (s || '').replace(/[Ää]/g,'ae').replace(/[Öö]/g,'oe').replace(/[Üü]/g,'ue').replace(/ß/g,'ss').toLowerCase(); }
 function textFor(b: any) { return norm([rawType(b), b?.offerTitle].filter(Boolean).join(' ')); }
 function labelFor(b: any) {
-  const parts = [b.offerTitle || '—', rawType(b) || '—', b.status === 'cancelled' ? 'Cancelled' : (b.status || 'Active'), b.date ? `since ${String(b.date).slice(0,10)}` : undefined].filter(Boolean);
+  const parts = [
+    b.offerTitle || '—',
+    rawType(b) || '—',
+    b.status === 'cancelled' ? 'Cancelled' : (b.status || 'Active'),
+    b.date ? `since ${String(b.date).slice(0,10)}` : undefined
+  ].filter(Boolean);
   return parts.join(' — ');
 }
 
+/** Frontend-Spiegel der Serverlogik: welche Buchungen sind kündbar? */
+function isBookingCancellable(booking: any, offersById: Map<string, any>) {
+  const off = booking?.offerId ? offersById.get(String(booking.offerId)) : null;
+
+  const t  = (off?.type || booking?.type || '').toString();
+  const st = (off?.sub_type || booking?.offerType || '').toString().toLowerCase();
+  const cat = (off?.category || '').toString();
+
+  if (st === 'powertraining') return false;
+  if (t === 'Camp' || t === 'PersonalTraining') return false;
+
+  if (t === 'Foerdertraining' || t === 'Kindergarten') return true;
+  if (cat === 'Weekly') return true;
+
+  return false;
+}
+
 export default function CancelDialog({ customer, onClose, onChanged }: Props) {
-  // Offers laden (für Mapping booking -> course value)
   const [offers, setOffers] = useState<any[]>([]);
   const [loadingOffers, setLoadingOffers] = useState(false);
   const [err, setErr] = useState<string | null>(null);
@@ -26,13 +47,15 @@ export default function CancelDialog({ customer, onClose, onChanged }: Props) {
     (async () => {
       try {
         setLoadingOffers(true); setErr(null);
-        const pid = (typeof window !== 'undefined' && localStorage.getItem('providerId')) || '';
-        const res = await fetch(`/api/admin/offers?limit=500`, { cache: 'no-store', headers: { ...(pid ? { 'x-provider-id': pid } : {}) } });
+        const res = await fetch(`/api/admin/offers?limit=500`, {
+          cache: 'no-store',
+          credentials: 'include',
+        });
         const data = res.ok ? await res.json() : [];
         const list = Array.isArray(data?.items) ? data.items : (Array.isArray(data) ? data : []);
         setOffers(list);
       } catch (e: any) {
-        setErr(e?.message || 'Failed to load categories');
+        setErr(e?.message || 'Failed to load offers');
       } finally {
         setLoadingOffers(false);
       }
@@ -45,17 +68,14 @@ export default function CancelDialog({ customer, onClose, onChanged }: Props) {
     return m;
   }, [offers]);
 
-  // NEW: selected course value (like /trainings)
-  const [courseValue, setCourseValue] = useState<string>(''); // '' = All courses
+  const [courseValue, setCourseValue] = useState<string>('');
 
-  // Buchungen nach Auswahl filtern
   const filteredBookings = useMemo(() => {
-    const src = customer.bookings || [];
+    const src = (customer.bookings || []).filter((b: any) => isBookingCancellable(b, offersById));
     if (!courseValue) return src;
     return src.filter(b => courseValueFromBooking(b, offersById) === courseValue);
   }, [customer.bookings, offersById, courseValue]);
 
-  // Dropdown (fixed overlay)
   const triggerRef = useRef<HTMLButtonElement | null>(null);
   const menuRef = useRef<HTMLDivElement | null>(null);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -101,22 +121,45 @@ export default function CancelDialog({ customer, onClose, onChanged }: Props) {
   }, [menuOpen]);
 
   const selectedIsCancelled = selected?.status === 'cancelled';
+
+  // 🔹 Eingangsdatum (vom …) – Standard heute
   const [cancelDate, setCancelDate] = useState<string>(todayISO());
+
+  // 🔹 Enddatum (zum …) – neu
+  const [endDate, setEndDate] = useState<string>('');
+
   const [reason, setReason] = useState<string>('');
   const [saving, setSaving] = useState(false);
-  const disabled = saving || !selected || !cancelDate || selectedIsCancelled;
+
+  const endBeforeStart = Boolean(endDate && cancelDate && endDate < cancelDate);
+  const disabled = saving || !selected || !cancelDate || !endDate || selectedIsCancelled || endBeforeStart;
 
   async function submit() {
-    if (!customer._id || !selected?._id || !cancelDate) return;
+    if (!customer._id || !selected?._id || !cancelDate || !endDate) return;
     setSaving(true); setErr(null);
     try {
-      const pid = (typeof window !== 'undefined' && localStorage.getItem('providerId')) || '';
       const r = await fetch(
         `/api/admin/customers/${encodeURIComponent(customer._id)}/bookings/${encodeURIComponent(selected._id)}/cancel`,
-        { method: 'POST', headers: { 'Content-Type': 'application/json', ...(pid ? { 'x-provider-id': pid } : {}) }, cache: 'no-store', body: JSON.stringify({ date: cancelDate, reason }) }
+        {
+          method: 'POST',
+          credentials: 'include',
+          headers: { 'Content-Type': 'application/json' },
+          cache: 'no-store',
+          body: JSON.stringify({ 
+            date: cancelDate,     // Eingangsdatum (vom …)
+            endDate,              // Beendigungsdatum (zum …)  ← WICHTIG
+            reason
+          })
+        }
       );
-      if (!r.ok) throw new Error(`Cancel failed (${r.status}) ${await r.text().catch(()=> '')}`);
-      const r2 = await fetch(`/api/admin/customers/${encodeURIComponent(customer._id)}`, { cache: 'no-store', headers: { ...(pid ? { 'x-provider-id': pid } : {}) } });
+      if (!r.ok) {
+        const t = await r.text().catch(()=> '');
+        throw new Error(`Cancel failed (${r.status}) ${t}`);
+      }
+      const r2 = await fetch(`/api/admin/customers/${encodeURIComponent(customer._id)}`, {
+        cache: 'no-store',
+        credentials: 'include',
+      });
       const fresh = r2.ok ? await r2.json() : null;
       if (fresh) onChanged(fresh);
       onClose();
@@ -137,7 +180,7 @@ export default function CancelDialog({ customer, onClose, onChanged }: Props) {
         </div>
 
         {err && <div className="mb-2 text-red-600">{err}</div>}
-        {loadingOffers && <div className="mb-2 text-gray-600">Loading categories…</div>}
+        {loadingOffers && <div className="mb-2 text-gray-600">Loading courses…</div>}
 
         {/* Courses (grouped) */}
         <div className="grid gap-2 mb-2">
@@ -151,10 +194,15 @@ export default function CancelDialog({ customer, onClose, onChanged }: Props) {
                 </optgroup>
               ))}
             </select>
+            {!filteredBookings.length && (
+              <div className="text-sm text-gray-600 mt-1">
+                No cancellable bookings for this filter. Powertraining and certain one-off programs are not cancellable.
+              </div>
+            )}
           </div>
         </div>
 
-        {/* Booking trigger */}
+     {/* Booking trigger */}
         <div className="grid gap-2 mb-2">
           <div>
             <label className="lbl">Booking</label>
@@ -207,15 +255,48 @@ export default function CancelDialog({ customer, onClose, onChanged }: Props) {
           </div>
         )}
 
+
+       
+
         {/* Form */}
         <div className="grid gap-2">
           <div>
-            <label className="lbl">Effective date (required)</label>
-            <input className="input" type="date" value={cancelDate} min={todayISO()} onChange={(e)=> setCancelDate(e.target.value)} disabled={!selected || selectedIsCancelled} />
+            <label className="lbl">Receipt date (vom) — required</label>
+            <input
+              className="input"
+              type="date"
+              value={cancelDate}
+              min={todayISO()}
+              onChange={(e)=> setCancelDate(e.target.value)}
+              disabled={!selected || selectedIsCancelled}
+            />
+          </div>
+          <div>
+            <label className="lbl">End date (zum) — required</label>
+            <input
+              className="input"
+              type="date"
+              value={endDate}
+              min={cancelDate || todayISO()}
+              onChange={(e)=> setEndDate(e.target.value)}
+              disabled={!selected || selectedIsCancelled}
+            />
+            {endBeforeStart && (
+              <div className="text-sm text-red-600 mt-1">
+                End date must be on or after the receipt date.
+              </div>
+            )}
           </div>
           <div>
             <label className="lbl">Reason (optional)</label>
-            <textarea className="input" rows={3} value={reason} onChange={(e)=> setReason(e.target.value)} placeholder="e.g., moved away, club change" disabled={!selected || selectedIsCancelled} />
+            <textarea
+              className="input"
+              rows={3}
+              value={reason}
+              onChange={(e)=> setReason(e.target.value)}
+              placeholder="e.g., moved away, club change"
+              disabled={!selected || selectedIsCancelled}
+            />
           </div>
           {selected && selectedIsCancelled && <div className="text-gray-600">This booking is already cancelled.</div>}
         </div>
@@ -230,7 +311,6 @@ export default function CancelDialog({ customer, onClose, onChanged }: Props) {
     </div>
   );
 }
-
 
 
 
