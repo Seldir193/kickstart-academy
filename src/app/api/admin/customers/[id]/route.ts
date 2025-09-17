@@ -1,9 +1,8 @@
-
-
-
-
 // src/app/api/admin/customers/[id]/route.ts
-import { NextResponse } from 'next/server';
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
+
+import { NextRequest, NextResponse } from 'next/server';
 import { getProviderIdFromCookies } from '@/app/api/lib/auth';
 
 function apiBase() {
@@ -11,53 +10,61 @@ function apiBase() {
   return b.replace(/\/+$/, '');
 }
 
-export async function GET(_req: Request, { params }: { params: { id: string } }) {
+export async function GET(_req: NextRequest, { params }: { params: { id: string } }) {
   const pid = await getProviderIdFromCookies();
-  if (!pid) return NextResponse.json({ ok:false, error:'Unauthorized' }, { status: 401 });
+  if (!pid) return NextResponse.json({ ok: false, error: 'Unauthorized' }, { status: 401 });
 
   const r = await fetch(`${apiBase()}/customers/${encodeURIComponent(params.id)}`, {
-    headers: { 'X-Provider-Id': pid, 'Accept': 'application/json' },
+    headers: { 'X-Provider-Id': pid, Accept: 'application/json' },
     cache: 'no-store',
   });
 
-  const text = await r.text();
-  let data: any; try { data = JSON.parse(text); } catch { data = { raw: text }; }
-  return NextResponse.json(data, { status: r.status });
+  const body = await r.text();
+  return new NextResponse(body, {
+    status: r.status,
+    headers: { 'content-type': r.headers.get('content-type') || 'application/json' },
+  });
 }
 
-export async function PUT(req: Request, { params }: { params: { id: string } }) {
+export async function PUT(req: NextRequest, { params }: { params: { id: string } }) {
   const pid = await getProviderIdFromCookies();
-  if (!pid) return NextResponse.json({ ok:false, error:'Unauthorized' }, { status: 401 });
+  if (!pid) return NextResponse.json({ ok: false, error: 'Unauthorized' }, { status: 401 });
 
-  const body = await req.json().catch(() => ({}));
+  const bodyIn = await req.json().catch(() => ({}));
   const r = await fetch(`${apiBase()}/customers/${encodeURIComponent(params.id)}`, {
     method: 'PUT',
-    headers: { 'Content-Type': 'application/json', 'X-Provider-Id': pid },
-    body: JSON.stringify(body),
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Provider-Id': pid,
+      Accept: 'application/json',
+    },
+    body: JSON.stringify(bodyIn),
     cache: 'no-store',
   });
 
-  const text = await r.text();
-  let data: any; try { data = JSON.parse(text); } catch { data = { raw: text }; }
-  return NextResponse.json(data, { status: r.status });
+  const body = await r.text();
+  return new NextResponse(body, {
+    status: r.status,
+    headers: { 'content-type': r.headers.get('content-type') || 'application/json' },
+  });
 }
 
-export async function DELETE(_req: Request, { params }: { params: { id: string } }) {
+export async function DELETE(_req: NextRequest, { params }: { params: { id: string } }) {
   const pid = await getProviderIdFromCookies();
-  if (!pid) return NextResponse.json({ ok:false, error:'Unauthorized' }, { status: 401 });
+  if (!pid) return NextResponse.json({ ok: false, error: 'Unauthorized' }, { status: 401 });
 
   const r = await fetch(`${apiBase()}/customers/${encodeURIComponent(params.id)}`, {
     method: 'DELETE',
-    headers: { 'X-Provider-Id': pid },
+    headers: { 'X-Provider-Id': pid, Accept: 'application/json' },
     cache: 'no-store',
   });
 
-  const text = await r.text();
-  let data: any; try { data = JSON.parse(text); } catch { data = { raw: text }; }
-  return NextResponse.json(data, { status: r.status });
+  const body = await r.text();
+  return new NextResponse(body, {
+    status: r.status,
+    headers: { 'content-type': r.headers.get('content-type') || 'application/json' },
+  });
 }
-
-
 
 
 
