@@ -1,25 +1,3 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // app/admin/customers/dialogs/BookOfferDialog.tsx
 'use client';
 
@@ -40,28 +18,15 @@ type Props = {
   onChanged: (freshCustomer: Customer) => void;
 };
 
-type CreatedBookingResponse = { ok: boolean; booking?: { _id: string } };
 
-async function tryPost(urls: string[], body: any, withProviderHeader = false) {
-  const pid = typeof window !== 'undefined' ? (localStorage.getItem('providerId') || '') : '';
-  for (const url of urls) {
-    const res = await fetch(url, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        ...(withProviderHeader && pid ? { 'x-provider-id': pid } : {}),
-      },
-      cache: 'no-store',
-      body: JSON.stringify(body || {}),
-    });
-    if (res.ok) return { ok: true, url, status: res.status, res };
-    if (res.status !== 404) {
-      const t = await res.text().catch(() => '');
-      throw new Error(`HTTP ${res.status} at ${url}${t ? ` – ${t}` : ''}`);
-    }
-  }
-  return { ok: false, url: urls[urls.length - 1], status: 404, res: null as any };
-}
+  
+
+type CreatedBookingResponse = {
+  ok?: boolean;
+  booking?: { _id: string; confirmationCode?: string };
+  error?: string;          // <— hinzugefügt
+  message?: string;        // <— optional, falls Backend "message" nutzt
+};
 
 function fmtEUR(n: number) {
   try {
@@ -111,40 +76,44 @@ export default function BookOfferDialog({ customer, offer, onClose, onChanged }:
     setErr(null);
 
     try {
-      // 1) create booking (admin proxy first, fallback to backend)
-      const create = await tryPost(
-        [
-          `/api/admin/customers/${encodeURIComponent(customer._id)}/bookings`,
-          `http://127.0.0.1:5000/api/customers/${encodeURIComponent(customer._id)}/bookings`,
-        ],
-        { offerId: offer._id, date: dateISO },
-        /* withProviderHeader */ true
+      // 1) create booking (immer über unsere /api-Proxy-Route; JWT wird automatisch mitgesendet)
+      const createRes = await fetch(
+        `/api/admin/customers/${encodeURIComponent(customer._id)}/bookings`,
+        {
+          method: 'POST',
+          credentials: 'include', // 🔐 HttpOnly-Cookie mitsenden
+          cache: 'no-store',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ offerId: offer._id, date: dateISO }),
+        }
       );
-      if (!create.ok || !create.res) throw new Error('Failed to create booking.');
-      const data = (await create.res.json()) as CreatedBookingResponse;
-      const bookingId = data?.booking?._id;
-      if (!bookingId) throw new Error('Booking id not returned.');
+      const createData = (await createRes.json().catch(() => ({}))) as CreatedBookingResponse;
+      if (!createRes.ok || !createData?.ok || !createData.booking?._id) {
+        throw new Error(createData?.['error'] || `Create booking failed (${createRes.status})`);
+      }
+      const bookingId = createData.booking._id;
 
-      // 2) send participation confirmation email (idempotent; 409 is fine)
-      const mail = await tryPost(
-        [
-          `/api/admin/customers/${encodeURIComponent(customer._id)}/bookings/${encodeURIComponent(bookingId)}/email/confirmation`,
-          `http://127.0.0.1:5000/api/customers/${encodeURIComponent(customer._id)}/bookings/${encodeURIComponent(bookingId)}/email/confirmation`,
-        ],
-        {},
-        /* withProviderHeader */ true
+      // 2) send participation confirmation email (idempotent; 409 ist ok)
+      const mailRes = await fetch(
+        `/api/admin/customers/${encodeURIComponent(customer._id)}/bookings/${encodeURIComponent(bookingId)}/email/confirmation`,
+        {
+          method: 'POST',
+          credentials: 'include', // 🔐
+          cache: 'no-store',
+          headers: { 'Content-Type': 'application/json' },
+        }
       );
-      if (!mail.ok && mail.status !== 409) {
-        throw new Error('Failed to send participation confirmation.');
+      if (!mailRes.ok && mailRes.status !== 409) {
+        // nur warnen – kein harter Abbruch
+        console.warn('confirmation email failed', mailRes.status, await mailRes.text().catch(() => ''));
       }
 
-      // 3) refresh customer (so UI shows the new active booking)
-      const pid = localStorage.getItem('providerId') || '';
-      const r2 = await fetch(`/api/admin/customers/${encodeURIComponent(customer._id)}`, {
+      // 3) refresh customer (so UI zeigt neue aktive Buchung)
+      const freshRes = await fetch(`/api/admin/customers/${encodeURIComponent(customer._id)}`, {
+        credentials: 'include', // 🔐
         cache: 'no-store',
-        headers: { ...(pid ? { 'x-provider-id': pid } : {}) },
       });
-      const fresh = r2.ok ? await r2.json() : null;
+      const fresh = freshRes.ok ? await freshRes.json() : null;
       if (fresh) onChanged(fresh);
 
       onClose();
@@ -186,11 +155,13 @@ export default function BookOfferDialog({ customer, offer, onClose, onChanged }:
             />
           </div>
 
-          {!!offer?.price && pro.firstMonthPrice != null && (
+        {typeof offer?.price === 'number' && pro.firstMonthPrice != null && (
             <div className="rounded bg-gray-50 p-2 text-sm">
               <div><strong>Price overview</strong></div>
-              <div>Monthly price: {fmtEUR(offer.price)}</div>
-              <div>First month (prorated from {dateISO}): <strong>{fmtEUR(pro.firstMonthPrice)}</strong></div>
+              <div>Monthly price: {fmtEUR(offer.price!)}</div>
+              <div>
+                First month (prorated from {dateISO}): <strong>{fmtEUR(pro.firstMonthPrice!)}</strong>
+              </div>
             </div>
           )}
         </div>
