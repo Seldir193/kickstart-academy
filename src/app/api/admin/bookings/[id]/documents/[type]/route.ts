@@ -1,5 +1,6 @@
 // app/api/admin/bookings/[id]/documents/[type]/route.ts
 import { NextRequest, NextResponse } from 'next/server';
+import { getProviderId } from '@/app/api/lib/auth';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -12,22 +13,6 @@ function baseFromEnv() {
   return raw.replace(/\/$/, '');
 }
 
-function getProviderId(req: NextRequest): string | null {
-  // 1) Header
-  const h = req.headers.get('x-provider-id');
-  if (h && h.trim()) return h.trim();
-  // 2) Cookies (vom Admin-Login)
-  const c =
-    req.cookies.get('providerId')?.value ||
-    req.cookies.get('adminProviderId')?.value ||
-    req.cookies.get('aid')?.value;
-  if (c && String(c).trim()) return String(c).trim();
-  // 3) Query (?providerId=...)
-  const q = req.nextUrl.searchParams.get('providerId');
-  if (q && q.trim()) return q.trim();
-  return null;
-}
-
 export async function GET(
   req: NextRequest,
   ctx: { params: { id: string; type: string } }
@@ -35,36 +20,44 @@ export async function GET(
   const BASE = baseFromEnv();
   const { id, type } = ctx.params;
 
+  // nur erlaubte Dokumenttypen
   const ALLOWED = new Set(['participation', 'cancellation', 'storno']);
   if (!ALLOWED.has(type)) {
-    return NextResponse.json({ error: 'Invalid document type' }, { status: 400 });
+    return NextResponse.json({ ok: false, error: 'Invalid document type' }, { status: 400 });
   }
 
-  const providerId = getProviderId(req);
+  // 🔐 ProviderId ausschließlich aus HttpOnly-JWT
+  const providerId = await getProviderId(req);
   if (!providerId) {
-    return NextResponse.json({ ok: false, error: 'Missing provider id' }, { status: 401 });
+    return NextResponse.json({ ok: false, error: 'Unauthorized' }, { status: 401 });
   }
 
-  // Backend-Alias lebt unter /api/admin/customers/...
-  const url = `${BASE}/admin/customers/bookings/${encodeURIComponent(
-    id
-  )}/documents/${encodeURIComponent(type)}`;
+  // Upstream-URL (wie in deinem Kommentar beschrieben)
+  const url = `${BASE}/admin/customers/bookings/${encodeURIComponent(id)}/documents/${encodeURIComponent(type)}`;
 
   try {
-    const r = await fetch(url, {
-      headers: { 'x-provider-id': providerId },
+    const upstream = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'x-provider-id': providerId,
+        'accept': 'application/pdf,application/octet-stream,application/json,*/*',
+      },
       cache: 'no-store',
       redirect: 'follow',
     });
 
-    const buf = await r.arrayBuffer();
-    const headers: Record<string, string> = {
-      'content-type': r.headers.get('content-type') || (r.ok ? 'application/pdf' : 'application/json'),
-    };
-    const cd = r.headers.get('content-disposition');
-    if (cd) headers['content-disposition'] = cd;
+    // Stream direkt durchreichen; Header übernehmen/fallbacken
+    const res = new NextResponse(upstream.body, {
+      status: upstream.status,
+      headers: {
+        'content-type': upstream.headers.get('content-type') || (upstream.ok ? 'application/pdf' : 'application/json'),
+        'content-disposition': upstream.headers.get('content-disposition') || '',
+      },
+    });
+    const len = upstream.headers.get('content-length');
+    if (len) res.headers.set('content-length', len);
 
-    return new NextResponse(Buffer.from(buf), { status: r.status, headers });
+    return res;
   } catch (e: any) {
     console.error('[doc-proxy] error:', e?.message || e);
     return NextResponse.json({ ok: false, error: e?.message || 'Proxy error' }, { status: 500 });
