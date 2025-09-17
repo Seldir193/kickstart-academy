@@ -32,7 +32,10 @@ export default function CustomersPage() {
   async function load() {
     setLoading(true); setErr(null);
     try {
-      const res = await fetch(`/api/admin/customers?${query}`, { cache: 'no-store' });
+      const res = await fetch(`/api/admin/customers?${query}`, {
+        credentials: 'include',        // ✅ JWT-Cookie mitsenden
+        cache: 'no-store'
+      });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data: ListResponse = await res.json();
       setItems(data.items || []);
@@ -97,7 +100,10 @@ export default function CustomersPage() {
                   key={c._id}
                   className="tr hover:bg-gray-50 cursor-pointer"
                   onClick={async ()=>{
-                    const r = await fetch(`/api/admin/customers/${c._id}`, { cache:'no-store' });
+                    const r = await fetch(`/api/admin/customers/${c._id}`, {
+                      cache:'no-store',
+                      credentials: 'include',   // ✅ HIER ergänzt
+                    });
                     const full = r.ok ? await r.json() : c;
                     setEditing(full);
                   }}
