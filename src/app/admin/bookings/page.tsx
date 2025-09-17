@@ -22,6 +22,9 @@ const STATUSES: Status[] = ['pending', 'processing', 'confirmed', 'cancelled', '
 const asStatus = (s?: Booking['status']): Status => (s ?? 'pending') as Status;
 
 export default function AdminBookingsPage() {
+   
+  
+  
   const [all, setAll] = useState<Booking[]>([]);
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState('');
@@ -29,15 +32,19 @@ export default function AdminBookingsPage() {
   const [busyId, setBusyId] = useState<string>('');
 
   // UI-Notice statt alert()
-  const [notice, setNotice] = useState<{type:'ok'|'error', msg:string} | null>(null);
-  const showOk = (msg:string) => { setNotice({ type:'ok', msg }); setTimeout(()=>setNotice(null), 4000); };
-  const showError = (msg:string) => { setNotice({ type:'error', msg }); setTimeout(()=>setNotice(null), 6000); };
+  const [notice, setNotice] = useState<{ type: 'ok' | 'error'; msg: string } | null>(null);
+  const showOk = (msg: string) => { setNotice({ type: 'ok', msg }); setTimeout(() => setNotice(null), 4000); };
+  const showError = (msg: string) => { setNotice({ type: 'error', msg }); setTimeout(() => setNotice(null), 6000); };
 
   async function load() {
     setLoading(true);
     setErr('');
     try {
-      const r = await fetch(`/api/admin/bookings`, { cache: 'no-store' });
+      const r = await fetch(`/api/admin/bookings`, {
+        method: 'GET',
+        credentials: 'include',        // 🔐 JWT-Cookie mitsenden
+        cache: 'no-store',
+      });
       if (!r.ok) throw new Error(`Failed to fetch bookings (${r.status})`);
       const data = await r.json();
       setAll(data.bookings || []);
@@ -51,7 +58,7 @@ export default function AdminBookingsPage() {
   useEffect(() => { load(); }, []);
 
   const counts = useMemo<Record<Status, number>>(() => {
-    const map: Record<Status, number> = { pending:0, processing:0, confirmed:0, cancelled:0, deleted:0 };
+    const map: Record<Status, number> = { pending: 0, processing: 0, confirmed: 0, cancelled: 0, deleted: 0 };
     for (const b of all) map[asStatus(b.status)] += 1;
     return map;
   }, [all]);
@@ -65,7 +72,7 @@ export default function AdminBookingsPage() {
     setBusyId(id);
     try {
       const url = `/api/admin/bookings/${id}/confirm${opts?.resend ? '?resend=1' : ''}`;
-      const r = await fetch(url, { method: 'POST' });
+      const r = await fetch(url, { method: 'POST', credentials: 'include' }); // 🔐
       const d = await r.json().catch(() => ({} as any));
       if (!r.ok || !d.ok) throw new Error(d.error || r.statusText);
 
@@ -78,7 +85,6 @@ export default function AdminBookingsPage() {
       } else {
         showOk('Buchung bestätigt und E-Mail versendet.');
       }
-
       await load();
     } catch (e: any) {
       showError(`Fehler beim Bestätigen: ${e?.message || e}`);
@@ -90,7 +96,11 @@ export default function AdminBookingsPage() {
   async function resendBooking(id: string) {
     setBusyId(id);
     try {
-      const r = await fetch(`/api/admin/bookings/${id}/resend-confirmation`, { method: 'POST' });
+      // vereinheitlicht auf confirm?resend=1 (siehe Server-Route)
+      const r = await fetch(`/api/admin/bookings/${id}/confirm?resend=1`, {
+        method: 'POST',
+        credentials: 'include',       // 🔐
+      });
       const d = await r.json().catch(() => ({}));
       if (!r.ok || !d.ok) throw new Error(d.error || r.statusText);
       showOk('Bestätigung erneut gesendet.');
@@ -107,6 +117,7 @@ export default function AdminBookingsPage() {
     try {
       const r = await fetch(`/api/admin/bookings/${id}/status`,  {
         method: 'PATCH',
+        credentials: 'include',       // 🔐
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status }),
       });
@@ -122,10 +133,12 @@ export default function AdminBookingsPage() {
   }
 
   async function deleteBooking(id: string) {
-    
     setBusyId(id);
     try {
-      const r = await fetch(`/api/admin/bookings/${id}`, { method: 'DELETE' });
+      const r = await fetch(`/api/admin/bookings/${id}`, {
+        method: 'DELETE',
+        credentials: 'include',       // 🔐
+      });
       const d = await r.json().catch(() => ({}));
       if (!r.ok || !d.ok) throw new Error(d.error || r.statusText);
       showOk('Buchung gelöscht (soft delete).');
@@ -145,10 +158,7 @@ export default function AdminBookingsPage() {
       <h1>Bookings</h1>
 
       {notice && (
-        <div
-          className={notice.type === 'ok' ? 'ok' : 'error'}
-          style={{ margin: '8px 0 12px' }}
-        >
+        <div className={notice.type === 'ok' ? 'ok' : 'error'} style={{ margin: '8px 0 12px' }}>
           {notice.msg}
         </div>
       )}
@@ -226,10 +236,6 @@ export default function AdminBookingsPage() {
     </main>
   );
 }
-
-
-
-
 
 
 
