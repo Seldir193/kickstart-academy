@@ -3,12 +3,10 @@
 
 import React, { useEffect, useMemo, useState } from 'react';
 import type { Customer, Offer, BookingRef } from '../types';
-import { CANCEL_ALLOWED } from '../types';
 
 import BookDialog from './BookDialog';
 import CancelDialog from './CancelDialog';
 import StornoDialog from './StornoDialog';
-//import BookingsDialog from './BookingsDialog';
 import DocumentsDialog from './DocumentsDialog'; // NEW
 
 type Props = {
@@ -19,23 +17,6 @@ type Props = {
   onSaved?: () => void;
   onDeleted?: () => void;
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 export default function CustomerDialog({
   mode, customer, onClose, onCreated, onSaved, onDeleted,
@@ -57,12 +38,11 @@ export default function CustomerDialog({
   const [bookOpen, setBookOpen] = useState(false);
   const [cancelOpen, setCancelOpen] = useState(false);
   const [stornoOpen, setStornoOpen] = useState(false);
-  const [bookingsOpen, setBookingsOpen] = useState(false);
   const [documentsOpen, setDocumentsOpen] = useState(false); // NEW
 
   const [offers, setOffers] = useState<Offer[]>([]);
   const [offersLoading, setOffersLoading] = useState(false);
-  const [offerTypeFilter, setOfferTypeFilter] = useState<string>('');
+  const [offerTypeFilter, setOfferTypeFilter] = useState<string>(''); // aktuell ungenutzt, kannst du später nutzen
 
   useEffect(() => {
     if (mode==='edit' && customer) setForm(customer);
@@ -74,9 +54,16 @@ export default function CustomerDialog({
     (async () => {
       try {
         setOffersLoading(true);
-        const res = await fetch(`/api/admin/offers?limit=200`, { cache: 'no-store' });
+        setErr(null);
+        const res = await fetch(`/api/admin/offers?limit=200`, {
+          cache: 'no-store',
+          credentials: 'include', // 🔐 JWT-Cookie mitsenden
+        });
+        if (!res.ok) throw new Error(`Failed to load offers (${res.status})`);
         const data = await res.json();
         setOffers(Array.isArray(data.items) ? data.items : (Array.isArray(data) ? data : []));
+      } catch (e: any) {
+        setErr(e?.message || 'Failed to load offers');
       } finally {
         setOffersLoading(false);
       }
@@ -93,6 +80,8 @@ export default function CustomerDialog({
     return (b.type || offerById[b.offerId || '']?.type || '').trim();
   }
 
+
+
   function up(path: string, value: any) {
     setForm((prev) => {
       const c = structuredClone(prev) as any;
@@ -108,7 +97,10 @@ export default function CustomerDialog({
     setSaving(true); setErr(null);
     try {
       const res = await fetch('/api/admin/customers', {
-        method:'POST', headers:{ 'Content-Type':'application/json' },
+        method:'POST',
+        credentials: 'include',         // 🔐
+        cache: 'no-store',
+        headers:{ 'Content-Type':'application/json' },
         body: JSON.stringify({
           newsletter: !!form.newsletter,
           address: form.address,
@@ -129,7 +121,10 @@ export default function CustomerDialog({
     setSaving(true); setErr(null);
     try {
       const res = await fetch(`/api/admin/customers/${encodeURIComponent(form._id)}`, {
-        method:'PUT', headers:{ 'Content-Type':'application/json' },
+        method:'PUT',
+        credentials: 'include',         // 🔐
+        cache: 'no-store',
+        headers:{ 'Content-Type':'application/json' },
         body: JSON.stringify({
           newsletter: !!form.newsletter,
           address: form.address,
@@ -150,7 +145,11 @@ export default function CustomerDialog({
     if (!confirm('Delete this customer?')) return;
     setSaving(true); setErr(null);
     try {
-      const res = await fetch(`/api/admin/customers/${encodeURIComponent(form._id)}`, { method:'DELETE' });
+      const res = await fetch(`/api/admin/customers/${encodeURIComponent(form._id)}`, {
+        method:'DELETE',
+        credentials: 'include',         // 🔐
+        cache: 'no-store',
+      });
       if (!res.ok) throw new Error(`Delete failed (${res.status})`);
       onDeleted?.();
     } catch(e:any) {
@@ -167,13 +166,11 @@ export default function CustomerDialog({
         {/* Header */}
         <div className="dialog-head">
           <div className="dialog-head__left">
-            <h2 className="text-xl font-bold">Customer #{form.userId ?? '—'}</h2>
+            <h2 className="text-xl font-bold">Customer #{(form as any).userId ?? '—'}</h2>
             <span className={`badge ${isActive ? '' : 'badge-muted'}`}>{isActive ? 'Active' : 'Cancelled'}</span>
           </div>
           <div className="dialog-head__actions">
             <button className="btn" onClick={()=> setDocumentsOpen(true)} disabled={!form._id}>Documents</button>
-           
-
             <button className="btn" onClick={()=> setBookOpen(true)} disabled={!form._id}>Book</button>
             <button className="btn" onClick={()=> setCancelOpen(true)} disabled={!form._id}>Cancel</button>
             <button className="btn" onClick={()=> setStornoOpen(true)} disabled={!form._id}>Storno</button>
@@ -266,21 +263,7 @@ export default function CustomerDialog({
           )}
         </div>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
         {/* Sub-Dialogs */}
-      
         {documentsOpen && (
           <DocumentsDialog customerId={form._id} onClose={()=> setDocumentsOpen(false)} />
         )}
@@ -309,8 +292,6 @@ export default function CustomerDialog({
     </div>
   );
 }
-
-
 
 
 
