@@ -1,12 +1,5 @@
 
-
-
-
-
-
-
-
-
+// app/admin/login/page.tsx
 'use client';
 
 import { useEffect, useState } from 'react';
@@ -72,37 +65,31 @@ export default function AdminLoginPage() {
     if (Object.keys(eObj).length) return;
 
     setLoading(true);
- 
 
-      // app/admin/login/page.tsx (Ausschnitt in onSubmit)
-try {
-  // providerId aus localStorage holen oder via prompt erfragen (oder eigenes Input-Feld hinzufügen)
-  let providerId = localStorage.getItem('providerId') || '';
-  if (!providerId) {
-    providerId = window.prompt('Bitte Provider-ID eingeben (Mongo ObjectId):', '') || '';
-  }
-  if (providerId) {
-    // UI-Helfer: im LS & Cookie behalten (praktisch für ZIP/CSV-Links)
-    localStorage.setItem('providerId', providerId);
-    document.cookie = `providerId=${providerId}; path=/`;
-  }
+    try {
+      // Für ENV-Admin-Login (nur DEV): providerId abfragen
+      let providerId = '';
+      if (process.env.NODE_ENV !== 'production') {
+        providerId = window.prompt('Bitte Provider-ID eingeben (Mongo ObjectId):', '') || '';
+      }
 
-  const r = await fetch('/api/admin/auth/login', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email, password, providerId }),
-    credentials: 'include',
-    cache: 'no-store',
-  });
- 
-
-
+      const r = await fetch('/api/admin/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password, providerId }),
+        credentials: 'include',
+        cache: 'no-store',
+      });
 
       if (r.ok) {
         window.location.assign(next);
         return;
       }
-      const d = await r.json().catch(() => ({}));
+
+      // Fehlertext robust auslesen
+      const t = await r.text();
+      let d: any;
+      try { d = JSON.parse(t); } catch { d = { error: t || 'Login failed' }; }
       setFormError(d?.error || 'Login failed');
     } catch {
       setFormError('Network error');
@@ -110,6 +97,7 @@ try {
       setLoading(false);
     }
   }
+
 
   return (
     <div className="container">
@@ -134,7 +122,6 @@ try {
               autoComplete="email"
               aria-invalid={Boolean(errors.email)}
             />
-            {/* reservierter Platz für die Fehlermeldung */}
             <span className="error-slot" aria-live="polite">
               {errors.email ? <span className="error">{errors.email}</span> : null}
             </span>
@@ -177,3 +164,8 @@ try {
     </div>
   );
 }
+
+
+
+
+
