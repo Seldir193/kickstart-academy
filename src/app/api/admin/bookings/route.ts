@@ -1,4 +1,5 @@
-// Lauf sicher im Node.js-Runtime (damit Buffer verfügbar ist)
+
+// client/src/app/api/admin/bookings/route.ts
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
@@ -6,39 +7,49 @@ import { NextResponse, type NextRequest } from 'next/server';
 import { getProviderIdFromCookies } from '@/app/api/lib/auth';
 
 function apiBase() {
-  const b = process.env.NEXT_BACKEND_API_BASE || 'http://127.0.0.1:5000/api';
-  return b.replace(/\/+$/, '');
+  const raw =
+    process.env.NEXT_BACKEND_API_BASE ||
+    process.env.NEXT_PUBLIC_API_URL ||
+    'http://127.0.0.1:5000/api';
+  return raw.replace(/\/+$/, '');
 }
 
+// GET /api/admin/bookings?status=&page=&limit=...
 export async function GET(req: NextRequest) {
   try {
-    // Provider-ID aus JWT-Cookie holen
     const pid = await getProviderIdFromCookies();
     if (!pid) {
-      return NextResponse.json({ ok: false, error: 'Unauthorized: missing provider' }, { status: 401 });
+      return NextResponse.json({ ok: false, error: 'Unauthorized' }, { status: 401 });
     }
 
-    // Query durchreichen (?status=..., ?page=..., ...)
+    // ⚠️ Upstream ohne /admin
     const url = new URL(`${apiBase()}/bookings`);
-    req.nextUrl.searchParams.forEach((v, k) => url.searchParams.append(k, v));
+    // Query aus dem Frontend durchreichen
+    req.nextUrl.searchParams.forEach((v, k) => url.searchParams.set(k, v));
 
-    // WICHTIG: X-Provider-Id statt Basic!
     const r = await fetch(url.toString(), {
-      headers: { 'X-Provider-Id': pid },
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'X-Provider-Id': pid,
+      },
       cache: 'no-store',
     });
 
-    const text = await r.text();
-    let data: any; try { data = JSON.parse(text); } catch { data = { ok: false, raw: text }; }
-    return NextResponse.json(data, { status: r.status });
+    const body = await r.text();
+    return new NextResponse(body, {
+      status: r.status,
+      headers: {
+        'content-type': r.headers.get('content-type') || 'application/json',
+      },
+    });
   } catch (e: any) {
-    console.error('admin bookings proxy error:', e);
-    return NextResponse.json({ ok: false, error: 'Proxy failed', detail: String(e?.message ?? e) }, { status: 500 });
+    return NextResponse.json(
+      { ok: false, error: 'Proxy failed', detail: String(e?.message ?? e) },
+      { status: 500 }
+    );
   }
 }
-
-
-
 
 
 
