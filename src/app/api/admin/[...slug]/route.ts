@@ -13,7 +13,7 @@ function baseFromEnv() {
   return raw.replace(/\/$/, '');
 }
 
-// Nur auth ausnehmen, damit /api/admin/bookings NICHT ausgeschlossen wird
+// Nur auth ausnehmen, damit deine eigenen /api/admin/auth/* Routen greifen
 const EXCLUDE_PREFIXES = ['auth'];
 
 function shouldExclude(slug: string[]) {
@@ -21,11 +21,24 @@ function shouldExclude(slug: string[]) {
   return EXCLUDE_PREFIXES.includes(first);
 }
 
+
 function buildUpstreamUrl(BASE: string, slug: string[], req: NextRequest) {
-  const parts = (slug || []).map(s => encodeURIComponent(s)).join('/');
-  const qs = req.nextUrl.searchParams.toString();
-  return `${BASE}/admin/${parts}${qs ? `?${qs}` : ''}`;
+  const search = req.nextUrl.search || '';
+  const path = slug.map(s => encodeURIComponent(s)).join('/');
+
+  // Diese drei gehen an die "öffentlichen" Backend-Routen:
+  // /api/admin/customers -> /api/customers
+  // /api/admin/offers    -> /api/offers
+  // /api/admin/places    -> /api/places
+  const first = (slug[0] || '').toLowerCase();
+  if (['customers','offers','places'].includes(first)) {
+    return `${BASE}/${path}${search}`;
+  }
+
+  // alles andere bleibt unter /api/admin/...
+  return `${BASE}/admin/${path}${search}`;
 }
+
 
 async function forward(req: NextRequest, upstreamUrl: string, providerId: string) {
   const method = req.method.toUpperCase();
@@ -39,21 +52,15 @@ async function forward(req: NextRequest, upstreamUrl: string, providerId: string
   const ct = req.headers.get('content-type');
   if (ct) headers['content-type'] = ct;
 
-  const up = await fetch(upstreamUrl, {
-    method,
-    headers,
-    body: hasBody ? body : undefined,
-    cache: 'no-store',
-  });
+  const up = await fetch(upstreamUrl, { method, headers, body, cache: 'no-store' });
 
   const res = new NextResponse(up.body, {
     status: up.status,
-    headers: {
-      'content-type': up.headers.get('content-type') || 'application/octet-stream',
-      'content-disposition': up.headers.get('content-disposition') || '',
-    },
+    headers: { 'content-type': up.headers.get('content-type') || 'application/octet-stream' },
   });
+  const cd  = up.headers.get('content-disposition');
   const len = up.headers.get('content-length');
+  if (cd)  res.headers.set('content-disposition', cd);
   if (len) res.headers.set('content-length', len);
   return res;
 }
@@ -66,17 +73,16 @@ async function handler(req: NextRequest, ctx: { params: { slug?: string[] } }) {
 
   const slug = ctx.params.slug || [];
   if (shouldExclude(slug)) {
-    // Lass deine speziellen /api/admin/auth/* Handler greifen
     return NextResponse.json({ ok:false, error:'Not found' }, { status:404 });
   }
 
-  const providerId = await getProviderId(req); // 🔐 aus HttpOnly-JWT
+  const providerId = await getProviderId(req);
   if (!providerId) {
     return NextResponse.json({ ok:false, error:'Unauthorized' }, { status:401 });
   }
 
-  const upstreamUrl = buildUpstreamUrl(BASE, slug, req);
   try {
+    const upstreamUrl = buildUpstreamUrl(BASE, slug, req);
     return await forward(req, upstreamUrl, providerId);
   } catch (e: any) {
     return NextResponse.json({ ok:false, error:'Proxy error', detail:String(e?.message ?? e) }, { status:500 });
@@ -90,13 +96,3 @@ export const PATCH   = handler;
 export const DELETE  = handler;
 export const HEAD    = handler;
 export const OPTIONS = handler;
-
-
-
-
-
-
-
-
-
-
