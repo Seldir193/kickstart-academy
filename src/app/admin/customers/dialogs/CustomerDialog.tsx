@@ -29,6 +29,7 @@ export default function CustomerDialog({
     parent:  { salutation:'', firstName:'', lastName:'', email:'', phone:'', phone2:'' },
     notes: '',
     bookings: [],
+    canceledAt: null,
   };
 
   const [form, setForm] = useState<Customer>(() => mode==='edit' && customer ? customer : blank);
@@ -43,6 +44,32 @@ export default function CustomerDialog({
   const [offers, setOffers] = useState<Offer[]>([]);
   const [offersLoading, setOffersLoading] = useState(false);
   const [offerTypeFilter, setOfferTypeFilter] = useState<string>(''); // aktuell ungenutzt, kannst du später nutzen
+
+  // Busy-Flag nur für den Newsletter-Toggle
+const [newsletterBusy, setNewsletterBusy] = useState(false);
+
+
+
+
+async function toggleNewsletter(id: string, checked: boolean) {
+  const r = await fetch(`/api/admin/customers/${encodeURIComponent(id)}/newsletter`, {
+    method: 'PATCH',
+    credentials: 'include',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ newsletter: checked }),
+  });
+  const data = await r.json().catch(() => null);
+  if (!r.ok || data?.ok === false) {
+    throw new Error(data?.error || `Failed to update newsletter (${r.status})`);
+  }
+  if (!data?.customer) {
+    // Server hat keinen Customer zurückgegeben → lieber Fehler werfen
+    throw new Error('Server did not return updated customer');
+  }
+  return data.customer as Customer;
+}
+
+
 
   useEffect(() => {
     if (mode==='edit' && customer) setForm(customer);
@@ -93,28 +120,70 @@ export default function CustomerDialog({
     });
   }
 
+
+
+
+
+
+
+
   async function create() {
-    setSaving(true); setErr(null);
-    try {
-      const res = await fetch('/api/admin/customers', {
-        method:'POST',
-        credentials: 'include',         // 🔐
-        cache: 'no-store',
-        headers:{ 'Content-Type':'application/json' },
-        body: JSON.stringify({
-          newsletter: !!form.newsletter,
-          address: form.address,
-          child: form.child,
-          parent: form.parent,
-          notes: form.notes || '',
-        }),
-      });
-      if (!res.ok) throw new Error(`Create failed (${res.status})`);
-      onCreated?.();
-    } catch(e:any) {
-      setErr(e?.message || 'Create failed');
-    } finally { setSaving(false); }
-  }
+  setSaving(true); setErr(null);
+  try {
+    const res = await fetch('/api/admin/customers', {
+      method:'POST',
+      credentials: 'include',
+      cache: 'no-store',
+      headers:{ 'Content-Type':'application/json' },
+      body: JSON.stringify({
+        newsletter: !!form.newsletter,
+        address: form.address,
+        child: form.child,
+        parent: form.parent,
+        notes: form.notes || '',
+      }),
+    });
+    if (!res.ok) throw new Error(`Create failed (${res.status})`);
+    const created = await res.json();
+
+    // ⬇️ NEU: Falls im Dialog schon Newsletter angehakt war,
+    // nach dem Anlegen direkt beim Provider eintragen
+    if (created?._id && created?.newsletter === true) {
+      try {
+        await toggleNewsletter(created._id, true);
+      } catch (e:any) {
+        // Nicht hart fehlschlagen – Hinweis reicht
+        console.warn('Newsletter sync after create failed:', e?.message || e);
+        alert(e?.message || 'Newsletter sync failed after create');
+      }
+    }
+
+    onCreated?.();
+  } catch(e:any) {
+    setErr(e?.message || 'Create failed');
+  } finally { setSaving(false); }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   async function save() {
     if (!form._id) return;
@@ -157,7 +226,64 @@ export default function CustomerDialog({
     } finally { setSaving(false); }
   }
 
-  const isActive = !form.canceledAt;
+  //const isActive = !form.canceledAt;
+
+
+
+
+const isActive = !form?.canceledAt;
+
+
+
+
+// Kleine Datumsformatierung (lokal)
+function fmtDE(dt: any) {
+  if (!dt) return '';
+  const d = new Date(dt);
+  if (isNaN(d.getTime())) return '';
+  return new Intl.DateTimeFormat('de-DE', {
+    timeZone: 'Europe/Berlin',
+    dateStyle: 'medium',
+    timeStyle: 'short',
+  }).format(d);
+}
+
+// Marketing-Meta bequem aus dem Formular holen
+
+
+
+
+
+const mk = useMemo(() => {
+  const anyForm = form as any;
+  return {
+    provider: anyForm?.marketingProvider as string | undefined,
+    status: anyForm?.marketingStatus as string | undefined,          // 'subscribed' | 'pending' | 'unsubscribed' | 'error'
+    contactId: anyForm?.marketingContactId as string | undefined,
+    // Fallbacks für unterschiedliche Feldnamen:
+    lastSyncedAt:
+      anyForm?.marketingLastSyncedAt ??
+      anyForm?.marketingSyncedAt ??
+      anyForm?.lastSyncedAt ??
+      null,
+    consentAt: anyForm?.marketingConsentAt as any,
+    lastError: anyForm?.marketingLastError as string | undefined,
+  };
+}, [form]);
+
+
+function statusLabel(s?: string) {
+  switch ((s || '').toLowerCase()) {
+    case 'subscribed':   return 'Subscribed';
+    case 'pending':      return 'Pending (DOI)';
+    case 'unsubscribed': return 'Unsubscribed';
+    case 'error':        return 'Error';
+    default:             return '—';
+  }
+}
+
+
+
 
   return (
     <div className="ks-modal-root">
@@ -217,13 +343,90 @@ export default function CustomerDialog({
               <div><label className="lbl">Email</label>
                 <input className="input" type="email" value={form.parent?.email || ''} onChange={(e)=>up('parent.email', e.target.value)} /></div>
             </div>
-            <div className="grid grid-cols-3 gap-2">
-              <div><label className="lbl">Phone</label><input className="input" value={form.parent?.phone || ''} onChange={(e)=>up('parent.phone', e.target.value)} /></div>
-              <div><label className="lbl">Phone 2</label><input className="input" value={form.parent?.phone2 || ''} onChange={(e)=>up('parent.phone2', e.target.value)} /></div>
-              <label className="lbl flex items-center gap-2">
-                <input type="checkbox" checked={!!form.newsletter} onChange={(e)=>up('newsletter', e.target.checked)} /> Newsletter
-              </label>
-            </div>
+          
+
+          <div className="grid grid-cols-3 gap-2">
+  <div>
+    <label className="lbl">Phone</label>
+    <input className="input" value={form.parent?.phone || ''} onChange={(e)=>up('parent.phone', e.target.value)} />
+  </div>
+  <div>
+    <label className="lbl">Phone 2</label>
+    <input className="input" value={form.parent?.phone2 || ''} onChange={(e)=>up('parent.phone2', e.target.value)} />
+  </div>
+
+  {/* Newsletter + Status */}
+  <div>
+    <label className="lbl flex items-center gap-2">
+
+
+
+<input
+  type="checkbox"
+  checked={!!form.newsletter}
+  disabled={newsletterBusy || saving}
+  onChange={async (e) => {
+    const next = e.target.checked;
+    setForm(prev => ({ ...prev, newsletter: next }));
+    if (mode !== 'edit' || !form._id) return;
+
+    setNewsletterBusy(true);
+    try {
+      const updated = await toggleNewsletter(form._id, next);
+
+      // ⬇️ HIER der Merge statt setForm(updated)
+      setForm(prev => ({
+        ...prev,
+        ...updated,
+        newsletter: updated?.newsletter ?? next,
+      }));
+    } catch (err:any) {
+      setForm(prev => ({ ...prev, newsletter: !next }));
+      alert(err?.message || 'Newsletter update failed');
+    } finally {
+      setNewsletterBusy(false);
+    }
+  }}
+/>
+
+
+
+
+
+
+
+
+      Newsletter
+      {newsletterBusy && <span className="text-gray-500 text-sm">Saving…</span>}
+    </label>
+
+    {/* Marketing-Status anzeigen (rein informativ) */}
+    <div className="text-xs text-gray-600 mt-1" title={mk.lastError ? `Error: ${mk.lastError}` : undefined}>
+      <div>
+        <span className="font-medium">Status:</span> {statusLabel(mk.status)}
+        {mk.provider ? ` • Provider: ${mk.provider}` : ''}
+      </div>
+      <div>
+        {mk.consentAt ? `Consent: ${fmtDE(mk.consentAt)} • ` : ''}
+        {mk.lastSyncedAt ? `Synced: ${fmtDE(mk.lastSyncedAt)}` : ''}
+        {mk.lastError && <span className="text-red-600"> • Error vorhanden</span>}
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
           </fieldset>
 
           {/* Address */}
