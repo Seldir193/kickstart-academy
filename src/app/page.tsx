@@ -1,5 +1,11 @@
 import Link from 'next/link';
 
+
+
+const wpBase = process.env.NEXT_PUBLIC_WP_BASE_URL ?? 'http://localhost/wordpress';
+const wpPath = process.env.NEXT_PUBLIC_WP_CONTACT_PATH ?? '/?page_id=143';
+const contactUrl = `${wpBase.replace(/\/$/, '')}${wpPath.startsWith('/') ? wpPath : `/${wpPath}`}`;
+
 export default function HomePage() {
   return (
     <section className="hero">
@@ -11,7 +17,8 @@ export default function HomePage() {
         </p>
         <div className="hero-actions">
           <Link href="/trainings" className="btn btn-primary">View Trainings</Link>
-          <Link href="http://localhost/wordpress/index.php/home/" className="btn btn-ghost">Contact</Link>
+          <Link href={contactUrl} className="btn btn-ghost">Contact</Link>
+    
         </div>
       </div>
     </section>
