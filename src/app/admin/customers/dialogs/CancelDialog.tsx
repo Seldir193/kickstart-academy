@@ -21,22 +21,55 @@ function labelFor(b: any) {
   return parts.join(' — ');
 }
 
-/** Frontend-Spiegel der Serverlogik: welche Buchungen sind kündbar? */
+function softNorm(s: string) {
+  return norm(s).replace(/[\s\-\._]/g, '');
+}
+function looksLikeRentACoach(s: string) {
+  const n = softNorm(s);
+  return n.includes('rent') && n.includes('coach');
+}
+
+
+/* ================== Nicht kündbare Kurs-Werte (Dropdown) ================== */
+// ⬅︎ NEU: Falls deine courseOptions andere Werte haben, ergänze/ändere hier:
+const NON_CANCELABLE_COURSE_VALUES = [
+  'RentACoach', 'Rent a Coach',       // Club Programs → Rent a Coach
+  'CoachEducation', 'Education', 'Coach Education', // Coach Education
+];
+//const NON_CANCELABLE_COURSE_NORM = new Set(NON_CANCELABLE_COURSE_VALUES.map(norm));
+
 function isBookingCancellable(booking: any, offersById: Map<string, any>) {
   const off = booking?.offerId ? offersById.get(String(booking.offerId)) : null;
 
-  const t  = (off?.type || booking?.type || '').toString();
-  const st = (off?.sub_type || booking?.offerType || '').toString().toLowerCase();
-  const cat = (off?.category || '').toString();
+  const type  = String(off?.type ?? booking?.type ?? '');
+  const stype = String(off?.sub_type ?? booking?.offerType ?? '');
+  const cat   = String(off?.category ?? booking?.category ?? '');
+  const title = String(off?.title ?? booking?.offerTitle ?? '');
 
+  const t  = softNorm(type);
+  const st = softNorm(stype);
+  const c  = softNorm(cat);
+  const tt = softNorm(title);
+
+  // 🔒 Coach Education NIE kündbar
+  // (bei dir: sub_type === 'CoachEducation'; zusätzlich Titel-Backup)
+  if (st === 'coacheducation' || tt.includes('coacheducation')) return false;
+
+  // 🔒 Rent-a-Coach NIE kündbar
+  // (bei dir: category === 'RentACoach' ODER sub_type === 'RentACoach_Generic'
+  //  plus Titel-Backup „rent a coach“)
+  if (c === 'rentacoach' || st === 'rentacoachgeneric' || looksLikeRentACoach(title)) return false;
+
+  // Deine bestehenden Regeln (leicht normalisiert):
   if (st === 'powertraining') return false;
-  if (t === 'Camp' || t === 'PersonalTraining') return false;
+  if (t === 'camp' || t === 'personaltraining') return false;
 
-  if (t === 'Foerdertraining' || t === 'Kindergarten') return true;
-  if (cat === 'Weekly') return true;
+  if (t === 'foerdertraining' || t === 'kindergarten') return true;
+  if (c === 'weekly') return true;
 
   return false;
 }
+
 
 export default function CancelDialog({ customer, onClose, onChanged }: Props) {
   const [offers, setOffers] = useState<any[]>([]);
@@ -62,6 +95,9 @@ export default function CancelDialog({ customer, onClose, onChanged }: Props) {
     })();
   }, []);
 
+  
+
+
   const offersById = useMemo(() => {
     const m = new Map<string, any>();
     for (const o of offers) if (o?._id) m.set(String(o._id), o);
@@ -70,11 +106,47 @@ export default function CancelDialog({ customer, onClose, onChanged }: Props) {
 
   const [courseValue, setCourseValue] = useState<string>('');
 
+  // ⬅︎ NEU: Wenn im Course-Dropdown ein nicht kündbarer Kurs gewählt wurde,
+  // erzwingen wir eine leere Liste (kein Angebot auswählbar).
+ 
+  // Mappe value -> Option-Metadaten
+const COURSE_META_BY_VALUE = useMemo(() => {
+  const m = new Map<string, { mode: 'type'|'subtype'; value: string; label: string; category?: string }>();
+  for (const g of GROUPED_COURSE_OPTIONS) {
+    for (const it of g.items) {
+      m.set(it.value, it as any);
+    }
+  }
+  return m;
+}, []);
+
+
+
+
+const courseValueIsNonCancelable = useMemo(() => {
+  if (!courseValue) return false;
+  const opt = COURSE_META_BY_VALUE.get(courseValue);
+  if (!opt) return false;
+
+  // 🔒 Coach Education per value
+  if (opt.value === 'CoachEducation') return true;
+
+  // 🔒 Rent-a-Coach per Kategorie
+  if (opt.category === 'RentACoach') return true;
+
+  // Fallback: Label-Schutz (falls künftig umbenannt)
+  if (looksLikeRentACoach(opt.label)) return true;
+
+  return false;
+}, [courseValue, COURSE_META_BY_VALUE]);
+
+
   const filteredBookings = useMemo(() => {
     const src = (customer.bookings || []).filter((b: any) => isBookingCancellable(b, offersById));
     if (!courseValue) return src;
+    if (courseValueIsNonCancelable) return []; // ⬅︎ NEU: leere Liste erzwingen
     return src.filter(b => courseValueFromBooking(b, offersById) === courseValue);
-  }, [customer.bookings, offersById, courseValue]);
+  }, [customer.bookings, offersById, courseValue, courseValueIsNonCancelable]);
 
   const triggerRef = useRef<HTMLButtonElement | null>(null);
   const menuRef = useRef<HTMLDivElement | null>(null);
@@ -125,17 +197,31 @@ export default function CancelDialog({ customer, onClose, onChanged }: Props) {
   // 🔹 Eingangsdatum (vom …) – Standard heute
   const [cancelDate, setCancelDate] = useState<string>(todayISO());
 
-  // 🔹 Enddatum (zum …) – neu
+  // 🔹 Enddatum (zum …)
   const [endDate, setEndDate] = useState<string>('');
 
   const [reason, setReason] = useState<string>('');
   const [saving, setSaving] = useState(false);
 
   const endBeforeStart = Boolean(endDate && cancelDate && endDate < cancelDate);
-  const disabled = saving || !selected || !cancelDate || !endDate || selectedIsCancelled || endBeforeStart;
+
+  // ⬅︎ NEU: zusätzlich sperren, wenn nicht kündbarer Kurs im Filter gewählt wurde
+  const disabledByNonCancelableCourse = courseValueIsNonCancelable;
+
+  const disabled = saving
+    || !selected
+    || !cancelDate
+    || !endDate
+    || selectedIsCancelled
+    || endBeforeStart
+    || disabledByNonCancelableCourse; // ⬅︎ NEU
+
+    
+
 
   async function submit() {
     if (!customer._id || !selected?._id || !cancelDate || !endDate) return;
+    if (disabledByNonCancelableCourse) return; // Schutz
     setSaving(true); setErr(null);
     try {
       const r = await fetch(
@@ -145,9 +231,9 @@ export default function CancelDialog({ customer, onClose, onChanged }: Props) {
           credentials: 'include',
           headers: { 'Content-Type': 'application/json' },
           cache: 'no-store',
-          body: JSON.stringify({ 
+          body: JSON.stringify({
             date: cancelDate,     // Eingangsdatum (vom …)
-            endDate,              // Beendigungsdatum (zum …)  ← WICHTIG
+            endDate,              // Beendigungsdatum (zum …)
             reason
           })
         }
@@ -169,6 +255,18 @@ export default function CancelDialog({ customer, onClose, onChanged }: Props) {
       setSaving(false);
     }
   }
+
+
+const offerButtonText = useMemo(() => {
+  if (courseValueIsNonCancelable) {
+    return 'No cancellable bookings'; // <- statt ''
+  }
+  if (selected) return labelFor(selected);
+  if (filteredBookings.length) return 'Select…';
+  return 'No cancellable bookings';
+}, [courseValueIsNonCancelable, selected, filteredBookings]);
+
+
 
   return (
     <div className="ks-modal-root ks-modal-root--top">
@@ -196,13 +294,16 @@ export default function CancelDialog({ customer, onClose, onChanged }: Props) {
             </select>
             {!filteredBookings.length && (
               <div className="text-sm text-gray-600 mt-1">
-                No cancellable bookings for this filter. Powertraining and certain one-off programs are not cancellable.
+                {/* ⬅︎ NEU: Hinweistext präziser für die zwei Fälle */}
+                {courseValueIsNonCancelable
+                  ? 'This course type is not cancellable (e.g., Rent a Coach / Coach Education).'
+                  : 'No cancellable bookings for this filter. Powertraining and certain one-off programs are not cancellable.'}
               </div>
             )}
           </div>
         </div>
 
-     {/* Booking trigger */}
+        {/* Booking trigger */}
         <div className="grid gap-2 mb-2">
           <div>
             <label className="lbl">Booking</label>
@@ -210,15 +311,22 @@ export default function CancelDialog({ customer, onClose, onChanged }: Props) {
               ref={triggerRef}
               type="button"
               className="input"
+             title={courseValueIsNonCancelable ? 'This course is not cancellable' : undefined}
+
               onClick={() => (menuOpen ? setMenuOpen(false) : openMenu())}
               disabled={!filteredBookings.length}
               aria-haspopup="listbox"
               aria-expanded={menuOpen}
               style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
             >
+              
+ 
+
               <span style={{ opacity: selectedIsCancelled ? 0.6 : 1 }}>
-                {selected ? labelFor(selected) : (filteredBookings.length ? 'Select…' : 'No bookings')}
-              </span>
+  {offerButtonText || '\u00A0' /* NBSP, damit die Höhe gleich bleibt */}
+</span>
+
+
               <span aria-hidden>▾</span>
             </button>
           </div>
@@ -255,9 +363,6 @@ export default function CancelDialog({ customer, onClose, onChanged }: Props) {
           </div>
         )}
 
-
-       
-
         {/* Form */}
         <div className="grid gap-2">
           <div>
@@ -268,7 +373,7 @@ export default function CancelDialog({ customer, onClose, onChanged }: Props) {
               value={cancelDate}
               min={todayISO()}
               onChange={(e)=> setCancelDate(e.target.value)}
-              disabled={!selected || selectedIsCancelled}
+              disabled={!selected || selectedIsCancelled || disabledByNonCancelableCourse} // ⬅︎ NEU
             />
           </div>
           <div>
@@ -279,7 +384,7 @@ export default function CancelDialog({ customer, onClose, onChanged }: Props) {
               value={endDate}
               min={cancelDate || todayISO()}
               onChange={(e)=> setEndDate(e.target.value)}
-              disabled={!selected || selectedIsCancelled}
+              disabled={!selected || selectedIsCancelled || disabledByNonCancelableCourse} // ⬅︎ NEU
             />
             {endBeforeStart && (
               <div className="text-sm text-red-600 mt-1">
@@ -295,10 +400,15 @@ export default function CancelDialog({ customer, onClose, onChanged }: Props) {
               value={reason}
               onChange={(e)=> setReason(e.target.value)}
               placeholder="e.g., moved away, club change"
-              disabled={!selected || selectedIsCancelled}
+              disabled={!selected || selectedIsCancelled || disabledByNonCancelableCourse} // ⬅︎ NEU
             />
           </div>
           {selected && selectedIsCancelled && <div className="text-gray-600">This booking is already cancelled.</div>}
+          {disabledByNonCancelableCourse && (
+            <div className="text-gray-600">
+              Cancellations are not allowed for this course type.
+            </div>
+          )}
         </div>
 
         <div className="flex justify-end gap-2 mt-3">
@@ -311,6 +421,10 @@ export default function CancelDialog({ customer, onClose, onChanged }: Props) {
     </div>
   );
 }
+
+
+
+
 
 
 
