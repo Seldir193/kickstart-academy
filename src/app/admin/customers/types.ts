@@ -28,6 +28,15 @@ export type Customer = {
   canceledAt?: string|null;
   createdAt?: string;
   bookings?: BookingRef[];
+// NEU in Customer:
+marketingProvider?: 'mailchimp'|'brevo'|'sendgrid'|null;
+marketingStatus?: 'subscribed'|'pending'|'unsubscribed'|'error'|null;
+marketingContactId?: string|null;
+marketingLastSyncedAt?: string|null;
+marketingLastError?: string|null;
+marketingConsentAt?: string|null;
+
+
 };
 
 export type ListResponse = { items: Customer[]; total: number; page: number; limit: number };
@@ -98,7 +107,37 @@ export const API_ENDPOINTS = {
     `/api/admin/customers/${encodeURIComponent(customerId)}/documents${qs ? `?${qs}` : ''}`,
   exportDocumentsCsv: (customerId: string, qs: string) =>
     `/api/admin/customers/${encodeURIComponent(customerId)}/documents.csv${qs ? `?${qs}` : ''}`,
+
+
+
+
+
+
+
+
+  // NEU in API_ENDPOINTS:
+listCustomers: (qs: string) =>
+  `/api/admin/customers${qs ? `?${qs}` : ''}`,
+getCustomer: (customerId: string) =>
+  `/api/admin/customers/${encodeURIComponent(customerId)}`,
+createCustomer: `/api/admin/customers`,
+updateCustomer: (customerId: string) =>
+  `/api/admin/customers/${encodeURIComponent(customerId)}`,
+deleteCustomer: (customerId: string) =>
+  `/api/admin/customers/${encodeURIComponent(customerId)}`,
+
+toggleNewsletter: (customerId: string) =>
+  `/api/admin/customers/${encodeURIComponent(customerId)}/newsletter`,
+
 };
+
+
+
+
+
+
+
+
 
 
 
