@@ -11,6 +11,25 @@ type Props = {
   onBooked: (freshCustomer: Customer) => void;
 };
 
+
+
+
+// Weekly = echte Weekly-Kurse ODER (Foerdertraining/Kindergarten) ohne ClubPrograms/RentACoach
+function isWeeklyOffer(o?: Offer | null) {
+  if (!o) return false;
+
+  // 1) echte Weekly
+  if (o.category === 'Weekly') return true;
+
+  // 2) explizit NICHT Weekly
+  if (o.category === 'ClubPrograms' || o.category === 'RentACoach') return false;
+
+  // 3) Fallback: alte Datensätze ohne category
+  return o.type === 'Foerdertraining' || o.type === 'Kindergarten';
+}
+
+
+
 function isNum(v: any): v is number { return typeof v === 'number' && isFinite(v); }
 function fmtEUR(n: number) { try { return new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(n); } catch { return `${n.toFixed(2)} €`; } }
 function fmtDE(dateISO: string) {
@@ -60,8 +79,12 @@ export default function BookDialog({ customerId, onClose, onBooked }: Props) {
       } finally {
         setLoadingOffers(false);
       }
+
+     
     })();
-  }, []);
+  },  []);
+
+
 
   const filteredOffers = useMemo(
     () => offers.filter(o => offerMatchesCourse(courseValue, o)),
@@ -79,10 +102,22 @@ export default function BookDialog({ customerId, onClose, onBooked }: Props) {
     () => filteredOffers.find(o => o._id === selectedOfferId) || null,
     [filteredOffers, selectedOfferId]
   );
-  const pro = useMemo(
-    () => prorateForStart(selectedDate, isNum(selectedOffer?.price) ? selectedOffer!.price : null),
-    [selectedDate, selectedOffer?.price]
-  );
+
+  const isWeekly = useMemo(() => isWeeklyOffer(selectedOffer), [selectedOffer]);
+
+const pro = useMemo(() => {
+  if (!isWeekly) return null;
+  return isNum(selectedOffer?.price)
+    ? prorateForStart(selectedDate, selectedOffer!.price)
+    : null;
+}, [isWeekly, selectedDate, selectedOffer?.price]);
+
+
+
+  //const pro = useMemo(
+    //() => prorateForStart(selectedDate, isNum(selectedOffer?.price) ? selectedOffer!.price : null),
+    //[selectedDate, selectedOffer?.price]
+  //);
 
   async function submit() {
     if (!customerId || !selectedOfferId || !selectedDate) return;
@@ -190,18 +225,41 @@ export default function BookDialog({ customerId, onClose, onBooked }: Props) {
           </div>
         </div>
 
+      
+
+
+
+
         {/* Price box */}
-        {isNum(selectedOffer?.price) && (
-          <div className="mt-3 p-3 rounded bg-gray-50 border">
-            <div className="font-semibold mb-1">Price overview</div>
-            <ul className="list-disc ml-5">
-              <li>Monthly price: <b>{fmtEUR(selectedOffer!.price!)}</b></li>
-              {pro
-                ? <li>First month (pro-rata from <b>{fmtDE(selectedDate)}</b>): <b>{fmtEUR(pro.firstMonthPrice)}</b> <span className="text-gray-600">({pro.daysRemaining}/{pro.daysInMonth} days)</span></li>
-                : <li className="text-gray-600">Select a valid date to see pro-rata.</li>}
-            </ul>
-          </div>
+{isNum(selectedOffer?.price) && (
+  isWeekly ? (
+    <div className="mt-3 p-3 rounded bg-gray-50 border">
+      <div className="font-semibold mb-1">Price overview</div>
+      <ul className="list-disc ml-5">
+        <li>Monthly price: <b>{fmtEUR(selectedOffer!.price!)}</b></li>
+        {pro ? (
+          <li>
+            First month (pro-rata from <b>{fmtDE(selectedDate)}</b>):{" "}
+            <b>{fmtEUR(pro.firstMonthPrice)}</b>{" "}
+            <span className="text-gray-600">
+              ({pro.daysRemaining}/{pro.daysInMonth} days)
+            </span>
+          </li>
+        ) : (
+          <li className="text-gray-600">Select a valid date to see pro-rata.</li>
         )}
+      </ul>
+    </div>
+  ) : (
+    <div className="mt-3">
+      <div>
+        Price: <b>{fmtEUR(selectedOffer!.price!)}</b>
+      </div>
+    </div>
+  )
+)}
+
+
 
         <div className="flex justify-end gap-2 mt-3">
           <button className="btn" onClick={onClose}>Close</button>
