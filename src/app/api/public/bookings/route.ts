@@ -1,7 +1,6 @@
 
 
 
-
 // client/src/app/api/public/bookings/route.ts
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -85,14 +84,23 @@ export async function POST(req: NextRequest) {
     }
 
     return NextResponse.json(payload, { status: r.status });
-  } catch (err: any) {
+  }  
+  catch (err: any) {
     console.error("[/api/public/bookings] upstream error:", err?.message || err);
     return NextResponse.json(
       { ok: false, error: "Upstream fetch failed", detail: String(err?.message ?? err) },
       { status: 502 }
     );
+
+
+  
   }
 }
+
+  
+  
+  
+
 
 
 
