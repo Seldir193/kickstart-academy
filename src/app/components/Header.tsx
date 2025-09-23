@@ -10,13 +10,13 @@ const WP_CONTACT_URL =
   process.env.NEXT_PUBLIC_WP_CONTACT_URL ||
   'http://localhost/wordpress/index.php/home/';
 
+
 const adminNav = [
   { href: '/',                label: 'Home' },
   { href: '/orte',            label: 'Places' },
   { href: '/trainings',       label: 'Trainings' },
   { href: '/admin/invoices',  label: 'Rechnungen' },
   { href: '/customers',       label: 'Customers' },
-  { href: '/shop',            label: 'Shop (demo)' },
   { href: '/admin/datev',     label: 'DATEV' }, // <- EINMAL hier
 ];
 
@@ -76,7 +76,7 @@ export default function Header({ isAdminInitial = false }: Props) {
               {adminNav.map((item) => {
                 if (item.label.toLowerCase() === 'programs') return null;
 
-                const isRouteActive =
+              const isRouteActive =
                   pathname === item.href ||
                   (item.href === '/trainings'      && pathname.startsWith('/trainings')) ||
                   (item.href === '/customers'      && pathname.startsWith('/customers')) ||
@@ -120,9 +120,18 @@ export default function Header({ isAdminInitial = false }: Props) {
               <LogoutLink isLoggingOut={isLoggingOut} setIsLoggingOut={setIsLoggingOut} />
             </>
           ) : (
-            <a href={WP_CONTACT_URL} className="nav-link active" rel="noopener">
-              Contact
-            </a>
+   
+            <>
+    <Link href="/trainings" className="nav-link">Trainings</Link>
+    
+    <a href={WP_CONTACT_URL} className="nav-link" rel="noopener">
+      Contact
+    </a>
+  </>
+
+            
+
+
           )}
         </nav>
       </div>
