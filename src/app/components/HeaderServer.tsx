@@ -1,5 +1,4 @@
-
-
+// headerServer.tsx
 export const dynamic = 'force-dynamic'; // ensure per-request render
 
 import { cookies } from 'next/headers';
