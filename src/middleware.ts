@@ -1,23 +1,19 @@
-
-
-
-
-
-
-
-
-
-
-
-
 // middleware.ts
 import { NextResponse, type NextRequest } from 'next/server';
 
-const PUBLIC_PAGES = new Set(['/admin/login', '/admin/signup']);
+const PUBLIC_PAGES = new Set([
+  '/admin/login',
+  '/admin/signup',
+  '/admin/password-reset', // <- allow forgot page
+  '/admin/new-password',   // <- allow new password page
+]);
+
 const PUBLIC_API = new Set([
   '/api/admin/auth/login',
   '/api/admin/auth/signup',
   '/api/admin/auth/logout',
+  '/api/admin/auth/forgot', // <- allow send reset mail
+  '/api/admin/auth/reset',  // <- allow apply new password
   '/api/ping',
   '/api/health',
 ]);
@@ -25,7 +21,10 @@ const PUBLIC_API = new Set([
 export function middleware(req: NextRequest) {
   const { pathname, searchParams, search } = req.nextUrl;
 
-  // Allow static/Next internals
+  if (req.method === 'OPTIONS' || req.method === 'HEAD') {
+    return NextResponse.next();
+  }
+
   if (
     pathname.startsWith('/_next') ||
     pathname.startsWith('/favicon') ||
@@ -35,17 +34,20 @@ export function middleware(req: NextRequest) {
     return NextResponse.next();
   }
 
-  // 🚫 Block standalone /book — only allow when embed=1
+  if (pathname.startsWith('/api/public')) {
+    return NextResponse.next();
+  }
+
   if (pathname === '/book' && searchParams.get('embed') !== '1') {
     const url = req.nextUrl.clone();
-    url.pathname = '/';            // or '/trainings' if you prefer
+    url.pathname = '/';
     url.search = '';
     return NextResponse.redirect(url);
   }
 
   const token = req.cookies.get('admin_token')?.value;
 
-  // -------- API GUARD --------
+  // --- API guard ---
   if (pathname.startsWith('/api/admin')) {
     if (PUBLIC_API.has(pathname)) return NextResponse.next();
     if (!token) {
@@ -57,7 +59,7 @@ export function middleware(req: NextRequest) {
     return NextResponse.next();
   }
 
-  // -------- PAGE GUARD --------
+  // --- Page guard ---
   if (pathname.startsWith('/admin')) {
     if (PUBLIC_PAGES.has(pathname)) return NextResponse.next();
     if (!token) {
@@ -68,7 +70,6 @@ export function middleware(req: NextRequest) {
     }
   }
 
-  // Optional guard for /trainings
   if (pathname === '/trainings' && !token) {
     const url = req.nextUrl.clone();
     url.pathname = '/admin/login';
@@ -76,18 +77,15 @@ export function middleware(req: NextRequest) {
     return NextResponse.redirect(url);
   }
 
-
-// optional: /customers -> /admin/customers
-if (pathname === '/customers') {
-  const url = req.nextUrl.clone();
-  url.pathname = '/admin/customers';
-  return NextResponse.redirect(url);
-}
+  if (pathname === '/customers') {
+    const url = req.nextUrl.clone();
+    url.pathname = '/admin/customers';
+    return NextResponse.redirect(url);
+  }
 
   return NextResponse.next();
 }
 
-// Add '/book' to the matcher
-//export const config = { matcher: ['/admin/:path*', '/api/admin/:path*', '/trainings', '/book'] };
-
-export const config = { matcher: ['/admin/:path*', '/api/admin/:path*', '/trainings', '/book', '/customers'] };
+export const config = {
+  matcher: ['/admin/:path*', '/api/admin/:path*', '/trainings', '/book', '/customers'],
+};
