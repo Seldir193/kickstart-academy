@@ -1,4 +1,3 @@
-
 // app/admin/login/page.tsx
 'use client';
 
@@ -38,13 +37,14 @@ export default function AdminLoginPage() {
 
   function handleBlur(field: 'email' | 'password') {
     const e = validate({ [field]: field === 'email' ? email : password });
-    setErrors(prev => ({ ...prev, [field]: e[field] }));
+    setErrors((prev) => ({ ...prev, [field]: e[field] }));
   }
 
   function handleChange(field: 'email' | 'password', value: string) {
-    if (field === 'email') setEmail(value); else setPassword(value);
+    if (field === 'email') setEmail(value);
+    else setPassword(value);
 
-    setErrors(prev => {
+    setErrors((prev) => {
       const next = { ...prev };
       if (field === 'email') {
         next.email = isValidEmail(value) ? undefined : 'Invalid email';
@@ -53,6 +53,49 @@ export default function AdminLoginPage() {
       }
       return next;
     });
+  }
+
+  // ✅ Avatar, User-ID & Name im LocalStorage cachen
+  async function seedAvatarCacheFromLogin(loginData: any) {
+    try {
+      // 1) Erst aus der Login-Response lesen
+      let userId: string | null =
+        loginData?.user?.id || loginData?.user?._id || loginData?.user?.providerId || null;
+      let avatarUrl: string | null = loginData?.user?.avatarUrl ?? null;
+      let fullName: string | null = loginData?.user?.fullName ?? null;
+
+      // 2) Falls etwas fehlt → Profil abrufen (einmal)
+      if (!userId || !avatarUrl || !fullName) {
+        const pr = await fetch('/api/admin/auth/profile', {
+          credentials: 'include',
+          cache: 'no-store',
+        });
+        const pd = await pr.json().catch(() => ({}));
+        if (pr.ok && (pd?.ok ?? pr.ok)) {
+          userId   = userId   ?? pd?.user?.id ?? pd?.user?._id ?? pd?.user?.providerId ?? null;
+          avatarUrl = avatarUrl ?? pd?.user?.avatarUrl ?? null;
+          fullName  = fullName  ?? pd?.user?.fullName  ?? null;
+        }
+      }
+
+      // 3) In den Cache schreiben (oder löschen)
+      if (userId) {
+        localStorage.setItem('ks_user_id', String(userId));
+        // 🔑 wichtig für vorhandene Frontend-Logik (z.B. Teilbeträge, alte Routen):
+        localStorage.setItem('providerId', String(userId));
+      } else {
+        localStorage.removeItem('ks_user_id');
+        localStorage.removeItem('providerId');
+      }
+
+      if (avatarUrl) localStorage.setItem('ks_avatar_url', avatarUrl);
+      else localStorage.removeItem('ks_avatar_url');
+
+      if (fullName) localStorage.setItem('ks_full_name', fullName);
+      else localStorage.removeItem('ks_full_name');
+    } catch {
+      // silent fail
+    }
   }
 
   async function onSubmit(e: React.FormEvent) {
@@ -67,22 +110,35 @@ export default function AdminLoginPage() {
     setLoading(true);
 
     try {
-      // Für ENV-Admin-Login (nur DEV): providerId abfragen
-    //  let providerId = '';
-      //if (process.env.NODE_ENV !== 'production') {
-      //  providerId = window.prompt('Bitte Provider-ID eingeben (Mongo ObjectId):', '') || '';
-     // }
+      // 🔧 Für ENV-Admin-Logins: providerId (Owner-ObjectId) mitsenden, wenn vorhanden.
+      // Quelle: zuerst URL (?providerId=...), dann localStorage.
+      const pidFromQuery = sp.get('providerId') || '';
+      const pidFromLS = (typeof window !== 'undefined' && localStorage.getItem('providerId')) || '';
+      const devProviderId = (pidFromQuery || pidFromLS).trim();
+
+      const payload: any = { email, password };
+      if (/^[a-f0-9]{24}$/i.test(devProviderId)) {
+        payload.providerId = devProviderId;
+      }
 
       const r = await fetch('/api/admin/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        //body: JSON.stringify({ email, password, providerId }),
-         body: JSON.stringify({ email, password }),
+        body: JSON.stringify(payload),
         credentials: 'include',
         cache: 'no-store',
       });
 
       if (r.ok) {
+        // 💾 Login-Response lesen (kann avatarUrl enthalten) und Cache setzen,
+        // danach sofort zum Ziel navigieren
+        const data = await r.json().catch(() => ({}));
+        await seedAvatarCacheFromLogin(data);
+
+        // Falls Login-Response schon eine id hat, zusätzlich „providerId“ sichern
+        const uid = data?.user?.id || data?.user?._id || data?.user?.providerId;
+        if (uid) localStorage.setItem('providerId', String(uid));
+
         window.location.assign(next);
         return;
       }
@@ -90,7 +146,11 @@ export default function AdminLoginPage() {
       // Fehlertext robust auslesen
       const t = await r.text();
       let d: any;
-      try { d = JSON.parse(t); } catch { d = { error: t || 'Login failed' }; }
+      try {
+        d = JSON.parse(t);
+      } catch {
+        d = { error: t || 'Login failed' };
+      }
       setFormError(d?.error || 'Login failed');
     } catch {
       setFormError('Network error');
@@ -98,7 +158,6 @@ export default function AdminLoginPage() {
       setLoading(false);
     }
   }
-
 
   return (
     <div className="container">
@@ -147,6 +206,10 @@ export default function AdminLoginPage() {
             </span>
           </div>
 
+          <div className="actions" style={{ justifyContent: 'flex-start' }}>
+            <a href="/admin/password-reset" className="nav-link">Passwort vergessen?</a>
+          </div>
+
           <div className="actions">
             <button type="submit" className="btn btn-primary" disabled={loading}>
               {loading ? 'Signing in…' : 'Login'}
@@ -165,8 +228,6 @@ export default function AdminLoginPage() {
     </div>
   );
 }
-
-
 
 
 
