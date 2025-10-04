@@ -10,7 +10,7 @@ export default function Footer() {
   return (
     <footer className="site-footer">
       <div className="container">
-        <small>&copy; {year} KickStart Academy</small>
+        <small>&copy; {year} Dortmunder Fussballschule</small>
 
         {showAdminLink && (
           <small className="site-footer__admin">
