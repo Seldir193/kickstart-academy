@@ -2,134 +2,104 @@
 import { NextResponse } from 'next/server';
 import { signAdminToken } from '@/app/api/lib/auth';
 
-function clean(v: unknown) {
-  return String(v ?? '').trim().replace(/^['"]|['"]$/g, '');
-}
-function apiBase() {
-  const base = process.env.NEXT_BACKEND_API_BASE || 'http://127.0.0.1:5000/api';
-  return base.replace(/\/+$/, '');
-}
+const clean = (v: unknown) => String(v ?? '').trim();
+const apiBase = () =>
+  (process.env.NEXT_BACKEND_API_BASE || 'http://127.0.0.1:5000/api').replace(/\/+$/, '');
 
 export async function POST(req: Request) {
   const isDev = process.env.NODE_ENV !== 'production';
+  const body = await req.json().catch(() => ({}));
+  const email = clean(body?.email).toLowerCase();
+  const password = clean(body?.password);
 
-  try {
-    const body = await req.json().catch(() => ({}));
-    const e = clean(body?.email || '');
-    const p = clean(body?.password || '');
-
-    // Guard: AUTH_SECRET muss vorhanden sein (sonst crasht die Signierung tiefer)
-    const authSecret = (process.env.AUTH_SECRET || '').trim();
-    if (!authSecret) {
-      return NextResponse.json(
-        { ok: false, error: 'Server misconfigured: AUTH_SECRET is missing' },
-        { status: 500 }
-      );
+  // -------- ENV-Admin-Login --------
+  const envEmail = clean(process.env.ADMIN_EMAIL).toLowerCase();
+  const envPass  = clean(process.env.ADMIN_PASSWORD);
+  if (envEmail && envPass && email === envEmail) {
+    if (password !== envPass) {
+      return NextResponse.json({ ok: false, error: 'Invalid credentials' }, { status: 401 });
     }
 
-    // providerId aus Body → Query → (Alt-)Cookie
+    // providerId MUSS ein gültiger ObjectId-String sein (Owner-ID)
     const providerId =
       clean(body?.providerId) ||
-      clean(new URL(req.url).searchParams.get('providerId') || '') ||
+      clean(new URL(req.url).searchParams.get('providerId')) ||
       clean((req as any).cookies?.get?.('providerId')?.value || '');
 
-    const envEmail = clean(process.env.ADMIN_EMAIL || '').toLowerCase();
-    const envPass  = clean(process.env.ADMIN_PASSWORD || '');
-
-    // === ENV Admin-Login (lokal signieren, ohne Backend) ===
-    if (envEmail && envPass && e.toLowerCase() === envEmail) {
-      if (p !== envPass) {
-        return NextResponse.json({ ok: false, error: 'Invalid credentials' }, { status: 401 });
-      }
-      if (!providerId) {
-        return NextResponse.json({ ok: false, error: 'providerId required' }, { status: 400 });
-      }
-
-      let token = '';
-      try {
-        token = await signAdminToken({ id: providerId, email: envEmail, role: 'provider' });
-      } catch (err: any) {
-        return NextResponse.json(
-          { ok: false, error: 'Token signing failed', detail: String(err?.message ?? err) },
-          { status: 500 }
-        );
-      }
-
-      const res = NextResponse.json({
-        ok: true,
-        user: { id: providerId, fullName: 'System Admin', email: envEmail },
-      });
-
-      // Nur HttpOnly JWT setzen (Single Source of Truth)
-      res.cookies.set('admin_token', token, {
-        httpOnly: true,
-        sameSite: 'lax',
-        path: '/',
-        maxAge: 60 * 60 * 24 * 7, // 7 Tage
-        secure: !isDev,
-      });
-
-      return res;
+    if (!/^[a-f0-9]{24}$/i.test(providerId)) {
+      return NextResponse.json(
+        { ok: false, error: 'providerId (24-hex) required for ENV admin' },
+        { status: 400 }
+      );
     }
 
-    // === Backend-Login (Proxy) ===
-    const r = await fetch(`${apiBase()}/admin/auth/login`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email: e, password: p }),
-      cache: 'no-store',
+    const token = await signAdminToken({
+      id: providerId,          // <- wichtig: als id setzen
+                 // <- zusätzlich explizit
+      email: envEmail,
+      role: 'provider',
     });
 
-    const text = await r.text();
-    let data: any;
-    try { data = JSON.parse(text); } catch { data = { ok: false, raw: text }; }
+    const res = NextResponse.json({
+      ok: true,
+      user: { id: providerId, email: envEmail },
+    });
 
-    // Flexibles Mapping: id | _id | providerId
-    const user = data?.user ?? {};
-    const userId = user?.id || user?._id || user?.providerId;
-    const userEmail = user?.email;
+    res.cookies.set('admin_token', token, {
+      httpOnly: true,
+      sameSite: 'lax',
+      path: '/',
+      maxAge: 60 * 60 * 24 * 7,
+      secure: !isDev,
+    });
 
-    if (r.ok && (data?.ok ?? r.ok) && userId && userEmail) {
-      let token = '';
-      try {
-        token = await signAdminToken({ id: String(userId), email: String(userEmail), role: 'provider' });
-      } catch (err: any) {
-        return NextResponse.json(
-          { ok: false, error: 'Token signing failed', detail: String(err?.message ?? err) },
-          { status: 500 }
-        );
-      }
-
-      const res = NextResponse.json(
-        { ok: true, user: { ...user, id: String(userId) } },
-        { status: 200 }
-      );
-
-      // Nur HttpOnly JWT setzen (kein Klartext-Provider-Cookie)
-      res.cookies.set('admin_token', token, {
-        httpOnly: true,
-        sameSite: 'lax',
-        path: '/',
-        maxAge: 60 * 60 * 24 * 7,
-        secure: !isDev,
-      });
-
-      return res;
-    }
-
-    // Upstream-Fehler 1:1 durchreichen (sichtbar debuggen)
-    return NextResponse.json(
-      data || { ok: false, error: 'Login failed' },
-      { status: r.status || 500 }
-    );
-  } catch (e: any) {
-    console.error('Login error:', e);
-    return NextResponse.json(
-      { ok: false, error: 'Login route crashed', detail: String(e?.message ?? e) },
-      { status: 500 }
-    );
+    return res;
   }
+
+  // -------- Backend-Login (Proxy) --------
+  const r = await fetch(`${apiBase()}/admin/auth/login`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email, password }),
+    cache: 'no-store',
+  });
+
+  const text = await r.text();
+  let data: any; try { data = JSON.parse(text); } catch { data = { ok: false, raw: text }; }
+
+  const user = data?.user ?? {};
+  const userId = user?.id || user?._id || user?.providerId;
+  const userEmail = user?.email;
+
+  if (r.ok && userId && userEmail) {
+    // Hier signieren wir weiterhin mit userId – dein Proxy akzeptiert das (siehe Route unten)
+    const token = await signAdminToken({
+      id: String(userId),
+      email: String(userEmail),
+      role: 'provider',
+    });
+
+    const res = NextResponse.json({ ok: true, user: { ...user, id: String(userId) } });
+    res.cookies.set('admin_token', token, {
+      httpOnly: true,
+      sameSite: 'lax',
+      path: '/',
+      maxAge: 60 * 60 * 24 * 7,
+      secure: !isDev,
+    });
+    return res;
+  }
+
+  return NextResponse.json(data || { ok: false, error: 'Login failed' }, { status: r.status || 500 });
 }
+
+
+
+
+
+
+
+
 
 
 
