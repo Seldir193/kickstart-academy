@@ -15,11 +15,11 @@ type Props = {
   onClose: () => void;
   onCreated?: () => void;
   onSaved?: () => void;
-  onDeleted?: () => void;
+  //onDeleted?: () => void;
 };
 
 export default function CustomerDialog({
-  mode, customer, onClose, onCreated, onSaved, onDeleted,
+  mode, customer, onClose, onCreated, onSaved, //onDeleted,
 }: Props) {
   const blank: Customer = {
     _id: '',
@@ -209,22 +209,6 @@ async function toggleNewsletter(id: string, checked: boolean) {
     } finally { setSaving(false); }
   }
 
-  async function removeCustomer() {
-    if (!form._id) return;
-    if (!confirm('Delete this customer?')) return;
-    setSaving(true); setErr(null);
-    try {
-      const res = await fetch(`/api/admin/customers/${encodeURIComponent(form._id)}`, {
-        method:'DELETE',
-        credentials: 'include',         // 🔐
-        cache: 'no-store',
-      });
-      if (!res.ok) throw new Error(`Delete failed (${res.status})`);
-      onDeleted?.();
-    } catch(e:any) {
-      setErr(e?.message || 'Delete failed');
-    } finally { setSaving(false); }
-  }
 
   //const isActive = !form.canceledAt;
 
@@ -461,7 +445,7 @@ function statusLabel(s?: string) {
               <button className="btn btn-primary" onClick={save} disabled={saving} type="button">
                 {saving ? 'Saving…' : 'Save changes'}
               </button>
-              <button className="btn" onClick={removeCustomer} type="button">Delete</button>
+              
             </>
           )}
         </div>
