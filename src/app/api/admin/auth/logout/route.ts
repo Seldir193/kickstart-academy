@@ -28,6 +28,8 @@ export async function GET(req: NextRequest) {
   nukeCookie(res, 'admin_ui', { httpOnly: false, path: '/' });
 
   // WICHTIG: Provider-ID-Cookies wegräumen (nicht HttpOnly)
+  nukeCookie(res, 'admin_uid',       { httpOnly: true,  path: '/' });
+  nukeCookie(res, 'admin_email',     { httpOnly: true,  path: '/' });
   nukeCookie(res, 'providerId', { httpOnly: false, path: '/' });
   // falls du diese Namen irgendwo benutzt hast:
   nukeCookie(res, 'adminProviderId', { httpOnly: false, path: '/' });
@@ -44,13 +46,6 @@ export async function GET(req: NextRequest) {
 
 // Optional auch POST
 export const POST = GET;
-
-
-
-
-
-
-
 
 
 
