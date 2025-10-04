@@ -1,10 +1,12 @@
 
 
 
+import '@/app/styles/revenue.module.css';
 
+import '@/app/styles/header.css';
 
-
-
+import './styles/header-nav-hover.css';
+import './styles/profile-button.scss';
 
 import './styles/globals.scss';
 import type { Metadata } from 'next';
@@ -16,7 +18,7 @@ import Footer from './components/Footer';
 
 
 export const metadata: Metadata = {
-  title: 'KickStart Academy',
+  title: 'Dortmunder Fussballschule',
   description: 'Football School for the Next Generation',
 };
 
