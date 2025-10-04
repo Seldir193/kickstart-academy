@@ -1,4 +1,5 @@
 
+
 /* Mobile: eine Spalte */
 .ks .filters {
   display: grid;
@@ -24,67 +25,71 @@
 }
 
 /* Kleine Politur */
-.ks .filters .label { margin-bottom: 4px; display: block; }
-.ks .filters .input { width: 100%; height: 40px; line-height: 40px; padding: 0 12px; }
+.ks .filters .label {
+  margin-bottom: 4px;
+  display: block;
+}
+.ks .filters .input {
+  width: 100%;
+  height: 40px;
+  line-height: 40px;
+  padding: 0 12px;
+}
 
-
-
-
-
-
-
-
-
-.list__actions{
+.list__actions {
   display: flex;
   flex-direction: row-reverse;
 }
 
-
-
-
 /* Wenn embed-Modus aktiv ist, kein Header/Footer anzeigen */
 body.embed-mode .site-header,
-body.embed-mode .site-footer { display: none !important; }
-
-/* ggf. Padding korrigieren, falls dein Layout oben Platz für Header reserviert */
-body.embed-mode { padding-top: 0 !important; }
-
-
-
-
-.book-grid--single{
-  padding:unset !important;
-
+body.embed-mode .site-footer {
+  display: none !important;
 }
 
+/* ggf. Padding korrigieren, falls dein Layout oben Platz für Header reserviert */
+body.embed-mode {
+  padding-top: 0 !important;
+}
 
-
-
-
-
-
-
+.book-grid--single {
+  padding: unset !important;
+}
 
 :root {
   color-scheme: light;
   --brand: #0ea5e9; /* WP/React Primärfarbe */
 }
 
-* { box-sizing: border-box; }
-html, body { margin: 0; padding: 0; height: 100%; }
+* {
+  box-sizing: border-box;
+}
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
 
 body {
   min-height: 100vh;
-  display: grid;                 /* Header | Main | Footer */
+  display: grid; /* Header | Main | Footer */
   grid-template-rows: auto 1fr auto;
-  font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, 'Helvetica Neue', Arial, 'Noto Sans', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell,
+    "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji",
+    "Segoe UI Symbol";
   //background: #f5f5f5;
   color: #222;
 }
 
 /* ===== Layout / Container ===== */
-.container { max-width: 1200px; margin: 0 auto;   display: flex; gap:20px; justify-content: center; }
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+}
 
 /* Main verhält sich wie im WP-Theme (nur Main scrollt, Footer unten) */
 .site-main {
@@ -98,21 +103,40 @@ body {
   justify-content: flex-start;
 }
 /* Scrollbar unauffällig/versteckt (optional) */
-.site-main { scrollbar-width: none; -ms-overflow-style: none; }
-.site-main::-webkit-scrollbar { width: 0; height: 0; }
+.site-main {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.site-main::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
 
 /* ===== Header (dein aktueller Markup .nav/.nav-link) ===== */
 .site-header {
   background: #ffffff;
   border-bottom: 1px solid #eaeaea;
-  position: sticky; top: 0; z-index: 10;
+  position: sticky;
+  top: 0;
+  z-index: 10;
 }
-.header-inner { display: flex; align-items: center; justify-content: space-between; min-height: 64px; }
-.brand { font-weight: 700; text-decoration: none; color: #111; font-size: 20px; }
+.header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 64px;
+}
+.brand {
+  font-weight: 700;
+  text-decoration: none;
+  color: #111;
+  font-size: 20px;
+}
 
-
-
-.nav { display: flex; gap: 12px; }
+.nav {
+  display: flex;
+  gap: 12px;
+}
 .nav-link {
   text-decoration: none;
   padding: 8px 12px;
@@ -120,23 +144,40 @@ body {
   color: #333;
 }
 /* WP-Look: kein sichtbarer Hover, nur active ist schwarz/weiß */
-.nav-link:hover { color: #333; background: transparent; }
+.nav-link:hover {
+  color: #333;
+  background: transparent;
+}
 
-.nav-link.active { background: #111; color: #fff; }
-
-
-
-
+.nav-link.active {
+  background: #111;
+  color: #fff;
+}
 
 /* ===== Hero / Sections ===== */
 .hero {
   background: linear-gradient(180deg, #111 0%, #222 100%);
-  color: #fff; border-radius: 16px; padding: 48px; margin: 24px 0;
+  color: #fff;
+  border-radius: 16px;
+  padding: 48px;
+  margin: 24px 0;
 }
-.hero-content { max-width: 800px; }
-.hero h1 { font-size: clamp(28px, 4vw, 48px); margin: 0 0 8px; }
-.hero p { opacity: 0.9; margin: 0 0 16px; }
-.hero-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+.hero-content {
+  max-width: 800px;
+}
+.hero h1 {
+  font-size: clamp(28px, 4vw, 48px);
+  margin: 0 0 8px;
+}
+.hero p {
+  opacity: 0.9;
+  margin: 0 0 16px;
+}
+.hero-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
 
 /* ===== Buttons (WP-kompatible Klassen) ===== */
 .btn,
@@ -144,7 +185,9 @@ body {
 .angebot-button,
 .btn-book,
 button.btn-primary {
-  display: inline-flex; align-items: center; justify-content: center;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   padding: 10px 16px;
   border-radius: 10px;
   border: none;
@@ -153,42 +196,103 @@ button.btn-primary {
   background: var(--brand);
   color: #fff;
   text-decoration: none;
-  
 }
 /* Kein Hover-Farbwechsel – bleibt konstant wie im WP */
 .btn-primary:hover,
 .angebot-button:hover,
 .btn-book:hover,
-button.btn-primary:hover { background: var(--brand); color: #fff; }
+button.btn-primary:hover {
+  background: var(--brand);
+  color: #fff;
+}
 
 /* ===== Grid & Cards ===== */
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 16px; margin-top: 16px;
+  gap: 16px;
+  margin-top: 16px;
 }
 .card {
-  background: #fff; border: 1px solid #eaeaea; border-radius: 12px;
-  padding: 16px; display: flex; flex-direction: column; gap: 12px;
+  background: #fff;
+  border: 1px solid #eaeaea;
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
-.card-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
-.card-title { margin: 0; font-size: 18px; }
-.card-list { list-style: none; padding: 0; margin: 0; display: grid; gap: 4px; }
-.badge { background: #f1f5f9; color: #0f172a; border-radius: 999px; padding: 4px 10px; font-size: 12px; }
-.card-actions { margin-top: 4px; }
+.card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.card-title {
+  margin: 0;
+  font-size: 18px;
+}
+.card-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 4px;
+}
+.badge {
+  background: #f1f5f9;
+  color: #0f172a;
+  border-radius: 999px;
+  padding: 4px 10px;
+  font-size: 12px;
+}
+.card-actions {
+  margin-top: 4px;
+}
 
 /* ===== Formulare ===== */
-.form { display: grid; gap: 16px; margin-top: 16px; }
-.form .grid { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
-.field { display: grid; gap: 6px; }
-.field--full { grid-column: 1 / -1; }
-label { font-weight: 600; }
-input, select, textarea {
-  border: 1px solid #e5e7eb; border-radius: 10px; padding: 10px 12px; background: #fff; font-size: 16px;
+.form {
+  display: grid;
+  gap: 16px;
+  margin-top: 16px;
 }
-.error { color: #b91c1c; font-size: 0.9rem; }
-.ok { color: #065f46; font-weight: 600; }
-.actions { display: flex; align-items: center; gap: 12px; }
+.form .grid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
+.field {
+  display: grid;
+  gap: 6px;
+}
+.field--full {
+  grid-column: 1 / -1;
+}
+label {
+  font-weight: 600;
+}
+input,
+select,
+textarea {
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 10px 12px;
+  background: #fff;
+  font-size: 16px;
+}
+.error {
+  color: #b91c1c;
+  font-size: 0.9rem;
+}
+.ok {
+  color: #065f46;
+  font-weight: 600;
+}
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
 
 /* ===== Footer – identisch zum WP-Look ===== */
 .site-footer {
@@ -200,13 +304,13 @@ input, select, textarea {
   color: #666;
 }
 /* Optional: kleiner Anbieter-Login rechts oder inline trennen */
-.site-footer__admin a { text-decoration: none; color:#666 }
-.site-footer__admin a:hover { text-decoration: underline; }
-
-
-
-
-
+.site-footer__admin a {
+  text-decoration: none;
+  color: #666;
+}
+.site-footer__admin a:hover {
+  text-decoration: underline;
+}
 
 /* Abstand NUR wenn direkt auf ein Label eine chip-row folgt */
 .form__group .label + .chip-row {
@@ -218,19 +322,16 @@ input, select, textarea {
   margin-top: 6px;
 }
 
-
-.form__group{
+.form__group {
   display: flex;
   align-items: center;
-  gap:8px;
+  gap: 8px;
 }
-
 
 .form__group--stack {
   display: block !important; /* force vertical */
   align-items: initial;
 }
-
 
 /* =========================================================
    OFFERS UI – additions (append to existing globals.scss)
@@ -242,8 +343,13 @@ input, select, textarea {
 ========================================================= */
 
 /* Button aliases to match component classnames */
-.btn--primary { @extend .btn-primary; }  /* reuse your existing primary look */
-.btn--disabled { opacity: 0.6; cursor: not-allowed; }
+.btn--primary {
+  @extend .btn-primary;
+} /* reuse your existing primary look */
+.btn--disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
 
 /* ----- Filters row (search + location + type) ----- */
 .filters {
@@ -263,7 +369,9 @@ input, select, textarea {
     flex-direction: column;
     gap: 6px;
 
-    &--wide { grid-column: 1 / -1; } /* make search input full-width on mobile */
+    &--wide {
+      grid-column: 1 / -1;
+    } /* make search input full-width on mobile */
   }
 }
 
@@ -271,10 +379,16 @@ input, select, textarea {
    .label { font-weight: 600; }
    .input  -> you already style input/select/textarea globally
    No duplication needed. If you want a class hook, you can alias: */
-.label { font-size: 13px; } /* tiny polish */
+.label {
+  font-size: 13px;
+} /* tiny polish */
 
 /* ----- Chips (for Types & Days) ----- */
-.chip-row { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
 .chip {
   border: 1px solid #e5e7eb;
   background: #fff;
@@ -283,14 +397,22 @@ input, select, textarea {
   cursor: pointer;
   transition: background 120ms ease, color 120ms ease, border-color 120ms ease;
 
-  &:hover { background: #fafafa; }
+  &:hover {
+    background: #fafafa;
+  }
 }
 .chip--active {
-  background: #111; color: #fff; border-color: #111;
+  background: #111;
+  color: #fff;
+  border-color: #111;
 }
 
 /* ----- Tags ribbon (static categories) ----- */
-.tag-row { display: flex; flex-wrap: wrap; gap: 8px; }
+.tag-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
 .tag {
   display: inline-block;
   background: #fff;
@@ -304,47 +426,77 @@ input, select, textarea {
 /* ----- Toggle Switch (Online active) ----- */
 .switch {
   position: relative;
-  width: 44px; height: 24px;
+  width: 44px;
+  height: 24px;
   border-radius: 999px;
   background: #c7c7c7;
   border: 1px solid #e5e7eb;
   transition: background 120ms ease, border-color 120ms ease;
 }
 .switch__thumb {
-  position: absolute; top: 50%; left: 2px; transform: translateY(-50%);
-  width: 20px; height: 20px; background: #fff; border-radius: 999px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+  position: absolute;
+  top: 50%;
+  left: 2px;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  background: #fff;
+  border-radius: 999px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
   transition: left 120ms ease;
 }
-.switch--on { background: #10b981; border-color: #10b981; }
-.switch--on .switch__thumb { left: 22px; }
+.switch--on {
+  background: #10b981;
+  border-color: #10b981;
+}
+.switch--on .switch__thumb {
+  left: 22px;
+}
 
 /* ----- Modal (Create Offer Dialog) ----- */
 //.modal { position: fixed; inset: 0; z-index: 40; }
-.modal__overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.4); }
+.modal__overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+}
 .modal__wrap {
-  position: absolute; inset: 0;
-  display: flex; align-items: flex-start; justify-content: center;
-  padding: 16px; overflow-y: auto;
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 16px;
+  overflow-y: auto;
 }
 .modal__panel {
-  position: relative; width: 100%; max-width: 760px;
-  background: #fff; border-radius:12px; border: 1px solid #eaeaea;
+  position: relative;
+  width: 100%;
+  max-width: 760px;
+  background: #fff;
+  border-radius: 12px;
+  border: 1px solid #eaeaea;
   box-shadow: 0 10px 25px rgba(17, 24, 39, 0.08);
-  padding: 22px; margin-top: 4vh;
+  padding: 22px;
+  margin-top: 4vh;
 
   margin-top: clamp(12px, 4vh, 48px);
 }
-.modal__title { font-size: 20px; font-weight: 600; margin: 0 0 10px; }
-.modal__close {
-  position: absolute; top: 10px; right: 10px;
-  border: 1px solid #eaeaea; background: #fff;
-  border-radius: 999px; padding: 6px 8px; cursor: pointer;
+.modal__title {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 0 0 10px;
 }
-
-
-
-
+.modal__close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  border: 1px solid #eaeaea;
+  background: #fff;
+  border-radius: 999px;
+  padding: 6px 8px;
+  cursor: pointer;
+}
 
 /* Header ist calc(var(--mega-z) + 1) -> Modal eine Stufe drüber */
 .modal {
@@ -353,58 +505,71 @@ input, select, textarea {
   z-index: calc(var(--mega-z) + 2); // vorher: 40
 }
 
-
-
-
-
-
-.modal__close:hover { background: #fafafa; }
+.modal__close:hover {
+  background: #fafafa;
+}
 
 /* subtle motion (respects reduced motion) */
-@keyframes fade-in { from { opacity: 0 } to { opacity: 1 } }
-@keyframes zoom-in { from { transform: scale(0.98) } to { transform: scale(1) } }
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes zoom-in {
+  from {
+    transform: scale(0.98);
+  }
+  to {
+    transform: scale(1);
+  }
+}
 @media (prefers-reduced-motion: no-preference) {
-  .modal__overlay { animation: fade-in 120ms ease; }
-  .modal__panel { animation: zoom-in 120ms ease; }
+  .modal__overlay {
+    animation: fade-in 120ms ease;
+  }
+  .modal__panel {
+    animation: zoom-in 120ms ease;
+  }
 }
 
 /* ----- Form helper blocks inside modal ----- */
-.form { display: grid; gap: 16px; } /* you already have .form; this only ensures spacing in modal */
-.form .grid { gap: 16px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
-.help { font-size: 12px; color: #666; }
+.form {
+  display: grid;
+  gap: 16px;
+} /* you already have .form; this only ensures spacing in modal */
+.form .grid {
+  gap: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
+.help {
+  font-size: 12px;
+  color: #666;
+}
 
 /* ----- Pager (pagination) ----- */
 .pager {
-  display: flex; align-items: center; justify-content: space-between; margin-top: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 14px;
 }
-.pager__info { font-size: 13px; color: #666; }
-.pager__actions { display: flex; gap: 8px; }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+.pager__info {
+  font-size: 13px;
+  color: #666;
+}
+.pager__actions {
+  display: flex;
+  gap: 8px;
+}
 
 /* ================= Offers/Trainings UI (scoped) =================== */
 
 /* In diesem Bereich wollen wir vertikal stacken – Container darf kein Flex-Row sein */
-.ks > .container { 
-  display: block; 
+.ks > .container {
+  display: block;
 }
 
 /* Filters: Grid-Spacing */
@@ -419,7 +584,7 @@ input, select, textarea {
   display: flex;
   align-items: flex-end;
   gap: 12px;
-  flex-wrap: wrap;      /* bricht sauber auf kleinen Screens */
+  flex-wrap: wrap; /* bricht sauber auf kleinen Screens */
 }
 
 /* Search-Container wächst */
@@ -430,7 +595,7 @@ input, select, textarea {
 
 /* Label/Inputs harmonisieren */
 .ks .filters .label {
-  color: #475569;       /* slate-600 */
+  color: #475569; /* slate-600 */
   font-weight: 600;
   margin-bottom: 4px;
   display: block;
@@ -455,9 +620,11 @@ input, select, textarea {
   padding: 8px 12px;
   border-radius: 10px;
   font-weight: 600;
-  height: 40px;         /* gleiche Höhe wie Input */
+  height: 40px; /* gleiche Höhe wie Input */
 }
-.ks .quick-types .btn:hover { background: #f8fafc; }
+.ks .quick-types .btn:hover {
+  background: #f8fafc;
+}
 
 /* Ergebnisliste */
 .ks .list {
@@ -473,14 +640,16 @@ input, select, textarea {
   padding: 12px 0;
   border-bottom: 1px solid #eef2f7;
 }
-.ks .list__item:last-child { border-bottom: 0; }
+.ks .list__item:last-child {
+  border-bottom: 0;
+}
 .ks .list__title {
   font-weight: 700;
   font-size: 16px;
   margin: 0 0 4px;
 }
 .ks .list__meta {
-  color: #64748b;       /* slate-500 */
+  color: #64748b; /* slate-500 */
   font-size: 14px;
   margin-top: 2px;
 }
@@ -498,9 +667,16 @@ input, select, textarea {
   gap: 12px;
   margin-top: 12px;
 }
-.ks .pager__info { color: #475569; }
-.ks .pager__actions { display: flex; gap: 8px; }
-.ks .pager__actions .btn { min-width: 96px; }
+.ks .pager__info {
+  color: #475569;
+}
+.ks .pager__actions {
+  display: flex;
+  gap: 8px;
+}
+.ks .pager__actions .btn {
+  min-width: 96px;
+}
 
 /* Dialog-Panel angenehm breit */
 .ks .modal__wrap {
@@ -516,46 +692,23 @@ input, select, textarea {
 
 /* Mobile: schöner Umbruch */
 @media (max-width: 640px) {
-  .ks .filters__row { align-items: stretch; }
-  .ks .filters__field--grow { flex: 1 1 100%; min-width: 0; }
-  .ks .quick-types { width: 100%; }
-  .ks .quick-types .btn { flex: 1 1 auto; }
-  .ks .list__item { align-items: flex-start; }
+  .ks .filters__row {
+    align-items: stretch;
+  }
+  .ks .filters__field--grow {
+    flex: 1 1 100%;
+    min-width: 0;
+  }
+  .ks .quick-types {
+    width: 100%;
+  }
+  .ks .quick-types .btn {
+    flex: 1 1 auto;
+  }
+  .ks .list__item {
+    align-items: flex-start;
+  }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 /* Card padding variable (match your actual card padding) */
 .card {
@@ -577,12 +730,14 @@ input, select, textarea {
   padding-left: calc(var(--card-pad) + 1rem);
   padding-right: calc(var(--card-pad) + 1rem);
 
-  width: auto;          /* stretch via margins, not width calc */
+  width: auto; /* stretch via margins, not width calc */
   border: 0 !important; /* no border on hover background */
-  box-shadow: none;     /* safety */
+  box-shadow: none; /* safety */
 }
 
-.is-interactive { cursor: pointer; }
+.is-interactive {
+  cursor: pointer;
+}
 
 .list.list--bleed .list__item.chip.is-fullhover .list__body {
   flex: 1 1 auto;
@@ -602,45 +757,19 @@ input, select, textarea {
   outline-offset: 2px;
 }
 
-
-
-
-
-
-
-
-
 /* No rounded corners for full-bleed hover rows inside cards */
 .list.list--bleed .list__item.chip.is-fullhover,
 .list.list--bleed .list__item.chip.is-fullhover:hover,
 .list.list--bleed .list__item.chip.is-fullhover:focus {
-  border-radius: 0 !important;  /* square corners */
-  border: 0 !important;         /* ensure no border sneaks in */
-  box-shadow: none;             /* safety */
+  border-radius: 0 !important; /* square corners */
+  border: 0 !important; /* ensure no border sneaks in */
+  box-shadow: none; /* safety */
 }
 
-
-
-.form__actions{
+.form__actions {
   display: flex;
-  gap:8px;
+  gap: 8px;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 /* Minimal, self-contained icon button */
 .icon-btn {
@@ -653,8 +782,8 @@ input, select, textarea {
   width: var(--btn-size);
   height: var(--btn-size);
   padding: 0;
-  border: 0;               /* no border */
-  border-radius: 9999px;   /* circular background */
+  border: 0; /* no border */
+  border-radius: 9999px; /* circular background */
   background: transparent; /* will be set by modifier */
   line-height: 0;
   cursor: pointer;
@@ -680,47 +809,37 @@ input, select, textarea {
 
 .icon--close {
   /* mask the PNG to paint it white */
-  -webkit-mask: url('/icons/close.png') no-repeat center / contain;
-          mask: url('/icons/close.png') no-repeat center / contain;
+  -webkit-mask: url("/icons/close.png") no-repeat center / contain;
+  mask: url("/icons/close.png") no-repeat center / contain;
 }
 
 /* Screen-reader only text (if not already defined) */
 .sr-only {
   position: absolute !important;
-  width: 1px; height: 1px;
-  padding: 0; margin: -1px;
-  overflow: hidden; clip: rect(0, 0, 1px, 1px);
-  white-space: nowrap; border: 0;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 1px, 1px);
+  white-space: nowrap;
+  border: 0;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 /* Pager layout: arrows with centered numeric counter */
 .pager--arrows {
   display: grid;
-  grid-template-columns: var(--icon-btn-size, 2.5rem) 1fr var(--icon-btn-size, 2.5rem);
+  grid-template-columns: var(--icon-btn-size, 2.5rem) 1fr var(
+      --icon-btn-size,
+      2.5rem
+    );
   align-items: center;
 }
 
 /* Icon buttons (reuse if already defined) */
 .pager__nav {
   --icon-btn-size: 2.5rem; /* click area */
-  --icon-size: 1.2rem;     /* icon size */
+  --icon-size: 1.2rem; /* icon size */
 
   appearance: none;
   display: inline-flex;
@@ -744,7 +863,7 @@ input, select, textarea {
 .pager__nav:focus-visible {
   outline: none;
   transform: scale(1.06);
-  background: color-mix(in srgb, currentColor 12%, transparent);   
+  background: color-mix(in srgb, currentColor 12%, transparent);
 }
 
 .pager__nav[disabled] {
@@ -759,7 +878,7 @@ input, select, textarea {
 .pager__count {
   text-align: center;
   font-variant-numeric: tabular-nums; /* nicer aligned digits */
-  font-weight: 600;                   /* a bit stronger */
+  font-weight: 600; /* a bit stronger */
   user-select: none;
 }
 
@@ -773,8 +892,8 @@ input, select, textarea {
 /* Right arrow from /public/icons/arrow_right_alt.svg (tint via currentColor) */
 .icon--arrow {
   background-color: currentColor;
-  -webkit-mask: url('/icons/arrow_right_alt.svg') no-repeat center / contain;
-          mask: url('/icons/arrow_right_alt.svg') no-repeat center / contain;
+  -webkit-mask: url("/icons/arrow_right_alt.svg") no-repeat center / contain;
+  mask: url("/icons/arrow_right_alt.svg") no-repeat center / contain;
 }
 
 /* Left arrow is mirrored */
@@ -782,140 +901,15 @@ input, select, textarea {
   transform: scaleX(-1);
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* Dropdown container (behält deinen Header-Stil unverändert) */
-
-
-/* Der Container um den Angebote-Button ist der Bezugspunkt */
-.nav-item--group {
-  position: relative;
+:root {
+  --header-height: 72px; /* match your real header height */
+  --header-bg: #fff; /* header background color */
+  --mega-gap: 8px; /* small offset below the button/header */
+  --mega-z: 1000; /* base z-index for mega dropdown */
+  --mega-backdrop: rgba(0, 0, 0, 0.45);
+  --mega-bg: #fff;
+  --mega-link: #666;
 }
-
-/* Panel rechts unter dem Button ausrichten (nicht links) */
-.nav-dropdown {
-  position: absolute;
-  top: 100%;
-  right: 0;   /* <- neu */
-  left: auto; /* <- wichtig: überschreibt left:0 */
-  z-index: 50;
-
-  display: flex;
-  gap: 8px;
-  padding: 8px 0;
-
-  background: #fff;
-  border-top: 1px solid #eaeaea;
-  border-right: 0; border-left: 0; border-bottom: 0;
-  border-radius: 0;
-  box-shadow: none;
-  white-space: nowrap;
-}
-
-
-
-
-
-
-.nav-link--button {
-  background: transparent;
-  border: 0;
-
-  font: inherit;
-  color: inherit;
-  cursor: pointer;
-}
-
-
-/* Links nebeneinander – erben deinen .nav-link Stil */
-.nav-dropdown__link {
-  /* erbt von .nav-link durch die zusätzliche Klasse in JSX */
-  display: inline-block;
-}
-
-/* Dein Header-Hover bleibt: kein Farbwechsel; daher hier nichts setzen */
-.nav-dropdown__link:hover,
-.nav-dropdown__link:focus-visible {
-  outline: none;
-}
-
-/* Caret wie gehabt */
-.nav-link .caret { margin-left: .25rem; font-size: .85em; }
-/* Reserve space under every input for inline errors to prevent layout shift */
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 /* Make the row gap configurable and cancel it just before the error line */
 .field {
@@ -925,7 +919,7 @@ input, select, textarea {
 
 /* Reserve space, but pull the error up by exactly the gap value → no vertical gap */
 .field .error-slot {
-  min-height: 18px;          /* one line */
+  min-height: 18px; /* one line */
   margin-top: calc(-1 * var(--field-gap)); /* cancels the grid gap just above */
 }
 
@@ -939,216 +933,18 @@ input, select, textarea {
   padding-left: 15px; /* keep if you like the indent */
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-:root {
-  --header-height: 72px;         /* match your real header height */
-  --header-bg: #fff;             /* header background color */
-  --mega-gap: 8px;               /* small offset below the button/header */
-  --mega-z: 1000;                /* base z-index for mega dropdown */
-  --mega-backdrop: rgba(0,0,0,.45);
-  --mega-bg: #fff;
-  --mega-link: #666;
-}
-
-/* 1) Fix the header at the top and keep it above everything */
-.site-header {
-  position: fixed;
-  top: 0; left: 0; right: 0;
-  z-index: calc(var(--mega-z) + 1);  /* header above backdrop/panel */
-  background: var(--header-bg);
-  /* optional: if you want to enforce height */
-  /* min-height: var(--header-height); */
-}
-
-/* 2) Push the page content down so it’s not hidden behind the fixed header */
-html, body { margin: 0; }
-body { padding-top: var(--header-height); }
-
-/* 3) Mega dropdown (unchanged behavior; just ensure correct layering) */
-.mega { display: none; }
-.mega.is-open { display: block; }
-
-/* Darken the whole page BELOW the header */
-.mega__backdrop {
-  position: fixed;
-  left: 0; right: 0;
-  top: calc(var(--header-height) + var(--mega-gap)); /* start below header */
-  bottom: 0;
-  background: var(--mega-backdrop);
-  z-index: var(--mega-z);
-}
-
-/* Full-width white panel just under the header */
-.mega__panel {
-  position: fixed;
-  left: 0; right: 0;
-  //top: calc(var(--header-height) + var(--mega-gap));
-  width: 100vw;
-  background: var(--mega-bg);
-  z-index: calc(var(--mega-z) + 0); /* below the fixed header (which is +1) */
-}
-
-/* Inner layout */
-.mega__inner {
-  max-width: 1100px;
-  margin: 0 auto;
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 24px;
-  padding: 16px 12px;
-  text-align: left;
-}
-
-/* Columns */
-.mega__col { min-width: 0; }
-
-/* Bold headings */
-.mega__heading { font-weight: 700; margin: 0 0 6px; }
-
-/* List + items with no bullets */
-.mega__list { list-style: none; margin: 0; padding: 0; }
-.mega__item { margin-top: 6px; }
-
-/* Gray links; underline only on hover */
-.mega__link { color: var(--mega-link); text-decoration: none; }
-.mega__link:hover { text-decoration: underline; }
-
-/* Responsive */
-@media (max-width: 900px) {
-  .mega__inner { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-}
-@media (max-width: 560px) {
-  .mega__inner { grid-template-columns: 1fr; }
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* Verhindere schwarzen Klick-Flash durch :active */
-.nav-link:active {
-  background: inherit;
-  color: inherit;
-}
-
-
-
-
-
-
-
-
-/* Programs button "active" when dropdown is open */
-.nav-link--button[aria-expanded="true"] {
-  background: #000;
-  color: #fff;
-}
-
-/* Don’t keep links black on mouse focus; use focus-visible for keyboard only */
-.nav-link:focus { outline: none; } /* no visual here */
-.nav-link:focus-visible {
-  outline: 2px solid #000;
-  outline-offset: 2px;
-}
-
-/* (keep your existing fixed header + mega styles as you already set) */
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /* ===================== */
 /* EMBED MODE – CORE     */
 /* ===================== */
 
 html.embed-mode,
-body.embed-mode { height: 100%; }
 body.embed-mode {
-  padding-top: 0 !important;     /* kein reserviertes Header-Padding */
-  //display: flex;  
-  //align-items: center;
+  height: 100%;
 }
-
-
-body.embed-mode .site-header,
-body.embed-mode .site-footer {
-  display: none !important;       /* Header/Footer komplett ausblenden */
+body.embed-mode {
+  padding-top: 0 !important; /* kein reserviertes Header-Padding */
+  //display: flex;
+  //align-items: center;
 }
 
 /* =============================== */
@@ -1160,14 +956,18 @@ body.embed-mode .site-footer {
 /* Der ganze Inhalt der Buchungsseite: zentriert, angenehme Breite */
 .book-grid {
   width: 100%;
-  max-width: 760px;                       /* Lesebreite */
-  margin: 0 auto;                         /* horizontal zentriert */
+  max-width: 760px; /* Lesebreite */
+  margin: 0 auto; /* horizontal zentriert */
   //padding: clamp(12px, 2vw, 24px);
 }
 
 /* Inhalt linksbündig lassen (keine Textzentrierung) */
-.book-main { min-width: 0; }
-.book-form { text-align: left; }
+.book-main {
+  min-width: 0;
+}
+.book-form {
+  text-align: left;
+}
 
 /* Inline-"Selected offer" Karte direkt über den Feldern */
 .book-offer--inline {
@@ -1175,21 +975,28 @@ body.embed-mode .site-footer {
   border: 1px solid #eaeaea;
   border-radius: 12px;
   padding: 16px;
-  margin-bottom: 12px;                    /* Abstand zu den Feldern */
+  margin-bottom: 12px; /* Abstand zu den Feldern */
   text-align: center;
-  color:#fff;
-
-
-
+  color: #fff;
 }
 
-    
-
-
-.book-offer__title { margin: 0 0 8px; font-weight: 700;font-size: clamp(28px, 4vw, 48px);  }
-.book-offer__line  { font-weight: 600;    opacity:0.9;}
-.book-offer__meta  { margin-top: 6px; color: #fff;    opacity:0.9;}
-.book-offer__info  { margin-top: 8px; }
+.book-offer__title {
+  margin: 0 0 8px;
+  font-weight: 700;
+  font-size: clamp(28px, 4vw, 48px);
+}
+.book-offer__line {
+  font-weight: 600;
+  opacity: 0.9;
+}
+.book-offer__meta {
+  margin-top: 6px;
+  color: #fff;
+  opacity: 0.9;
+}
+.book-offer__info {
+  margin-top: 8px;
+}
 
 /* Formular-Grid: 2 Spalten (Desktop), mobil 1 Spalte */
 .book-form__grid {
@@ -1198,41 +1005,33 @@ body.embed-mode .site-footer {
   //gap: 16px 24px;
 }
 
-
 /* Volle Breite für breite Felder (z. B. Nachricht) */
-.field--full { grid-column: 1 / -1; }
+.field--full {
+  grid-column: 1 / -1;
+}
 
 /* 20px Abstand zwischen letztem Feld-Grid und Button-Zeile */
-.book-form__grid + .book-actions { margin-top: 20px; display: flex; justify-content: center;}
-
-
-
-
+.book-form__grid + .book-actions {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+}
 
 @media (max-width: 550px) {
   .book-form__grid {
     grid-template-columns: 1fr;
   }
 
-  body.embed-mode{
+  body.embed-mode {
     align-items: unset !important;
   }
-
-
 }
 
-
-
-
-
-
-
-
-
-
-
-
-.dob { display: grid; grid-template-columns: 1fr 1fr 1.5fr; gap: 8px; }
+.dob {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1.5fr;
+  gap: 8px;
+}
 .dob select {
   border: 1px solid #e5e7eb;
   border-radius: 10px;
@@ -1240,182 +1039,329 @@ body.embed-mode .site-footer {
   background: #fff;
 }
 
-
-
-
-
-
-
-
-
-.book-sub{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:end}
-.book-sub__left{display:flex;gap:10px;align-items:flex-end}
-.book-sub__titles{display:grid;gap:4px}
-.book-back{appearance:none;background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:6px 10px;cursor:pointer}
-.book-back img{display:block;width:18px;height:18px}
-.book-back:hover{background:#f5faff}
-@media (max-width:560px){.book-sub{grid-template-columns:1fr}}
-
-
-
-
-
-
-
-
-
-
-
+.book-sub {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 12px;
+  align-items: end;
+}
+.book-sub__left {
+  display: flex;
+  gap: 10px;
+  align-items: flex-end;
+}
+.book-sub__titles {
+  display: grid;
+  gap: 4px;
+}
+.book-back {
+  appearance: none;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 6px 10px;
+  cursor: pointer;
+}
+.book-back img {
+  display: block;
+  width: 18px;
+  height: 18px;
+}
+.book-back:hover {
+  background: #f5faff;
+}
+@media (max-width: 560px) {
+  .book-sub {
+    grid-template-columns: 1fr;
+  }
+}
 
 /* Ansprechpartner: immer in einer Zeile (Bild | Name | Email) */
-.contact-coach{
+.contact-coach {
   display: grid;
   grid-template-columns: auto 1fr auto; /* Bild | Name flex | Email */
   align-items: center;
   column-gap: 14px;
 }
-.contact-coach__avatar{
-  width:56px; height:56px;
-  border-radius:999px;
-  object-fit:cover;
-  background:#f1f5f9;
-  border:1px solid #eaeaea;
+.contact-coach__avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 999px;
+  object-fit: cover;
+  background: #f1f5f9;
+  border: 1px solid #eaeaea;
 }
-.contact-coach__name{
-  font-weight:700;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
-  min-width:0; /* wichtig: erlaubt ellipsis innerhalb grid */
+.contact-coach__name {
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0; /* wichtig: erlaubt ellipsis innerhalb grid */
 }
-.contact-coach__email{
-  white-space:nowrap;
+.contact-coach__email {
+  white-space: nowrap;
 }
-.contact-coach__email a{
-  color:#0ea5e9; text-decoration:none;
+.contact-coach__email a {
+  color: #0ea5e9;
+  text-decoration: none;
 }
-.contact-coach__email a:hover{ text-decoration:underline; }
+.contact-coach__email a:hover {
+  text-decoration: underline;
+}
 
 /* Wenn extrem schmal, darf es umbrechen */
-@media (max-width: 420px){
-  .contact-coach{
+@media (max-width: 420px) {
+  .contact-coach {
     grid-template-columns: auto 1fr; /* Bild | Textblock */
     row-gap: 8px;
   }
-  .contact-coach__email{ grid-column: 2; } /* Email unter den Namen, aber linksbündig */
+  .contact-coach__email {
+    grid-column: 2;
+  } /* Email unter den Namen, aber linksbündig */
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-.book-contact .contact{display:flex;align-items:center;gap:12px}
-.book-contact .contact__avatar{border-radius:999px;object-fit:cover;border:1px solid #e5e7eb}
-.book-contact .contact__body{display:flex;flex-direction:column;gap:2px;min-width:0}
-.book-contact .contact__name{font-weight:700}
-.book-contact .contact__email{color:#0ea5e9;text-decoration:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.book-contact .contact__email:hover{text-decoration:underline}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+.book-contact .contact {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.book-contact .contact__avatar {
+  border-radius: 999px;
+  object-fit: cover;
+  border: 1px solid #e5e7eb;
+}
+.book-contact .contact__body {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.book-contact .contact__name {
+  font-weight: 700;
+}
+.book-contact .contact__email {
+  color: #0ea5e9;
+  text-decoration: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.book-contact .contact__email:hover {
+  text-decoration: underline;
+}
 
 /* ========= Base UI ========= */
-.card { border:1px solid #e5e7eb; border-radius:12px; padding:12px; background:#fff; }
-.btn { appearance:none; border:1px solid #e5e7eb; border-radius:10px; padding:8px 12px;  cursor:pointer; }
-.btn:hover { background:#f8fafc; }
-.btn-primary { background:#0ea5e9; color:#fff; border:none; }
-.btn-primary:hover { background:#0c96d2; }
-.btn-disabled { opacity:.55; cursor:not-allowed; }
-.btn-ghost { background: transparent; border: 1px solid #e5e7eb; }
-.btn-ghost:hover { background:#f8fafc; }
+.card {
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 12px;
+  background: #fff;
+}
+.btn {
+  appearance: none;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 8px 12px;
+  cursor: pointer;
+}
+.btn:hover {
+  background: #f8fafc;
+}
+.btn-primary {
+  background: #0ea5e9;
+  color: #fff;
+  border: none;
+}
+.btn-primary:hover {
+  background: #0c96d2;
+}
+.btn-disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+.btn-ghost {
+  background: transparent;
+  border: 1px solid #e5e7eb;
+}
+.btn-ghost:hover {
+  background: #f8fafc;
+}
 
-.input { border:1px solid #e5e7eb; border-radius:10px; padding:8px 10px; width:100%; background:#fff; }
+.input {
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 8px 10px;
+  width: 100%;
+  background: #fff;
+}
 
-.th { text-align:left; font-weight:700; padding:10px; border-bottom:1px solid #e5e7eb; font-size:12px; color:#475569; }
-.td { padding:10px; border-bottom:1px solid #f1f5f9; vertical-align:top; }
-.tr:last-child .td { border-bottom:0; }
+.th {
+  text-align: left;
+  font-weight: 700;
+  padding: 10px;
+  border-bottom: 1px solid #e5e7eb;
+  font-size: 12px;
+  color: #475569;
+}
+.td {
+  padding: 10px;
+  border-bottom: 1px solid #f1f5f9;
+  vertical-align: top;
+}
+.tr:last-child .td {
+  border-bottom: 0;
+}
 
-.lbl { display:block; font-size:12px; color:#475569; margin-bottom:4px; }
+.lbl {
+  display: block;
+  font-size: 12px;
+  color: #475569;
+  margin-bottom: 4px;
+}
 
-.badge { display:inline-block; font-size:12px; padding:2px 8px; border-radius:999px; border:1px solid #e5e7eb; }
-.badge-muted { background:#f1f5f9; color:#475569; }
+.badge {
+  display: inline-block;
+  font-size: 12px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  border: 1px solid #e5e7eb;
+}
+.badge-muted {
+  background: #f1f5f9;
+  color: #475569;
+}
 
 /* ========= Modal / Overlay ========= */
-.ks-modal-root { position: fixed; inset: 0; display: grid; place-items: center; z-index: 5000; }
-.ks-modal-root--top { z-index: 5100; }
-.ks-backdrop   { position: absolute; inset: 0; background: rgba(0,0,0,.45); z-index: 1; }
-.ks-panel      { position: relative; z-index: 2; }
+.ks-modal-root {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  z-index: 5000;
+}
+.ks-modal-root--top {
+  z-index: 5100;
+}
+.ks-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  z-index: 1;
+}
+.ks-panel {
+  position: relative;
+  z-index: 2;
+}
 
 /* Panel-Größen */
-.ks-panel--lg { width: calc(100% - 24px); max-width: 1200px; max-height: 90vh; overflow: auto; }
-.ks-panel--md { width: calc(100% - 24px); max-width: 720px;  max-height: 85vh; overflow: auto; }
+.ks-panel--lg {
+  width: calc(100% - 24px);
+  max-width: 1200px;
+  max-height: 90vh;
+  overflow: auto;
+}
+.ks-panel--md {
+  width: calc(100% - 24px);
+  max-width: 720px;
+  max-height: 85vh;
+  overflow: auto;
+}
 
 /* ========= Helpers ========= */
-.bg-gray-50 { background:#f9fafb; }
-.text-red-600 { color:#dc2626; }
-.text-gray-600 { color:#4b5563; }
-.text-gray-700 { color:#374151; }
-.text-sm { font-size: .875rem; }
-.text-lg { font-size: 1.125rem; }
-.text-xl { font-size: 1.25rem; }
-.font-bold { font-weight: 700; }
-.font-semibold { font-weight: 600; }
-.font-mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
-.truncate { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.p-4 { padding:1rem; }
-.mb-2 { margin-bottom:.5rem; }
-.mb-3 { margin-bottom:.75rem; }
-.mb-4 { margin-bottom:1rem; }
-.mt-3 { margin-top:.75rem; }
-.grid { display:grid; }
-.flex { display:flex; }
-.flex-1 { flex:1 1 0%; }
-.flex-wrap { flex-wrap:wrap; }
-.items-center { align-items:center; }
-.items-end { align-items:flex-end; }
-.justify-between { justify-content:space-between; }
-.justify-end { justify-content:flex-end; }
-.gap-2 { gap:.5rem; }
-.max-w-6xl { max-width:72rem; }
-.mx-auto { margin-left:auto; margin-right:auto; }
-.cursor-pointer { cursor:pointer; }
-.hover\:bg-gray-50:hover { background:#f9fafb; }
-.overflow-auto { overflow: auto; }
+.bg-gray-50 {
+  background: #f9fafb;
+}
+.text-red-600 {
+  color: #dc2626;
+}
+.text-gray-600 {
+  color: #4b5563;
+}
+.text-gray-700 {
+  color: #374151;
+}
+.text-sm {
+  font-size: 0.875rem;
+}
+.text-lg {
+  font-size: 1.125rem;
+}
+.text-xl {
+  font-size: 1.25rem;
+}
+.font-bold {
+  font-weight: 700;
+}
+.font-semibold {
+  font-weight: 600;
+}
+.font-mono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    "Liberation Mono", "Courier New", monospace;
+}
+.truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.p-4 {
+  padding: 1rem;
+}
+.mb-2 {
+  margin-bottom: 0.5rem;
+}
+.mb-3 {
+  margin-bottom: 0.75rem;
+}
+.mb-4 {
+  margin-bottom: 1rem;
+}
+.mt-3 {
+  margin-top: 0.75rem;
+}
+.grid {
+  display: grid;
+}
+.flex {
+  display: flex;
+}
+.flex-1 {
+  flex: 1 1 0%;
+}
+.flex-wrap {
+  flex-wrap: wrap;
+}
+.items-center {
+  align-items: center;
+}
+.items-end {
+  align-items: flex-end;
+}
+.justify-between {
+  justify-content: space-between;
+}
+.justify-end {
+  justify-content: flex-end;
+}
+.gap-2 {
+  gap: 0.5rem;
+}
+.max-w-6xl {
+  max-width: 72rem;
+}
+.mx-auto {
+  margin-left: auto;
+  margin-right: auto;
+}
+.cursor-pointer {
+  cursor: pointer;
+}
+.hover\:bg-gray-50:hover {
+  background: #f9fafb;
+}
+.overflow-auto {
+  overflow: auto;
+}
 
 /* ========= 2-Spalten Formular ========= */
 .form-columns {
@@ -1423,68 +1369,74 @@ body.embed-mode .site-footer {
   grid-template-columns: 1fr 1fr;
   gap: 16px;
 }
-.form-columns .card { margin: 0; }
-@media (max-width: 900px) { .form-columns { grid-template-columns: 1fr; } }
+.form-columns .card {
+  margin: 0;
+}
+@media (max-width: 900px) {
+  .form-columns {
+    grid-template-columns: 1fr;
+  }
+}
 
 /* ========= Dialog Header ========= */
 .dialog-head {
-  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
   margin-bottom: 12px;
 }
-.dialog-head__left { display:flex; align-items:center; gap: 10px; }
-.dialog-head__actions { display:flex; align-items:center; gap: 8px; }
+.dialog-head__left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.dialog-head__actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
 
 .dialog-subhead {
-  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
   margin-bottom: 10px;
 }
 
 /* ========= Auswahlreihen (Radio-Listen) ========= */
 .ks-row {
-  display:flex; align-items:flex-start; gap:10px;
-  border:1px solid #e5e7eb; border-radius:10px; padding:10px;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 10px;
 }
-.ks-row--disabled { opacity:.6; pointer-events:none; }
-.ks-row__text { display:grid; gap:2px; min-width:0; }
+.ks-row--disabled {
+  opacity: 0.6;
+  pointer-events: none;
+}
+.ks-row__text {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
 
 /* ========= Simple table util ========= */
-.text-center { text-align:center; }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+.text-center {
+  text-align: center;
+}
 
 /* Dropdown & list viewport (5 visible, rest scroll) */
-.ks-dropdown { margin-top: 8px; }
+.ks-dropdown {
+  margin-top: 8px;
+}
 .ks-list {
   display: grid;
   gap: 6px;
-  max-height: 240px;  /* ~5 rows */
+  max-height: 240px; /* ~5 rows */
   overflow: auto;
   padding: 6px;
   border: 1px solid #e5e7eb;
@@ -1499,10 +1451,20 @@ body.embed-mode .site-footer {
   background: #fff;
   cursor: pointer;
 }
-.ks-list__item:hover { background: #f8fafc; }
-.ks-list__item.is-active { outline: 2px solid #0ea5e9; outline-offset: 0; }
-.ks-item__title { font-weight: 600; }
-.ks-item__meta { color: #64748b; font-size: 13px; }
+.ks-list__item:hover {
+  background: #f8fafc;
+}
+.ks-list__item.is-active {
+  outline: 2px solid #0ea5e9;
+  outline-offset: 0;
+}
+.ks-item__title {
+  font-weight: 600;
+}
+.ks-item__meta {
+  color: #64748b;
+  font-size: 13px;
+}
 
 /* Price row in BookOfferDialog */
 .ks-price-row {
@@ -1510,65 +1472,91 @@ body.embed-mode .site-footer {
   gap: 12px;
   grid-template-columns: 1fr 1fr;
 }
-@media (max-width: 720px) { .ks-price-row { grid-template-columns: 1fr; } }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+@media (max-width: 720px) {
+  .ks-price-row {
+    grid-template-columns: 1fr;
+  }
+}
 
 /* ===== Rechnungen Seite (selbe Optik wie Dialog, aber als Seite) ===== */
 .ks.invoices {
   /* gleiche Layout-Breite/Höhe wie Trainings */
-  > .container { max-width: 72rem; margin: 0 auto; }
+  > .container {
+    max-width: 72rem;
+    margin: 0 auto;
+  }
 
   /* Head-Leiste wie in Dialog */
   .dialog-subhead {
-    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
     margin-bottom: 12px;
   }
-  .dialog-head__left { display:flex; align-items:center; gap: 10px; }
+  .dialog-head__left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
 
   /* Filter-Inputs identisch hoch wie im Dialog */
-  .input { height: 40px; line-height: 40px; padding: 0 12px; }
+  .input {
+    height: 40px;
+    line-height: 40px;
+    padding: 0 12px;
+  }
 
   /* Die „Overlay-Liste“ soll visuell wie deine ks-list Einträge aussehen */
-  .ks-list__item { text-align: left; }
-  .ks-item__title { font-weight: 600; }
-  .ks-item__meta  { color: #64748b; font-size: 13px; }
+  .ks-list__item {
+    text-align: left;
+  }
+  .ks-item__title {
+    font-weight: 600;
+  }
+  .ks-item__meta {
+    color: #64748b;
+    font-size: 13px;
+  }
 
   /* Konsistente Spacing-Polish zur Trainings-Seite */
-  .card { padding: 16px; }
-  .card-title { font-size: 18px; margin: 0; }
-  .card__empty { text-align:center; color:#64748b; padding: 20px 8px; }
+  .card {
+    padding: 16px;
+  }
+  .card-title {
+    font-size: 18px;
+    margin: 0;
+  }
+  .card__empty {
+    text-align: center;
+    color: #64748b;
+    padding: 20px 8px;
+  }
 
   /* Pager already styled global; just make sure arrows line up */
-  .pager { margin-top: 12px; }
+  .pager {
+    margin-top: 12px;
+  }
 }
+
+.input--readonly {
+  border: none;
+  background: transparent;
+  padding-left: 0;
+  pointer-events: none;
+  color: inherit;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
