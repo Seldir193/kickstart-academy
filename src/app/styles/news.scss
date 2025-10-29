@@ -1,0 +1,88 @@
+
+
+
+
+
+
+
+/* === News-Admin: Header-Breite & saubere Textflucht, ohne Seiteneffekte === */
+
+:root {
+  --news-container-max: 1440px;
+  --news-container-pad: 16px; /* gleiche Textflucht wie Header */
+}
+
+/* 1) Container: gleiche Breite wie Header, KEIN internes Padding (Doppelung vermeiden) */
+.news-admin .container {
+  max-width: var(--news-container-max) !important;
+  width: 100%;
+  margin-inline: auto;
+  padding-inline: 0 !important;       /* Container hat 0 */
+  display: block !important;           /* neutralisiert evtl. globales flex */
+  justify-content: initial !important;
+}
+
+/* 2) Lose Sektionen auf 16px einrücken – Cards behalten eigenes Padding */
+.news-admin .dialog-subhead,
+.news-admin .pager {
+  margin-inline: 0 !important;
+  max-width: none !important;
+  width: 100%;
+}
+
+/* 3) Cards: Standard-Card-Stil */
+.news-admin .card {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 16px; /* 0 (container) + 16 (card) = Header-Feeling */
+}
+.news-admin .card-title { font-size: 18px; margin: 0; }
+.news-admin .card__empty { text-align: center; color: #64748b; padding: 20px 8px; }
+
+/* 4) Liste */
+.news-admin .list { list-style: none; margin: 0; padding: 0; }
+.news-admin .list__item {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px; padding: 12px 0; border-bottom: 1px solid #eef2f7;
+}
+.news-admin .list__item:last-child { border-bottom: 0; }
+.news-admin .list__title { font-weight: 700; font-size: 16px; margin: 0 0 4px; }
+.news-admin .list__meta { color: #64748b; font-size: 14px; margin-top: 2px; }
+.news-admin .is-interactive { cursor: pointer; }
+
+/* 5) Full-bleed Hover in Cards – exakt an Card-Padding (16px) koppeln */
+.news-admin .list.list--bleed .list__item.chip.is-fullhover {
+  margin-left: -16px;
+  margin-right: -16px;
+  padding-left: calc(16px + 16px);  /* 16px (card-pad) + 16px Innen */
+  padding-right: calc(16px + 16px);
+  border: 0;
+}
+
+/* 6) Dialogbreite: eine klare Variante wählen (A empfohlen) */
+/* A: medium */
+.news-admin .ks-panel.ks-panel--md { max-width: 900px !important; max-height: 90vh; overflow: auto; }
+/* B: groß (falls viel Editor-Inhalt) */
+/* .news-admin .ks-panel.ks-panel--lg { max-width: 1200px !important; max-height: 90vh; overflow: auto; } */
+
+/* 7) Optional: wenn irgendwo Tailwind max-w-6xl reinfunkt */
+.news-admin .max-w-6xl { max-width: var(--news-container-max) !important; }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
