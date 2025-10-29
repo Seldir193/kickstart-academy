@@ -1,0 +1,336 @@
+
+/* ===================== Training / Course Styles (aus TrainingCard) ===================== */
+.ks .list__avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  object-fit: cover;
+  border: 1px solid #e5e7eb;
+  margin-right: 10px;
+}
+.ks .list__avatar--ph {
+  background: #f1f5f9;
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  margin-right: 10px;
+  border: 1px solid #e5e7eb;
+}
+/* Ergänzt nur, was nicht global existiert */
+.ks .list__item { display: flex; align-items: center; gap: 8px; }
+.ks .list__body { flex: 1 1 auto; min-width: 0; }
+
+/* === OFFERS / TRAININGS / INVOICES (KS) ========================= */
+
+/* Mobile: eine Spalte */
+.ks .filters {
+  display: grid;
+  gap: 12px;
+  margin-top: 8px;
+  grid-template-columns: 1fr;
+  margin-bottom: 16px;
+}
+/* Desktop: 3 Spalten -> [Button+Search] | [Locations] | [Courses] */
+@media (min-width: 900px) {
+  .ks .filters {
+    grid-template-columns: 1fr 260px 260px;
+    align-items: end;
+  }
+}
+/* In Spalte 1: Button + Search nebeneinander (GRID bleibt) */
+.ks .filters__row {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 12px;
+  align-items: end;
+}
+/* Kleine Politur */
+.ks .filters .label {
+  margin-bottom: 4px;
+  display: block;
+  color: #475569;
+  font-weight: 600;
+  font-size: 13px;
+}
+.ks .filters .input {
+  width: 100%;
+  height: 40px;
+  line-height: 40px;
+  padding: 0 12px;
+}
+
+/* =========================================================
+   OFFERS UI – additions
+   - Filters (search + selects)
+   - Chips/Tags
+   - Modal dialog (create offer)
+   - Switch (online active)
+   - Pager (pagination)
+========================================================= */
+
+.btn--disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ----- Chips ----- */
+.chip-row { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip {
+  border: 1px solid #e5e7eb;
+  background: #fff;
+  padding: 8px 12px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background 120ms ease, color 120ms ease, border-color 120ms ease;
+  &:hover { background: #fafafa; }
+}
+.chip--active { background: #111; color: #fff; border-color: #111; }
+
+/* ----- Tags ----- */
+.tag-row { display: flex; flex-wrap: wrap; gap: 8px; }
+.tag {
+  display: inline-block;
+  background: #fff;
+  border: 1px solid #eaeaea;
+  padding: 8px 12px;
+  border-radius: 999px;
+  box-shadow: 0 10px 25px rgba(17, 24, 39, 0.08);
+  font-size: 14px;
+}
+
+/* ----- Toggle Switch ----- */
+.switch {
+  position: relative;
+  width: 44px; height: 24px;
+  border-radius: 999px;
+  background: #c7c7c7;
+  border: 1px solid #e5e7eb;
+  transition: background 120ms ease, border-color 120ms ease;
+}
+.switch__thumb {
+  position: absolute; top: 50%; left: 2px; transform: translateY(-50%);
+  width: 20px; height: 20px; background: #fff; border-radius: 999px;
+  box-shadow: 0 2px 6px rgba(0,0,0,.12);
+  transition: left 120ms ease;
+}
+.switch--on { background: #10b981; border-color: #10b981; }
+.switch--on .switch__thumb { left: 22px; }
+
+/* ----- Modal (Create Offer Dialog) ----- */
+.modal__overlay { position: absolute; inset: 0; background: rgba(0,0,0,.4); }
+.modal__wrap {
+  position: absolute; inset: 0; display: flex; align-items: flex-start;
+  justify-content: center; padding: 16px; overflow-y: auto;
+}
+.modal__panel {
+  position: relative; width: 100%; max-width: 760px; background: #fff;
+  border-radius: 12px; border: 1px solid #eaeaea;
+  box-shadow: 0 10px 25px rgba(17,24,39,.08);
+  padding: 22px; margin-top: 4vh;
+  margin-top: clamp(12px, 4vh, 48px);
+}
+.modal__title { font-size: 20px; font-weight: 600; margin: 0 0 10px; }
+.modal__close {
+  position: absolute; top: 10px; right: 10px;
+  border: 1px solid #eaeaea; background: #fff; border-radius: 999px;
+  padding: 6px 8px; cursor: pointer;
+}
+.modal { position: fixed; inset: 0; z-index: calc(var(--mega-z) + 2); }
+.modal__close:hover { background: #fafafa; }
+
+@keyframes fade-in { from {opacity:0} to {opacity:1} }
+@keyframes zoom-in { from {transform:scale(.98)} to {transform:scale(1)} }
+@media (prefers-reduced-motion: no-preference) {
+  .modal__overlay { animation: fade-in 120ms ease; }
+  .modal__panel { animation: zoom-in 120ms ease; }
+}
+
+/* ================= Offers/Trainings UI (scoped) =================== */
+.ks > .container { display: block; }
+
+.ks .quick-types { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.ks .quick-types .btn {
+  background: #fff; color: #0f172a; border: 1px solid #e5e7eb;
+  padding: 8px 12px; border-radius: 10px; font-weight: 600; height: 40px;
+}
+.ks .quick-types .btn:hover { background: #f8fafc; }
+
+.ks .list { list-style: none; margin: 0; padding: 0; }
+.ks .list__item {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px; padding: 12px 0; border-bottom: 1px solid #eef2f7;
+}
+.ks .list__item:last-child { border-bottom: 0; }
+.ks .list__title { font-weight: 700; font-size: 16px; margin: 0 0 4px; }
+.ks .list__meta { color: #64748b; font-size: 14px; margin-top: 2px; }
+.ks .card__empty { text-align: center; color: #64748b; padding: 20px 8px; }
+
+/* Pager */
+.pager {
+  display: flex; align-items: center; justify-content: space-between; margin-top: 14px;
+}
+.pager__info { font-size: 13px; color: #666; }
+.pager__actions { display: flex; gap: 8px; }
+
+.ks .pager {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 12px;
+}
+.ks .pager__info { color: #475569; }
+.ks .pager__actions { display: flex; gap: 8px; }
+.ks .pager__actions .btn { min-width: 96px; }
+
+.ks .modal__wrap { display: flex; align-items: center; justify-content: center; padding: 16px; }
+.ks .modal__panel { width: 100%; max-width: 720px; }
+
+@media (max-width: 640px) {
+  .ks .filters__row { align-items: stretch; }
+  .ks .filters__field--grow { flex: 1 1 100%; min-width: 0; }
+  .ks .quick-types { width: 100%; }
+  .ks .quick-types .btn { flex: 1 1 auto; }
+  .ks .list__item { align-items: flex-start; }
+}
+
+/* ========= Modal / Overlay ========= */
+.ks-modal-root { position: fixed; inset: 0; display: grid; place-items: center; z-index: 5000; }
+.ks-modal-root--top { z-index: 5100; }
+.ks-backdrop { position: absolute; inset: 0; background: rgba(0,0,0,.45); z-index: 1; }
+.ks-panel { position: relative; z-index: 2; }
+
+.ks-panel--lg {
+  width: calc(100% - 24px); max-width: 1200px; max-height: 90vh; overflow: auto;
+}
+.ks-panel--md {
+  width: calc(100% - 24px); max-width: 720px; max-height: 85vh; overflow: auto;
+}
+
+/* ========= 2-Spalten Formular ========= */
+.form-columns { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.form-columns .card { margin: 0; }
+@media (max-width: 900px) { .form-columns { grid-template-columns: 1fr; } }
+
+/* ========= Dialog Header ========= */
+.dialog-head {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px;
+}
+.dialog-head__left { display: flex; align-items: center; gap: 10px; }
+.dialog-head__actions { display: flex; align-items: center; gap: 8px; }
+.dialog-subhead {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 10px;
+}
+
+/* ========= Auswahlreihen ========= */
+.ks-row {
+  display: flex; align-items: flex-start; gap: 10px;
+  border: 1px solid #e5e7eb; border-radius: 10px; padding: 10px;
+}
+.ks-row--disabled { opacity: 0.6; pointer-events: none; }
+.ks-row__text { display: grid; gap: 2px; min-width: 0; }
+
+/* ========= Simple table util ========= */
+.text-center { text-align: center; }
+
+/* Dropdown & list viewport */
+.ks-dropdown { margin-top: 8px; }
+.ks-list {
+  display: grid; gap: 6px; max-height: 240px; overflow: auto; padding: 6px;
+  border: 1px solid #e5e7eb; border-radius: 10px; background: #fff;
+}
+.ks-list__item {
+  text-align: left; border: 1px solid #e5e7eb; border-radius: 10px;
+  padding: 8px 10px; background: #fff; cursor: pointer;
+}
+.ks-list__item:hover { background: #f8fafc; }
+.ks-list__item.is-active { outline: 2px solid #0ea5e9; outline-offset: 0; }
+.ks-item__title { font-weight: 600; }
+.ks-item__meta { color: #64748b; font-size: 13px; }
+
+/* Price row */
+.ks-price-row { display: grid; gap: 12px; grid-template-columns: 1fr 1fr; }
+@media (max-width: 720px) { .ks-price-row { grid-template-columns: 1fr; } }
+
+/* ===== Invoices ===== */
+.ks.invoices {
+  > .container { max-width: 1440px; width:100%; margin: 0 auto; }
+
+  .dialog-subhead {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 12px; margin-bottom: 12px;
+  }
+
+  .dialog-head__left { display: flex; align-items: center; gap: 10px; }
+
+  .input { height: 40px; line-height: 40px; padding: 0 12px; }
+
+  .ks-list__item { text-align: left; }
+  .ks-item__title { font-weight: 600; }
+  .ks-item__meta { color: #64748b; font-size: 13px; }
+
+  .card { padding: 16px; }
+  .card-title { font-size: 18px; margin: 0; }
+  .card__empty { text-align: center; color: #64748b; padding: 20px 8px; }
+
+  .pager { margin-top: 12px; }
+}
+
+/* Page-Kopf (neutral) */
+.page-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom:1rem;
+}
+
+/* Intro-Header der Trainingsseite (margins ohne inline-styles) */
+.ks .page-head .card-title { margin: 0; }
+.ks .page-head p { margin: 0; }
+
+/* ===== /trainings: visuelle Breite an Header angleichen (nur hier!) ===== */
+:root { --container-pad: 16px; }
+
+/* 1) Container-Padding auf /trainings entfernen */
+.ks > main.container {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+/* 3) Card innen nur vertikal polstern (horizontales kommt von (2)) */
+.ks > main.container > .card {
+  padding-top: 16px !important;
+  padding-bottom: 16px !important;
+}
+
+/* WICHTIG: KEINE globale Regel wie `.ks .card { padding-left/right: 0; }` */
+
+
+/* ===================================================================
+   >>> Tailwind-Interop & Kopfzeile in card p-0 (keine Logikänderung) <<<
+   - sorgt dafür, dass Tailwind-Utilities wie p-0 an .card wirklich greifen
+   - stellt die „Alle auswählen“-Zeile bei card p-0 korrekt ein
+=================================================================== */
+
+/* Tailwind-Utility-Vorrang gegen globale Card-Padding-Regeln */
+.card.p-0 { margin-top:16px; }
+.card.px-0 { padding-left: 0 !important; padding-right: 0 !important; }
+.card.py-0 { padding-top: 0 !important; padding-bottom: 0 !important; }
+.card.pt-0 { padding-top: 0 !important; }
+.card.pr-0 { padding-right: 0 !important; }
+.card.pb-0 { padding-bottom: 0 !important; }
+.card.pl-0 { padding-left: 0 !important; }
+
+/* „Alle auswählen“-Kopfzeile in card p-0: wieder links/rechts eingerückt */
+.card.p-0 > .list__item:first-child,
+.card.px-0 > .list__item:first-child {
+  padding-left: calc(var(--card-pad, 1rem) + 1rem);
+  padding-right: calc(var(--card-pad, 1rem) + 1rem);
+  border-bottom: 1px solid #eef2f7;
+}
+
+
+
+
+
+
+
+
+
