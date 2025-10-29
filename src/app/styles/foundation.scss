@@ -1,0 +1,107 @@
+
+
+
+
+
+
+:root {
+  color-scheme: light;
+  --brand: #0ea5e9; /* WP/React Primärfarbe */
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+body {
+  min-height: 100vh;
+  display: grid; /* Header | Main | Footer */
+  grid-template-rows: auto 1fr auto;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell,
+    "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji",
+    "Segoe UI Symbol";
+  background: #f5f5f5;
+  color: #222;
+}
+
+/* ===== Layout / Container ===== */
+.container {
+  max-width: 1440px;
+  margin: 0 auto;
+  //display: flex;
+  gap: 20px;
+  justify-content: center;
+  padding:0 16px;
+  width:100%;
+}
+
+/* Main verhält sich wie im WP-Theme (nur Main scrollt, Footer unten) */
+
+.site-main {
+  min-height: 0;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+//  padding: 24px ;
+   padding-block: 24px;   /* oben/unten */
+  padding-inline: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+
+
+
+/* Scrollbar unauffällig/versteckt (optional) */
+.site-main {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.site-main::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+
+
+:root {
+  --header-height: 72px; /* match your real header height */
+  --header-bg: #fff; /* header background color */
+  --mega-gap: 8px; /* small offset below the button/header */
+  --mega-z: 1000; /* base z-index for mega dropdown */
+  --mega-backdrop: rgba(0, 0, 0, 0.45);
+  --mega-bg: #fff;
+  --mega-link: #666;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
