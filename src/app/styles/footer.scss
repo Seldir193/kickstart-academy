@@ -1,0 +1,117 @@
+
+
+/* Minimal admin footer — dark, clean, legal-only */
+
+.site-footer--minimal {
+  --footer-bg: #0e0e10;
+  --footer-fg: #eaeaea;
+  --footer-fg-muted: #b9bec4;
+
+  background: var(--footer-bg);
+  color: var(--footer-fg);
+  width: 100%;
+  border-top: 1px solid #1a1b1e;
+}
+
+.site-footer--minimal .container {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 14px 16px;
+}
+
+.footer-min {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+/* left: logo + brand */
+.footer-min__left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.footer-min__logo {
+  width: 26px;
+  height: auto;
+  display: block;
+  filter: none;             /* don’t invert; provide white logo if needed */
+  opacity: 0.95;
+}
+
+.footer-min__brand {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.footer-min__brand-name {
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 0.01em;
+}
+
+.footer-min__copy {
+  color: var(--footer-fg-muted);
+  font-size: 0.95rem;
+}
+
+/* center: email */
+.footer-min__mail {
+  color: var(--footer-fg-muted);
+  text-decoration: none;
+  white-space: nowrap;
+}
+.footer-min__mail:hover,
+.footer-min__mail:focus-visible {
+  color: #fff;
+  text-decoration: none;
+  outline: none;
+}
+
+/* right: legal nav */
+.footer-min__links {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.footer-min__links a {
+  color: var(--footer-fg-muted);
+  text-decoration: none;
+  white-space: nowrap;
+}
+.footer-min__links a:hover,
+.footer-min__links a:focus-visible {
+  color: #fff;
+  text-decoration: none;
+  outline: none;
+}
+
+/* responsive: stack + center */
+@media (max-width: 700px) {
+  .footer-min {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 8px;
+  }
+  .footer-min__links {
+    gap: 12px;
+  }
+}
+
+
+
+
+
+
+
+
+
+
