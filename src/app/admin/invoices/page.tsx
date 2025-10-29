@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { useEffect, useMemo, useRef, useState } from 'react';
@@ -211,9 +212,18 @@ function openPdf(item: DocItem) {
 
 
   return (
-    <div className="ks invoices">
-      <main className="container max-w-6xl mx-auto">
+
+
+   
+      <div className=" ks invoices ">
+    
+ <div className=" ks max-w-6xl mx-auto p-4 ">
+                    <div className="page-head">
+        <h1 className="text-2xl font-bold">Rechnungen</h1>
+    </div>
+         
         <section className="card">
+   
           <div className="dialog-subhead">
             <div className="dialog-head__left">
               <h2 className="card-title">Rechnungen / Dokumente</h2>
@@ -393,37 +403,23 @@ function openPdf(item: DocItem) {
             </ul>
           )}
 
-          {/* Pager */}
-          <div className="pager pager--arrows">
-            <button
-              type="button"
-              className="pager__nav pager__nav--prev"
-              aria-label="Previous page"
-              disabled={page <= 1}
-              onClick={() => setPage((p) => Math.max(1, p - 1))}
-            >
-              <span className="icon icon--arrow icon--arrow-left" aria-hidden="true" />
-            </button>
-            <div className="pager__count" aria-live="polite" aria-atomic="true">
-              {page} / {totalPages}
-            </div>
-            <button
-              type="button"
-              className="pager__nav pager__nav--next"
-              aria-label="Next page"
-              disabled={page >= totalPages}
-              onClick={() => setPage((p) => p + 1)}
-            >
-              <span className="icon icon--arrow" aria-hidden="true" />
-            </button>
-          </div>
+
+
+
+
+
+          
+
+
+
+
+
+
+
 
           {/* Per-page + Downloads (auf 10 fest) */}
           <div className="flex items-center justify-between mt-3">
-            <div className="flex items-center gap-2">
-              <span className="text-gray-600">Pro Seite</span>
-              <span className="font-medium">10</span>
-            </div>
+            
 
             <div className="flex items-center gap-2">
               <a href={csvHref} className="btn" suppressHydrationWarning>
@@ -436,9 +432,55 @@ function openPdf(item: DocItem) {
           </div>
 
           {err && <div className="mt-2 text-red-600">{err}</div>}
-        </section>
-      </main>
-    </div>
+        
+     </section>
+   </div>
+
+
+
+   {/* Pager – Icon-Style wie in globals.base.scss */}
+<div className="pager pager--arrows">
+  <button
+    type="button"
+    className="btn"
+    aria-label="Previous page"
+    disabled={page <= 1}
+    onClick={() => setPage((p) => Math.max(1, p - 1))}
+  >
+    <img
+      src="/icons/arrow_right_alt.svg"
+      alt=""
+      aria-hidden="true"
+      className="icon-img icon-img--left"
+    />
+  </button>
+
+  <div className="pager__count" aria-live="polite" aria-atomic="true">
+    {page} / {totalPages}
+  </div>
+
+  <button
+    type="button"
+    className="btn"
+    aria-label="Next page"
+    disabled={page >= totalPages}
+    onClick={() => setPage((p) => p + 1)}
+  >
+    <img
+      src="/icons/arrow_right_alt.svg"
+      alt=""
+      aria-hidden="true"
+      className="icon-img"
+    />
+  </button>
+</div>
+  
+   </div>
+
+
+
+    
+  
   );
 }
 
