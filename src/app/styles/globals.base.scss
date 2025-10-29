@@ -1,0 +1,672 @@
+
+
+
+/* === Fix: Kein Layout-Sprung bei sichtbarer Y-Scrollleiste & Zoom !== 100% === */
+
+body {
+  /* Root ist der Scroll-Container → Platz für Scrollbar dauerhaft reservieren */
+  overflow-y: auto;
+  scrollbar-gutter: stable;
+}
+
+//html:dir(ltr) body { scrollbar-gutter: stable; }     /* rechts */
+//html:dir(rtl) body { scrollbar-gutter: stable; }     /* links (automatisch korrekt) */
+
+
+/* Fallback für Browser ohne scrollbar-gutter */
+@supports not (scrollbar-gutter: stable both-edges) {
+  html,
+  body { overflow-y: scroll; } /* Scrollbar-Platz immer reservieren */
+}
+
+/* Sicherheitsnetz: Nie 100vw für Vollbreite (inkl. Scrollbar) verwenden */
+:where(.use-viewport-width-fix) {
+  width: 100%;
+  max-width: 100vw; /* harmless */
+}
+
+/* Windows/Chromium Rundungs-Fix: verhindert Subpixel-Shift bei 75%/50% Zoom */
+//.container {
+  //contain: layout paint; /* keine Seiteneffekte, stabilisiert Zentrierung */
+//}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.site-footer {
+  margin-top: auto; /* Footer an den unteren Rand schieben */
+}
+
+
+/* ===== Brand / Nav ===== */
+.brand {
+  font-weight: 700;
+  text-decoration: none;
+  color: #111;
+  font-size: 20px;
+}
+
+.nav {
+  display: flex;
+  gap: 12px;
+}
+.nav-link {
+  text-decoration: none;
+  padding: 8px 12px;
+  border-radius: 8px;
+  color: #333;
+}
+/* WP-Look: kein sichtbarer Hover, nur active ist schwarz/weiß */
+.nav-link:hover {
+  color: #333;
+  background: transparent;
+}
+.nav-link.active {
+  background: #111;
+  color: #fff;
+}
+
+/* ===== Hero / Sections ===== */
+.hero {
+  background: linear-gradient(180deg, #111 0%, #222 100%);
+  color: #fff;
+  border-radius: 16px;
+  padding: 48px;
+  margin: 24px 0;
+}
+.hero-content {
+  max-width: 800px;
+}
+.hero h1 {
+  font-size: clamp(28px, 4vw, 48px);
+  margin: 0 0 8px;
+}
+.hero p {
+  opacity: 0.9;
+  margin: 0 0 16px;
+}
+.hero-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+/* ===== Buttons (WP-kompatible Klassen) ===== */
+/* === Buttons: bei Hover invertieren (weißes BG, dunkler Text) === */
+
+/* === Einheitlicher Button-Look (wie "Kurs anlegen") === */
+
+.btn,
+.btn-primary,
+.angebot-button,
+.btn-book,
+button.btn-primary {
+  background: var(--brand);
+  color: #fff;
+  border: 1px solid transparent;
+  transition: background-color 140ms ease, color 140ms ease, border-color 140ms ease;
+}
+
+/* Hover/Focus: invertieren → weißes BG + dunkler Text */
+/* Base */
+
+
+.btn,
+.btn-primary,
+.angebot-button,
+.btn-book,
+button.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 16px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  background: var(--brand);
+ color: #fff;
+  text-decoration: none;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Kein Hover-Farbwechsel – bleibt konstant wie im WP */
+
+/* ===== Grid & Cards ===== */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px;
+  margin-top: 16px;
+}
+.card {
+  background: #fff;
+  border: 1px solid #eaeaea;
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.card-title {
+  margin: 0;
+  font-size: 18px;
+}
+.card-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 4px;
+}
+.badge {
+  background: #f1f5f9;
+  color: #0f172a;
+  border-radius: 999px;
+  padding: 4px 10px;
+  font-size: 12px;
+}
+.card-actions {
+  margin-top: 4px;
+}
+
+/* ===== Formulare ===== */
+.form {
+  display: grid;
+  gap: 16px;
+  margin-top: 16px;
+}
+.form .grid {
+  gap: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
+.field {
+  display: grid;
+  gap: 6px;
+}
+.field--full {
+  grid-column: 1 / -1;
+}
+label {
+  font-weight: 600;
+}
+input,
+select,
+textarea {
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 10px 12px;
+  background: #fff;
+  font-size: 16px;
+}
+.error {
+  color: #b91c1c;
+  font-size: 0.9rem;
+}
+.ok {
+  color: #065f46;
+  font-weight: 600;
+}
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Abstand NUR wenn direkt auf ein Label eine chip-row folgt */
+.form__group .label + .chip-row {
+  margin-top: 8px; /* oder 12px */
+}
+/* kleiner Abstand zwischen chip-row und Hilfe-Text */
+.form__group .chip-row + .help {
+  margin-top: 6px;
+}
+.form__group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.form__group--stack {
+  display: block !important; /* force vertical */
+  align-items: initial;
+}
+
+/* Allgemein verwendete Liste-Aktionen */
+.list__actions {
+  display: flex;
+  flex-direction: row-reverse;
+  gap:8px;
+}
+
+/* Wenn embed-Modus aktiv ist, kein Header/Footer anzeigen */
+body.embed-mode .site-header,
+body.embed-mode .site-footer {
+  display: none !important;
+}
+/* ggf. Padding korrigieren, falls dein Layout oben Platz für Header reserviert */
+body.embed-mode {
+  padding-top: 0 !important;
+}
+
+/* Hilfe-Text */
+.help {
+  font-size: 12px;
+  color: #666;
+}
+
+/* ----- Pager (pagination) ----- */
+.pager {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 14px;
+}
+.pager__info {
+  font-size: 13px;
+  color: #666;
+}
+.pager__actions {
+  display: flex;
+  gap: 8px;
+}
+
+/* Card padding variable (match your actual card padding) */
+.card {
+  --card-pad: 1rem; /* ggf. anpassen */
+}
+
+/* Full-bleed rows: extend background to card edges, no border */
+.list.list--bleed .list__item.chip.is-fullhover {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+
+  padding-left: calc(var(--card-pad) + 1rem);
+  padding-right: calc(var(--card-pad) + 1rem);
+  width: auto;
+  border: 0 !important;
+  box-shadow: none;
+}
+
+.is-interactive { cursor: pointer; }
+
+.list.list--bleed .list__item.chip.is-fullhover .list__body {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.list.list--bleed .list__item.chip.is-fullhover .list__actions {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: row-reverse;
+  gap: 8px;
+}
+
+/* Accessible focus */
+.list.list--bleed .list__item.chip.is-fullhover:focus {
+  outline: var(--focus-outline, 2px dotted currentColor);
+  outline-offset: 2px;
+}
+
+/* No rounded corners for full-bleed hover rows inside cards */
+.list.list--bleed .list__item.chip.is-fullhover,
+.list.list--bleed .list__item.chip.is-fullhover:hover,
+.list.list--bleed .list__item.chip.is-fullhover:focus {
+  border-radius: 0 !important;
+  border: 0 !important;
+  box-shadow: none;
+}
+
+.form__actions { display: flex; gap: 8px; }
+
+/* Minimal, self-contained icon button */
+.icon-btn {
+  --icon-size: 3.1rem;
+  --btn-size: 2.25rem;
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--btn-size);
+  height: var(--btn-size);
+  padding: 0;
+  border: 0;
+  border-radius: 9999px;
+  background: transparent;
+  line-height: 0;
+  cursor: pointer;
+}
+.icon-btn--danger {
+  background: var(--danger, #e53935);
+  color: #fff;
+}
+.icon-btn--danger:hover,
+.icon-btn--danger:focus {
+  background: color-mix(in srgb, var(--danger, #e53935) 90%, #000 10%);
+  outline: none;
+}
+
+/* White icon using CSS mask so the PNG color doesn't matter */
+.icon {
+  display: block;
+  width: var(--icon-size);
+  height: var(--icon-size);
+  background-color: #fff; /* icon color */
+}
+.icon--close {
+  -webkit-mask: url("/icons/close.png") no-repeat center / contain;
+  mask: url("/icons/close.png") no-repeat center / contain;
+}
+
+/* Screen-reader only text (if not already defined) */
+.sr-only {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 1px, 1px);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Pager layout: arrows with centered numeric counter */
+.pager--arrows {
+  display: grid;
+  grid-template-columns: var(--icon-btn-size, 2.5rem) 1fr var(--icon-btn-size, 2.5rem);
+  align-items: center;
+}
+
+/* Icon buttons (reuse if already defined) */
+.pager__nav {
+  --icon-btn-size: 2.5rem;
+  --icon-size: 1.2rem;
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--icon-btn-size);
+  height: var(--icon-btn-size);
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: currentColor;
+  cursor: pointer;
+  border-radius: 9999px;
+  transition: transform 120ms ease, background-color 120ms ease;
+}
+.pager__nav:hover,
+.pager__nav:focus-visible {
+  outline: none;
+  transform: scale(1.06);
+  background: color-mix(in srgb, currentColor 12%, transparent);
+}
+.pager__nav[disabled] {
+  opacity: 0.35;
+  cursor: default;
+  pointer-events: none;
+  transform: none;
+  background: transparent;
+}
+
+/* Centered numbers */
+.pager__count {
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  user-select: none;
+}
+
+/* Icon box (if not already present) */
+.icon {
+  display: block;
+  width: var(--icon-size, 1.2rem);
+  height: var(--icon-size, 1.2rem);
+}
+
+/* Right arrow from /public/icons/arrow_right_alt.svg (tint via currentColor) */
+.icon--arrow {
+  background-color: currentColor;
+  -webkit-mask: url("/icons/arrow_right_alt.svg") no-repeat center / contain;
+  mask: url("/icons/arrow_right_alt.svg") no-repeat center / contain;
+}
+/* Left arrow is mirrored */
+.icon--arrow-left { transform: scaleX(-1); }
+
+/* Make the row gap configurable and cancel it just before the error line */
+.field {
+  --field-gap: 6px; /* matches your existing gap */
+  row-gap: var(--field-gap);
+}
+/* Reserve space, but pull the error up by exactly the gap value → no vertical gap */
+.field .error-slot {
+  min-height: 18px; /* one line */
+  margin-top: calc(-1 * var(--field-gap));
+}
+/* Error text styling (as you wanted) */
+.field .error {
+  color: #b91c1c;
+  font-size: 14px;
+  margin: 0;
+  display: flex;
+  font-weight: 400;
+  padding-left: 15px;
+}
+
+/* ===================== */
+/* EMBED MODE – CORE     */
+/* ===================== */
+html.embed-mode,
+body.embed-mode { height: 100%; }
+body.embed-mode {
+  padding-top: 0 !important; /* kein reserviertes Header-Padding */
+}
+
+/* ========= Helpers ========= */
+.bg-gray-50 { background: #f9fafb; }
+.text-red-600 { color: #dc2626; }
+.text-gray-600 { color: #4b5563; }
+.text-gray-700 { color: #374151; }
+.text-sm { font-size: 0.875rem; }
+.text-lg { font-size: 1.125rem; }
+.text-xl { font-size: 1.25rem; }
+.font-bold { font-weight: 700; }
+.font-semibold { font-weight: 600; }
+.font-mono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    "Liberation Mono", "Courier New", monospace;
+}
+.truncate { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.mb-2 { margin-bottom: 0.5rem; }
+.mb-3 { margin-bottom: 0.75rem; }
+.mb-4 { margin-bottom: 1rem; }
+.mt-3 { margin-top: 0.75rem; }
+.flex { display: flex; }
+.flex-1 { flex: 1 1 0%; }
+.flex-wrap { flex-wrap: wrap; }
+.items-center { align-items: center; }
+.items-end { align-items: flex-end; }
+.justify-between { justify-content: space-between; }
+.justify-end { justify-content: flex-end; }
+.gap-2 { gap: 0.5rem; }
+.mx-auto { margin-left: auto; margin-right: auto; }
+.cursor-pointer { cursor: pointer; }
+.hover\:bg-gray-50:hover { background: #f9fafb; }
+.overflow-auto { overflow: auto; }
+.text-center { text-align: center; }
+
+/* ===== Entfernt: alter .site-footer/.site-footer__admin/.site-footer .container-Code ===== */
+/* (Der alte, ungenutzte Footer-Block wurde vollständig gelöscht.) */
+
+
+
+
+
+
+
+
+/* Pager – Icon-Style wie Invoices (mit IMG-Icons) */
+.pager.pager--arrows {
+  display: grid;
+  grid-template-columns: 2.5rem 1fr 2.5rem; /* L/R-Buttons gleich breit, Zahl zentriert */
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Buttons: transparent, keine Umrandung — wie Bild 3 (Normalzustand) */
+.pager.pager--arrows .btn {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  width: 2.5rem;
+  height: 2.5rem;
+  padding: 0;
+  border-radius: 9999px;            /* runde Hover-Fläche */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 140ms ease, transform 120ms ease;
+}
+
+/* Hover / Focus: zarte, graue runde Fläche — wie Bild 2 */
+.pager.pager--arrows .btn:hover:not(:disabled),
+.pager.pager--arrows .btn:focus-visible {
+  background: rgba(0, 0, 0, 0.08);
+  outline: none;
+}
+
+/* Disabled: blass, keine Hover-Fläche — wie linker Pfeil in Bild 2 */
+.pager.pager--arrows .btn:disabled {
+  opacity: 0.35;
+  pointer-events: none;
+  background: transparent;
+}
+
+/* Pfeil-IMGs: saubere Größe, kein Baseline-Gap */
+.pager.pager--arrows .icon-img {
+  display: block;
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+/* Linker Pfeil spiegeln */
+.pager.pager--arrows .icon-img--left {
+  transform: scaleX(-1);
+}
+
+/* Zähler in der Mitte */
+.pager__count {
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  user-select: none;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Icon-only Edit-Trigger (kein Button-Style, nur Hover wie Pager) */
+.edit-trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  padding: 0;
+  border-radius: 9999px; /* runde Hover-Fläche */
+  background: transparent;
+  transition: background-color 140ms ease, transform 120ms ease;
+  cursor: pointer;
+}
+
+.edit-trigger:hover,
+.edit-trigger:focus-visible {
+  background: rgba(0, 0, 0, 0.08); /* exakt wie dein Pager-Hover */
+  outline: none;
+}
+
+.edit-trigger .icon-img {
+  display: block;
+  width: 1.25rem; /* wie Pager-Icons */
+  height: 1.25rem;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
