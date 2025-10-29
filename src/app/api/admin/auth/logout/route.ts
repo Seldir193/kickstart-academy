@@ -30,6 +30,9 @@ export async function GET(req: NextRequest) {
   // WICHTIG: Provider-ID-Cookies wegräumen (nicht HttpOnly)
   nukeCookie(res, 'admin_uid',       { httpOnly: true,  path: '/' });
   nukeCookie(res, 'admin_email',     { httpOnly: true,  path: '/' });
+
+  nukeCookie(res, 'admin_name',  { httpOnly: true,  path: '/' }); 
+  
   nukeCookie(res, 'providerId', { httpOnly: false, path: '/' });
   // falls du diese Namen irgendwo benutzt hast:
   nukeCookie(res, 'adminProviderId', { httpOnly: false, path: '/' });
