@@ -2,7 +2,13 @@
 'use client';
 
 import React, { useEffect, useMemo, useState } from 'react';
-import styles from '@/app/styles/revenue.module.css';
+
+
+
+
+import styles from "@/app/styles/revenue.module.scss";
+
+
 import {
   BarChart,
   Bar,
@@ -198,7 +204,8 @@ const yMaxYearly  = Math.max(MAX_Y,  ceilToStep(yearMaxValue,  STEP));
 
   return (
     <div className={styles.pageWrap}>
-      <h1 className={styles.pageTitle}>Umsatzübersicht</h1>
+          
+      <h1 className='text-2xl font-bold m-0'>Umsatzübersicht</h1>
 
       <div className={styles.container}>
         {/* Source-Umschalter + Jahres-/Monatsfilter */}
