@@ -27,9 +27,11 @@ const adminNav = [
   { href: '/',               label: 'Home' },
   { href: '/orte',           label: 'Places' },
   { href: '/trainings',      label: 'Trainings' },
+  { href: '/admin/coaches',  label: 'Coaches' }, 
   { href: '/admin/invoices', label: 'Rechnungen' },
   { href: '/customers',      label: 'Customers' },
   { href: '/admin/datev',    label: 'DATEV' },
+   { href: '/admin/news',     label: 'News' },
   { href: '/admin/revenue',  label: 'Umsatz' }, 
 ];
 
@@ -45,7 +47,19 @@ export default function Header({ isAdminInitial = false }: Props) {
   return (
     <header className="site-header">
       <div className="container header-inner">
-        <Link href="/" className="brand">Dortmunder Fussballschule</Link>
+       
+
+   {/* Brand: Logo statt Text */}
+        <Link href="/" className="brand" aria-label="Startseite">
+          {/* aus /public/assets/img/logo.jpg */}
+          <img
+            src="/assets/img/logo.jpg"
+            alt="Dortmunder Fussballschule"
+          
+          />
+        </Link>
+
+
 
         <nav className="nav nav--row">
           {isAdmin ? (
@@ -61,6 +75,8 @@ export default function Header({ isAdminInitial = false }: Props) {
                     (item.href === '/orte'           && pathname.startsWith('/orte')) ||
                     (item.href === '/admin/invoices' && pathname.startsWith('/admin/invoices')) ||
                     (item.href === '/admin/datev'    && pathname.startsWith('/admin/datev'));
+                    (item.href === '/admin/news'     && pathname.startsWith('/admin/news'));
+                     (item.href === '/admin/coaches'  && pathname.startsWith('/admin/coaches')); 
 
                   const addActive = !isLoggingOut && isRouteActive && !navigatingTopLink;
 
@@ -91,6 +107,8 @@ export default function Header({ isAdminInitial = false }: Props) {
                 >
                   Bookings
                 </Link>
+               
+
               </div>
 
               <div className="nav__spacer" />
@@ -105,6 +123,7 @@ export default function Header({ isAdminInitial = false }: Props) {
           ) : (
             <>
               <Link href="/trainings" className="nav-link">Trainings</Link>
+              <Link href="/coaches" className="nav-link">Coaches</Link> {/* optional */}
               <a href={WP_CONTACT_URL} className="nav-link" rel="noopener">
                 Contact
               </a>
