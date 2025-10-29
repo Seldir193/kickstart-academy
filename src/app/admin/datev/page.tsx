@@ -53,7 +53,7 @@ export default function DatevExportPage() {
 
   return (
     <div className="p-4 max-w-2xl">
-      <h1 className="text-xl font-bold mb-3">DATEV-Export (OPOS-Variante)</h1>
+      <h1 className="text-2xl font-bold m-0">DATEV-Export (OPOS-Variante)</h1>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
         <label className="block">
