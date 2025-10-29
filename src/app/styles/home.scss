@@ -1,0 +1,52 @@
+/* ===== Anbieter-Home (Dashboard) – eigene Datei ===== */
+
+.dash {
+  display: grid;
+  gap: 16px;
+}
+
+.dash-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.dash-head__left { display: grid; gap: 4px; }
+.dash-subtitle { color: #666; font-size: 0.95rem; }
+.dash-head__actions { display: flex; gap: 8px; flex-wrap: wrap; }
+
+/* Quick Actions */
+.quick-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+/* KPIs */
+.dash-kpis {
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+}
+.kpi {
+  display: grid;
+  gap: 6px;
+}
+.kpi__label { color: #666; font-size: 0.9rem; }
+.kpi__value { font-size: 1.6rem; font-weight: 700; }
+.kpi__link { font-size: 0.9rem; text-decoration: none; color: var(--brand, #111); }
+
+/* Task-Zeilen Aktionen rechtsbündig (list.__actions ist row-reverse global, das ist ok) */
+.task-row .list__actions {
+  gap: 8px;
+}
+
+/* Responsiv */
+@media (max-width: 800px) {
+  .dash-head { flex-direction: column; align-items: flex-start; }
+}
+
+/* Nur Admin-Home: Container als Flex-Spalte */
+.admin-home.ks > .container {
+  display: flex;
+  flex-direction: column; /* Tippfehler gefixt */
+  gap: 10px;
+}
