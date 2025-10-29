@@ -1,3 +1,5 @@
+
+
 // app/api/lib/auth.ts
 import { cookies } from 'next/headers';
 import { SignJWT, jwtVerify } from 'jose';
@@ -80,3 +82,8 @@ export async function getProviderIdFromCookies(): Promise<string | null> {
   const pid = store.get('providerId')?.value;
   return pid ? String(pid) : null;
 }
+
+
+
+
+
