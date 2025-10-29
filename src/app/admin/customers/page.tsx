@@ -199,21 +199,48 @@ export default function CustomersPage() {
         </div>
       )}
 
-      <div className="flex gap-2 items-center justify-end mt-3">
-        <button className="btn" onClick={() => setPage((p) => Math.max(1, p - 1))} disabled={page <= 1}>
-          Prev
-        </button>
-        <div>
-          {page} / {pages}
-        </div>
-        <button
-          className="btn"
-          onClick={() => setPage((p) => Math.min(pages, p + 1))}
-          disabled={page >= pages}
-        >
-          Next
-        </button>
-      </div>
+
+{/* Pagination (Icon-Style wie Invoices/globals.base.scss) */}
+<div className="pager pager--arrows">
+  <button
+    type="button"
+    className="btn"
+    aria-label="Previous page"
+    disabled={page <= 1}
+    onClick={() => setPage((p) => Math.max(1, p - 1))}
+  >
+    <img
+      src="/icons/arrow_right_alt.svg"
+      alt=""
+      aria-hidden="true"
+      className="icon-img icon-img--left"
+    />
+  </button>
+
+  <div className="pager__count" aria-live="polite" aria-atomic="true">
+    {page} / {pages}
+  </div>
+
+  <button
+    type="button"
+    className="btn"
+    aria-label="Next page"
+    disabled={page >= pages}
+    onClick={() => setPage((p) => Math.min(pages, p + 1))}
+  >
+    <img
+      src="/icons/arrow_right_alt.svg"
+      alt=""
+      aria-hidden="true"
+      className="icon-img"
+    />
+  </button>
+</div>
+
+
+
+       
+
 
       {createOpen && (
         <CustomerDialog
@@ -243,3 +270,20 @@ export default function CustomersPage() {
     </div>
   );
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
