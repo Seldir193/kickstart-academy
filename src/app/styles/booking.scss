@@ -1,0 +1,324 @@
+.book-grid--single {
+  padding: unset !important;
+}
+
+/* =============================== */
+/* Booking: zentriertes Single-UI  */
+/* =============================== */
+
+//.book-embed { min-height: 100dvh; }
+
+/* Der ganze Inhalt der Buchungsseite: zentriert, angenehme Breite */
+.book-grid {
+  width: 100%;
+  max-width: 760px; /* Lesebreite */
+  margin: 0 auto; /* horizontal zentriert */
+  //padding: clamp(12px, 2vw, 24px);
+}
+
+/* Inhalt linksbündig lassen (keine Textzentrierung) */
+.book-main {
+  min-width: 0;
+}
+.book-form {
+  text-align: left;
+}
+
+/* Inline-"Selected offer" Karte direkt über den Feldern */
+.book-offer--inline {
+  background: linear-gradient(180deg, #111 0%, #222 100%);
+  border: 1px solid #eaeaea;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 12px; /* Abstand zu den Feldern */
+  text-align: center;
+  color: #fff;
+}
+
+.book-offer__title {
+  margin: 0 0 8px;
+  font-weight: 700;
+  font-size: clamp(28px, 4vw, 48px);
+}
+.book-offer__line {
+  font-weight: 600;
+  opacity: 0.9;
+}
+.book-offer__meta {
+  margin-top: 6px;
+  color: #fff;
+  opacity: 0.9;
+}
+.book-offer__info {
+  margin-top: 8px;
+}
+
+/* Formular-Grid: 2 Spalten (Desktop), mobil 1 Spalte */
+.book-form__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  //gap: 16px 24px;
+}
+
+/* Volle Breite für breite Felder (z. B. Nachricht) */
+.field--full {
+  grid-column: 1 / -1;
+}
+
+/* 20px Abstand zwischen letztem Feld-Grid und Button-Zeile */
+.book-form__grid + .book-actions {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+@media (max-width: 550px) {
+  .book-form__grid {
+    grid-template-columns: 1fr;
+  }
+
+  body.embed-mode {
+    align-items: unset !important;
+  }
+}
+
+.dob {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1.5fr;
+  gap: 8px;
+}
+.dob select {
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 10px 12px;
+  background: #fff;
+}
+
+.book-sub {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 12px;
+  align-items: end;
+}
+.book-sub__left {
+  display: flex;
+  gap: 10px;
+  align-items: flex-end;
+}
+.book-sub__titles {
+  display: grid;
+  gap: 4px;
+}
+.book-back {
+  appearance: none;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 6px 10px;
+  cursor: pointer;
+}
+.book-back img {
+  display: block;
+  width: 18px;
+  height: 18px;
+}
+.book-back:hover {
+  background: #f5faff;
+}
+@media (max-width: 560px) {
+  .book-sub {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Ansprechpartner: immer in einer Zeile (Bild | Name | Email) */
+.contact-coach {
+  display: grid;
+  grid-template-columns: auto 1fr auto; /* Bild | Name flex | Email */
+  align-items: center;
+  column-gap: 14px;
+}
+.contact-coach__avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 999px;
+  object-fit: cover;
+  background: #f1f5f9;
+  border: 1px solid #eaeaea;
+}
+.contact-coach__name {
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0; /* wichtig: erlaubt ellipsis innerhalb grid */
+}
+.contact-coach__email {
+  white-space: nowrap;
+}
+.contact-coach__email a {
+  color: #0ea5e9;
+  text-decoration: none;
+}
+.contact-coach__email a:hover {
+  text-decoration: underline;
+}
+
+/* Wenn extrem schmal, darf es umbrechen */
+@media (max-width: 420px) {
+  .contact-coach {
+    grid-template-columns: auto 1fr; /* Bild | Textblock */
+    row-gap: 8px;
+  }
+  .contact-coach__email {
+    grid-column: 2;
+  } /* Email unter den Namen, aber linksbündig */
+}
+
+.book-contact .contact {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.book-contact .contact__avatar {
+  border-radius: 999px;
+  object-fit: cover;
+  border: 1px solid #e5e7eb;
+}
+.book-contact .contact__body {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.book-contact .contact__name {
+  font-weight: 700;
+}
+.book-contact .contact__email {
+  color: #0ea5e9;
+  text-decoration: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.book-contact .contact__email:hover {
+  text-decoration: underline;
+}
+
+/* ========= Base UI ========= */
+/* WICHTIG: Diese globalen Regeln bleiben hier,
+   damit sie – wie in deiner Original-Datei – zuletzt greifen. */
+.card {
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 12px;
+  background: #fff;
+}
+.btn {
+  appearance: none;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 8px 12px;
+  cursor: pointer;
+}
+.btn:hover {
+  background: #f8fafc;
+}
+.btn-primary {
+  background: #0ea5e9;
+  color: #fff;
+  border: none;
+}
+.btn-primary:hover {
+  background: #0c96d2;
+}
+.btn-disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+.btn-ghost {
+  background: transparent;
+  border: 1px solid #e5e7eb;
+}
+.btn-ghost:hover {
+  background: #f8fafc;
+}
+
+.input {
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 8px 10px;
+  width: 100%;
+  background: #fff;
+}
+
+.th {
+  text-align: left;
+  font-weight: 700;
+  padding: 10px;
+  border-bottom: 1px solid #e5e7eb;
+  font-size: 12px;
+  color: #475569;
+}
+.td {
+  padding: 10px;
+  border-bottom: 1px solid #f1f5f9;
+  vertical-align: top;
+}
+.tr:last-child .td {
+  border-bottom: 0;
+}
+
+.lbl {
+  display: block;
+  font-size: 12px;
+  color: #475569;
+  margin-bottom: 4px;
+}
+
+.badge {
+  display: inline-block;
+  font-size: 12px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  border: 1px solid #e5e7eb;
+}
+.badge-muted {
+  background: #f1f5f9;
+  color: #475569;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
