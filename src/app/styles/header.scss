@@ -1,0 +1,167 @@
+
+
+
+/* relies on variables from foundation.scss: 
+   --header-height, --header-bg, --mega-z, --mega-gap, --mega-backdrop, --mega-bg, --mega-link */
+
+/* Fixed header (overrides sticky from globals.base.scss) */
+.site-header {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: calc(var(--mega-z) + 1);
+  background: var(--header-bg);
+  border-bottom: 1px solid #eaeaea;
+}
+
+
+
+.header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 64px;
+}
+
+.site-header .header-inner {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+
+/* Push page content below the fixed header */
+body { padding-top: var(--header-height); }
+
+/* --- Nav helpers / focus --- */
+.nav-link:focus { outline: none; }
+.nav-link:focus-visible {
+  outline: 2px solid #000;
+  outline-offset: 2px;
+}
+
+/* Layout helpers (nur falls nicht schon im Markup verwendet) */
+.nav--row        { display: flex; align-items: center; gap: 12px; }
+.nav__links      { display: flex; align-items: center; gap: 8px; }
+.nav__spacer     { flex: 1 1 auto; }
+.header__actions { display: flex; align-items: center; gap: 8px; }
+
+/* --- Simple dropdown neben einem Nav-Item --- */
+.nav-item--group { position: relative; }
+
+.nav-link--button {
+  background: transparent;
+  border: 0;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  padding: 8px 12px;
+  border-radius: 8px;
+  transition: background-color 120ms ease;
+}
+.nav-link--button:hover { background: rgba(0,0,0,0.04); }
+
+.nav-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  left: auto;
+  z-index: calc(var(--mega-z) + 2);
+  display: flex;
+  gap: 8px;
+  padding: 8px 0;
+  background: #fff;
+  border-top: 1px solid #eaeaea;
+  white-space: nowrap;
+}
+.nav-dropdown__link {
+  display: inline-block;
+  text-decoration: none;
+  padding: 8px 12px;
+  border-radius: 8px;
+  color: #333;
+  transition: background-color 120ms ease, color 120ms ease;
+}
+.nav-dropdown__link:hover { background: rgba(0,0,0,0.04); }
+
+/* --- Mega dropdown (full width unter dem Header) --- */
+.mega { display: none; }
+.mega.is-open { display: block; }
+
+.mega__backdrop {
+  position: fixed;
+  left: 0; right: 0;
+  top: calc(var(--header-height) + var(--mega-gap));
+  bottom: 0;
+  background: var(--mega-backdrop);
+  z-index: var(--mega-z);
+}
+
+.mega__panel {
+  position: fixed;
+  left: 0; right: 0;
+  width: 100vw;
+  background: var(--mega-bg);
+  z-index: var(--mega-z); /* header ist +1 */
+}
+
+.mega__inner {
+  max-width: 1440px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 24px;
+  padding: 16px 12px;
+  text-align: left;
+}
+
+.mega__col { min-width: 0; }
+.mega__heading { font-weight: 700; margin: 0 0 6px; }
+.mega__list { list-style: none; margin: 0; padding: 0; }
+.mega__item { margin-top: 6px; }
+.mega__link { color: var(--mega-link); text-decoration: none; }
+.mega__link:hover { text-decoration: underline; }
+
+@media (max-width: 900px)  { .mega__inner { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 560px)  { .mega__inner { grid-template-columns: 1fr; } }
+
+/* Embed-Mode: Header ausblenden (bleibt wie bisher) */
+body.embed-mode .site-header { display: none !important; }
+
+
+
+/* --- Header nav hover (nur Hover-Optik, Design unverändert) --- */
+/* Pill-Hover für normale Links (nicht .active) */
+.site-header .nav .nav-link:not(.active):hover {
+  background: rgba(0, 0, 0, 0.04);
+  border-radius: 999px; /* pill look on hover */
+}
+
+/* Falls der Dropdown-Trigger ein Button ist */
+.site-header .nav .nav-link--button:not(.active):hover {
+  background: rgba(0, 0, 0, 0.04);
+  border-radius: 999px;
+}
+
+/* Optional: Brand-Hover (kannst du weglassen, wenn du es nicht möchtest) */
+.site-header .brand:hover {
+  background: rgba(0, 0, 0, 0.04);
+  border-radius: 999px;
+}
+
+
+
+
+
+
+
+/* Logo-Größe im Header angleichen */
+.site-header .brand {
+  display: inline-flex;
+  align-items: center;
+}
+.site-header .brand img {
+  height: 50px; /* passend zu min-height:64px der header-inner */
+  width: 50px;
+  display: block;
+}
+
