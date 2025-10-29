@@ -1,5 +1,5 @@
 
-
+// app/admin/bookings/page.tsx
 'use client';
 
 import React, { useEffect, useMemo, useState } from 'react';
@@ -15,7 +15,7 @@ type Booking = {
   lastName: string;
   email: string;
   age: number;
-  date: string;                 // yyyy-mm-dd oder ISO
+  date: string; // yyyy-mm-dd oder ISO
   level: string;
   message?: string;
   createdAt: string;
@@ -78,12 +78,12 @@ function messageToLines(msg?: string): string[] {
 
   t = t
     .replace(/\s*,\s*Geburtstag:/gi, '\nGeburtstag:')
-    .replace(/\s*,\s*Kontakt:/gi,    '\nKontakt:')
-    .replace(/\s*,\s*Adresse:/gi,    '\nAdresse:')
-    .replace(/\s*,\s*Telefon:/gi,    '\nTelefon:')
-    .replace(/\s*,\s*Gutschein:/gi,  '\nGutschein:')
-    .replace(/\s*,\s*Quelle:/gi,     '\nQuelle:')
-    .replace(/\s*,\s*Kind:/gi,       '\nKind:');
+    .replace(/\s*,\s*Kontakt:/gi, '\nKontakt:')
+    .replace(/\s*,\s*Adresse:/gi, '\nAdresse:')
+    .replace(/\s*,\s*Telefon:/gi, '\nTelefon:')
+    .replace(/\s*,\s*Gutschein:/gi, '\nGutschein:')
+    .replace(/\s*,\s*Quelle:/gi, '\nQuelle:')
+    .replace(/\s*,\s*Kind:/gi, '\nKind:');
 
   t = t.replace(/^\s*Anmeldung\b/i, 'Anmeldung');
 
@@ -118,13 +118,52 @@ export default function AdminBookingsPage() {
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState<string | null>(null);
 
-  // Globaler Toast (wie showOk)
+  // Globaler Toast
   const [notice, setNotice] = useState<{ type: 'ok' | 'error'; text: string } | null>(null);
   const showOk = (text: string) => { setNotice({ type: 'ok', text }); setTimeout(() => setNotice(null), 5000); };
   const showError = (text: string) => { setNotice({ type: 'error', text }); setTimeout(() => setNotice(null), 5000); };
 
   // Dialog
   const [sel, setSel] = useState<Booking | null>(null);
+
+  // Auswahl (Checkboxen)
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const visibleIds = useMemo(() => items.map(b => b._id), [items]);
+  const selectedCount = selectedIds.size;
+  const allVisibleSelected = useMemo(
+    () => visibleIds.length > 0 && visibleIds.every(id => selectedIds.has(id)),
+    [visibleIds, selectedIds]
+  );
+  const selItems = useMemo(
+    () => items.filter(b => selectedIds.has(b._id)),
+    [items, selectedIds]
+  );
+
+  function toggleOne(id: string, checked: boolean) {
+    setSelectedIds(prev => {
+      const next = new Set(prev);
+      if (checked) next.add(id); else next.delete(id);
+      return next;
+    });
+  }
+  function selectAllVisible() {
+    setSelectedIds(prev => {
+      const next = new Set(prev);
+      if (allVisibleSelected) {
+        visibleIds.forEach(id => next.delete(id));
+      } else {
+        visibleIds.forEach(id => next.add(id));
+      }
+      return next;
+    });
+  }
+  function clearSelection() { setSelectedIds(new Set()); }
+
+  // Bulk-Eligibility (Regeln)
+  const canBulkProcessing = selItems.some(b => b.status === 'pending');
+  const canBulkConfirmed  = selItems.some(b => b.status === 'pending' || b.status === 'processing');
+  const canBulkCancelled  = selItems.some(b => b.status === 'pending' || b.status === 'processing');
+  const canBulkDelete     = selItems.length > 0;
 
   // Query
   const query = useMemo(() => {
@@ -168,7 +207,7 @@ export default function AdminBookingsPage() {
     (counts.cancelled ?? 0) +
     (counts.deleted ?? 0);
 
-  /* ===== Server-Aktionen ===== */
+  /* ===== Server-Aktionen (Einzel) ===== */
   async function apiConfirm(id: string, resend = false): Promise<string> {
     const url = `/api/admin/bookings/${encodeURIComponent(id)}/confirm${resend ? '?resend=1' : ''}`;
     const r = await fetch(url, { method: 'POST', credentials: 'include', cache: 'no-store' });
@@ -181,8 +220,9 @@ export default function AdminBookingsPage() {
     return resend ? 'Bestätigung erneut gesendet.' : 'Buchung bestätigt und E-Mail versendet.';
   }
 
-  async function apiSetStatus(id: string, next: Status): Promise<string> {
-    const r = await fetch(`/api/admin/bookings/${encodeURIComponent(id)}/status`, {
+  async function apiSetStatus(id: string, next: Status, opts?: { forceMail?: boolean }): Promise<string> {
+    const url = `/api/admin/bookings/${encodeURIComponent(id)}/status${opts?.forceMail ? '?force=1' : ''}`;
+    const r = await fetch(url, {
       method: 'PATCH',
       credentials: 'include',
       headers: { 'Content-Type': 'application/json' },
@@ -208,7 +248,103 @@ export default function AdminBookingsPage() {
     return 'Buchung gelöscht.';
   }
 
-  /* ===== Dialog mit per-Button-Hinweisen (5s) + globalem Toast ===== */
+  // 🔔 Bestätigten Termin absagen – versucht Spezialroute, fallback auf /status?force=1
+  async function apiCancelConfirmed(id: string): Promise<string> {
+    // 1) Neuer Spezial-Endpunkt (falls vorhanden)
+    const trySpecial = await fetch(`/api/admin/bookings/${encodeURIComponent(id)}/cancel-confirmed`, {
+      method: 'POST',
+      credentials: 'include',
+      cache: 'no-store',
+    });
+    if (trySpecial.status === 404) {
+      // 2) Fallback: Status->cancelled + force=1 (generische Absage-Mail)
+      const text = await apiSetStatus(id, 'cancelled', { forceMail: true });
+      showOk(text + ' (Fallback verwendet)');
+      return 'Bestätigter Termin abgesagt (Fallback).';
+    }
+    const d = await trySpecial.json().catch(() => ({}));
+    if (!trySpecial.ok || d?.ok === false) throw new Error(d?.error || trySpecial.statusText);
+    await load();
+    if (sel && sel._id === id) setSel(prev => prev ? { ...prev, status: 'cancelled' } : prev);
+    return 'Bestätigter Termin wurde abgesagt und spezielle E-Mail versendet.';
+  }
+
+  /* ===== Bulk-Aktionen (mit Regeln & Mail bei Confirm) ===== */
+  async function bulkSetStatus(next: Status) {
+    if (!selectedIds.size) return;
+
+    let eligible: Booking[] = [];
+    if (next === 'processing') {
+      eligible = selItems.filter(b => b.status === 'pending');
+    } else if (next === 'cancelled') {
+      eligible = selItems.filter(b => b.status === 'pending' || b.status === 'processing');
+    } else if (next === 'confirmed') {
+      eligible = selItems.filter(b => b.status === 'pending' || b.status === 'processing');
+    } else {
+      eligible = [];
+    }
+    if (!eligible.length) return;
+
+    try {
+      if (next === 'confirmed') {
+        await Promise.all(
+          eligible.map(b =>
+            fetch(`/api/admin/bookings/${encodeURIComponent(b._id)}/confirm`, {
+              method: 'POST',
+              credentials: 'include',
+              cache: 'no-store',
+            })
+          )
+        );
+        showOk(`(${eligible.length}) bestätigt und E-Mails versendet.`);
+      } else {
+        await Promise.all(
+          eligible.map(b =>
+            fetch(`/api/admin/bookings/${encodeURIComponent(b._id)}/status`, {
+              method: 'PATCH',
+              credentials: 'include',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ status: next }),
+            })
+          )
+        );
+        showOk(
+          next === 'processing' ? `(${eligible.length}) → In Bearbeitung.` :
+          next === 'cancelled'  ? `(${eligible.length}) → Abgesagt.` :
+                                  'Status aktualisiert.'
+        );
+      }
+      await load();
+    } catch (e:any) {
+      showError(e?.message || 'Bulk-Aktion fehlgeschlagen.');
+    } finally {
+      clearSelection();
+    }
+  }
+
+  async function bulkDelete() {
+    if (!selectedIds.size) return;
+    const eligible = selItems.filter(b => b.status !== 'deleted');
+    if (!eligible.length) return;
+    try {
+      await Promise.all(
+        eligible.map(b =>
+          fetch(`/api/admin/bookings/${encodeURIComponent(b._id)}`, {
+            method: 'DELETE',
+            credentials: 'include',
+          })
+        )
+      );
+      await load();
+      showOk(`(${eligible.length}) Buchungen gelöscht.`);
+    } catch (e:any) {
+      showError(e?.message || 'Bulk-Löschen fehlgeschlagen.');
+    } finally {
+      clearSelection();
+    }
+  }
+
+  /* ===== Dialog (Einzel) ===== */
   function BookingDialog({
     booking,
     onClose,
@@ -216,6 +352,7 @@ export default function AdminBookingsPage() {
     onResend,
     onSetStatus,
     onDelete,
+    onCancelConfirmed,
     notify,
   }: {
     booking: Booking;
@@ -224,7 +361,8 @@ export default function AdminBookingsPage() {
     onResend: () => Promise<string>;
     onSetStatus: (s: Status) => Promise<string>;
     onDelete: () => Promise<string>;
-    notify: (text: string) => void;       // 🔔 globaler Toast
+    onCancelConfirmed: () => Promise<string>;
+    notify: (text: string) => void;
   }) {
     const [busy, setBusy] = useState<string>('');
     const [msg, setMsg] = useState<{
@@ -232,6 +370,7 @@ export default function AdminBookingsPage() {
       confirm?: string;
       resend?: string;
       cancelled?: string;
+      cancelConfirmed?: string;
     }>({});
 
     function flash(key: keyof typeof msg, text: string) {
@@ -241,7 +380,7 @@ export default function AdminBookingsPage() {
       }, 5000);
     }
 
-    const lines = messageToLines(booking.message);
+    const s = booking.status ?? 'pending';
 
     return (
       <ModalPortal>
@@ -261,7 +400,7 @@ export default function AdminBookingsPage() {
                   {booking.firstName} {booking.lastName}
                 </h2>
                 <span className="badge">{booking.level}</span>
-                <span className={`badge ${booking.status==='cancelled' || booking.status==='deleted' ? 'badge-muted' : ''}`}>
+                <span className={`badge ${s==='cancelled' || s==='deleted' ? 'badge-muted' : ''}`}>
                   {asStatus(booking.status)}
                 </span>
               </div>
@@ -270,9 +409,10 @@ export default function AdminBookingsPage() {
               </div>
             </div>
 
-            {/* Aktionsleiste mit Inline-Hinweisen */}
+            {/* Aktionsleiste (Einzel) */}
             <div className="flex flex-wrap gap-2 justify-end mb-3">
-              {booking.status !== 'processing' && booking.status !== 'cancelled' && booking.status !== 'deleted' && (
+              {/* „In Bearbeitung“ nur aus pending */}
+              {s === 'pending' && (
                 <div className="flex items-center gap-2">
                   <button
                     className="btn"
@@ -282,7 +422,7 @@ export default function AdminBookingsPage() {
                         setBusy('processing');
                         const text = await onSetStatus('processing');
                         flash('processing', text);
-                        notify(text); // 🔔 global
+                        notify(text);
                       } catch (e:any) {
                         const t = e?.message || 'Aktion fehlgeschlagen';
                         flash('processing', t);
@@ -298,7 +438,8 @@ export default function AdminBookingsPage() {
                 </div>
               )}
 
-              {booking.status !== 'confirmed' && booking.status !== 'cancelled' && booking.status !== 'deleted' && (
+              {/* Bestätigen NICHT wenn cancelled/deleted/confirmed */}
+              {s !== 'confirmed' && s !== 'cancelled' && s !== 'deleted' && (
                 <div className="flex items-center gap-2">
                   <button
                     className="btn btn-primary"
@@ -308,7 +449,7 @@ export default function AdminBookingsPage() {
                         setBusy('confirm');
                         const text = await onConfirm();
                         flash('confirm', text);
-                        notify(text); // 🔔 global
+                        notify(text);
                       } catch (e:any) {
                         const t = e?.message || 'Aktion fehlgeschlagen';
                         flash('confirm', t);
@@ -324,7 +465,8 @@ export default function AdminBookingsPage() {
                 </div>
               )}
 
-              {booking.status === 'confirmed' && (
+              {/* Erneut senden nur im confirmed */}
+              {s === 'confirmed' && (
                 <div className="flex items-center gap-2">
                   <button
                     className="btn"
@@ -334,7 +476,7 @@ export default function AdminBookingsPage() {
                         setBusy('resend');
                         const text = await onResend();
                         flash('resend', text);
-                        notify(text); // 🔔 global
+                        notify(text);
                       } catch (e:any) {
                         const t = e?.message || 'Aktion fehlgeschlagen';
                         flash('resend', t);
@@ -350,7 +492,35 @@ export default function AdminBookingsPage() {
                 </div>
               )}
 
-              {booking.status !== 'cancelled' && booking.status !== 'deleted' && (
+              {/* Absage für bestätigte Termine */}
+              {s === 'confirmed' && (
+                <div className="flex items-center gap-2">
+                  <button
+                    className="btn btn--danger"
+                    disabled={busy === 'cancelConfirmed'}
+                    onClick={async () => {
+                      try {
+                        setBusy('cancelConfirmed');
+                        const text = await onCancelConfirmed();
+                        flash('cancelConfirmed', text);
+                        notify(text);
+                      } catch (e:any) {
+                        const t = e?.message || 'Aktion fehlgeschlagen';
+                        flash('cancelConfirmed', t);
+                        notify(t);
+                      } finally {
+                        setBusy('');
+                      }
+                    }}
+                  >
+                    {busy==='cancelConfirmed' ? 'Bitte warten…' : 'Bestätigten Termin absagen'}
+                  </button>
+                  {msg.cancelConfirmed && <span className="text-sm ok">{msg.cancelConfirmed}</span>}
+                </div>
+              )}
+
+              {/* Normale Absage NICHT in confirmed/cancelled/deleted */}
+              {s !== 'cancelled' && s !== 'deleted' && s !== 'confirmed' && (
                 <div className="flex items-center gap-2">
                   <button
                     className="btn"
@@ -360,7 +530,7 @@ export default function AdminBookingsPage() {
                         setBusy('cancelled');
                         const text = await onSetStatus('cancelled');
                         flash('cancelled', text);
-                        notify(text); // 🔔 global
+                        notify(text);
                       } catch (e:any) {
                         const t = e?.message || 'Aktion fehlgeschlagen';
                         flash('cancelled', t);
@@ -376,7 +546,8 @@ export default function AdminBookingsPage() {
                 </div>
               )}
 
-              {booking.status !== 'deleted' && (
+              {/* Löschen immer möglich außer schon deleted */}
+              {s !== 'deleted' && (
                 <div className="flex items-center gap-2">
                   <button
                     className="btn"
@@ -385,8 +556,8 @@ export default function AdminBookingsPage() {
                       try {
                         setBusy('delete');
                         const text = await onDelete();
-                        notify(text); // 🔔 global
-                        onClose();     // Dialog schließen nach Löschen
+                        notify(text);
+                        onClose();
                       } finally {
                         setBusy('');
                       }
@@ -400,7 +571,6 @@ export default function AdminBookingsPage() {
 
             {/* Read-only Inhalte */}
             <div className="form-columns mb-3">
-              {/* Buchung */}
               <fieldset className="card">
                 <legend className="font-bold">Buchung</legend>
                 <div className="grid grid-cols-2 gap-2">
@@ -431,7 +601,6 @@ export default function AdminBookingsPage() {
                 </div>
               </fieldset>
 
-              {/* Nachricht hübsch gelabelt */}
               <fieldset className="card">
                 <legend className="font-bold">Nachricht</legend>
                 {messageToLines(booking.message).length ? (
@@ -467,7 +636,7 @@ export default function AdminBookingsPage() {
         <h1 className="text-2xl font-bold">Bookings</h1>
       </div>
 
-      {/* Globaler Toast (fixed, 5s) */}
+      {/* Globaler Toast */}
       {notice && (
         <div
           className={notice.type === 'ok' ? 'ok' : 'error'}
@@ -505,15 +674,53 @@ export default function AdminBookingsPage() {
           <select
             className="input"
             value={status}
-            onChange={(e)=> { setStatus(e.target.value as StatusOrAll); setPage(1); }}
+            onChange={(e)=> { setStatus(e.target.value as StatusOrAll); setPage(1); clearSelection(); }}
           >
-            <option value="all">All ({(allCount || total)})</option>
+            <option value="all">All ({(((counts.pending ?? 0) + (counts.processing ?? 0) + (counts.confirmed ?? 0) + (counts.cancelled ?? 0) + (counts.deleted ?? 0)) || total)})</option>
             <option value="pending">Pending ({counts.pending ?? 0})</option>
             <option value="processing">Processing ({counts.processing ?? 0})</option>
             <option value="confirmed">Confirmed ({counts.confirmed ?? 0})</option>
             <option value="cancelled">Cancelled ({counts.cancelled ?? 0})</option>
             <option value="deleted">Deleted ({counts.deleted ?? 0})</option>
           </select>
+        </div>
+      </div>
+
+      {/* Bulk-Aktionsleiste */}
+      <div className="flex flex-wrap items-center justify-between mb-2">
+        <div className="text-sm text-gray-700">
+          {selectedCount > 0 ? `${selectedCount} ausgewählt` : ''}
+        </div>
+        <div className="flex gap-2">
+          <button type="button" className="btn" onClick={selectAllVisible}
+                  disabled={items.length === 0}>
+            {allVisibleSelected ? 'Sichtbare abwählen' : 'Sichtbare auswählen'}
+          </button>
+          <button type="button" className="btn" onClick={clearSelection}
+                  disabled={selectedCount === 0}>
+            Clear
+          </button>
+
+          <button type="button" className="btn"
+                  onClick={() => bulkSetStatus('processing')}
+                  disabled={!canBulkProcessing}>
+            → Processing
+          </button>
+          <button type="button" className="btn"
+                  onClick={() => bulkSetStatus('cancelled')}
+                  disabled={!canBulkCancelled}>
+            → Cancelled
+          </button>
+          <button type="button" className="btn"
+                  onClick={() => bulkSetStatus('confirmed')}
+                  disabled={!canBulkConfirmed}>
+            → Confirmed
+          </button>
+          <button type="button" className="btn btn--danger"
+                  onClick={bulkDelete}
+                  disabled={!canBulkDelete}>
+            Delete selected
+          </button>
         </div>
       </div>
 
@@ -524,9 +731,17 @@ export default function AdminBookingsPage() {
       {/* Tabelle */}
       {!loading && !err && (
         <div className="card p-0 overflow-auto">
-          <table className="w-full text-sm">
+          <table className="w-full text-sm" style={{ borderCollapse: 'collapse' }}>
             <thead className="bg-gray-50">
               <tr>
+                <th className="th" style={{ width: 44 }}>
+                  <input
+                    type="checkbox"
+                    aria-label="Sichtbare auswählen/abwählen"
+                    checked={allVisibleSelected && items.length > 0}
+                    onChange={selectAllVisible}
+                  />
+                </th>
                 <th className="th">Name</th>
                 <th className="th">Email</th>
                 <th className="th">Age</th>
@@ -537,35 +752,77 @@ export default function AdminBookingsPage() {
               </tr>
             </thead>
             <tbody>
-              {items.map(b => (
-                <tr
-                  key={b._id}
-                  className="tr hover:bg-gray-50 cursor-pointer"
-                  onClick={() => setSel(b)}
-                  title="Details ansehen"
-                >
-                  <td className="td">{b.firstName} {b.lastName}</td>
-                  <td className="td">{b.email}</td>
-                  <td className="td">{b.age}</td>
-                  <td className="td">{b.date}</td>
-                  <td className="td">{b.level}</td>
-                  <td className="td">{asStatus(b.status)}</td>
-                  <td className="td">{fmtDate_DE(b.createdAt)}</td>
-                </tr>
-              ))}
+              {items.map(b => {
+                const checked = selectedIds.has(b._id);
+                return (
+                  <tr
+                    key={b._id}
+                    className="tr hover:bg-gray-50 cursor-pointer"
+                    onClick={() => setSel(b)}
+                    title="Details ansehen"
+                  >
+                    <td className="td" onClick={(e) => e.stopPropagation()}>
+                      <input
+                        type="checkbox"
+                        checked={checked}
+                        onChange={(e) => toggleOne(b._id, e.target.checked)}
+                        aria-label={`Buchung auswählen: ${b.firstName} ${b.lastName}`}
+                        title={b.status === 'cancelled' ? 'Abgesagt – nur Bulk-Löschen sinnvoll' : ''}
+                      />
+                    </td>
+                    <td className="td">{b.firstName} {b.lastName}</td>
+                    <td className="td">{b.email}</td>
+                    <td className="td">{b.age}</td>
+                    <td className="td">{b.date}</td>
+                    <td className="td">{b.level}</td>
+                    <td className="td">{asStatus(b.status)}</td>
+                    <td className="td">{fmtDate_DE(b.createdAt)}</td>
+                  </tr>
+                );
+              })}
               {!items.length && (
-                <tr><td className="td" colSpan={7}>No bookings.</td></tr>
+                <tr><td className="td" colSpan={8}>No bookings.</td></tr>
               )}
             </tbody>
           </table>
         </div>
       )}
 
-      {/* Pager – 10 pro Seite */}
-      <div className="flex gap-2 items-center justify-end mt-3">
-        <button className="btn" onClick={()=> setPage(p => Math.max(1, p-1))} disabled={page<=1}>Prev</button>
-        <div>{page} / {pages}</div>
-        <button className="btn" onClick={()=> setPage(p => Math.min(pages, p+1))} disabled={page>=pages}>Next</button>
+      {/* Pager – Icon-Style wie Invoices */}
+      <div className="pager pager--arrows">
+        <button
+          type="button"
+          className="btn"
+          aria-label="Previous page"
+          disabled={page <= 1}
+          onClick={() => { setPage((p) => Math.max(1, p - 1)); clearSelection(); }}
+        >
+          <img
+            src="/icons/arrow_right_alt.svg"
+            alt=""
+            aria-hidden="true"
+            className="icon-img icon-img--left"
+          />
+        </button>
+
+        <div className="pager__count" aria-live="polite" aria-atomic="true">
+          {page} / {pages}
+        </div>
+
+        <button
+          type="button"
+          className="btn"
+          aria-label="Next page"
+          disabled={page >= pages}
+          onClick={() => { setPage((p) => Math.min(pages, p + 1)); clearSelection(); }}
+        >
+          <img
+            src="/icons/arrow_right_alt.svg"
+            alt=""
+            aria-hidden="true"
+            className="icon-img"
+          />
+        </button>
       </div>
 
       {/* Dialog */}
@@ -577,12 +834,46 @@ export default function AdminBookingsPage() {
           onResend={() => apiConfirm(sel._id, true)}
           onSetStatus={(s) => apiSetStatus(sel._id, s)}
           onDelete={() => apiDelete(sel._id)}
-          notify={showOk} // 🔔 globaler Toast auslösen
+          onCancelConfirmed={() => apiCancelConfirmed(sel._id)}
+          notify={showOk}
         />
       )}
     </div>
   );
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
