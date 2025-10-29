@@ -29,6 +29,7 @@
     "@types/recharts": "^2.0.1",
     "eslint": "^9",
     "eslint-config-next": "15.4.6",
+    "sass": "^1.93.2",
     "typescript": "^5"
   }
 }
