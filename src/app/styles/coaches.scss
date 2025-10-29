@@ -1,0 +1,298 @@
+/* ========================================================================== */
+/*  Coaches (Admin) – schlanke, gescopte Version                              */
+/*  Abhängigkeiten: booking.scss (.btn, .btn-primary, .input, .lbl, .card)    */
+/* ========================================================================== */
+
+.coaches {
+
+  /* =============================== */
+  /* Filterleiste                    */
+  /* =============================== */
+  .coach-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: flex-end;
+    margin-bottom: 12px;
+
+    &__field {
+      min-width: 220px;
+      display: grid;
+      gap: 6px;
+
+      &--grow { flex: 1 1 320px; }
+    }
+
+    /* konsistentes Label in der Filterleiste */
+    .label {
+      display: block;
+      font-size: 12px;
+      color: #475569;
+      margin-bottom: 4px;
+    }
+  }
+
+  /* =============================== */
+  /* Tabelle / Liste                 */
+  /* =============================== */
+  .coach-table {
+    width: 100%;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    background: #fff;
+    overflow: hidden;
+
+    /* 6 Spalten: Sel. | Bild | Name | Position | Slug | Aktionen */
+    &__head,
+    &__row {
+      display: grid;
+      grid-template-columns: 40px 90px 1.2fr 1fr 130px 60px;
+      gap: 12px;
+      align-items: center;
+    }
+
+    &__head {
+      padding: 10px 12px;
+      border-bottom: 1px solid #eef2f7;
+      font-weight: 700;
+      font-size: 12px;
+      color: #475569;
+      background: #fafafa;
+    }
+
+    &__row {
+      padding: 12px;
+      border-bottom: 1px solid #f1f5f9;
+      transition: background-color .18s ease;
+
+      &:hover { background: #f8fafc; }
+      &:last-child { border-bottom: 0; }
+
+      /* Klickbar? – Fokus sichtbar */
+      &:focus-visible {
+        outline: 2px solid #0ea5e9;
+        outline-offset: -2px;
+      }
+    }
+
+    &__avatar {
+      width: 72px; height: 72px;
+      border-radius: 10px;
+      object-fit: cover;
+      background: #f1f5f9;
+      border: 1px solid #eaeaea;
+
+      &--ph {
+        display: block;
+        width: 72px; height: 72px;
+        border-radius: 10px;
+        background: repeating-linear-gradient(-45deg, #f3f4f6 0 10px, #eceff3 10px 20px);
+        border: 1px solid #eaeaea;
+      }
+    }
+
+    &__name {
+      font-weight: 700;
+      line-height: 1.2;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      min-width: 0;
+    }
+
+    &__pos  { color: #374151; }
+
+    &__slug {
+      font-size: 12px;
+      color: #64748b;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    &__actions {
+      display: flex;
+      gap: 8px;
+      justify-content: flex-start;
+    }
+  }
+
+  /* Responsiv */
+  @media (max-width: 1024px) {
+    .coach-table__head,
+    .coach-table__row {
+      /* Sel. | Bild | Name | Position | Aktionen (Slug ausblenden) */
+      grid-template-columns: 40px 80px 1.2fr 1fr 60px;
+    }
+    .coach-table__slug { display: none; }
+  }
+
+  @media (max-width: 640px) {
+    .coach-table__head,
+    .coach-table__row {
+      /* Sel. | Bild | Name | Aktionen (Position + Slug ausblenden) */
+      grid-template-columns: 40px 64px 1fr 60px;
+    }
+    .coach-table__pos { display: none; }
+  }
+
+  /* =============================== */
+  /* Pager                           */
+  /* =============================== */
+  .coach-pager {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 12px;
+    justify-content: space-between;
+
+    &__count {
+      min-width: 72px;
+      text-align: center;
+      font-variant-numeric: tabular-nums;
+      font-weight: 600;
+      user-select: none;
+    }
+
+    /* Button-Grundstil: transparent, keine Umrandung */
+    .btn {
+      appearance: none;
+      border: 0;
+      background: transparent;
+      width: 2.5rem;
+      height: 2.5rem;
+      padding: 0;
+      border-radius: 9999px;    /* runde Hover-Fläche */
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: background-color 140ms ease, transform 120ms ease;
+      box-shadow: none;
+    }
+
+    .btn:hover:not(:disabled),
+    .btn:focus-visible {
+      background: rgba(0, 0, 0, 0.08);
+      outline: none;
+    }
+
+    .btn:disabled {
+      opacity: .45;
+      pointer-events: none;
+      background: transparent;
+      transform: none;
+    }
+
+    /* Pfeil-Icons vereinheitlichen */
+    .icon-img {
+      display: block;
+      width: 1.25rem;
+      height: 1.25rem;
+    }
+    .icon-img--left {
+      transform: scaleX(-1);
+    }
+  }
+
+  /* =============================== */
+  /* Dialog (Create/Edit)            */
+  /* =============================== */
+  .dialog-backdrop {
+    position: fixed; inset: 0;
+    background: rgba(15, 23, 42, .44);
+    display: grid; place-items: center;
+    z-index: 50;
+  }
+
+  .dialog {
+    width: min(880px, calc(100% - 24px));
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    box-shadow: 0 20px 60px rgba(0,0,0,.18);
+    overflow: hidden;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    max-height: 90vh;
+  }
+
+  .dialog-head   { padding: 12px 16px; border-bottom: 1px solid #eef2f7; }
+  .dialog-title  { font-weight: 800; font-size: 18px; }
+  .dialog-body   { padding: 14px 16px; overflow: auto; }
+  .dialog-foot   { padding: 12px 16px; border-top: 1px solid #eef2f7; display: flex; gap: 10px; justify-content: flex-end; }
+
+  .coach-form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+
+    &__full { grid-column: 1 / -1; }
+  }
+
+  @media (max-width: 680px) {
+    .coach-form { grid-template-columns: 1fr; }
+  }
+
+  /* =============================== */
+  /* Modifikatoren / Icons           */
+  /* =============================== */
+
+  /* nutzt .btn und .btn-primary aus booking.scss */
+  .btn-danger {
+    background: #ef4444;
+    color: #fff;
+    border-color: transparent;
+  }
+  .btn-danger:hover { background: #dc2626; }
+
+  /* Mini-Icon (z. B. für Pfeile/Edit) */
+  .icon-img {
+    display: inline-block;
+    width: 18px; height: 18px;
+  }
+
+  /* Icon-only Edit-Trigger (kein Button-Style, nur dezentes Hover) */
+  .edit-trigger {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    padding: 0;
+    border-radius: 9999px; /* runde Hover-Fläche */
+    background: transparent;
+    transition: background-color 140ms ease, transform 120ms ease;
+    cursor: pointer;
+
+    .icon-img {
+      display: block;
+      width: 1.25rem;
+      height: 1.25rem;
+    }
+
+    &:hover,
+    &:focus-visible {
+      background: rgba(0, 0, 0, 0.08);
+      outline: none;
+    }
+  }
+
+  /* Respektiere Motion-Einstellungen */
+  @media (prefers-reduced-motion: reduce) {
+    .coach-table__row { transition: none; }
+    .coach-pager .btn { transition: none; }
+    .edit-trigger { transition: none; }
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
