@@ -1,21 +1,3 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
@@ -35,7 +17,7 @@ type Offer = {
   ageFrom?: number;
   ageTo?: number;
   info?: string;
-
+  category?: string;
   // Coach (optional; dynamisch aus eurer API)
   coachName?: string;
   coachFirst?: string;
@@ -73,7 +55,7 @@ type FormState = {
   source: string;
   accept: boolean;
   level: 'U8' | 'U10' | 'U12' | 'U14' | 'U16' | 'U18';
-  date: string; // Wunschtermin (required)
+  date: string; // Wunschtermin (nur noch bei Weekly)
   message: string;
 };
 
@@ -160,21 +142,48 @@ function getCoachAvatar(o?: Offer){
   return normalizeCoachSrc(direct);
 }
 
-
-
-
-
-
-
-
-
-
 function deriveCoach(o?: Offer) {
   const full = o?.coachName || o?.coach || [o?.coachFirst, o?.coachLast].filter(Boolean).join(' ');
   const { first, last } = splitName(full);
   const email = o?.coachEmail || o?.contactEmail || o?.email || extractEmail(o?.info) || '';
   const avatar = getCoachAvatar(o);
   return { first, last, email, avatar };
+}
+
+/* Programme, die KEIN Schnuppertraining sind (Club Programs) */
+function isNonTrialProgram(o?: Offer | null) {
+  const t = (o?.type || '').toLowerCase();
+  const c = (o?.category || '').toLowerCase();
+
+  const isRentACoach =
+    t.startsWith('rentacoach') || c === 'rentacoach';
+  const isClubProgram =
+    t.startsWith('clubprogram') || c === 'clubprograms';
+  const isCoachEducation =
+    t.startsWith('coacheducation') || c === 'coacheducation';
+
+  return isRentACoach || isClubProgram || isCoachEducation;
+}
+
+/* Neue Kategorisierungs-Helper */
+function normCategory(o?: Offer | null) {
+  return (o?.category || '').replace(/\s+/g, '').toLowerCase();
+}
+
+function isWeeklyCourse(o?: Offer | null) {
+  const cat = normCategory(o);
+  return cat === 'weekly' || cat === 'weeklycourses';
+}
+
+function isHolidayProgram(o?: Offer | null) {
+  const cat = normCategory(o);
+  // Holiday Programs: Camps + Power Training
+  return cat === 'holiday' || cat === 'holidayprograms';
+}
+
+function isIndividualCourse(o?: Offer | null) {
+  const cat = normCategory(o);
+  return cat === 'individual' || cat === 'individualcourses';
 }
 
 /* ===== Page Component ===== */
@@ -190,9 +199,10 @@ export default function BookPage() {
 
   const isEmbed = useMemo(() => params.get('embed') === '1', [params]);
 
-
   const [today, setToday] = useState<string>('');
-  useEffect(() => { setToday(new Date().toISOString().split('T')[0]); }, []);
+  useEffect(() => {
+    setToday(new Date().toISOString().split('T')[0]);
+  }, []);
 
   useEffect(() => {
     if (status === 'success') {
@@ -245,6 +255,13 @@ export default function BookPage() {
     return () => { cancelled = true; };
   }, [params]);
 
+  const nonTrial = useMemo(() => isNonTrialProgram(offer), [offer]);
+  const isWeekly = useMemo(() => isWeeklyCourse(offer), [offer]);
+  const isHoliday = useMemo(() => isHolidayProgram(offer), [offer]);
+  const isIndividual = useMemo(() => isIndividualCourse(offer), [offer]);
+
+  const showWishDate = isWeekly; // Wunschtermin nur bei Weekly Courses
+
   // labels
   const productName = offer?.title || offer?.type || 'Programm';
   const dayCode = normDay(offer?.days?.[0]);
@@ -255,6 +272,13 @@ export default function BookPage() {
     .filter(Boolean)
     .join(' ');
 
+  // Überschrift abhängig von Kategorie
+  const heading = isWeekly
+    ? 'Kostenfreies Schnuppertraining anfragen'
+    : isHoliday
+      ? 'Anmeldung'
+      : 'Anfrage senden'; // Individual + Club + Rest
+
   // handlers
   const onChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, type } = e.target as HTMLInputElement;
@@ -264,42 +288,95 @@ export default function BookPage() {
 
   const validate = () => {
     const e: Record<string, string> = {};
-    if (!form.offerId) e.offerId = 'Offer fehlt.';
-    if (!form.childFirst.trim()) e.childFirst = 'Pflichtfeld';
-    if (!form.childLast.trim()) e.childLast = 'Pflichtfeld';
-    if (!form.email || !/^\S+@\S+\.\S+$/.test(form.email)) e.email = 'Ungültige E-Mail';
+    const isNonTrial = isNonTrialProgram(offer);
+    const weekly = isWeeklyCourse(offer);
 
-    const ageYears = calcAge(form.birthYear, form.birthMonth, form.birthDay);
-    if (ageYears == null) {
-      e.birthYear = e.birthMonth = e.birthDay = 'Bitte vollständiges Geburtsdatum wählen';
-    } else if (ageYears < 5 || ageYears > 19) {
-      e.birthYear = e.birthMonth = e.birthDay = 'Alter muss zwischen 5 und 19 liegen';
+    if (!form.offerId) e.offerId = 'Offer fehlt.';
+    if (!form.email || !/^\S+@\S+\.\S+$/.test(form.email)) {
+      e.email = 'Ungültige E-Mail';
     }
 
-    if (!form.date) e.date = 'Bitte Datum wählen';
-    else if (today && form.date < today) e.date = 'Datum darf nicht in der Vergangenheit liegen';
+    // Kind + Geburtsdatum: bei allen außer Club Programs (Non-Trial)
+    if (!isNonTrial) {
+      const ageYears = calcAge(form.birthYear, form.birthMonth, form.birthDay);
+      if (ageYears == null) {
+        e.birthYear = e.birthMonth = e.birthDay = 'Bitte vollständiges Geburtsdatum wählen';
+      } else if (ageYears < 5 || ageYears > 19) {
+        e.birthYear = e.birthMonth = e.birthDay = 'Alter muss zwischen 5 und 19 liegen';
+      }
+
+      if (!form.childFirst.trim()) e.childFirst = 'Pflichtfeld';
+      if (!form.childLast.trim()) e.childLast = 'Pflichtfeld';
+    }
+
+    // Wunschtermin nur bei Weekly-Kursen prüfen
+    if (weekly) {
+      if (!form.date) e.date = 'Bitte Datum wählen';
+      else if (today && form.date < today) e.date = 'Datum darf nicht in der Vergangenheit liegen';
+    }
 
     if (!form.accept) e.accept = 'Bitte AGB/Widerruf bestätigen';
+
     return e;
   };
 
   const onSubmit = async (ev: React.FormEvent) => {
     ev.preventDefault();
+
+    const isNonTrial = isNonTrialProgram(offer);
+    const weekly = isWeeklyCourse(offer);
+    const holiday = isHolidayProgram(offer);
+    const individual = isIndividualCourse(offer);
+
     const e = validate();
     setErrors(e);
     if (Object.keys(e).length) return;
 
-    const ageYears = calcAge(form.birthYear, form.birthMonth, form.birthDay);
-    const birth = [form.birthDay, form.birthMonth, form.birthYear].filter(Boolean).join('.');
+    // Alter berechnen oder Default setzen
+    const ageYears = isNonTrial
+      ? 18 // Default-Alter für RentACoach / ClubProgram / CoachEducation
+      : calcAge(form.birthYear, form.birthMonth, form.birthDay);
+
+    const birth = [form.birthDay, form.birthMonth, form.birthYear]
+      .filter(Boolean)
+      .join('.');
+
+    // Namen: bei den drei Non-Trial-Programmen Elternnamen verwenden
+    const firstName = isNonTrial
+      ? (form.parentFirst || form.childFirst || 'Interessent')
+      : form.childFirst;
+
+    const lastName = isNonTrial
+      ? (form.parentLast || form.childLast || '')
+      : form.childLast;
+
+    // Datum:
+    // - Weekly: echtes Wunschdatum
+    // - Holiday + Individual + Club Programs: automatisch heute
+    const sendAutoDate = !weekly; // alles außer Weekly
+    const dateToSend = sendAutoDate
+      ? (today || null)
+      : (form.date || null);
+
+  
+
+      const extraHeader = weekly
+      ? 'Anmeldung schnuppertraining'
+      : holiday
+        ? 'Anmeldung'
+        : 'Anfrage';
 
     const extra =
-      `Anmeldung Schnuppertraining\n` +
+      `${extraHeader}\n` +
+      `Programm: ${productName}\n` +
       `Kind: ${form.childFirst} ${form.childLast} (${form.childGender || '-'}), Geburtstag: ${birth || '-'}\n` +
       `Kontakt: ${form.salutation || ''} ${form.parentFirst} ${form.parentLast}\n` +
       `Adresse: ${form.street} ${form.houseNo}, ${form.zip} ${form.city}\n` +
       `Telefon: ${form.phone}${form.phone2 ? ' / ' + form.phone2 : ''}\n` +
       `Gutschein: ${form.voucher || '-'}\n` +
       `Quelle: ${form.source || '-'}`;
+
+
 
     try {
       setStatus('sending');
@@ -308,11 +385,11 @@ export default function BookPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           offerId: form.offerId,
-          firstName: form.childFirst,
-          lastName: form.childLast,
+          firstName,
+          lastName,
           email: form.email,
           age: ageYears,
-          date: form.date || null,
+          date: dateToSend,
           level: form.level,
           message: [form.message, extra].filter(Boolean).join('\n\n'),
         }),
@@ -342,6 +419,10 @@ export default function BookPage() {
   const YEAR_OPTS = range(1980, 2025).reverse().map(String);
 
   const coach = deriveCoach(offer || undefined);
+
+  const submitLabel = status === 'sending'
+    ? 'Senden…'
+    : (isHoliday ? 'Kostenpflichtig Buchen' : 'Anfragen');
 
   return (
     <>
@@ -385,25 +466,30 @@ export default function BookPage() {
                     </button>
 
                     <div className="book-sub__titles">
-                      <h2 className="book-h1">Kostenfreies Schnuppertraining anfragen</h2>
+                      <h2 className="book-h1">
+                        {heading}
+                      </h2>
                       <div className="book-product">{productName}</div>
                       <div className="book-meta">{sessionLine}</div>
                     </div>
                   </div>
 
-                  <div className="book-sub__right">
-                    <label htmlFor="wish-date">Wunschtermin*</label>
-                    <input
-                      id="wish-date"
-                      type="date"
-                      name="date"
-                      min={today || undefined}
-                      value={form.date}
-                      onChange={onChange}
-                      required
-                    />
-                    {errors.date && <span className="error error--small">{errors.date}</span>}
-                  </div>
+                  {/* Wunschtermin nur bei Weekly-Kursen */}
+                  {showWishDate && (
+                    <div className="book-sub__right">
+                      <label htmlFor="wish-date">Wunschtermin*</label>
+                      <input
+                        id="wish-date"
+                        type="date"
+                        name="date"
+                        min={today || undefined}
+                        value={form.date}
+                        onChange={onChange}
+                        required
+                      />
+                      {errors.date && <span className="error error--small">{errors.date}</span>}
+                    </div>
+                  )}
                 </div>
               </div>
 
@@ -433,70 +519,72 @@ export default function BookPage() {
                 </div>
               )}
 
-              {/* 1. Angaben zum Kind (WEISS) */}
-              <fieldset className="card">
-                <legend>1. Angaben zum Kind</legend>
+              {/* 1. Angaben zum Kind (WEISS) – nur bei normalen Kursen (nicht Club Programs) */}
+              {!nonTrial && (
+                <fieldset className="card">
+                  <legend>1. Angaben zum Kind</legend>
 
-                <div className="field-row">
-                  <label className="radio">
-                    <input
-                      type="radio"
-                      name="childGender"
-                      value="weiblich"
-                      checked={form.childGender === 'weiblich'}
-                      onChange={onChange}
-                    />
-                    weiblich
-                  </label>
-                  <label className="radio">
-                    <input
-                      type="radio"
-                      name="childGender"
-                      value="männlich"
-                      checked={form.childGender === 'männlich'}
-                      onChange={onChange}
-                    />
-                    männlich
-                  </label>
-                </div>
+                  <div className="field-row">
+                    <label className="radio">
+                      <input
+                        type="radio"
+                        name="childGender"
+                        value="weiblich"
+                        checked={form.childGender === 'weiblich'}
+                        onChange={onChange}
+                      />
+                      weiblich
+                    </label>
+                    <label className="radio">
+                      <input
+                        type="radio"
+                        name="childGender"
+                        value="männlich"
+                        checked={form.childGender === 'männlich'}
+                        onChange={onChange}
+                      />
+                      männlich
+                    </label>
+                  </div>
 
-                <div className="field-grid">
-                  <div className="field">
-                    <label>Geburtstag</label>
-                    <div className="dob">
-                      <select name="birthDay" value={form.birthDay} onChange={onChange}>
-                        <option value="">TT</option>
-                        {DAY_OPTS.map((d) => <option key={d} value={d}>{d}</option>)}
-                      </select>
+                  <div className="field-grid">
+                    <div className="field">
+                      <label>Geburtstag</label>
+                      <div className="dob">
+                        <select name="birthDay" value={form.birthDay} onChange={onChange}>
+                          <option value="">TT</option>
+                          {DAY_OPTS.map((d) => <option key={d} value={d}>{d}</option>)}
+                        </select>
 
-                      <select name="birthMonth" value={form.birthMonth} onChange={onChange}>
-                        <option value="">MM</option>
-                        {MONTH_OPTS.map((m) => <option key={m} value={m}>{m}</option>)}
-                      </select>
+                        <select name="birthMonth" value={form.birthMonth} onChange={onChange}>
+                          <option value="">MM</option>
+                          {MONTH_OPTS.map((m) => <option key={m} value={m}>{m}</option>)}
+                        </select>
 
-                      <select name="birthYear" value={form.birthYear} onChange={onChange}>
-                        <option value="">JJJJ</option>
-                        {YEAR_OPTS.map((y) => <option key={y} value={y}>{y}</option>)}
-                      </select>
+                        <select name="birthYear" value={form.birthYear} onChange={onChange}>
+                          <option value="">JJJJ</option>
+                          {YEAR_OPTS.map((y) => <option key={y} value={y}>{y}</option>)}
+                        </select>
+                      </div>
+                      {(errors.birthDay || errors.birthMonth || errors.birthYear) && (
+                        <span className="error">Bitte gültiges Geburtsdatum wählen</span>
+                      )}
                     </div>
-                    {(errors.birthDay || errors.birthMonth || errors.birthYear) && (
-                      <span className="error">Bitte gültiges Geburtsdatum wählen</span>
-                    )}
-                  </div>
 
-                  <div className="field">
-                    <label>Vorname (Kind)*</label>
-                    <input name="childFirst" value={form.childFirst} onChange={onChange} />
-                    {errors.childFirst && <span className="error">{errors.childFirst}</span>}
-                  </div>
+                    <div className="field">
+                      <label>Vorname (Kind)*</label>
+                      <input name="childFirst" value={form.childFirst} onChange={onChange} />
+                      {errors.childFirst && <span className="error">{errors.childFirst}</span>}
+                    </div>
 
-                  <div className="field">
-                    <label>Nachname (Kind)*</label>
-                    <input name="childLast" value={form.childLast} onChange={onChange} />
-                    {errors.childLast && <span className="error">{errors.childLast}</span>}
+                    <div className="field">
+                      <label>Nachname (Kind)*</label>
+                      <input name="childLast" value={form.childLast} onChange={onChange} />
+                      {errors.childLast && <span className="error">{errors.childLast}</span>}
+                    </div>
                   </div>
-                </div>
-              </fieldset>
+                </fieldset>
+              )}
 
               {/* 2. Rechnung & Kontakt (GRAU) */}
               <fieldset className="card card--muted">
@@ -595,7 +683,7 @@ export default function BookPage() {
               {/* Button */}
               <div className="book-actions">
                 <button className="btn btn-primary" disabled={status === 'sending' || !!offerError || !offer}>
-                  {status === 'sending' ? 'Senden…' : 'Kostenfreies Schnuppertraining anfragen'}
+                  {submitLabel}
                 </button>
                 {status === 'success' && <span className="ok">Anfrage gesendet!</span>}
                 {status === 'error' && <span className="error">Etwas ist schiefgelaufen.</span>}
@@ -718,35 +806,6 @@ export default function BookPage() {
     </>
   );
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
