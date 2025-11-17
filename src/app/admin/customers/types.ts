@@ -72,6 +72,13 @@ export type DocumentItem = {
   href?: string;                 // Next proxy to open PDF (POST behind the scenes)
 };
 
+
+
+
+
+
+
+
 export const CANCEL_ALLOWED = new Set(['Kindergarten', 'Foerdertraining', 'Athletiktraining', 'AthleticTraining']);
 
 /** Centralized API endpoints */
