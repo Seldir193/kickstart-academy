@@ -33,6 +33,8 @@ const adminNav = [
   { href: '/admin/datev',    label: 'DATEV' },
    { href: '/admin/news',     label: 'News' },
   { href: '/admin/revenue',  label: 'Umsatz' }, 
+   { href: '/admin/bookings',    label: 'Bookings' },              // normale Anfragen
+  { href: '/admin/online-bookings', label: 'Online Buchungen' }, 
 ];
 
 export default function Header({ isAdminInitial = false }: Props) {
@@ -77,7 +79,8 @@ export default function Header({ isAdminInitial = false }: Props) {
                     (item.href === '/admin/datev'    && pathname.startsWith('/admin/datev'));
                     (item.href === '/admin/news'     && pathname.startsWith('/admin/news'));
                      (item.href === '/admin/coaches'  && pathname.startsWith('/admin/coaches')); 
-
+(item.href === '/admin/bookings'     && pathname.startsWith('/admin/bookings')) ||
+  (item.href === '/admin/online-bookings' && pathname.startsWith('/admin/online-bookings'));
                   const addActive = !isLoggingOut && isRouteActive && !navigatingTopLink;
 
                   return (
@@ -95,18 +98,7 @@ export default function Header({ isAdminInitial = false }: Props) {
                   );
                 })}
 
-                <Link
-                  href="/admin/bookings"
-                  className={`nav-link ${
-                    !isLoggingOut && pathname.startsWith('/admin/bookings') && !navigatingTopLink ? 'active' : ''
-                  }`}
-                  onMouseDown={() => {
-                    setNavigatingTopLink(true);
-                    (document.activeElement as HTMLElement | null)?.blur?.();
-                  }}
-                >
-                  Bookings
-                </Link>
+               
                
 
               </div>
