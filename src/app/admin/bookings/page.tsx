@@ -8,6 +8,22 @@ import BookingDialog from './BookingDialog';
 type Status = 'pending' | 'processing' | 'confirmed' | 'cancelled' | 'deleted';
 type StatusOrAll = Status | 'all';
 
+type ProgramFilter =
+  | 'all'
+  // Weekly Courses
+  | 'weekly_foerdertraining'
+  | 'weekly_kindergarten'
+  | 'weekly_goalkeeper'
+  | 'weekly_development_athletik'
+  // Individual Courses
+  | 'ind_1to1'
+  | 'ind_1to1_athletik'
+  | 'ind_1to1_goalkeeper'
+  // Club Programs
+  | 'club_rentacoach'
+  | 'club_trainingcamps'
+  | 'club_coacheducation';
+
 type Booking = {
   _id: string;
   firstName: string;
@@ -20,6 +36,8 @@ type Booking = {
   createdAt: string;
   status?: Status;
   confirmationCode?: string;
+  // wichtig: backend filtert über offerId, wir zeigen es aber nicht an
+  offerId?: string;
 };
 
 type ListResp = {
@@ -33,7 +51,6 @@ type ListResp = {
   counts?: Partial<Record<Status, number>>;
   error?: string;
 };
-
 
 /* ============ Debounce Hook ============ */
 function useDebouncedValue<T>(value: T, delay = 300) {
@@ -62,10 +79,46 @@ function asStatus(s?: Booking['status']): Status {
   return (s ?? 'pending') as Status;
 }
 
+// Programm aus message holen (Zeile "Programm: ...")
+function extractProgramName(msg?: string): string | null {
+  if (!msg) return null;
+  const m = msg.match(/Programm:\s*(.+)/i);
+  return m ? m[1].trim() : null;
+}
+
+// Kürzel für die Tabelle (max. 3 Zeichen)
+function programShort(booking: Booking): string {
+  const name = extractProgramName(booking.message) || '';
+  if (!name) return '—';
+
+  const low = name.toLowerCase();
+
+  // Feste Mappings
+  if (low.includes('fördertraining') || low.includes('foerdertraining')) return 'FÖ';
+  if (
+    low.includes('kindergarten') ||
+    low.includes('fußballkindergarten') ||
+    low.includes('fussballkindergarten')
+  )
+    return 'KDG';
+  if (low.includes('torwart') || low.includes('goalkeeper')) return 'TW';
+  if (low.includes('athletik') || low.includes('athletic')) return 'ATH';
+  if (low.includes('rentacoach') || low.includes('rent-a-coach')) return 'RAC';
+  if (low.includes('coach education')) return 'CE';
+  if (low.includes('camp')) return 'CMP';
+  if (low.includes('powertraining') || low.includes('power training')) return 'PWR';
+
+  // Fallback: erste 3 Buchstaben, groß
+  const clean = name.replace(/[^a-zA-ZäöüÄÖÜß]/g, '').toUpperCase();
+  if (!clean) return '—';
+  return clean.slice(0, 3);
+}
+
 /* ============ Page ============ */
 export default function AdminBookingsPage() {
   // Filter UI
   const [status, setStatus] = useState<StatusOrAll>('all');
+  const [program, setProgram] = useState<ProgramFilter>('all');
   const [q, setQ] = useState('');
   const qDebounced = useDebouncedValue(q, 300);
 
@@ -73,18 +126,25 @@ export default function AdminBookingsPage() {
   const [page, setPage] = useState(1);
   const [limit] = useState(PAGE_SIZE);
 
-  // Daten
+  // Daten für aktuelle Ansicht (inkl. Status + Seite)
   const [items, setItems] = useState<Booking[]>([]);
-  const [total, setTotal] = useState(0);
+  const [total, setTotal] = useState(0); // für Pager (aktuelle Filterung)
   const [pages, setPages] = useState(1);
   const [counts, setCounts] = useState<Partial<Record<Status, number>>>({});
+
+  // Globale Daten (alle Status, gleiche Suche + Programm)
+  const [globalTotal, setGlobalTotal] = useState(0);
+  const [globalCounts, setGlobalCounts] = useState<
+    Partial<Record<Status, number>>
+  >({});
 
   // UI state
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState<string | null>(null);
 
   // Globaler Toast
-  const [notice, setNotice] = useState<{ type: 'ok' | 'error'; text: string } | null>(null);
+  const [notice, setNotice] =
+    useState<{ type: 'ok' | 'error'; text: string } | null>(null);
   const showOk = (text: string) => {
     setNotice({ type: 'ok', text });
     setTimeout(() => setNotice(null), 5000);
@@ -99,6 +159,8 @@ export default function AdminBookingsPage() {
 
   // Auswahl (Checkboxen)
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const [showHardDeleteDialog, setShowHardDeleteDialog] = useState(false);
+
   const visibleIds = useMemo(() => items.map((b) => b._id), [items]);
   const selectedCount = selectedIds.size;
   const allVisibleSelected = useMemo(
@@ -135,26 +197,67 @@ export default function AdminBookingsPage() {
     setSelectedIds(new Set());
   }
 
-  // Bulk-Eligibility (Regeln)
-  const canBulkProcessing = selItems.some((b) => b.status === 'pending');
-  const canBulkConfirmed = selItems.some(
-    (b) => b.status === 'pending' || b.status === 'processing'
-  );
-  const canBulkCancelled = selItems.some(
-    (b) => b.status === 'pending' || b.status === 'processing'
-  );
+  const deletedSelected = selItems.filter((b) => b.status === 'deleted');
+  const canRestoreDeleted = deletedSelected.length > 0;
+  const canHardDelete = deletedSelected.length > 0;
   const canBulkDelete = selItems.length > 0;
 
-  // Query
+  // Query für aktuelle Ansicht (Status + Seite + Programm)
   const query = useMemo(() => {
     const p = new URLSearchParams();
     if (status && status !== 'all') p.set('status', status);
+    if (program && program !== 'all') p.set('program', program);
     if (qDebounced.trim()) p.set('q', qDebounced.trim());
     p.set('page', String(page));
     p.set('limit', String(limit));
     return p.toString();
-  }, [status, qDebounced, page, limit]);
+  }, [status, program, qDebounced, page, limit]);
 
+  // Query für globale Zahlen (nur Suche + Programm, keine Status-Filter)
+  const globalQuery = useMemo(() => {
+    const p = new URLSearchParams();
+    if (program && program !== 'all') p.set('program', program);
+    if (qDebounced.trim()) p.set('q', qDebounced.trim());
+    p.set('page', '1');
+    p.set('limit', '1');
+    return p.toString();
+  }, [qDebounced, program]);
+
+  /* ===== Globale Zahlen laden (All + Status-Zahlen) ===== */
+  async function loadGlobal() {
+    try {
+      const res = await fetch(`/api/admin/bookings?${globalQuery}`, {
+        method: 'GET',
+        credentials: 'include',
+        cache: 'no-store',
+      });
+      const data: ListResp = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data?.error || `HTTP ${res.status}`);
+
+      const totalAll =
+        typeof data.total === 'number'
+          ? data.total
+          : Array.isArray(data.items)
+          ? data.items.length
+          : Array.isArray(data.bookings)
+          ? data.bookings.length
+          : 0;
+
+      setGlobalTotal(totalAll);
+      setGlobalCounts(data.counts || {});
+    } catch (e: any) {
+      console.warn('[bookings] loadGlobal failed:', e?.message || e);
+    }
+  }
+
+  const allCount =
+    (globalCounts.pending ?? 0) +
+    (globalCounts.processing ?? 0) +
+    (globalCounts.confirmed ?? 0) +
+    (globalCounts.cancelled ?? 0) +
+    (globalCounts.deleted ?? 0);
+
+  /* ===== Daten für aktuelle Ansicht laden ===== */
   async function load() {
     setLoading(true);
     setErr(null);
@@ -167,17 +270,21 @@ export default function AdminBookingsPage() {
       const data: ListResp = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(data?.error || `HTTP ${res.status}`);
 
-      const arr = (
+      const list =
         Array.isArray(data.items)
           ? data.items
           : Array.isArray(data.bookings)
           ? data.bookings
-          : []
-      ) as Booking[];
-      setItems(arr);
-      setTotal(data.total ?? arr.length);
-      setPages(data.pages ?? Math.max(1, Math.ceil((data.total ?? arr.length) / limit)));
-      setCounts(data.counts ?? {});
+          : [];
+
+      const totalForFilter =
+        typeof data.total === 'number' ? data.total : list.length;
+
+      setItems(list as Booking[]);
+      setTotal(totalForFilter);
+      setPages(Math.max(1, Math.ceil(totalForFilter / limit)));
+
+      setCounts(data.counts || {});
     } catch (e: any) {
       setErr(e?.message || 'Load failed');
       showError(e?.message || 'Load failed');
@@ -188,24 +295,35 @@ export default function AdminBookingsPage() {
 
   useEffect(() => {
     load();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [query]);
+
+  useEffect(() => {
+    loadGlobal();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [globalQuery]);
 
   /* ===== Server-Aktionen (Einzel) ===== */
   async function apiConfirm(id: string, resend = false): Promise<string> {
     const url = `/api/admin/bookings/${encodeURIComponent(id)}/confirm${
       resend ? '?resend=1' : ''
     }`;
-    const r = await fetch(url, { method: 'POST', credentials: 'include', cache: 'no-store' });
+    const r = await fetch(url, {
+      method: 'POST',
+      credentials: 'include',
+      cache: 'no-store',
+    });
     const d = await r.json().catch(() => ({}));
     if (!r.ok || d?.ok === false) throw new Error(d?.error || r.statusText);
-    await load();
+    await Promise.all([load(), loadGlobal()]);
     if (sel && sel._id === id) {
       setSel((prev) =>
         prev
           ? {
               ...prev,
               status: 'confirmed',
-              confirmationCode: d.booking?.confirmationCode ?? prev.confirmationCode,
+              confirmationCode:
+                d.booking?.confirmationCode ?? prev.confirmationCode,
             }
           : prev
       );
@@ -231,7 +349,7 @@ export default function AdminBookingsPage() {
     });
     const d = await r.json().catch(() => ({}));
     if (!r.ok || d?.ok === false) throw new Error(d?.error || r.statusText);
-    await load();
+    await Promise.all([load(), loadGlobal()]);
     if (sel && sel._id === id) setSel(d.booking ?? sel);
     if (next === 'processing') return 'Auf „In Bearbeitung“ gesetzt.';
     if (next === 'cancelled') return 'Absage versendet.';
@@ -245,7 +363,7 @@ export default function AdminBookingsPage() {
     });
     const d = await r.json().catch(() => ({}));
     if (!r.ok || d?.ok === false) throw new Error(d?.error || r.statusText);
-    await load();
+    await Promise.all([load(), loadGlobal()]);
     return 'Buchung gelöscht.';
   }
 
@@ -267,69 +385,10 @@ export default function AdminBookingsPage() {
     const d = await trySpecial.json().catch(() => ({}));
     if (!trySpecial.ok || d?.ok === false)
       throw new Error(d?.error || trySpecial.statusText);
-    await load();
+    await Promise.all([load(), loadGlobal()]);
     if (sel && sel._id === id)
       setSel((prev) => (prev ? { ...prev, status: 'cancelled' } : prev));
     return 'Bestätigter Termin wurde abgesagt und spezielle E-Mail versendet.';
-  }
-
-  /* ===== Bulk-Aktionen ===== */
-  async function bulkSetStatus(next: Status) {
-    if (!selectedIds.size) return;
-
-    let eligible: Booking[] = [];
-    if (next === 'processing') {
-      eligible = selItems.filter((b) => b.status === 'pending');
-    } else if (next === 'cancelled') {
-      eligible = selItems.filter(
-        (b) => b.status === 'pending' || b.status === 'processing'
-      );
-    } else if (next === 'confirmed') {
-      eligible = selItems.filter(
-        (b) => b.status === 'pending' || b.status === 'processing'
-      );
-    } else {
-      eligible = [];
-    }
-    if (!eligible.length) return;
-
-    try {
-      if (next === 'confirmed') {
-        await Promise.all(
-          eligible.map((b) =>
-            fetch(`/api/admin/bookings/${encodeURIComponent(b._id)}/confirm`, {
-              method: 'POST',
-              credentials: 'include',
-              cache: 'no-store',
-            })
-          )
-        );
-        showOk(`(${eligible.length}) bestätigt und E-Mails versendet.`);
-      } else {
-        await Promise.all(
-          eligible.map((b) =>
-            fetch(`/api/admin/bookings/${encodeURIComponent(b._id)}/status`, {
-              method: 'PATCH',
-              credentials: 'include',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ status: next }),
-            })
-          )
-        );
-        showOk(
-          next === 'processing'
-            ? `(${eligible.length}) → In Bearbeitung.`
-            : next === 'cancelled'
-            ? `(${eligible.length}) → Abgesagt.`
-            : 'Status aktualisiert.'
-        );
-      }
-      await load();
-    } catch (e: any) {
-      showError(e?.message || 'Bulk-Aktion fehlgeschlagen.');
-    } finally {
-      clearSelection();
-    }
   }
 
   async function bulkDelete() {
@@ -345,7 +404,7 @@ export default function AdminBookingsPage() {
           })
         )
       );
-      await load();
+      await Promise.all([load(), loadGlobal()]);
       showOk(`(${eligible.length}) Buchungen gelöscht.`);
     } catch (e: any) {
       showError(e?.message || 'Bulk-Löschen fehlgeschlagen.');
@@ -354,41 +413,51 @@ export default function AdminBookingsPage() {
     }
   }
 
+  // Gelöschte (status='deleted') wiederherstellen
+  async function bulkRestoreDeleted() {
+    if (!deletedSelected.length) return;
 
+    try {
+      await Promise.all(
+        deletedSelected.map((b) =>
+          fetch(`/api/admin/bookings/${encodeURIComponent(b._id)}/restore`, {
+            method: 'POST',
+            credentials: 'include',
+            cache: 'no-store',
+          })
+        )
+      );
+      await Promise.all([load(), loadGlobal()]);
+      showOk(`(${deletedSelected.length}) Buchungen wiederhergestellt.`);
+    } catch (e: any) {
+      showError(e?.message || 'Wiederherstellen fehlgeschlagen.');
+    } finally {
+      clearSelection();
+    }
+  }
 
+  async function bulkHardDelete() {
+    if (!deletedSelected.length) return;
 
-// Programm aus message holen (Zeile "Programm: ...")
-function extractProgramName(msg?: string): string | null {
-  if (!msg) return null;
-  const m = msg.match(/Programm:\s*(.+)/i);
-  return m ? m[1].trim() : null;
-}
-
-// Kürzel für die Tabelle (max. 3 Zeichen)
-function programShort(booking: Booking): string {
-  const name = extractProgramName(booking.message) || '';
-  if (!name) return '—';
-
-  const low = name.toLowerCase();
-
-  // Feste Mappings
-  if (low.includes('fördertraining') || low.includes('foerdertraining')) return 'FÖ';
-  if (low.includes('kindergarten') || low.includes('fußballkindergarten') || low.includes('fussballkindergarten')) return 'KDN';
-  if (low.includes('camp')) return 'CMP';
-  if (low.includes('power')) return 'PWR';
-  if (low.includes('coach education')) return 'CE';
-  if (low.includes('rent a coach') || low.includes('rentacoach')) return 'RAC';
-  if (low.includes('individual')) return 'IND';
-  if (low.includes('torwart') || low.includes('goalkeeper')) return 'TW';
-  if (low.includes('athletik') || low.includes('athletic')) return 'ATH';
-
-  // Fallback: erste 3 Buchstaben, groß
-  const clean = name.replace(/[^a-zA-ZäöüÄÖÜß]/g, '').toUpperCase();
-  if (!clean) return '—';
-  return clean.slice(0, 3);
-}
-
-
+    try {
+      await Promise.all(
+        deletedSelected.map((b) =>
+          fetch(`/api/admin/bookings/${encodeURIComponent(b._id)}/hard`, {
+            method: 'DELETE',
+            credentials: 'include',
+            cache: 'no-store',
+          })
+        )
+      );
+      await Promise.all([load(), loadGlobal()]);
+      showOk(`(${deletedSelected.length}) Buchungen endgültig gelöscht.`);
+    } catch (e: any) {
+      showError(e?.message || 'Endgültiges Löschen fehlgeschlagen.');
+    } finally {
+      clearSelection();
+      setShowHardDeleteDialog(false);
+    }
+  }
 
   return (
     <div className="p-4 max-w-6xl mx-auto">
@@ -418,8 +487,8 @@ function programShort(booking: Booking): string {
       )}
 
       {/* Filter */}
-      <div className="flex gap-2 items-end mb-3">
-        <div className="flex-1">
+      <div className="flex flex-wrap gap-2 items-end mb-3">
+        <div className="flex-1 min-w-[220px]">
           <label htmlFor="search" className="block text-sm text-gray-600">
             Search
           </label>
@@ -437,6 +506,45 @@ function programShort(booking: Booking): string {
             }}
           />
         </div>
+
+        {/* Kurs-Filter wie im WordPress-Formular (ohne Holiday) */}
+        <div style={{ minWidth: 260 }}>
+          <label className="block text-sm text-gray-600">Course</label>
+          <select
+            className="input"
+            value={program}
+            onChange={(e) => {
+              setProgram(e.target.value as ProgramFilter);
+              setPage(1);
+              clearSelection();
+            }}
+          >
+            <option value="all">All courses</option>
+
+            <optgroup label="Weekly Courses">
+              <option value="weekly_foerdertraining">Foerdertraining</option>
+              <option value="weekly_kindergarten">Soccer Kindergarten</option>
+              <option value="weekly_goalkeeper">Goalkeeper Training</option>
+              <option value="weekly_development_athletik">
+                Development Training • Athletik
+              </option>
+            </optgroup>
+
+            <optgroup label="Individual Courses">
+              <option value="ind_1to1">1:1 Training</option>
+              <option value="ind_1to1_athletik">1:1 Training Athletik</option>
+              <option value="ind_1to1_goalkeeper">1:1 Training Torwart</option>
+            </optgroup>
+
+            <optgroup label="Club Programs">
+              <option value="club_rentacoach">Rent-a-Coach</option>
+              <option value="club_trainingcamps">Training Camps</option>
+              <option value="club_coacheducation">Coach Education</option>
+            </optgroup>
+          </select>
+        </div>
+
+        {/* Status-Filter */}
         <div style={{ minWidth: 220 }}>
           <label className="block text-sm text-gray-600">Status</label>
           <select
@@ -448,22 +556,20 @@ function programShort(booking: Booking): string {
               clearSelection();
             }}
           >
-            <option value="all">
-              All(
-              {(
-                (counts.pending ?? 0) +
-                  (counts.processing ?? 0) +
-                  (counts.confirmed ?? 0) +
-                  (counts.cancelled ?? 0) +
-                  (counts.deleted ?? 0) || total
-              ).toString()}
-              )
+            <option value="all">All ({allCount})</option>
+            <option value="pending">Pending ({globalCounts.pending ?? 0})</option>
+            <option value="processing">
+              Processing ({globalCounts.processing ?? 0})
             </option>
-            <option value="pending">Pending ({counts.pending ?? 0})</option>
-            <option value="processing">Processing ({counts.processing ?? 0})</option>
-            <option value="confirmed">Confirmed ({counts.confirmed ?? 0})</option>
-            <option value="cancelled">Cancelled ({counts.cancelled ?? 0})</option>
-            <option value="deleted">Deleted ({counts.deleted ?? 0})</option>
+            <option value="confirmed">
+              Confirmed ({globalCounts.confirmed ?? 0})
+            </option>
+            <option value="cancelled">
+              Cancelled ({globalCounts.cancelled ?? 0})
+            </option>
+            <option value="deleted">
+              Deleted ({globalCounts.deleted ?? 0})
+            </option>
           </select>
         </div>
       </div>
@@ -491,30 +597,7 @@ function programShort(booking: Booking): string {
             Clear
           </button>
 
-          <button
-            type="button"
-            className="btn"
-            onClick={() => bulkSetStatus('processing')}
-            disabled={!canBulkProcessing}
-          >
-            → Processing
-          </button>
-          <button
-            type="button"
-            className="btn"
-            onClick={() => bulkSetStatus('cancelled')}
-            disabled={!canBulkCancelled}
-          >
-            → Cancelled
-          </button>
-          <button
-            type="button"
-            className="btn"
-            onClick={() => bulkSetStatus('confirmed')}
-            disabled={!canBulkConfirmed}
-          >
-            → Confirmed
-          </button>
+          {/* Soft-Delete → status='deleted' */}
           <button
             type="button"
             className="btn btn--danger"
@@ -522,6 +605,26 @@ function programShort(booking: Booking): string {
             disabled={!canBulkDelete}
           >
             Delete selected
+          </button>
+
+          {/* Gelöschte wiederherstellen */}
+          <button
+            type="button"
+            className="btn"
+            onClick={bulkRestoreDeleted}
+            disabled={!canRestoreDeleted}
+          >
+            Wiederherstellen
+          </button>
+
+          {/* Hard Delete */}
+          <button
+            type="button"
+            className="btn btn--danger"
+            onClick={() => setShowHardDeleteDialog(true)}
+            disabled={!canHardDelete}
+          >
+            Endgültig löschen
           </button>
         </div>
       </div>
@@ -533,7 +636,10 @@ function programShort(booking: Booking): string {
       {/* Tabelle */}
       {!loading && !err && (
         <div className="card p-0 overflow-auto">
-          <table className="w-full text-sm" style={{ borderCollapse: 'collapse' }}>
+          <table
+            className="w-full text-sm"
+            style={{ borderCollapse: 'collapse' }}
+          >
             <thead className="bg-gray-50">
               <tr>
                 <th className="th" style={{ width: 44 }}>
@@ -547,7 +653,6 @@ function programShort(booking: Booking): string {
                 <th className="th">Name</th>
                 <th className="th">Email</th>
                 <th className="th">Age</th>
-                
                 <th className="th">Programm</th>
                 <th className="th">Status</th>
                 <th className="th">Created</th>
@@ -569,11 +674,6 @@ function programShort(booking: Booking): string {
                         checked={checked}
                         onChange={(e) => toggleOne(b._id, e.target.checked)}
                         aria-label={`Buchung auswählen: ${b.firstName} ${b.lastName}`}
-                        title={
-                          b.status === 'cancelled'
-                            ? 'Abgesagt – nur Bulk-Löschen sinnvoll'
-                            : ''
-                        }
                       />
                     </td>
                     <td className="td">
@@ -581,10 +681,7 @@ function programShort(booking: Booking): string {
                     </td>
                     <td className="td">{b.email}</td>
                     <td className="td">{b.age}</td>
-                    
-            
                     <td className="td">{programShort(b)}</td>
-
                     <td className="td">{asStatus(b.status)}</td>
                     <td className="td">{fmtDate_DE(b.createdAt)}</td>
                   </tr>
@@ -592,7 +689,7 @@ function programShort(booking: Booking): string {
               })}
               {!items.length && (
                 <tr>
-                  <td className="td" colSpan={8}>
+                  <td className="td" colSpan={7}>
                     No bookings.
                   </td>
                 </tr>
@@ -658,20 +755,57 @@ function programShort(booking: Booking): string {
           notify={showOk}
         />
       )}
+
+      {/* Bestätigungsdialog für endgültiges Löschen */}
+      {showHardDeleteDialog && deletedSelected.length > 0 && (
+        <div
+          onClick={() => setShowHardDeleteDialog(false)}
+          style={{
+            position: 'fixed',
+            inset: 0,
+            background: 'rgba(0,0,0,0.4)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 7000,
+          }}
+        >
+          <div
+            className="card"
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              maxWidth: 420,
+              width: '100%',
+              margin: '0 16px',
+            }}
+          >
+            <h2 className="text-lg font-semibold mb-2">
+              Buchungen endgültig löschen
+            </h2>
+            <p className="text-sm text-gray-700 mb-4">
+              Bist du sicher? Möchtest du {deletedSelected.length} ausgewählte
+              Anfrage{deletedSelected.length > 1 ? 'n' : ''} endgültig löschen?
+              Dieser Vorgang kann <b>nicht</b> rückgängig gemacht werden.
+            </p>
+            <div className="flex justify-end gap-2">
+              <button
+                type="button"
+                className="btn"
+                onClick={() => setShowHardDeleteDialog(false)}
+              >
+                Nein
+              </button>
+              <button
+                type="button"
+                className="btn btn--danger"
+                onClick={bulkHardDelete}
+              >
+                Ja, endgültig löschen
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
