@@ -304,6 +304,10 @@ export default function AdminBookingsPage() {
   }, [globalQuery]);
 
   /* ===== Server-Aktionen (Einzel) ===== */
+
+  // app/admin/bookings/page.tsx
+
+
   async function apiConfirm(id: string, resend = false): Promise<string> {
     const url = `/api/admin/bookings/${encodeURIComponent(id)}/confirm${
       resend ? '?resend=1' : ''
@@ -332,6 +336,9 @@ export default function AdminBookingsPage() {
       ? 'Bestätigung erneut gesendet.'
       : 'Buchung bestätigt und E-Mail versendet.';
   }
+
+
+
 
   async function apiSetStatus(
     id: string,
