@@ -1,3 +1,5 @@
+
+
 // app/admin/customers/dialogs/BookDialog.tsx
 'use client';
 
@@ -126,64 +128,85 @@ export default function BookDialog({ customerId, onClose, onBooked }: Props) {
       : null;
   }, [isWeekly, selectedDate, selectedOffer?.price]);
 
-  async function submit() {
-    if (!customerId || !selectedOfferId || !selectedDate) return;
-    setSaving(true);
-    setErr(null);
-    try {
-      // 1) Create booking (für diesen Kunden)
-      const res = await fetch(
-        `/api/admin/customers/${encodeURIComponent(customerId)}/bookings`,
+
+
+async function submit() {
+  if (!customerId || !selectedOfferId || !selectedDate) return;
+  setSaving(true);
+  setErr(null);
+
+  try {
+    // 1) Booking für diesen Kunden anlegen
+    const res = await fetch(
+      `/api/admin/customers/${encodeURIComponent(customerId)}/bookings`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include', // 🔐
+        cache: 'no-store',
+        body: JSON.stringify({
+          offerId: selectedOfferId,
+          date: selectedDate,
+        }),
+      }
+    );
+
+    if (!res.ok) {
+      throw new Error(`Create booking failed (${res.status})`);
+    }
+
+    const payload = await res.json();
+    const newBooking = payload?.booking;
+
+    // 2) Zentral bestätigen
+    //    Backend erkennt: interne Buchung (nicht online_request)
+    //    → keine Terminbestätigung, nur Teilnahme/Rechnung (laut deiner /:id/confirm-Logik)
+    if (newBooking?._id) {
+      const r2 = await fetch(
+        `/api/admin/bookings/${encodeURIComponent(newBooking._id)}/confirm`,
         {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          credentials: 'include', // 🔐
+          credentials: 'include',
           cache: 'no-store',
-          body: JSON.stringify({ offerId: selectedOfferId, date: selectedDate }),
         }
       );
-      if (!res.ok) throw new Error(`Create booking failed (${res.status})`);
-      const payload = await res.json();
-      const newBooking = payload?.booking;
 
-      // 2) Zentrale Confirm-Route nutzen (inkl. Rechnung/Teilnahme für Holiday)
-      if (newBooking?._id) {
-        const r2 = await fetch(
-          `/api/admin/bookings/${encodeURIComponent(
-            newBooking._id
-          )}/confirm?resend=1`,
-          {
-            method: 'POST',
-            credentials: 'include', // 🔐
-            cache: 'no-store',
-          }
+      const d2 = await r2.json().catch(() => null);
+      if (!r2.ok || d2?.ok === false) {
+        console.warn(
+          'confirmation (confirm route) failed',
+          r2.status,
+          d2 || (await r2.text().catch(() => ''))
         );
-        if (!r2.ok && r2.status !== 409) {
-          console.warn(
-            'confirmation (confirm route) failed',
-            r2.status,
-            await r2.text().catch(() => '')
-          );
-        }
       }
-
-      // 3) Refresh customer
-      const r3 = await fetch(
-        `/api/admin/customers/${encodeURIComponent(customerId)}`,
-        {
-          cache: 'no-store',
-          credentials: 'include', // 🔐
-        }
-      );
-      const fresh = r3.ok ? await r3.json() : null;
-      if (fresh) onBooked(fresh);
-      onClose();
-    } catch (e: any) {
-      setErr(e?.message || 'Booking failed');
-    } finally {
-      setSaving(false);
     }
+
+    // 3) Customer neu laden, damit Buchungen & Documents aktuell sind
+    const r3 = await fetch(
+      `/api/admin/customers/${encodeURIComponent(customerId)}`,
+      {
+        cache: 'no-store',
+        credentials: 'include',
+      }
+    );
+    const fresh = r3.ok ? await r3.json() : null;
+    if (fresh) onBooked(fresh);
+
+    onClose();
+  } catch (e: any) {
+    setErr(e?.message || 'Booking failed');
+  } finally {
+    setSaving(false);
   }
+}
+
+
+
+
+
+
+
+
 
   return (
     <div className="ks-modal-root ks-modal-root--top">
@@ -318,6 +341,14 @@ export default function BookDialog({ customerId, onClose, onBooked }: Props) {
     </div>
   );
 }
+
+
+
+
+
+
+
+
 
 
 
