@@ -1,14 +1,25 @@
+//globals.scss
 @use "./foundation" as *;
  @use "./globals.base" as *;
    @use "./header" as *;
     @use "./offers" as *;
     @use "./booking" as *;
+    //@use "./bookDialog" as *;
+     // @use "./customerDialog" as *;
      @use "./profile" as *;
       @use "./footer" as *; 
       @use "./home" as *;
        @use "./news" as *;
         @use "./coaches" as *;
-
-
+        //@use "./invoices" as *; 
+//@use "./customers" as *;
+//@use "./trainingCard" as *;
+@use "./admin-forms" as *;
        
 
+:root {
+  --brand-navy: #0F1E2E;
+  --text: #222;
+  /* optional, falls du auch --brand brauchst */
+  --brand: #0ea5e9;
+}
