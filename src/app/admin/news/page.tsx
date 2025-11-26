@@ -94,9 +94,12 @@ function NewsDialog({
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
 
+  const [categoryOpen, setCategoryOpen] = useState(false);
+
   useEffect(() => {
     if (mode === 'edit' && initial) setForm({ ...initial });
     if (mode === 'create') setForm({ ...blank });
+    setCategoryOpen(false);  
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mode, initial?._id]);
 
@@ -186,22 +189,60 @@ function NewsDialog({
               />
             </div>
             <div>
-              <label className="lbl">Kategorie</label>
-              <select
-                className="input"
-                value={form.category || 'News'}
-                onChange={(e) =>
-                  setForm({ ...form, category: e.target.value as News['category'] })
-                }
-              >
-                {CATEGORIES.map((c) => (
-                  <option key={c} value={c}>
-                    {c}
-                  </option>
-                ))}
-              </select>
-            </div>
+             
+             
+
+
+            
+  <label className="lbl">Kategorie</label>
+  <div
+    className={
+      'ks-selectbox' + (categoryOpen ? ' ks-selectbox--open' : '')
+    }
+  >
+    <button
+      type="button"
+      className="ks-selectbox__trigger"
+      onClick={() => setCategoryOpen((o) => !o)}
+      aria-haspopup="listbox"
+      aria-expanded={categoryOpen}
+    >
+      <span className="ks-selectbox__label">
+        {form.category || 'News'}
+      </span>
+      <span className="ks-selectbox__chevron" aria-hidden="true" />
+    </button>
+
+    {categoryOpen && (
+      <div className="ks-selectbox__panel" role="listbox">
+        {CATEGORIES.map((c) => (
+          <button
+            key={c}
+            type="button"
+            className={
+              'ks-selectbox__option' +
+              ((form.category || 'News') === c
+                ? ' ks-selectbox__option--active'
+                : '')
+            }
+            onClick={() => {
+              setForm({ ...form, category: c });
+              setCategoryOpen(false);
+            }}
+          >
+            {c}
+          </button>
+        ))}
+      </div>
+    )}
+  </div>
+</div>
+
+
+</div>
           </div>
+
+          <div>
 
           <div>
             <label className="lbl">Überschrift</label>
