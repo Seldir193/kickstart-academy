@@ -1,0 +1,840 @@
+
+/* ==========================================================================
+   Admin Forms – zentrale Styles für alle Admin-Formulare
+   - .input (input, select, textarea, button)
+   - Hover / Focus / Disabled / Date-Inputs
+   - Custom-Dropdowns (Family, ks-selectbox, ks-family-select,
+     ks-filter-select, ks-training-select)
+   ========================================================================== */
+
+
+/* ========================================================================== */
+/* 1) Globale Basis für alle Felder mit className="input"                    */
+/* ========================================================================== */
+
+input.input,
+select.input,
+textarea.input,
+button.input {
+  border-radius: 8px;
+  border: 1px solid #d9dee6;
+  background-color: #fff;
+  font: inherit;
+  color: inherit;
+
+  transition:
+    border-color 0.18s ease,
+    box-shadow 0.18s ease,
+    background-color 0.18s ease;
+}
+
+/* Hover – dezente dunklere Border */
+input.input:hover,
+select.input:hover,
+textarea.input:hover,
+button.input:hover {
+  border-color: var(--text);
+}
+
+/* Focus – Navy + weicher Focus-Ring wie in allen Dialogen */
+input.input:focus,
+select.input:focus,
+textarea.input:focus,
+button.input:focus {
+  outline: none;
+  border-color: var(--brand-navy);
+  box-shadow: 0 0 0 3px
+    color-mix(in oklab, var(--brand-navy) 22%, #ffffff);
+}
+
+/* Disabled-Inputs – optional leicht „grau“ */
+input.input:disabled,
+select.input:disabled,
+textarea.input:disabled,
+button.input:disabled {
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* Date-Inputs – Hand-Cursor + klickbares Kalender-Icon */
+input.input[type='date'] {
+  cursor: pointer;
+}
+
+input.input[type='date']::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+}
+
+
+/* ========================================================================== */
+/* 2) Spezieller Date-Input im BookDialog (Start-Date, Höhe 50px)            */
+/* ========================================================================== */
+
+.ks-modal-root .ks-panel .input[type='date'] {
+  height: 50px;
+  border-radius: 8px;
+  padding: 0 12px;
+  background-color: #fff;
+}
+
+
+/* ========================================================================== */
+/* 3) Family-Dropdown (CustomerDialog: .family-dropdown...)                  */
+/* ========================================================================== */
+
+.family-dropdown {
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+}
+
+.family-dropdown-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+
+  height: 50px;
+  padding: 0 14px 0 16px;
+
+  transition:
+    border-color 0.18s ease,
+    box-shadow 0.18s ease,
+    background-color 0.18s ease;
+}
+
+.family-dropdown-label {
+  display: inline-flex;
+  align-items: center;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.family-dropdown-caret {
+  flex: 0 0 auto;
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 6px solid #5b6472;
+  transition:
+    transform 0.18s ease,
+    border-top-color 0.18s ease;
+}
+
+.family-dropdown-menu {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(100% + 6px);
+
+  background: #fff;
+  border: 1px solid #d9dee6;
+  border-radius: 8px;
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.08);
+  z-index: 20;
+
+  overflow: auto;
+  --row-h: 40px;
+  max-height: calc(var(--row-h) * 5);
+
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.family-dropdown-item {
+  padding: 0 14px 0 16px;
+  height: var(--row-h);
+
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  user-select: none;
+}
+
+/* Hover: helles Grau/Blau */
+.family-dropdown-item:hover {
+  background: #f4f7fb;
+}
+
+/* Ausgewählt: schwarzer Balken + weiße Schrift */
+.family-dropdown-item--active {
+  background: #000000;
+  color: #ffffff;
+}
+
+/* Hover: dunklere Border wie beim Trainer-Dropdown */
+.family-dropdown:hover .family-dropdown-trigger {
+  border-color: var(--text);
+}
+
+/* Offen/Focus: Navy + Ring + Caret drehen
+   (über .family-dropdown--open oder :focus-within) */
+.family-dropdown.family-dropdown--open .family-dropdown-trigger,
+.family-dropdown:focus-within .family-dropdown-trigger {
+  border-color: var(--brand-navy);
+  box-shadow: 0 0 0 3px
+    color-mix(in oklab, var(--brand-navy) 22%, #ffffff);
+}
+
+.family-dropdown.family-dropdown--open .family-dropdown-menu,
+.family-dropdown:focus-within .family-dropdown-menu {
+  border-color: color-mix(in oklab, var(--brand-navy) 20%, #d9dee6);
+}
+
+
+
+/* Caret Grundzustand */
+.family-dropdown .family-dropdown-caret {
+  border-top-color: #5b6472;
+  transform: rotate(0deg);
+}
+
+/* Caret drehen NUR wenn wirklich offen */
+.family-dropdown.family-dropdown--open .family-dropdown-caret {
+  border-top-color: var(--brand-navy);
+  transform: rotate(180deg);
+}
+
+
+
+/* ========================================================================== */
+/* 4) ks-selectbox (BookDialog – Courses & Offer Selectbox)                  */
+/* ========================================================================== */
+
+.ks-selectbox {
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+}
+
+.ks-selectbox__trigger {
+  height: 50px;
+  padding: 0 14px 0 16px;
+  width: 100%;
+  border: 1px solid #d9dee6;
+  border-radius: 8px;
+  background: #fff;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+
+  font-weight: 700;
+  line-height: 1;
+
+  transition: border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.ks-selectbox__trigger:hover {
+  border-color: var(--text);
+}
+
+.ks-selectbox__trigger:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+/* Label (Overflow sauber) */
+.ks-selectbox__label {
+  display: inline-flex;
+  align-items: center;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Caret wie im Trainer-Dropdown */
+.ks-selectbox__chevron {
+  flex: 0 0 auto;
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 6px solid #5b6472;
+  transition: transform 0.18s ease, border-top-color 0.18s ease;
+}
+
+/* Panel (max. 5 Einträge, Scroll) */
+.ks-selectbox__panel {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(100% + 6px);
+
+  background: #fff;
+  border: 1px solid #d9dee6;
+  border-radius: 8px;
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.08);
+  z-index: 20;
+
+  overflow: auto;
+  --row-h: 40px;
+  max-height: calc(var(--row-h) * 5);
+
+  padding: 4px 0 6px;
+}
+
+/* Gruppe (wie optgroup) */
+.ks-selectbox__group {
+  margin-top: 4px;
+}
+
+/* Gruppen-Label */
+.ks-selectbox__group-label {
+  padding: 6px 16px 4px;
+  font-size: 15px;
+  font-weight: 700;
+  text-transform: none;
+  letter-spacing: 0;
+  color: #111827;
+}
+
+/* Option */
+.ks-selectbox__option {
+  width: 100%;
+  padding: 0 16px 0 26px;
+  height: var(--row-h);
+
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+
+  cursor: pointer;
+  user-select: none;
+
+  background: transparent;
+  border: none;
+  text-align: left;
+  font: inherit;
+}
+
+/* Hover: helles Grau/Blau */
+.ks-selectbox__option:hover {
+  background: #f4f7fb;
+}
+
+/* Ausgewählt: schwarzer Balken + weiße Schrift */
+.ks-selectbox__option.ks-selectbox__option--active {
+  background: #000000;
+  color: #ffffff;
+}
+
+/* Offen: navy + Focus-Ring + gedrehter Caret */
+.ks-selectbox.ks-selectbox--open .ks-selectbox__trigger,
+.ks-selectbox.ks-selectbox--open .ks-selectbox__trigger:hover {
+  border-color: var(--brand-navy);
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--brand-navy) 22%, white);
+}
+
+.ks-selectbox.ks-selectbox--open .ks-selectbox__chevron {
+  border-top-color: var(--brand-navy);
+  transform: rotate(180deg);
+}
+
+.ks-selectbox.ks-selectbox--open .ks-selectbox__panel {
+  border-color: color-mix(in oklab, var(--brand-navy) 20%, #d9dee6);
+}
+
+.ks-selectbox.ks-selectbox--disabled .ks-selectbox__trigger {
+  cursor: default;
+  opacity: 0.6;
+  box-shadow: none;
+}
+
+
+/* ========================================================================== */
+/* 5) ks-family-select (BookDialog "Booking for" – Kind auswählen)           */
+/* ========================================================================== */
+
+.ks-family-select {
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+}
+
+/* Trigger */
+.ks-family-select__trigger {
+  height: 40px;
+  padding: 0 12px;
+  width: 100%;
+  border: 1px solid #d9dee6;
+  border-radius: 6px;
+  background: #f9fafb;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+
+  font-weight: 500;
+  line-height: 1.2;
+
+  transition: border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+/* schöner Overflow */
+.ks-family-select__trigger > span:first-child {
+  display: inline-flex;
+  align-items: center;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Hover */
+.ks-family-select__trigger:hover {
+  border-color: var(--text);
+}
+
+/* Caret */
+.ks-family-select__chevron {
+  flex: 0 0 auto;
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 6px solid #5b6472;
+  transition: transform 0.18s ease, border-top-color 0.18s ease;
+}
+
+/* Menü */
+.ks-family-select__menu {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(100% + 4px);
+
+  background: #fff;
+  border: 1px solid #d9dee6;
+  border-radius: 8px;
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.08);
+  z-index: 20;
+
+  overflow: auto;
+  --row-h: 36px;
+  max-height: calc(var(--row-h) * 5);
+
+  margin: 0;
+  padding: 4px 0;
+  list-style: none;
+}
+
+/* Option */
+.ks-family-select__option {
+  width: 100%;
+  padding: 0 12px;
+  height: var(--row-h);
+
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+
+  cursor: pointer;
+  user-select: none;
+
+  background: transparent;
+  border: none;
+  text-align: left;
+  font: inherit;
+}
+
+/* Hover: helles Grau/Blau */
+.ks-family-select__option:hover {
+  background: #f4f7fb;
+}
+
+/* Ausgewählt: schwarzer Balken + weiße Schrift */
+.ks-family-select__option.is-selected {
+  background: #000000;
+  color: #ffffff;
+}
+
+/* Offen / Focus-Status */
+.ks-family-select:focus-within .ks-family-select__trigger {
+  border-color: var(--brand-navy);
+  box-shadow: 0 0 0 3px
+    color-mix(in oklab, var(--brand-navy) 22%, white);
+}
+
+.ks-family-select:focus-within .ks-family-select__menu {
+  border-color: color-mix(in oklab, var(--brand-navy) 20%, #d9dee6);
+}
+
+.ks-family-select:focus-within .ks-family-select__chevron {
+  border-top-color: var(--brand-navy);
+  transform: rotate(180deg);
+}
+
+
+/* ========================================================================== */
+/* 6) Newsletter-Filter-Dropdown (Customers: .ks-filter-select...)           */
+/* ========================================================================== */
+
+.ks-filter-select {
+  position: relative;
+  width: 100%;
+  max-width: 120px;
+}
+
+/* Trigger */
+.ks-filter-select__trigger {
+  height: 40px;
+  padding: 0 14px 0 12px;
+  width: 100%;
+  border: 1px solid #d9dee6;
+  border-radius: 8px;
+  background: #fff;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+
+  font-weight: 600;
+  line-height: 1;
+
+  transition: border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+/* Label */
+.ks-filter-select__label {
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Hover */
+.ks-filter-select__trigger:hover {
+  border-color: var(--text);
+}
+
+/* Chevron */
+.ks-filter-select__chevron {
+  flex: 0 0 auto;
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 6px solid #5b6472;
+  transition: transform 0.18s ease, border-top-color 0.18s ease;
+}
+
+/* Menü */
+.ks-filter-select__menu {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(100% + 6px);
+
+  background: #fff;
+  border: 1px solid #d9dee6;
+  border-radius: 8px;
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.08);
+  z-index: 20;
+
+  margin: 0;
+  padding: 4px 0;
+  list-style: none;
+
+  overflow: auto;
+  --row-h: 36px;
+  max-height: calc(var(--row-h) * 5);
+}
+
+/* Option */
+.ks-filter-select__option {
+  width: 100%;
+  padding: 0 14px;
+  height: var(--row-h);
+
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+
+  cursor: pointer;
+  user-select: none;
+
+  background: transparent;
+  border: none;
+  text-align: left;
+  font: inherit;
+}
+
+/* Hover: helles Grau/Blau */
+.ks-filter-select__option:hover {
+  background: #f4f7fb;
+}
+
+/* Ausgewählt: schwarzer Balken + weiße Schrift */
+.ks-filter-select__option.is-selected {
+  background: #000000;
+  color: #ffffff;
+}
+
+/* Offen-Status */
+.ks-filter-select.ks-filter-select--open .ks-filter-select__trigger,
+.ks-filter-select.ks-filter-select--open .ks-filter-select__trigger:hover {
+  border-color: var(--brand-navy);
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--brand-navy) 22%, white);
+}
+
+.ks-filter-select.ks-filter-select--open .ks-filter-select__chevron {
+  border-top-color: var(--brand-navy);
+  transform: rotate(180deg);
+}
+
+.ks-filter-select.ks-filter-select--open .ks-filter-select__menu {
+  border-color: color-mix(in oklab, var(--brand-navy) 20%, #d9dee6);
+}
+
+
+/* ========================================================================== */
+/* 7) Training-Select (Locations & Courses: .ks-training-select...)          */
+/* ========================================================================== */
+
+.ks-training-select {
+  position: relative;
+  width: 100%;
+  max-width: 260px;
+}
+
+.ks-training-select__trigger {
+  height: 40px;
+  padding: 0 14px 0 12px;
+  width: 100%;
+  border: 1px solid #d9dee6;
+  border-radius: 8px;
+  background: #fff;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+
+  font-weight: 600;
+  line-height: 1;
+
+  transition: border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.ks-training-select__trigger:hover {
+  border-color: var(--text);
+}
+
+/* Label */
+.ks-training-select__label {
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Chevron */
+.ks-training-select__chevron {
+  flex: 0 0 auto;
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 6px solid #5b6472;
+  transition: transform 0.18s ease, border-top-color 0.18s ease;
+}
+
+/* Menü */
+.ks-training-select__menu {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(100% + 6px);
+
+  background: #fff;
+  border: 1px solid #d9dee6;
+  border-radius: 8px;
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.08);
+  z-index: 20;
+
+  margin: 0;
+  padding: 4px 0;
+  list-style: none;
+
+  overflow: auto;
+  --row-h: 36px;
+  max-height: calc(var(--row-h) * 5);
+}
+
+/* Gruppierte Variante */
+.ks-training-select__menu--grouped {
+  padding: 4px 0 6px;
+}
+
+.ks-training-select__group {
+  margin-top: 4px;
+}
+
+.ks-training-select__group-label {
+  padding: 6px 16px 4px;
+  font-size: 14px;
+  font-weight: 700;
+  text-transform: none;
+  letter-spacing: 0;
+  color: #111827;
+}
+
+/* Option */
+.ks-training-select__option {
+  width: 100%;
+  padding: 0 16px 0 26px;
+  height: var(--row-h);
+
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+
+  cursor: pointer;
+  user-select: none;
+
+  background: transparent;
+  border: none;
+  text-align: left;
+  font: inherit;
+}
+
+.ks-training-select__option--top {
+  padding-top: 6px;
+  padding-bottom: 6px;
+}
+
+/* Hover: helles Grau/Blau */
+.ks-training-select__option:hover {
+  background: #f4f7fb;
+}
+
+/* Ausgewählt: schwarzer Balken + weiße Schrift */
+.ks-training-select__option.is-selected {
+  background: #000000;
+  color: #ffffff;
+}
+
+/* Offen-Status */
+.ks-training-select.ks-training-select--open
+  .ks-training-select__trigger,
+.ks-training-select.ks-training-select--open
+  .ks-training-select__trigger:hover {
+  border-color: var(--brand-navy);
+  box-shadow: 0 0 0 3px
+    color-mix(in oklab, var(--brand-navy) 22%, white);
+}
+
+.ks-training-select.ks-training-select--open
+  .ks-training-select__chevron {
+  border-top-color: var(--brand-navy);
+  transform: rotate(180deg);
+}
+
+.ks-training-select.ks-training-select--open
+  .ks-training-select__menu {
+  border-color: color-mix(
+    in oklab,
+    var(--brand-navy) 20%,
+    #d9dee6
+  );
+}
+
+
+/* ========================================================================== */
+/* 8) Spezielle Filter-Feld-Höhe (Customers & Training)                      */
+/* ========================================================================== */
+
+/* Customers: Suchfeld & Newsletter-Select in einer Zeile */
+.ks-customers-filter-row .input {
+  height: 40px;
+  padding: 0 12px;
+  border-radius: 8px;
+}
+
+/* Training: Filter-Zeile */
+.ks-training-admin .filters .input {
+  height: 40px;
+  border-radius: 8px;
+  padding: 0 12px;
+}
+
+
+/* ========================================================================== */
+/* 9) Invoices – spezieller Dropdown-Trigger für "Dokumente (aktuelle Seite)"*/
+/* ========================================================================== */
+
+button.input[aria-haspopup='listbox'] {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Option Basis */
+.ks-selectbox__option {
+  width: 100%;
+  padding: 0 16px 0 26px;
+  height: var(--row-h);
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  cursor: pointer;
+  user-select: none;
+  background: transparent;
+  border: none;
+  text-align: left;
+  font: inherit;
+}
+
+/* Hover: helles Blau/Grau */
+.ks-selectbox__option:hover {
+  background: #f4f7fb;
+}
+
+/* Ausgewählte Option: schwarz + weiße Schrift (bleibt sichtbar auch ohne Hover) */
+.ks-selectbox__option.ks-selectbox__option--active {
+  background: #111827;
+  color: #ffffff;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
