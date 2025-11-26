@@ -41,14 +41,18 @@
   gap: 8px;
 }
 
+
 .yearDropdown,
 .monthDropdown {
-  border: 1px solid #d1d5db;
-  border-radius: 6px;
-  padding: 6px 8px;
-  font-size: 0.95rem;
-  background: #fff;
+  /* nur noch Layout, keine eigene Box mehr */
+  display: inline-block;
+  min-width: 140px;
+  /* keine eigene Border/Background/Padding */
+  border: none;
+  padding: 0;
+  background: transparent;
 }
+
 
 .loading {
   margin-top: 8px;
