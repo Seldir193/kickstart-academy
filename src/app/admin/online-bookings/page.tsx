@@ -1,8 +1,7 @@
-
 // app/admin/online-bookings/page.tsx
 'use client';
 
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import BookingDialog from '../bookings/BookingDialog';
 
 /* ============ Types ============ */
@@ -127,6 +126,67 @@ export default function AdminOnlineBookingsPage() {
     setSelectedIds(new Set());
   }
 
+  // -------- Custom-Dropdowns (ks-training-select) --------
+  // Courses
+  const [courseOpen, setCourseOpen] = useState(false);
+  const courseTriggerRef = useRef<HTMLButtonElement | null>(null);
+  const courseMenuRef = useRef<HTMLUListElement | null>(null);
+
+  const courseLabel = useMemo(() => {
+    if (program === 'camp') return 'Camps (Indoor/Outdoor)';
+    if (program === 'power') return 'Powertraining';
+    return 'All courses';
+  }, [program]);
+
+  useEffect(() => {
+    if (!courseOpen) return;
+
+    function onPointerDown(ev: PointerEvent) {
+      const target = ev.target as Node;
+      if (
+        courseTriggerRef.current?.contains(target) ||
+        courseMenuRef.current?.contains(target)
+      ) {
+        return;
+      }
+      setCourseOpen(false);
+    }
+
+    document.addEventListener('pointerdown', onPointerDown);
+    return () => document.removeEventListener('pointerdown', onPointerDown);
+  }, [courseOpen]);
+
+  // Status
+  const [statusOpen, setStatusOpen] = useState(false);
+  const statusTriggerRef = useRef<HTMLButtonElement | null>(null);
+  const statusMenuRef = useRef<HTMLUListElement | null>(null);
+
+  const statusLabel = useMemo(() => {
+    if (status === 'all') return `All (${totalAll ?? total})`;
+    if (status === 'confirmed') return `Confirmed (${counts.confirmed ?? 0})`;
+    if (status === 'cancelled') return `Cancelled (${counts.cancelled ?? 0})`;
+    if (status === 'deleted') return `Deleted (${counts.deleted ?? 0})`;
+    return 'Status';
+  }, [status, totalAll, total, counts.confirmed, counts.cancelled, counts.deleted]);
+
+  useEffect(() => {
+    if (!statusOpen) return;
+
+    function onPointerDown(ev: PointerEvent) {
+      const target = ev.target as Node;
+      if (
+        statusTriggerRef.current?.contains(target) ||
+        statusMenuRef.current?.contains(target)
+      ) {
+        return;
+      }
+      setStatusOpen(false);
+    }
+
+    document.addEventListener('pointerdown', onPointerDown);
+    return () => document.removeEventListener('pointerdown', onPointerDown);
+  }, [statusOpen]);
+
   // Query Richtung Backend
   const query = useMemo(() => {
     const p = new URLSearchParams();
@@ -181,7 +241,9 @@ export default function AdminOnlineBookingsPage() {
     if (resend) params.set('resend', '1');
     params.set('withInvoice', '1');
 
-    const url = `/api/admin/bookings/${encodeURIComponent(id)}/confirm?${params.toString()}`;
+    const url = `/api/admin/bookings/${encodeURIComponent(
+      id
+    )}/confirm?${params.toString()}`;
 
     const r = await fetch(url, {
       method: 'POST',
@@ -278,40 +340,37 @@ export default function AdminOnlineBookingsPage() {
     }
   }
 
-
   function bookingProgramAbbr(b: Booking): string {
-  const text = [
-    (b as any).offerType,
-    (b as any).offerTitle,
-    b.level,
-    (b as any).program,
-    b.message,
-  ]
-    .filter(Boolean)
-    .join(' ')
-    .toLowerCase();
+    const text = [
+      (b as any).offerType,
+      (b as any).offerTitle,
+      b.level,
+      (b as any).program,
+      b.message,
+    ]
+      .filter(Boolean)
+      .join(' ')
+      .toLowerCase();
 
-  if (!text) return '—';
+    if (!text) return '—';
 
-  if (text.includes('powertraining') || text.includes('power training')) {
-    return 'PWR';
+    if (text.includes('powertraining') || text.includes('power training')) {
+      return 'PWR';
+    }
+
+    if (
+      text.includes('camp') ||
+      text.includes('feriencamp') ||
+      text.includes('holiday camp')
+    ) {
+      return 'CMP';
+    }
+
+    return '—';
   }
-
-  if (
-    text.includes('camp') ||
-    text.includes('feriencamp') ||
-    text.includes('holiday camp')
-  ) {
-    return 'CMP';
-  }
-
-  return '—';
-}
-
 
   return (
     <div className="p-4 max-w-6xl mx-auto">
-
       <h1 className="text-2xl font-bold mb-4">
         Online Buchungen (Holiday)
       </h1>
@@ -353,51 +412,196 @@ export default function AdminOnlineBookingsPage() {
           />
         </div>
 
-        
-
-          {/* Courses / Program-Filter – NUR Styling geändert */}
+        {/* Courses – Custom Dropdown */}
         <div style={{ minWidth: 220 }}>
           <label className="block text-sm text-gray-600">Courses</label>
-          <select
-            className="input"
-            value={program}
-            onChange={(e) => {
-              setProgram(e.target.value as ProgramFilter);
-              setStatus('all');
-              setPage(1);
-              clearSelection();
-            }}
+          <div
+            className={
+              'ks-training-select' +
+              (courseOpen ? ' ks-training-select--open' : '')
+            }
           >
-            <option value="all">All courses</option>
-            <optgroup label="Holiday Programs">
-              <option value="camp">Camps (Indoor/Outdoor)</option>
-              <option value="power">Powertraining</option>
-            </optgroup>
-          </select>
+            <button
+              type="button"
+              ref={courseTriggerRef}
+              className="ks-training-select__trigger"
+              onClick={() => setCourseOpen((o) => !o)}
+            >
+              <span className="ks-training-select__label">{courseLabel}</span>
+              <span
+                className="ks-training-select__chevron"
+                aria-hidden="true"
+              />
+            </button>
+
+            {courseOpen && (
+              <ul
+                ref={courseMenuRef}
+                className="ks-training-select__menu ks-training-select__menu--grouped"
+                role="listbox"
+                aria-label="Courses"
+              >
+                <li>
+                  <button
+                    type="button"
+                    className={
+                      'ks-training-select__option ks-training-select__option--top' +
+                      (program === 'all' ? ' is-selected' : '')
+                    }
+                    onClick={() => {
+                      setProgram('all');
+                      setStatus('all');
+                      setPage(1);
+                      clearSelection();
+                      setCourseOpen(false);
+                    }}
+                  >
+                    All courses
+                  </button>
+                </li>
+
+                <li className="ks-training-select__group">
+                  <div className="ks-training-select__group-label">
+                    Holiday Programs
+                  </div>
+                  <button
+                    type="button"
+                    className={
+                      'ks-training-select__option' +
+                      (program === 'camp' ? ' is-selected' : '')
+                    }
+                    onClick={() => {
+                      setProgram('camp');
+                      setStatus('all');
+                      setPage(1);
+                      clearSelection();
+                      setCourseOpen(false);
+                    }}
+                  >
+                    Camps (Indoor/Outdoor)
+                  </button>
+                  <button
+                    type="button"
+                    className={
+                      'ks-training-select__option' +
+                      (program === 'power' ? ' is-selected' : '')
+                    }
+                    onClick={() => {
+                      setProgram('power');
+                      setStatus('all');
+                      setPage(1);
+                      clearSelection();
+                      setCourseOpen(false);
+                    }}
+                  >
+                    Powertraining
+                  </button>
+                </li>
+              </ul>
+            )}
+          </div>
         </div>
 
+        {/* Status – Custom Dropdown mit gleichen Styles */}
         <div style={{ minWidth: 180 }}>
           <label className="block text-sm text-gray-600">Status</label>
-          <select
-            className="input"
-            value={status}
-            onChange={(e) => {
-              setStatus(e.target.value as StatusOrAll);
-              setPage(1);
-              clearSelection();
-            }}
+          <div
+            className={
+              'ks-training-select' +
+              (statusOpen ? ' ks-training-select--open' : '')
+            }
           >
-            <option value="all">All ({totalAll ?? total})</option>
-            <option value="confirmed">
-              Confirmed ({counts.confirmed ?? 0})
-            </option>
-            <option value="cancelled">
-              Cancelled ({counts.cancelled ?? 0})
-            </option>
-            <option value="deleted">
-              Deleted ({counts.deleted ?? 0})
-            </option>
-          </select>
+            <button
+              type="button"
+              ref={statusTriggerRef}
+              className="ks-training-select__trigger"
+              onClick={() => setStatusOpen((o) => !o)}
+            >
+              <span className="ks-training-select__label">{statusLabel}</span>
+              <span
+                className="ks-training-select__chevron"
+                aria-hidden="true"
+              />
+            </button>
+
+            {statusOpen && (
+              <ul
+                ref={statusMenuRef}
+                className="ks-training-select__menu"
+                role="listbox"
+                aria-label="Status"
+              >
+                <li>
+                  <button
+                    type="button"
+                    className={
+                      'ks-training-select__option' +
+                      (status === 'all' ? ' is-selected' : '')
+                    }
+                    onClick={() => {
+                      setStatus('all');
+                      setPage(1);
+                      clearSelection();
+                      setStatusOpen(false);
+                    }}
+                  >
+                    All ({totalAll ?? total})
+                  </button>
+                </li>
+                <li>
+                  <button
+                    type="button"
+                    className={
+                      'ks-training-select__option' +
+                      (status === 'confirmed' ? ' is-selected' : '')
+                    }
+                    onClick={() => {
+                      setStatus('confirmed');
+                      setPage(1);
+                      clearSelection();
+                      setStatusOpen(false);
+                    }}
+                  >
+                    Confirmed ({counts.confirmed ?? 0})
+                  </button>
+                </li>
+                <li>
+                  <button
+                    type="button"
+                    className={
+                      'ks-training-select__option' +
+                      (status === 'cancelled' ? ' is-selected' : '')
+                    }
+                    onClick={() => {
+                      setStatus('cancelled');
+                      setPage(1);
+                      clearSelection();
+                      setStatusOpen(false);
+                    }}
+                  >
+                    Cancelled ({counts.cancelled ?? 0})
+                  </button>
+                </li>
+                <li>
+                  <button
+                    type="button"
+                    className={
+                      'ks-training-select__option' +
+                      (status === 'deleted' ? ' is-selected' : '')
+                    }
+                    onClick={() => {
+                      setStatus('deleted');
+                      setPage(1);
+                      clearSelection();
+                      setStatusOpen(false);
+                    }}
+                  >
+                    Deleted ({counts.deleted ?? 0})
+                  </button>
+                </li>
+              </ul>
+            )}
+          </div>
         </div>
       </div>
 
@@ -407,10 +611,18 @@ export default function AdminOnlineBookingsPage() {
           {selectedCount > 0 ? `${selectedCount} ausgewählt` : ''}
         </div>
         <div className="flex gap-2">
-          <button className="btn" onClick={selectAllVisible} disabled={!items.length}>
+          <button
+            className="btn"
+            onClick={selectAllVisible}
+            disabled={!items.length}
+          >
             {allVisibleSelected ? 'Abwählen' : 'Auswählen'}
           </button>
-          <button className="btn" onClick={clearSelection} disabled={!selectedCount}>
+          <button
+            className="btn"
+            onClick={clearSelection}
+            disabled={!selectedCount}
+          >
             Clear
           </button>
           <button
@@ -468,10 +680,12 @@ export default function AdminOnlineBookingsPage() {
                       onChange={(e) => toggleOne(b._id, e.target.checked)}
                     />
                   </td>
-                  <td className="td">{b.firstName} {b.lastName}</td>
+                  <td className="td">
+                    {b.firstName} {b.lastName}
+                  </td>
                   <td className="td">{b.email}</td>
                   <td className="td">{b.age}</td>
-                   <td className="td">{bookingProgramAbbr(b)}</td> 
+                  <td className="td">{bookingProgramAbbr(b)}</td>
                   <td className="td">{asStatus(b.status)}</td>
                   <td className="td">{fmtDate_DE(b.createdAt)}</td>
                 </tr>
@@ -488,51 +702,48 @@ export default function AdminOnlineBookingsPage() {
         </div>
       )}
 
-    
-
       {/* Pager */}
-<div className="pager pager--arrows">
-  <button
-    type="button"
-    className="btn"
-    aria-label="Previous page"
-    disabled={page <= 1}
-    onClick={() => {
-      setPage((p) => Math.max(1, p - 1));
-      clearSelection();
-    }}
-  >
-    <img
-      src="/icons/arrow_right_alt.svg"
-      alt=""
-      aria-hidden="true"
-      className="icon-img icon-img--left"
-    />
-  </button>
+      <div className="pager pager--arrows">
+        <button
+          type="button"
+          className="btn"
+          aria-label="Previous page"
+          disabled={page <= 1}
+          onClick={() => {
+            setPage((p) => Math.max(1, p - 1));
+            clearSelection();
+          }}
+        >
+          <img
+            src="/icons/arrow_right_alt.svg"
+            alt=""
+            aria-hidden="true"
+            className="icon-img icon-img--left"
+          />
+        </button>
 
-  <div className="pager__count" aria-live="polite" aria-atomic="true">
-    {page} / {pages}
-  </div>
+        <div className="pager__count" aria-live="polite" aria-atomic="true">
+          {page} / {pages}
+        </div>
 
-  <button
-    type="button"
-    className="btn"
-    aria-label="Next page"
-    disabled={page >= pages}
-    onClick={() => {
-      setPage((p) => Math.min(pages, p + 1));
-      clearSelection();
-    }}
-  >
-    <img
-      src="/icons/arrow_right_alt.svg"
-      alt=""
-      aria-hidden="true"
-      className="icon-img"
-    />
-  </button>
-</div>
-
+        <button
+          type="button"
+          className="btn"
+          aria-label="Next page"
+          disabled={page >= pages}
+          onClick={() => {
+            setPage((p) => Math.min(pages, p + 1));
+            clearSelection();
+          }}
+        >
+          <img
+            src="/icons/arrow_right_alt.svg"
+            alt=""
+            aria-hidden="true"
+            className="icon-img"
+          />
+        </button>
+      </div>
 
       {/* Dialog */}
       {sel && (
@@ -550,6 +761,10 @@ export default function AdminOnlineBookingsPage() {
     </div>
   );
 }
+
+
+
+
 
 
 
