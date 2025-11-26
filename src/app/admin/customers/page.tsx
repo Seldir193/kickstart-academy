@@ -1,10 +1,17 @@
 'use client';
 
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState, useRef } from 'react';
 import type { Customer, ListResponse } from './types';
 import CustomerDialog from './dialogs/CustomerDialog';
 
 type Tab = 'customers' | 'newsletter' | 'all';
+
+// Optionen für Newsletter-Filter
+const NEWSLETTER_OPTIONS: { value: 'all' | 'true' | 'false'; label: string }[] = [
+  { value: 'all', label: 'All' },
+  { value: 'true', label: 'Yes' },
+  { value: 'false', label: 'No' },
+];
 
 export default function CustomersPage() {
   const [items, setItems] = useState<Customer[]>([]);
@@ -19,8 +26,57 @@ export default function CustomersPage() {
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState<string | null>(null);
 
+
+
+
   const [editing, setEditing] = useState<Customer | null>(null);
   const [createOpen, setCreateOpen] = useState(false);
+
+  // Newsletter-Custom-Dropdown State
+  const [newsletterOpen, setNewsletterOpen] = useState(false);
+  const newsletterRef = useRef<HTMLDivElement | null>(null);
+
+  // Label für aktuellen Newsletter-Wert
+
+  const newsletterLabel = useMemo(() => {
+    switch (newsletter) {
+      case 'true':
+        return 'Yes';
+      case 'false':
+        return 'No';
+      default:
+        return 'All';
+    }
+  }, [newsletter]);
+   
+
+
+  // Click outside schließt Newsletter-Dropdown
+  useEffect(() => {
+    if (!newsletterOpen) return;
+
+    function handleClickOutside(ev: MouseEvent) {
+      if (!newsletterRef.current) return;
+      if (!newsletterRef.current.contains(ev.target as Node)) {
+        setNewsletterOpen(false);
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [newsletterOpen]);
+
+    useEffect(() => {
+    function handleClickOutside(ev: MouseEvent) {
+      if (!newsletterRef.current) return;
+      if (!newsletterRef.current.contains(ev.target as Node)) {
+        setNewsletterOpen(false);
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
 
   // Build query for backend
   const query = useMemo(() => {
@@ -52,9 +108,14 @@ export default function CustomersPage() {
       setLoading(false);
     }
   }
-  useEffect(() => { load(); }, [query]);
+  useEffect(() => {
+    load();
+  }, [query]);
 
   const pages = Math.max(1, Math.ceil(total / limit));
+
+   
+
 
   function switchTab(next: Tab) {
     setTab(next);
@@ -63,7 +124,7 @@ export default function CustomersPage() {
   }
 
   return (
-    <div className="p-4 max-w-6xl mx-auto">
+    <div className="ks-customers-admin p-4 max-w-6xl mx-auto">
       <div className="flex items-center justify-between mb-4">
         <h1 className="text-2xl font-bold">Customers</h1>
         <button className="btn btn-primary" onClick={() => setCreateOpen(true)}>
@@ -93,8 +154,13 @@ export default function CustomersPage() {
         </button>
       </div>
 
+
+
+
+
+
       {/* Filters */}
-      <div className="flex gap-2 items-end mb-3">
+      <div className="flex gap-2 items-end mb-3 ks-customers-filter-row">
         <div className="flex-1">
           <label className="block text-sm text-gray-600">Search</label>
           <input
@@ -107,22 +173,51 @@ export default function CustomersPage() {
             }}
           />
         </div>
+
         <div>
           <label className="block text-sm text-gray-600">Newsletter</label>
-          <select
-            className="input"
-            value={newsletter}
-            onChange={(e) => {
-              setPage(1);
-              setNewsletter(e.target.value as any);
-            }}
+
+          <div
+            ref={newsletterRef}
+            className={`ks-filter-select ${newsletterOpen ? 'ks-filter-select--open' : ''}`}
           >
-            <option value="all">All</option>
-            <option value="true">Yes</option>
-            <option value="false">No</option>
-          </select>
+            <button
+              type="button"
+              className="ks-filter-select__trigger"
+              onClick={() => setNewsletterOpen(open => !open)}
+            >
+              <span className="ks-filter-select__label">{newsletterLabel}</span>
+              <span className="ks-filter-select__chevron" aria-hidden="true" />
+            </button>
+
+            {newsletterOpen && (
+              <ul className="ks-filter-select__menu">
+                {['all', 'true', 'false'].map(val => (
+                  <li key={val}>
+                    <button
+                      type="button"
+                      className={
+                        'ks-filter-select__option' +
+                        (newsletter === val ? ' is-selected' : '')
+                      }
+                      onClick={() => {
+                        setPage(1);
+                        setNewsletter(val as any);
+                        setNewsletterOpen(false);
+                      }}
+                    >
+                      {val === 'all' ? 'All' : val === 'true' ? 'Yes' : 'No'}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
         </div>
       </div>
+
+            
+
 
       {loading && <div className="card">Loading…</div>}
       {err && <div className="card text-red-600">{err}</div>}
@@ -143,11 +238,14 @@ export default function CustomersPage() {
               </tr>
             </thead>
             <tbody>
-              {items.map((c) => {
+              {items.map(c => {
                 const bookings = c.bookings || [];
                 const hasBookings = bookings.length > 0;
                 const hasActive = bookings.some(
-                  (b: any) => !['cancelled', 'deleted', 'storno'].includes((b?.status as string) || '')
+                  (b: any) =>
+                    !['cancelled', 'deleted', 'storno'].includes(
+                      ((b?.status as string) || '') as string,
+                    ),
                 );
                 const isCustomer = hasBookings;
 
@@ -169,7 +267,8 @@ export default function CustomersPage() {
                       {[c.child?.firstName, c.child?.lastName].filter(Boolean).join(' ') || '—'}
                     </td>
                     <td className="td">
-                      {[c.parent?.firstName, c.parent?.lastName].filter(Boolean).join(' ') || '—'}
+                      {[c.parent?.firstName, c.parent?.lastName].filter(Boolean).join(' ') ||
+                        '—'}
                     </td>
                     <td className="td">{c.parent?.email || '—'}</td>
                     <td className="td">
@@ -199,48 +298,42 @@ export default function CustomersPage() {
         </div>
       )}
 
+      {/* Pagination (Icon-Style wie Invoices/globals.base.scss) */}
+      <div className="pager pager--arrows">
+        <button
+          type="button"
+          className="btn"
+          aria-label="Previous page"
+          disabled={page <= 1}
+          onClick={() => setPage(p => Math.max(1, p - 1))}
+        >
+          <img
+            src="/icons/arrow_right_alt.svg"
+            alt=""
+            aria-hidden="true"
+            className="icon-img icon-img--left"
+          />
+        </button>
 
-{/* Pagination (Icon-Style wie Invoices/globals.base.scss) */}
-<div className="pager pager--arrows">
-  <button
-    type="button"
-    className="btn"
-    aria-label="Previous page"
-    disabled={page <= 1}
-    onClick={() => setPage((p) => Math.max(1, p - 1))}
-  >
-    <img
-      src="/icons/arrow_right_alt.svg"
-      alt=""
-      aria-hidden="true"
-      className="icon-img icon-img--left"
-    />
-  </button>
+        <div className="pager__count" aria-live="polite" aria-atomic="true">
+          {page} / {pages}
+        </div>
 
-  <div className="pager__count" aria-live="polite" aria-atomic="true">
-    {page} / {pages}
-  </div>
-
-  <button
-    type="button"
-    className="btn"
-    aria-label="Next page"
-    disabled={page >= pages}
-    onClick={() => setPage((p) => Math.min(pages, p + 1))}
-  >
-    <img
-      src="/icons/arrow_right_alt.svg"
-      alt=""
-      aria-hidden="true"
-      className="icon-img"
-    />
-  </button>
-</div>
-
-
-
-       
-
+        <button
+          type="button"
+          className="btn"
+          aria-label="Next page"
+          disabled={page >= pages}
+          onClick={() => setPage(p => Math.min(pages, p + 1))}
+        >
+          <img
+            src="/icons/arrow_right_alt.svg"
+            alt=""
+            aria-hidden="true"
+            className="icon-img"
+          />
+        </button>
+      </div>
 
       {createOpen && (
         <CustomerDialog
@@ -270,16 +363,6 @@ export default function CustomersPage() {
     </div>
   );
 }
-
-
-
-
-
-
-
-
-
-
 
 
 
