@@ -1,7 +1,7 @@
 // app/admin/bookings/page.tsx
 'use client';
 
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import BookingDialog from './BookingDialog';
 
 /* ============ Types ============ */
@@ -64,6 +64,11 @@ function useDebouncedValue<T>(value: T, delay = 300) {
 
 /* ============ Helpers ============ */
 const PAGE_SIZE = 10;
+
+/* kleines clsx wie auf anderen Seiten */
+function clsx(...xs: Array<string | false | null | undefined>) {
+  return xs.filter(Boolean).join(' ');
+}
 
 function fmtDate_DE(value?: string) {
   if (!value) return '—';
@@ -305,9 +310,6 @@ export default function AdminBookingsPage() {
 
   /* ===== Server-Aktionen (Einzel) ===== */
 
-  // app/admin/bookings/page.tsx
-
-
   async function apiConfirm(id: string, resend = false): Promise<string> {
     const url = `/api/admin/bookings/${encodeURIComponent(id)}/confirm${
       resend ? '?resend=1' : ''
@@ -336,9 +338,6 @@ export default function AdminBookingsPage() {
       ? 'Bestätigung erneut gesendet.'
       : 'Buchung bestätigt und E-Mail versendet.';
   }
-
-
-
 
   async function apiSetStatus(
     id: string,
@@ -466,8 +465,84 @@ export default function AdminBookingsPage() {
     }
   }
 
+  /* ===== Dropdown-Labels für ks-selectbox ===== */
+
+  const programLabel = useMemo(() => {
+    switch (program) {
+      case 'all':
+        return 'All courses';
+      case 'weekly_foerdertraining':
+        return 'Foerdertraining';
+      case 'weekly_kindergarten':
+        return 'Soccer Kindergarten';
+      case 'weekly_goalkeeper':
+        return 'Goalkeeper Training';
+      case 'weekly_development_athletik':
+        return 'Development Training • Athletik';
+      case 'ind_1to1':
+        return '1:1 Training';
+      case 'ind_1to1_athletik':
+        return '1:1 Training Athletik';
+      case 'ind_1to1_goalkeeper':
+        return '1:1 Training Torwart';
+      case 'club_rentacoach':
+        return 'Rent-a-Coach';
+      case 'club_trainingcamps':
+        return 'Training Camps';
+      case 'club_coacheducation':
+        return 'Coach Education';
+      default:
+        return 'All courses';
+    }
+  }, [program]);
+
+  const statusLabel = useMemo(() => {
+    switch (status) {
+      case 'all':
+        return `All (${allCount})`;
+      case 'pending':
+        return `Pending (${globalCounts.pending ?? 0})`;
+      case 'processing':
+        return `Processing (${globalCounts.processing ?? 0})`;
+      case 'confirmed':
+        return `Confirmed (${globalCounts.confirmed ?? 0})`;
+      case 'cancelled':
+        return `Cancelled (${globalCounts.cancelled ?? 0})`;
+      case 'deleted':
+        return `Deleted (${globalCounts.deleted ?? 0})`;
+      default:
+        return `All (${allCount})`;
+    }
+  }, [status, allCount, globalCounts]);
+
+  /* ===== Dropdown-Open-States + Outside-Click ===== */
+
+  const [programOpen, setProgramOpen] = useState(false);
+  const [statusOpen, setStatusOpen] = useState(false);
+
+  const programRef = useRef<HTMLDivElement | null>(null);
+  const statusRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    function handlePointerDown(e: PointerEvent) {
+      const target = e.target as Node | null;
+      if (!target) return;
+
+      if (programRef.current?.contains(target)) return;
+      if (statusRef.current?.contains(target)) return;
+
+      if (programOpen) setProgramOpen(false);
+      if (statusOpen) setStatusOpen(false);
+    }
+
+    document.addEventListener('pointerdown', handlePointerDown);
+    return () => {
+      document.removeEventListener('pointerdown', handlePointerDown);
+    };
+  }, [programOpen, statusOpen]);
+
   return (
-    <div className="p-4 max-w-6xl mx-auto">
+    <div className="ks bookings-admin p-4 max-w-6xl mx-auto">
       {/* Head */}
       <div className="flex items-center justify-between mb-4">
         <h1 className="text-2xl font-bold">Bookings</h1>
@@ -514,70 +589,352 @@ export default function AdminBookingsPage() {
           />
         </div>
 
-        {/* Kurs-Filter wie im WordPress-Formular (ohne Holiday) */}
+        {/* Kurs-Filter – jetzt als ks-selectbox */}
         <div style={{ minWidth: 260 }}>
           <label className="block text-sm text-gray-600">Course</label>
-          <select
-            className="input"
-            value={program}
-            onChange={(e) => {
-              setProgram(e.target.value as ProgramFilter);
-              setPage(1);
-              clearSelection();
-            }}
+          <div
+            ref={programRef}
+            className={clsx(
+              'ks-selectbox',
+              programOpen && 'ks-selectbox--open',
+            )}
           >
-            <option value="all">All courses</option>
+            <button
+              type="button"
+              className="ks-selectbox__trigger"
+              onClick={() => setProgramOpen((o) => !o)}
+              aria-haspopup="listbox"
+              aria-expanded={programOpen}
+            >
+              <span className="ks-selectbox__label">{programLabel}</span>
+              <span className="ks-selectbox__chevron" aria-hidden="true" />
+            </button>
 
-            <optgroup label="Weekly Courses">
-              <option value="weekly_foerdertraining">Foerdertraining</option>
-              <option value="weekly_kindergarten">Soccer Kindergarten</option>
-              <option value="weekly_goalkeeper">Goalkeeper Training</option>
-              <option value="weekly_development_athletik">
-                Development Training • Athletik
-              </option>
-            </optgroup>
+            {programOpen && (
+              <div className="ks-selectbox__panel" role="listbox">
+                {/* All */}
+                <button
+                  type="button"
+                  className={clsx(
+                    'ks-selectbox__option',
+                    program === 'all' && 'ks-selectbox__option--active',
+                  )}
+                  onClick={() => {
+                    setProgram('all');
+                    setPage(1);
+                    clearSelection();
+                    setProgramOpen(false);
+                  }}
+                >
+                  All courses
+                </button>
 
-            <optgroup label="Individual Courses">
-              <option value="ind_1to1">1:1 Training</option>
-              <option value="ind_1to1_athletik">1:1 Training Athletik</option>
-              <option value="ind_1to1_goalkeeper">1:1 Training Torwart</option>
-            </optgroup>
+                {/* Weekly Courses */}
+                <div className="ks-selectbox__group">
+                  <div className="ks-selectbox__group-label">
+                    Weekly Courses
+                  </div>
+                  <button
+                    type="button"
+                    className={clsx(
+                      'ks-selectbox__option',
+                      program === 'weekly_foerdertraining' &&
+                        'ks-selectbox__option--active',
+                    )}
+                    onClick={() => {
+                      setProgram('weekly_foerdertraining');
+                      setPage(1);
+                      clearSelection();
+                      setProgramOpen(false);
+                    }}
+                  >
+                    Foerdertraining
+                  </button>
+                  <button
+                    type="button"
+                    className={clsx(
+                      'ks-selectbox__option',
+                      program === 'weekly_kindergarten' &&
+                        'ks-selectbox__option--active',
+                    )}
+                    onClick={() => {
+                      setProgram('weekly_kindergarten');
+                      setPage(1);
+                      clearSelection();
+                      setProgramOpen(false);
+                    }}
+                  >
+                    Soccer Kindergarten
+                  </button>
+                  <button
+                    type="button"
+                    className={clsx(
+                      'ks-selectbox__option',
+                      program === 'weekly_goalkeeper' &&
+                        'ks-selectbox__option--active',
+                    )}
+                    onClick={() => {
+                      setProgram('weekly_goalkeeper');
+                      setPage(1);
+                      clearSelection();
+                      setProgramOpen(false);
+                    }}
+                  >
+                    Goalkeeper Training
+                  </button>
+                  <button
+                    type="button"
+                    className={clsx(
+                      'ks-selectbox__option',
+                      program === 'weekly_development_athletik' &&
+                        'ks-selectbox__option--active',
+                    )}
+                    onClick={() => {
+                      setProgram('weekly_development_athletik');
+                      setPage(1);
+                      clearSelection();
+                      setProgramOpen(false);
+                    }}
+                  >
+                    Development Training • Athletik
+                  </button>
+                </div>
 
-            <optgroup label="Club Programs">
-              <option value="club_rentacoach">Rent-a-Coach</option>
-              <option value="club_trainingcamps">Training Camps</option>
-              <option value="club_coacheducation">Coach Education</option>
-            </optgroup>
-          </select>
+                {/* Individual Courses */}
+                <div className="ks-selectbox__group">
+                  <div className="ks-selectbox__group-label">
+                    Individual Courses
+                  </div>
+                  <button
+                    type="button"
+                    className={clsx(
+                      'ks-selectbox__option',
+                      program === 'ind_1to1' &&
+                        'ks-selectbox__option--active',
+                    )}
+                    onClick={() => {
+                      setProgram('ind_1to1');
+                      setPage(1);
+                      clearSelection();
+                      setProgramOpen(false);
+                    }}
+                  >
+                    1:1 Training
+                  </button>
+                  <button
+                    type="button"
+                    className={clsx(
+                      'ks-selectbox__option',
+                      program === 'ind_1to1_athletik' &&
+                        'ks-selectbox__option--active',
+                    )}
+                    onClick={() => {
+                      setProgram('ind_1to1_athletik');
+                      setPage(1);
+                      clearSelection();
+                      setProgramOpen(false);
+                    }}
+                  >
+                    1:1 Training Athletik
+                  </button>
+                  <button
+                    type="button"
+                    className={clsx(
+                      'ks-selectbox__option',
+                      program === 'ind_1to1_goalkeeper' &&
+                        'ks-selectbox__option--active',
+                    )}
+                    onClick={() => {
+                      setProgram('ind_1to1_goalkeeper');
+                      setPage(1);
+                      clearSelection();
+                      setProgramOpen(false);
+                    }}
+                  >
+                    1:1 Training Torwart
+                  </button>
+                </div>
+
+                {/* Club Programs */}
+                <div className="ks-selectbox__group">
+                  <div className="ks-selectbox__group-label">
+                    Club Programs
+                  </div>
+                  <button
+                    type="button"
+                    className={clsx(
+                      'ks-selectbox__option',
+                      program === 'club_rentacoach' &&
+                        'ks-selectbox__option--active',
+                    )}
+                    onClick={() => {
+                      setProgram('club_rentacoach');
+                      setPage(1);
+                      clearSelection();
+                      setProgramOpen(false);
+                    }}
+                  >
+                    Rent-a-Coach
+                  </button>
+                  <button
+                    type="button"
+                    className={clsx(
+                      'ks-selectbox__option',
+                      program === 'club_trainingcamps' &&
+                        'ks-selectbox__option--active',
+                    )}
+                    onClick={() => {
+                      setProgram('club_trainingcamps');
+                      setPage(1);
+                      clearSelection();
+                      setProgramOpen(false);
+                    }}
+                  >
+                    Training Camps
+                  </button>
+                  <button
+                    type="button"
+                    className={clsx(
+                      'ks-selectbox__option',
+                      program === 'club_coacheducation' &&
+                        'ks-selectbox__option--active',
+                    )}
+                    onClick={() => {
+                      setProgram('club_coacheducation');
+                      setPage(1);
+                      clearSelection();
+                      setProgramOpen(false);
+                    }}
+                  >
+                    Coach Education
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
 
-        {/* Status-Filter */}
+        {/* Status-Filter – jetzt als ks-selectbox */}
         <div style={{ minWidth: 220 }}>
           <label className="block text-sm text-gray-600">Status</label>
-          <select
-            className="input"
-            value={status}
-            onChange={(e) => {
-              setStatus(e.target.value as StatusOrAll);
-              setPage(1);
-              clearSelection();
-            }}
+          <div
+            ref={statusRef}
+            className={clsx(
+              'ks-selectbox',
+              statusOpen && 'ks-selectbox--open',
+            )}
           >
-            <option value="all">All ({allCount})</option>
-            <option value="pending">Pending ({globalCounts.pending ?? 0})</option>
-            <option value="processing">
-              Processing ({globalCounts.processing ?? 0})
-            </option>
-            <option value="confirmed">
-              Confirmed ({globalCounts.confirmed ?? 0})
-            </option>
-            <option value="cancelled">
-              Cancelled ({globalCounts.cancelled ?? 0})
-            </option>
-            <option value="deleted">
-              Deleted ({globalCounts.deleted ?? 0})
-            </option>
-          </select>
+            <button
+              type="button"
+              className="ks-selectbox__trigger"
+              onClick={() => setStatusOpen((o) => !o)}
+              aria-haspopup="listbox"
+              aria-expanded={statusOpen}
+            >
+              <span className="ks-selectbox__label">{statusLabel}</span>
+              <span className="ks-selectbox__chevron" aria-hidden="true" />
+            </button>
+
+            {statusOpen && (
+              <div className="ks-selectbox__panel" role="listbox">
+                <button
+                  type="button"
+                  className={clsx(
+                    'ks-selectbox__option',
+                    status === 'all' && 'ks-selectbox__option--active',
+                  )}
+                  onClick={() => {
+                    setStatus('all');
+                    setPage(1);
+                    clearSelection();
+                    setStatusOpen(false);
+                  }}
+                >
+                  All ({allCount})
+                </button>
+                <button
+                  type="button"
+                  className={clsx(
+                    'ks-selectbox__option',
+                    status === 'pending' &&
+                      'ks-selectbox__option--active',
+                  )}
+                  onClick={() => {
+                    setStatus('pending');
+                    setPage(1);
+                    clearSelection();
+                    setStatusOpen(false);
+                  }}
+                >
+                  Pending ({globalCounts.pending ?? 0})
+                </button>
+                <button
+                  type="button"
+                  className={clsx(
+                    'ks-selectbox__option',
+                    status === 'processing' &&
+                      'ks-selectbox__option--active',
+                  )}
+                  onClick={() => {
+                    setStatus('processing');
+                    setPage(1);
+                    clearSelection();
+                    setStatusOpen(false);
+                  }}
+                >
+                  Processing ({globalCounts.processing ?? 0})
+                </button>
+                <button
+                  type="button"
+                  className={clsx(
+                    'ks-selectbox__option',
+                    status === 'confirmed' &&
+                      'ks-selectbox__option--active',
+                  )}
+                  onClick={() => {
+                    setStatus('confirmed');
+                    setPage(1);
+                    clearSelection();
+                    setStatusOpen(false);
+                  }}
+                >
+                  Confirmed ({globalCounts.confirmed ?? 0})
+                </button>
+                <button
+                  type="button"
+                  className={clsx(
+                    'ks-selectbox__option',
+                    status === 'cancelled' &&
+                      'ks-selectbox__option--active',
+                  )}
+                  onClick={() => {
+                    setStatus('cancelled');
+                    setPage(1);
+                    clearSelection();
+                    setStatusOpen(false);
+                  }}
+                >
+                  Cancelled ({globalCounts.cancelled ?? 0})
+                </button>
+                <button
+                  type="button"
+                  className={clsx(
+                    'ks-selectbox__option',
+                    status === 'deleted' &&
+                      'ks-selectbox__option--active',
+                  )}
+                  onClick={() => {
+                    setStatus('deleted');
+                    setPage(1);
+                    clearSelection();
+                    setStatusOpen(false);
+                  }}
+                >
+                  Deleted ({globalCounts.deleted ?? 0})
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
