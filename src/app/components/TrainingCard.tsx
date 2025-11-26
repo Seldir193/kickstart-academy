@@ -1,14 +1,19 @@
-
-
-
-
-
 // src/app/components/TrainingCard.tsx
 'use client';
 
-import React, { useEffect, useMemo, useState } from 'react';
-import { GROUPED_COURSE_OPTIONS, ALL_COURSE_OPTIONS } from '@/app/lib/courseOptions';
-import OfferCreateDialog, { CreateOfferPayload } from '@/app/components/OfferCreateDialog';
+import React, {
+  useEffect,
+  useMemo,
+  useState,
+  useRef,
+} from 'react';
+import {
+  GROUPED_COURSE_OPTIONS,
+  ALL_COURSE_OPTIONS,
+} from '@/app/lib/courseOptions';
+import OfferCreateDialog, {
+  CreateOfferPayload,
+} from '@/app/components/OfferCreateDialog';
 import { useSearchParams } from 'next/navigation';
 
 type Offer = {
@@ -66,21 +71,48 @@ export default function TrainingCard() {
   const [bootstrappedFromURL, setBootstrappedFromURL] = useState(false);
   const pendingOpenIdRef = React.useRef<string | null>(null);
 
+  // Custom-Dropdowns: Locations + Courses
+  const [locationOpen, setLocationOpen] = useState(false);
+  const [courseOpen, setCourseOpen] = useState(false);
+  const locationDropdownRef = useRef<HTMLDivElement | null>(null);
+  const courseDropdownRef = useRef<HTMLDivElement | null>(null);
+
+  /* ==== Outside-Click: Dropdowns schließen ==== */
+  useEffect(() => {
+    function handleDown(ev: MouseEvent) {
+      const t = ev.target as Node;
+      if (
+        locationDropdownRef.current &&
+        locationDropdownRef.current.contains(t)
+      ) {
+        return;
+      }
+      if (courseDropdownRef.current && courseDropdownRef.current.contains(t)) {
+        return;
+      }
+      setLocationOpen(false);
+      setCourseOpen(false);
+    }
+    document.addEventListener('mousedown', handleDown);
+    return () => document.removeEventListener('mousedown', handleDown);
+  }, []);
+
+  /* ==== URL-Initialisierung ==== */
   useEffect(() => {
     if (bootstrappedFromURL) return;
     if (!searchParams) return;
 
     const sp = searchParams;
 
-    const qParam   = sp.get('q');
+    const qParam = sp.get('q');
     const locParam = sp.get('location') || sp.get('city');
-    const course   = sp.get('course');
-    const type     = sp.get('type');
-    const cat      = sp.get('category');
-    const sub      = sp.get('sub_type');
-    const openId   = sp.get('open');
+    const course = sp.get('course');
+    const type = sp.get('type');
+    const cat = sp.get('category');
+    const sub = sp.get('sub_type');
+    const openId = sp.get('open');
 
-    if (qParam)   setQ(qParam);
+    if (qParam) setQ(qParam);
     if (locParam) setLocationFilter(locParam);
 
     if (course) {
@@ -109,9 +141,11 @@ export default function TrainingCard() {
         const j = await r.json().catch(() => ({}));
         const arr: any[] = Array.isArray(j?.items) ? j.items : [];
         const cityList = arr
-          .map((p) => String(p?.city ?? '').trim())
-          .filter((s) => s.length > 0);
-        const unique = Array.from(new Set(cityList)).sort((a, b) => a.localeCompare(b));
+          .map(p => String(p?.city ?? '').trim())
+          .filter(s => s.length > 0);
+        const unique = Array.from(new Set(cityList)).sort((a, b) =>
+          a.localeCompare(b),
+        );
         setLocations(unique);
       } catch {
         setLocations([]);
@@ -128,7 +162,7 @@ export default function TrainingCard() {
     params.set('page', String(page));
     params.set('limit', String(limit));
 
-    const chosen = ALL_COURSE_OPTIONS.find((x) => x.value === courseValue);
+    const chosen = ALL_COURSE_OPTIONS.find(x => x.value === courseValue);
     if (chosen) {
       if (chosen.mode === 'type') {
         params.set('type', chosen.value);
@@ -158,7 +192,10 @@ export default function TrainingCard() {
           const raw = await r.json().catch(() => ({}));
           const d: OffersResponse = Array.isArray(raw)
             ? { items: raw as Offer[], total: (raw as Offer[]).length }
-            : { items: Array.isArray(raw.items) ? raw.items : [], total: Number(raw.total || 0) };
+            : {
+                items: Array.isArray(raw.items) ? raw.items : [],
+                total: Number(raw.total || 0),
+              };
           setItems(d.items);
           setTotal(d.total);
           // Auswahl zurücksetzen, wenn Seite/Daten wechseln
@@ -183,7 +220,7 @@ export default function TrainingCard() {
   useEffect(() => {
     if (!pendingOpenIdRef.current || !items.length) return;
     const id = pendingOpenIdRef.current;
-    const found = items.find((o) => o._id === id);
+    const found = items.find(o => o._id === id);
     if (found) {
       setEditing(found);
       setEditOpen(true);
@@ -192,7 +229,10 @@ export default function TrainingCard() {
   }, [items]);
 
   const pageCount = Math.max(1, Math.ceil(total / limit));
-  const startEdit = (o: Offer) => { setEditing(o); setEditOpen(true); };
+  const startEdit = (o: Offer) => {
+    setEditing(o);
+    setEditOpen(true);
+  };
 
   async function handleCreate(payload: CreateOfferPayload) {
     try {
@@ -215,7 +255,7 @@ export default function TrainingCard() {
       setCreateOpen(false);
       setPage(1);
       setQ('');
-      setRefreshTick((x) => x + 1);
+      setRefreshTick(x => x + 1);
     }
   }
 
@@ -239,7 +279,7 @@ export default function TrainingCard() {
     } finally {
       setEditOpen(false);
       setEditing(null);
-      setRefreshTick((x) => x + 1);
+      setRefreshTick(x => x + 1);
     }
   }
 
@@ -247,17 +287,20 @@ export default function TrainingCard() {
     const ok = window.confirm(`Delete offer "${o.title ?? o.type}"?`);
     if (!ok) return;
     try {
-      const res = await fetch(`/api/admin/offers/${encodeURIComponent(o._id)}`, {
-        method: 'DELETE',
-        cache: 'no-store',
-      });
+      const res = await fetch(
+        `/api/admin/offers/${encodeURIComponent(o._id)}`,
+        {
+          method: 'DELETE',
+          cache: 'no-store',
+        },
+      );
       if (!res.ok) {
         const err = await res.json().catch(() => ({}));
         console.error('Delete failed', err);
       } else {
-        setItems((prev) => prev.filter((x) => x._id !== o._id));
-        setTotal((t) => Math.max(0, t - 1));
-        setSelectedIds((prev) => prev.filter((id) => id !== o._id));
+        setItems(prev => prev.filter(x => x._id !== o._id));
+        setTotal(t => Math.max(0, t - 1));
+        setSelectedIds(prev => prev.filter(id => id !== o._id));
       }
     } catch (e) {
       console.error('Delete error', e);
@@ -267,14 +310,19 @@ export default function TrainingCard() {
   // Bulk-Delete (nur aktuelle Seite)
   async function handleBulkDelete() {
     if (selectedIds.length === 0) return;
-    const ok = window.confirm(`Delete ${selectedIds.length} selected offer(s)?`);
+    const ok = window.confirm(
+      `Delete ${selectedIds.length} selected offer(s)?`,
+    );
     if (!ok) return;
     for (const id of selectedIds) {
       try {
-        const res = await fetch(`/api/admin/offers/${encodeURIComponent(id)}`, {
-          method: 'DELETE',
-          cache: 'no-store',
-        });
+        const res = await fetch(
+          `/api/admin/offers/${encodeURIComponent(id)}`,
+          {
+            method: 'DELETE',
+            cache: 'no-store',
+          },
+        );
         if (!res.ok) {
           const err = await res.json().catch(() => ({}));
           console.error('Bulk delete failed for', id, err);
@@ -283,7 +331,7 @@ export default function TrainingCard() {
         console.error('Bulk delete error for', id, e);
       }
     }
-    setRefreshTick((x) => x + 1);
+    setRefreshTick(x => x + 1);
     setSelectedIds([]);
   }
 
@@ -292,24 +340,42 @@ export default function TrainingCard() {
   // Auswahl-Helpers
   const allSelected = items.length > 0 && selectedIds.length === items.length;
   const toggleSelect = (id: string, checked: boolean) => {
-    setSelectedIds((prev) =>
-      checked ? Array.from(new Set([...prev, id])) : prev.filter((x) => x !== id)
+    setSelectedIds(prev =>
+      checked ? Array.from(new Set([...prev, id])) : prev.filter(x => x !== id),
     );
   };
   const toggleSelectAll = (checked: boolean) => {
-    if (!checked) { setSelectedIds([]); return; }
-    setSelectedIds(items.map((x) => x._id));
+    if (!checked) {
+      setSelectedIds([]);
+      return;
+    }
+    setSelectedIds(items.map(x => x._id));
   };
 
+  /* ======= Labels für Custom-Dropdowns ======= */
+
+  const locationLabel = useMemo(() => {
+    if (!locationFilter) return 'All locations';
+    return locationFilter;
+  }, [locationFilter]);
+
+  const courseLabel = useMemo(() => {
+    if (!courseValue) return 'All courses';
+    const found =
+      ALL_COURSE_OPTIONS.find(o => o.value === courseValue) || null;
+    return found?.label || 'All courses';
+  }, [courseValue]);
+
   return (
-    <div className="ks">
+    <div className="ks ks-training-admin">
       {/* == wie booking: schmaler, zentrierter Hauptbereich == */}
       <div className="p-4 max-w-6xl mx-auto">
         {/* Intro (wie booking) */}
         <header className="mb-4">
           <h1 className="text-2xl font-bold m-0">Trainings</h1>
           <p className="text-gray-700 m-0">
-            Choose a session and book your spot. No account required (coming soon).
+            Choose a session and book your spot. No account required (coming
+            soon).
           </p>
         </header>
 
@@ -317,52 +383,172 @@ export default function TrainingCard() {
         <section className="filters">
           <div className="filters__row">
             <div className="filters__field">
-              <button className="btn btn--primary" onClick={() => setCreateOpen(true)}>
+              <button
+                className="btn btn--primary"
+                onClick={() => setCreateOpen(true)}
+              >
                 Create new offer
               </button>
             </div>
 
             <div className="filters__field filters__field--grow">
-              <label className="label">Search offers (min. 2 letters)</label>
+              <label className="label">
+                Search offers (min. 2 letters)
+              </label>
               <input
                 value={q}
-                onChange={(e) => { setQ(e.target.value); setPage(1); }}
+                onChange={e => {
+                  setQ(e.target.value);
+                  setPage(1);
+                }}
                 className="input"
                 placeholder="e.g., Summer Camp or street/city/zip"
               />
             </div>
           </div>
 
+          {/* Locations – Custom Dropdown */}
           <div className="filters__field">
             <label className="label">Locations</label>
-            <select
-              className="input"
-              value={locationFilter}
-              onChange={(e) => { setLocationFilter(e.target.value); setPage(1); }}
+            <div
+              className={clsx(
+                'ks-training-select',
+                locationOpen && 'ks-training-select--open',
+              )}
+              ref={locationDropdownRef}
             >
-              <option value="">All locations</option>
-              {locations.map((loc) => (
-                <option key={loc} value={loc}>{loc}</option>
-              ))}
-            </select>
+              <button
+                type="button"
+                className="ks-training-select__trigger"
+                onClick={() => {
+                  setLocationOpen(open => !open);
+                  setCourseOpen(false);
+                }}
+              >
+                <span className="ks-training-select__label">
+                  {locationLabel}
+                </span>
+                <span
+                  className="ks-training-select__chevron"
+                  aria-hidden="true"
+                />
+              </button>
+
+              {locationOpen && (
+                <ul className="ks-training-select__menu" role="listbox">
+                  <li>
+                    <button
+                      type="button"
+                      className={clsx(
+                        'ks-training-select__option',
+                        !locationFilter && 'is-selected',
+                      )}
+                      onClick={() => {
+                        setLocationFilter('');
+                        setPage(1);
+                        setLocationOpen(false);
+                      }}
+                    >
+                      All locations
+                    </button>
+                  </li>
+                  {locations.map(loc => (
+                    <li key={loc}>
+                      <button
+                        type="button"
+                        className={clsx(
+                          'ks-training-select__option',
+                          locationFilter === loc && 'is-selected',
+                        )}
+                        onClick={() => {
+                          setLocationFilter(loc);
+                          setPage(1);
+                          setLocationOpen(false);
+                        }}
+                      >
+                        {loc}
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
           </div>
 
+          {/* Courses – Custom Dropdown (gruppiert wie vorher) */}
           <div className="filters__field">
             <label className="label">Courses</label>
-            <select
-              className="input"
-              value={courseValue}
-              onChange={(e) => { setCourseValue(e.target.value); setPage(1); }}
+            <div
+              className={clsx(
+                'ks-training-select',
+                courseOpen && 'ks-training-select--open',
+              )}
+              ref={courseDropdownRef}
             >
-              <option value="">All courses</option>
-              {GROUPED_COURSE_OPTIONS.map((group) => (
-                <optgroup key={group.label} label={group.label}>
-                  {group.items.map((opt) => (
-                    <option key={opt.value} value={opt.value}>{opt.label}</option>
+              <button
+                type="button"
+                className="ks-training-select__trigger"
+                onClick={() => {
+                  setCourseOpen(open => !open);
+                  setLocationOpen(false);
+                }}
+              >
+                <span className="ks-training-select__label">
+                  {courseLabel}
+                </span>
+                <span
+                  className="ks-training-select__chevron"
+                  aria-hidden="true"
+                />
+              </button>
+
+              {courseOpen && (
+                <div className="ks-training-select__menu ks-training-select__menu--grouped">
+                  <button
+                    type="button"
+                    className={clsx(
+                      'ks-training-select__option ks-training-select__option--top',
+                      !courseValue && 'is-selected',
+                    )}
+                    onClick={() => {
+                      setCourseValue('');
+                      setPage(1);
+                      setCourseOpen(false);
+                    }}
+                  >
+                    All courses
+                  </button>
+
+                  {GROUPED_COURSE_OPTIONS.map(group => (
+                    <div
+                      key={group.label}
+                      className="ks-training-select__group"
+                    >
+                      <div className="ks-training-select__group-label">
+                        {group.label}
+                      </div>
+                      {group.items.map(opt => (
+                        <button
+                          key={opt.value}
+                          type="button"
+                          className={clsx(
+                            'ks-training-select__option',
+                            courseValue === opt.value && 'is-selected',
+                          )}
+                          onClick={() => {
+                            setCourseValue(opt.value);
+                            setPage(1);
+                            setCourseOpen(false);
+                          }}
+                        >
+                          {opt.label}
+                        </button>
+                      ))}
+                    </div>
                   ))}
-                </optgroup>
-              ))}
-            </select>
+                </div>
+              )}
+            </div>
           </div>
         </section>
 
@@ -373,9 +559,22 @@ export default function TrainingCard() {
               <h3 className="card-title m-0">
                 {selectedIds.length} selected
               </h3>
-              <div className="card-actions" style={{ display: 'flex', gap: 8 }}>
-                <button className="btn" onClick={() => setSelectedIds([])}>Clear</button>
-                <button className="btn btn-primary" onClick={handleBulkDelete}>Delete selected</button>
+              <div
+                className="card-actions"
+                style={{ display: 'flex', gap: 8 }}
+              >
+                <button
+                  className="btn"
+                  onClick={() => setSelectedIds([])}
+                >
+                  Clear
+                </button>
+                <button
+                  className="btn btn-primary"
+                  onClick={handleBulkDelete}
+                >
+                  Delete selected
+                </button>
               </div>
             </div>
           </section>
@@ -402,44 +601,62 @@ export default function TrainingCard() {
               >
                 <label
                   className="label"
-                  style={{ display: 'flex', alignItems: 'center', gap: 10, margin: 0, cursor: 'pointer' }}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 10,
+                    margin: 0,
+                    cursor: 'pointer',
+                  }}
                 >
                   <input
                     type="checkbox"
                     checked={allSelected}
                     aria-label="Alle auswählen"
-                    onChange={(e) => toggleSelectAll(e.target.checked)}
-                    onClick={(e) => e.stopPropagation()}
+                    onChange={e =>
+                      toggleSelectAll(e.target.checked)
+                    }
+                    onClick={e => e.stopPropagation()}
                   />
                   Alle auswählen
                 </label>
               </div>
 
               <ul className="list list--bleed">
-                {items.map((it) => {
+                {items.map(it => {
                   const isChecked = selectedIds.includes(it._id);
                   return (
                     <li
                       key={it._id}
                       className="list__item chip is-fullhover is-interactive"
                       onClick={() => startEdit(it)}
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter' || e.key === ' ') {
+                      onKeyDown={e => {
+                        if (
+                          e.key === 'Enter' ||
+                          e.key === ' '
+                        ) {
                           e.preventDefault();
                           startEdit(it);
                         }
                       }}
                       tabIndex={0}
                       role="button"
-                      aria-label={`Edit offer ${it.title ?? it.type}`}
+                      aria-label={`Edit offer ${
+                        it.title ?? it.type
+                      }`}
                     >
                       {/* Checkbox links */}
                       <input
                         type="checkbox"
                         checked={isChecked}
                         aria-label="Zeile auswählen"
-                        onClick={(e) => e.stopPropagation()}
-                        onChange={(e) => toggleSelect(it._id, e.target.checked)}
+                        onClick={e => e.stopPropagation()}
+                        onChange={e =>
+                          toggleSelect(
+                            it._id,
+                            e.target.checked,
+                          )
+                        }
                         style={{ marginRight: 10 }}
                       />
 
@@ -447,30 +664,51 @@ export default function TrainingCard() {
                       {avatarSrc(it) ? (
                         <img
                           src={avatarSrc(it)}
-                          alt={it.coachName ? `Coach ${it.coachName}` : 'Coach avatar'}
+                          alt={
+                            it.coachName
+                              ? `Coach ${it.coachName}`
+                              : 'Coach avatar'
+                          }
                           className="list__avatar"
                         />
                       ) : (
-                        <div className="list__avatar list__avatar--ph" aria-hidden="true" />
+                        <div
+                          className="list__avatar list__avatar--ph"
+                          aria-hidden="true"
+                        />
                       )}
 
                       {/* Text */}
                       <div className="list__body">
-                        <div className="list__title">{it.title ?? 'Offer'}</div>
+                        <div className="list__title">
+                          {it.title ?? 'Offer'}
+                        </div>
                         <div className="list__meta">
-                          {[it.type, it.location].filter(Boolean).join(' • ')}{' '}
-                          {typeof it.price === 'number' ? <>· {it.price} €</> : <>· Price on request</>}
-                          {it.coachName ? <> · Coach: {it.coachName}</> : null}
-                          {it.category ? <> · {it.category}</> : null}
-                          {it.sub_type ? <> · {it.sub_type}</> : null}
+                          {[it.type, it.location]
+                            .filter(Boolean)
+                            .join(' • ')}{' '}
+                          {typeof it.price === 'number' ? (
+                            <>· {it.price} €</>
+                          ) : (
+                            <>· Price on request</>
+                          )}
+                          {it.coachName ? (
+                            <> · Coach: {it.coachName}</>
+                          ) : null}
+                          {it.category ? (
+                            <> · {it.category}</>
+                          ) : null}
+                          {it.sub_type ? (
+                            <> · {it.sub_type}</>
+                          ) : null}
                         </div>
                       </div>
 
                       {/* Actions rechts */}
                       <div
                         className="list__actions"
-                        onClick={(e) => e.stopPropagation()}
-                        onKeyDown={(e) => e.stopPropagation()}
+                        onClick={e => e.stopPropagation()}
+                        onKeyDown={e => e.stopPropagation()}
                       >
                         <span
                           className="edit-trigger"
@@ -478,16 +716,27 @@ export default function TrainingCard() {
                           tabIndex={0}
                           title="Edit"
                           aria-label="Edit"
-                          onClick={() => { setEditing(it); setEditOpen(true); }}
-                          onKeyDown={(e) => {
-                            if (e.key === 'Enter' || e.key === ' ') {
+                          onClick={() => {
+                            setEditing(it);
+                            setEditOpen(true);
+                          }}
+                          onKeyDown={e => {
+                            if (
+                              e.key === 'Enter' ||
+                              e.key === ' '
+                            ) {
                               e.preventDefault();
                               setEditing(it);
                               setEditOpen(true);
                             }
                           }}
                         >
-                          <img src="/icons/edit.svg" alt="" aria-hidden="true" className="icon-img" />
+                          <img
+                            src="/icons/edit.svg"
+                            alt=""
+                            aria-hidden="true"
+                            className="icon-img"
+                          />
                         </span>
                       </div>
                     </li>
@@ -505,7 +754,9 @@ export default function TrainingCard() {
             className="btn"
             aria-label="Previous page"
             disabled={page <= 1}
-            onClick={() => setPage((p) => Math.max(1, p - 1))}
+            onClick={() =>
+              setPage(p => Math.max(1, p - 1))
+            }
           >
             <img
               src="/icons/arrow_right_alt.svg"
@@ -515,7 +766,11 @@ export default function TrainingCard() {
             />
           </button>
 
-          <div className="pager__count" aria-live="polite" aria-atomic="true">
+          <div
+            className="pager__count"
+            aria-live="polite"
+            aria-atomic="true"
+          >
             {page} / {pageCount}
           </div>
 
@@ -524,7 +779,9 @@ export default function TrainingCard() {
             className="btn"
             aria-label="Next page"
             disabled={page >= pageCount}
-            onClick={() => setPage((p) => Math.min(pageCount, p + 1))}
+            onClick={() =>
+              setPage(p => Math.min(pageCount, p + 1))
+            }
           >
             <img
               src="/icons/arrow_right_alt.svg"
@@ -563,7 +820,10 @@ export default function TrainingCard() {
                 ageTo: (editing.ageTo as any) ?? '',
                 info: editing.info ?? '',
                 onlineActive:
-                  typeof editing.onlineActive === 'boolean' ? editing.onlineActive : true,
+                  typeof editing.onlineActive ===
+                  'boolean'
+                    ? editing.onlineActive
+                    : true,
                 coachName: editing.coachName ?? '',
                 coachEmail: editing.coachEmail ?? '',
                 coachImage: editing.coachImage ?? '',
@@ -581,12 +841,6 @@ export default function TrainingCard() {
     </div>
   );
 }
-
-
-
-
-
-
 
 
 
