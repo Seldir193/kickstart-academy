@@ -1,3 +1,5 @@
+
+
 // src/app/admin/coaches/page.tsx
 import Link from 'next/link';
 import CoachList from '@/app/components/CoachList';
@@ -41,7 +43,7 @@ export default async function CoachesPage({
   const data = await fetchCoachesSSR(q, page, limit);
 
   return (
-    <div className="p-4 max-w-6xl mx-auto">
+    <div className="ks-coaches-admin p-4 max-w-6xl mx-auto">
       <header className="mb-4">
         <h1 className="text-2xl font-bold m-0">Coaches</h1>
         <p className="text-gray-700 m-0">Trainer verwalten (serverseitige Suche &amp; Pagination).</p>
@@ -55,15 +57,6 @@ export default async function CoachesPage({
 function CoachListSSRBridge({ data, query }: { data: CoachListResponse; query: string }) {
   return <CoachList initial={data} query={query} />;
 }
-
-
-
-
-
-
-
-
-
 
 
 
