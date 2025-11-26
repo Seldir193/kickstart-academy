@@ -33,21 +33,69 @@ type CourseOption = {
 
 const COURSES: CourseOption[] = [
   { label: 'Camps (Indoor/Outdoor)', value: 'camp', type: 'Camp', category: 'Holiday' },
-  { label: 'Power Training', value: 'powertraining', type: 'AthleticTraining', category: 'Holiday', sub_type: 'Powertraining' },
+  {
+    label: 'Power Training',
+    value: 'powertraining',
+    type: 'AthleticTraining',
+    category: 'Holiday',
+    sub_type: 'Powertraining',
+  },
 
   { label: 'Foerdertraining', value: 'foerdertraining', type: 'Foerdertraining', category: 'Weekly' },
   { label: 'Soccer Kindergarten', value: 'kindergarten', type: 'Kindergarten', category: 'Weekly' },
-  { label: 'Goalkeeper Training', value: 'torwarttraining', type: 'Foerdertraining', category: 'Weekly', sub_type: 'Torwarttraining' },
-  { label: 'Development Training · Athletik', value: 'foerder_athletik', type: 'Foerdertraining', category: 'Weekly', sub_type: 'Foerdertraining_Athletik' },
+  {
+    label: 'Goalkeeper Training',
+    value: 'torwarttraining',
+    type: 'Foerdertraining',
+    category: 'Weekly',
+    sub_type: 'Torwarttraining',
+  },
+  {
+    label: 'Development Training · Athletik',
+    value: 'foerder_athletik',
+    type: 'Foerdertraining',
+    category: 'Weekly',
+    sub_type: 'Foerdertraining_Athletik',
+  },
 
   { label: '1:1 Training', value: 'personal', type: 'PersonalTraining', category: 'Individual' },
-  { label: '1:1 Training Athletik', value: 'personal_athletik', type: 'PersonalTraining', category: 'Individual', sub_type: 'Einzeltraining_Athletik' },
-  { label: '1:1 Training Torwart', value: 'personal_torwart', type: 'PersonalTraining', category: 'Individual', sub_type: 'Einzeltraining_Torwart' },
+  {
+    label: '1:1 Training Athletik',
+    value: 'personal_athletik',
+    type: 'PersonalTraining',
+    category: 'Individual',
+    sub_type: 'Einzeltraining_Athletik',
+  },
+  {
+    label: '1:1 Training Torwart',
+    value: 'personal_torwart',
+    type: 'PersonalTraining',
+    category: 'Individual',
+    sub_type: 'Einzeltraining_Torwart',
+  },
 
-  { label: 'Training Camps', value: 'club_program', type: 'Camp', category: 'ClubPrograms', sub_type: 'ClubProgram_Generic' },
-  { label: 'Coach Education', value: 'coach_education', type: 'Foerdertraining', category: 'ClubPrograms', sub_type: 'CoachEducation' },
+  {
+    label: 'Training Camps',
+    value: 'club_program',
+    type: 'Camp',
+    category: 'ClubPrograms',
+    sub_type: 'ClubProgram_Generic',
+  },
+  {
+    label: 'Coach Education',
+    value: 'coach_education',
+    type: 'Foerdertraining',
+    category: 'ClubPrograms',
+    sub_type: 'CoachEducation',
+  },
 
-  { label: 'Rent-a-Coach', value: 'rent_a_coach', type: 'Foerdertraining', category: 'RentACoach', sub_type: 'RentACoach_Generic' },
+  {
+    label: 'Rent-a-Coach',
+    value: 'rent_a_coach',
+    type: 'Foerdertraining',
+    category: 'RentACoach',
+    sub_type: 'RentACoach_Generic',
+  },
 ];
 
 const CATEGORY_LABEL: Record<CategoryKey, string> = {
@@ -102,7 +150,9 @@ const normalizeCoachSrc = (src: string) => {
   if (!src) return '';
   if (/^https?:\/\//i.test(src)) return src;
   if (src.startsWith('/api/uploads/coach/')) return src;
-  if (/^\/?uploads\/coach\//i.test(src)) return src.startsWith('/') ? `/api${src}` : `/api/${src}`;
+  if (/^\/?uploads\/coach\//i.test(src)) {
+    return src.startsWith('/') ? `/api${src}` : `/api/${src}`;
+  }
   if (/^[\w.\-]+\.(png|jpe?g|webp|gif)$/i.test(src)) return `/api/uploads/coach/${src}`;
   return src;
 };
@@ -174,6 +224,10 @@ export default function OfferCreateDialog({
   const [categoryUI, setCategoryUI] = useState<CategoryKey | ''>('');
   const [courseUI, setCourseUI] = useState<string>('');
 
+  const [categoryOpen, setCategoryOpen] = useState(false);
+  const [courseOpen, setCourseOpen] = useState(false);
+  const [placeOpen, setPlaceOpen] = useState(false);
+
   const [uploading, setUploading] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string>('');
@@ -181,14 +235,30 @@ export default function OfferCreateDialog({
   const [places, setPlaces] = useState<Place[]>([]);
 
   const panelRef = useRef<HTMLDivElement | null>(null);
+  const categoryDropdownRef = useRef<HTMLDivElement | null>(null);
+  const courseDropdownRef = useRef<HTMLDivElement | null>(null);
+  const placeDropdownRef = useRef<HTMLDivElement | null>(null);
+
   useOnClickOutside(panelRef, onClose);
+  useOnClickOutside(categoryDropdownRef, () => setCategoryOpen(false));
+  useOnClickOutside(courseDropdownRef, () => setCourseOpen(false));
+  useOnClickOutside(placeDropdownRef, () => setPlaceOpen(false));
+
+  const selectedPlace = useMemo(
+  () => places.find((p) => p._id === form.placeId) || null,
+  [places, form.placeId],
+);
+
 
   // load places once
   useEffect(() => {
     const ctrl = new AbortController();
     (async () => {
       try {
-        const r = await fetch('/api/admin/places?page=1&pageSize=500', { cache: 'no-store', signal: ctrl.signal });
+        const r = await fetch('/api/admin/places?page=1&pageSize=500', {
+          cache: 'no-store',
+          signal: ctrl.signal,
+        });
         const j = await r.json().catch(() => ({}));
         const arr: Place[] = Array.isArray(j?.items) ? j.items : [];
         setPlaces(arr);
@@ -207,10 +277,11 @@ export default function OfferCreateDialog({
       setPreviewUrl(normalizeCoachSrc(init.coachImage));
       if (init.category) setCategoryUI(init.category as CategoryKey);
       if (init.type) {
-        const found = COURSES.find(c =>
-          c.type === init.type &&
-          (init.sub_type ? c.sub_type === init.sub_type : true) &&
-          (init.category ? c.category === init.category : true)
+        const found = COURSES.find(
+          (c) =>
+            c.type === init.type &&
+            (init.sub_type ? c.sub_type === init.sub_type : true) &&
+            (init.category ? c.category === init.category : true),
         );
         if (found) setCourseUI(found.value);
       } else {
@@ -218,6 +289,8 @@ export default function OfferCreateDialog({
       }
       setUploading(false);
       setUploadError(null);
+      setCategoryOpen(false);
+      setCourseOpen(false);
     } else {
       setForm({ ...blank });
       setPreviewUrl('');
@@ -225,12 +298,16 @@ export default function OfferCreateDialog({
       setCourseUI('');
       setUploading(false);
       setUploadError(null);
+      setCategoryOpen(false);
+      setCourseOpen(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, mode, JSON.stringify(initial)]);
 
   useEffect(() => {
-    function onKey(e: KeyboardEvent) { if (e.key === 'Escape') onClose(); }
+    function onKey(e: KeyboardEvent) {
+      if (e.key === 'Escape') onClose();
+    }
     if (open) document.addEventListener('keydown', onKey);
     return () => document.removeEventListener('keydown', onKey);
   }, [open, onClose]);
@@ -259,21 +336,21 @@ export default function OfferCreateDialog({
   function handleCategoryChange(next: CategoryKey | '') {
     setCategoryUI(next);
     setCourseUI('');
-    setForm(f => ({ ...f, category: next, sub_type: '' }));
+    setForm((f) => ({ ...f, category: next, sub_type: '' }));
   }
 
   function handleCourseChange(value: string) {
     setCourseUI(value);
-    const def = COURSES.find(c => c.value === value);
+    const def = COURSES.find((c) => c.value === value);
     if (!def) return;
     const cat = (categoryUI || def.category) as CategoryKey;
     setCategoryUI(cat);
-    setForm(f => ({ ...f, type: def.type, category: cat, sub_type: def.sub_type || '' }));
+    setForm((f) => ({ ...f, type: def.type, category: cat, sub_type: def.sub_type || '' }));
   }
 
   function onPlaceChange(placeId: string) {
-    const p = places.find(x => x._id === placeId);
-    setForm(f => ({
+    const p = places.find((x) => x._id === placeId);
+    setForm((f) => ({
       ...f,
       placeId,
       location: p?.city ? p.city : '',
@@ -320,80 +397,275 @@ export default function OfferCreateDialog({
     }
   }
 
-  const visibleCourses = COURSES.filter(c => !categoryUI || c.category === categoryUI);
+  const visibleCourses = COURSES.filter((c) => !categoryUI || c.category === categoryUI);
+
   if (!open) return null;
+
+  const categoryOrder: CategoryKey[] = [
+    'Holiday',
+    'Weekly',
+    'Individual',
+    'ClubPrograms',
+    'RentACoach',
+  ];
+
+  const selectedCourse = courseUI
+    ? COURSES.find((c) => c.value === courseUI) || null
+    : null;
 
   return (
     <div className="modal">
       <div className="modal__overlay" />
       <div className="modal__wrap">
-        <div ref={panelRef} className="modal__panel" role="dialog" aria-modal="true">
-          <button type="button" onClick={onClose} className="modal__close" aria-label="Close">✕</button>
-          <h2 className="modal__title">{mode === 'edit' ? 'Edit offer' : 'Create offer'}</h2>
+        <div
+          ref={panelRef}
+          className="modal__panel"
+          role="dialog"
+          aria-modal="true"
+        >
+          <button
+            type="button"
+            onClick={onClose}
+            className="modal__close"
+            aria-label="Close"
+          >
+            ✕
+          </button>
+          <h2 className="modal__title">
+            {mode === 'edit' ? 'Edit offer' : 'Create offer'}
+          </h2>
 
           <form onSubmit={handleSubmit} className="form">
             {/* Category & Course */}
             <div className="grid grid--2">
+              {/* Category – ks-selectbox */}
               <div className="form__group">
                 <label className="label">Category</label>
-                <select className="input" value={categoryUI}
-                        onChange={(e) => handleCategoryChange((e.target.value || '') as CategoryKey | '')}>
-                  <option value="">— Select category —</option>
-                  {(['Holiday','Weekly','Individual','ClubPrograms','RentACoach'] as CategoryKey[]).map(k => (
-                    <option key={k} value={k}>{CATEGORY_LABEL[k]}</option>
-                  ))}
-                </select>
+                <div
+                  ref={categoryDropdownRef}
+                  className={clsx(
+                    'ks-selectbox',
+                    categoryOpen && 'ks-selectbox--open',
+                  )}
+                >
+                  <button
+                    type="button"
+                    className="ks-selectbox__trigger"
+                    onClick={() => setCategoryOpen((o) => !o)}
+                    aria-haspopup="listbox"
+                    aria-expanded={categoryOpen}
+                  >
+                    <span className="ks-selectbox__label">
+                      {categoryUI
+                        ? CATEGORY_LABEL[categoryUI]
+                        : '— Select category —'}
+                    </span>
+                    <span className="ks-selectbox__chevron" aria-hidden="true" />
+                  </button>
+
+                  {categoryOpen && (
+                    <div className="ks-selectbox__panel" role="listbox">
+                      <button
+                        type="button"
+                        className={clsx(
+                          'ks-selectbox__option',
+                          !categoryUI && 'ks-selectbox__option--active',
+                        )}
+                        onClick={() => {
+                          handleCategoryChange('');
+                          setCategoryOpen(false);
+                        }}
+                      >
+                        — All categories —
+                      </button>
+
+                      {categoryOrder.map((k) => (
+                        <button
+                          key={k}
+                          type="button"
+                          className={clsx(
+                            'ks-selectbox__option',
+                            categoryUI === k && 'ks-selectbox__option--active',
+                          )}
+                          onClick={() => {
+                            handleCategoryChange(k);
+                            setCategoryOpen(false);
+                          }}
+                        >
+                          {CATEGORY_LABEL[k]}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
               </div>
+
+              {/* Course – ks-selectbox mit Gruppen */}
               <div className="form__group">
                 <label className="label">Course</label>
-                <select className="input" value={courseUI} onChange={(e) => handleCourseChange(e.target.value)}>
-                  <option value="">— Select course —</option>
-                  {visibleCourses.map(c => (<option key={c.value} value={c.value}>{c.label}</option>))}
-                </select>
+                <div
+                  ref={courseDropdownRef}
+                  className={clsx(
+                    'ks-selectbox',
+                    courseOpen && 'ks-selectbox--open',
+                  )}
+                >
+                  <button
+                    type="button"
+                    className="ks-selectbox__trigger"
+                    onClick={() => setCourseOpen((o) => !o)}
+                    aria-haspopup="listbox"
+                    aria-expanded={courseOpen}
+                  >
+                    <span className="ks-selectbox__label">
+                      {selectedCourse
+                        ? selectedCourse.label
+                        : '— Select course —'}
+                    </span>
+                    <span className="ks-selectbox__chevron" aria-hidden="true" />
+                  </button>
+
+                  {courseOpen && (
+                    <div className="ks-selectbox__panel" role="listbox">
+                      <button
+                        type="button"
+                        className={clsx(
+                          'ks-selectbox__option',
+                          !courseUI && 'ks-selectbox__option--active',
+                        )}
+                        onClick={() => {
+                          handleCourseChange('');
+                          setCourseOpen(false);
+                        }}
+                      >
+                        — No course selected —
+                      </button>
+
+                      {categoryOrder.map((cat) => {
+                        const groupCourses = visibleCourses.filter(
+                          (c) => c.category === cat,
+                        );
+                        if (!groupCourses.length) return null;
+
+                        return (
+                          <div
+                            key={cat}
+                            className="ks-selectbox__group"
+                          >
+                            <div className="ks-selectbox__group-label">
+                              {CATEGORY_LABEL[cat]}
+                            </div>
+                            {groupCourses.map((c) => (
+                              <button
+                                key={c.value}
+                                type="button"
+                                className={clsx(
+                                  'ks-selectbox__option',
+                                  courseUI === c.value &&
+                                    'ks-selectbox__option--active',
+                                )}
+                                onClick={() => {
+                                  handleCourseChange(c.value);
+                                  setCourseOpen(false);
+                                }}
+                              >
+                                {c.label}
+                              </button>
+                            ))}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
-            <p className="help" style={{marginTop: -6}}>
-              Selecting a course fills <code>type</code> automatically; <code>sub_type</code> is optional.
+
+            <p className="help" style={{ marginTop: -6 }}>
+              Selecting a course fills <code>type</code> automatically;{' '}
+              <code>sub_type</code> is optional.
             </p>
 
             {/* Place (only) + Price */}
             <div className="grid grid--2">
-              <div className="form__group">
-                <label className="label">Place</label>
-                <select
-                  className="input"
-                  value={form.placeId || ''}
-                  onChange={(e) => onPlaceChange(e.target.value)}
-                >
-                  <option value="">— Select place —</option>
-                  {places.map(p => (
-                    <option key={p._id} value={p._id}>
-                      {p.name} • {p.city}
-                    </option>
-                  ))}
-                </select>
-              </div>
+         <div className="form__group">
+  <label className="label">Place</label>
 
-              <div className="form__group">
-                <label className="label">Price (€)</label>
-                <input
-                  type="number"
-                  className="input"
-                  placeholder="e.g., 49"
-                  min={0}
-                  value={form.price}
-                  onChange={(e) => setForm((f) => ({ ...f, price: e.target.value === '' ? '' : Number(e.target.value) }))}
-                />
-              </div>
-            </div>
+  <div
+    ref={placeDropdownRef}
+    className={clsx('ks-selectbox', placeOpen && 'ks-selectbox--open')}
+  >
+    {/* Trigger */}
+    <button
+      type="button"
+      className="ks-selectbox__trigger"
+      onClick={() => setPlaceOpen((o) => !o)}
+      aria-haspopup="listbox"
+      aria-expanded={placeOpen}
+    >
+      <span className="ks-selectbox__label">
+        {selectedPlace
+          ? `${selectedPlace.name} • ${selectedPlace.city}`
+          : '— Select place —'}
+      </span>
+      <span className="ks-selectbox__chevron" aria-hidden="true" />
+    </button>
+
+    {/* Panel */}
+    {placeOpen && (
+      <div className="ks-selectbox__panel" role="listbox">
+        <button
+          type="button"
+          className={clsx(
+            'ks-selectbox__option',
+            !form.placeId && 'ks-selectbox__option--active',
+          )}
+          onClick={() => {
+            onPlaceChange('');
+            setPlaceOpen(false);
+          }}
+        >
+          — Select place —
+        </button>
+
+        {places.map((p) => (
+          <button
+            key={p._id}
+            type="button"
+            className={clsx(
+              'ks-selectbox__option',
+              form.placeId === p._id && 'ks-selectbox__option--active',
+            )}
+            onClick={() => {
+              onPlaceChange(p._id);
+              setPlaceOpen(false);
+            }}
+          >
+            {p.name} • {p.city}
+          </button>
+        ))}
+      </div>
+    )}
+  </div>
+</div>
+</div>
+
+            
 
             {/* Days */}
             <div className="form__group form__group--stack">
               <label className="label">Day(s)</label>
               <div className="chip-row">
                 {DAYS.map((d) => (
-                  <button key={d.key} type="button" onClick={() => toggleDay(d.key)}
-                          className={clsx('chip', form.days.includes(d.key) && 'chip--active')}>
+                  <button
+                    key={d.key}
+                    type="button"
+                    onClick={() => toggleDay(d.key)}
+                    className={clsx(
+                      'chip',
+                      form.days.includes(d.key) && 'chip--active',
+                    )}
+                  >
                     {d.label}
                   </button>
                 ))}
@@ -404,13 +676,25 @@ export default function OfferCreateDialog({
             <div className="grid grid--2">
               <div className="form__group">
                 <label className="label">Time from</label>
-                <input type="time" className="input" value={form.timeFrom}
-                       onChange={(e) => setForm((f) => ({ ...f, timeFrom: e.target.value }))}/>
+                <input
+                  type="time"
+                  className="input"
+                  value={form.timeFrom}
+                  onChange={(e) =>
+                    setForm((f) => ({ ...f, timeFrom: e.target.value }))
+                  }
+                />
               </div>
               <div className="form__group">
                 <label className="label">Time to</label>
-                <input type="time" className="input" value={form.timeTo}
-                       onChange={(e) => setForm((f) => ({ ...f, timeTo: e.target.value }))}/>
+                <input
+                  type="time"
+                  className="input"
+                  value={form.timeTo}
+                  onChange={(e) =>
+                    setForm((f) => ({ ...f, timeTo: e.target.value }))
+                  }
+                />
               </div>
             </div>
 
@@ -418,61 +702,141 @@ export default function OfferCreateDialog({
             <div className="grid grid--2">
               <div className="form__group">
                 <label className="label">Age from</label>
-                <input type="number" className="input" placeholder="e.g., 6" min={0} value={form.ageFrom}
-                       onChange={(e) => setForm((f) => ({ ...f, ageFrom: e.target.value === '' ? '' : Number(e.target.value) }))}/>
+                <input
+                  type="number"
+                  className="input"
+                  placeholder="e.g., 6"
+                  min={0}
+                  value={form.ageFrom}
+                  onChange={(e) =>
+                    setForm((f) => ({
+                      ...f,
+                      ageFrom:
+                        e.target.value === ''
+                          ? ''
+                          : Number(e.target.value),
+                    }))
+                  }
+                />
               </div>
               <div className="form__group">
                 <label className="label">Age to</label>
-                <input type="number" className="input" placeholder="e.g., 14" min={0} value={form.ageTo}
-                       onChange={(e) => setForm((f) => ({ ...f, ageTo: e.target.value === '' ? '' : Number(e.target.value) }))}/>
+                <input
+                  type="number"
+                  className="input"
+                  placeholder="e.g., 14"
+                  min={0}
+                  value={form.ageTo}
+                  onChange={(e) =>
+                    setForm((f) => ({
+                      ...f,
+                      ageTo:
+                        e.target.value === ''
+                          ? ''
+                          : Number(e.target.value),
+                    }))
+                  }
+                />
               </div>
             </div>
 
             {/* Info */}
             <div className="form__group">
               <label className="label">Info text</label>
-              <textarea className="input input--textarea" placeholder="Additional information…"
-                        value={form.info} onChange={(e) => setForm((f) => ({ ...f, info: e.target.value }))}/>
+              <textarea
+                className="input input--textarea"
+                placeholder="Additional information…"
+                value={form.info}
+                onChange={(e) =>
+                  setForm((f) => ({ ...f, info: e.target.value }))
+                }
+              />
             </div>
 
             {/* Coach */}
             <div className="grid grid--2">
               <div className="form__group">
                 <label className="label">Coach name</label>
-                <input className="input" placeholder="e.g., Noah Example" value={form.coachName}
-                       onChange={(e) => setForm((f) => ({ ...f, coachName: e.target.value }))}/>
+                <input
+                  className="input"
+                  placeholder="e.g., Noah Example"
+                  value={form.coachName}
+                  onChange={(e) =>
+                    setForm((f) => ({ ...f, coachName: e.target.value }))
+                  }
+                />
               </div>
               <div className="form__group">
                 <label className="label">Coach E-Mail</label>
-                <input className="input" type="email" placeholder="coach@example.com" value={form.coachEmail}
-                       onChange={(e) => setForm((f) => ({ ...f, coachEmail: e.target.value }))}/>
+                <input
+                  className="input"
+                  type="email"
+                  placeholder="coach@example.com"
+                  value={form.coachEmail}
+                  onChange={(e) =>
+                    setForm((f) => ({ ...f, coachEmail: e.target.value }))
+                  }
+                />
               </div>
             </div>
 
             <div className="form__group">
               <label className="label">Coach image</label>
               <div className="upload-row">
-                <input type="file" accept="image/*" onChange={handleCoachFileChange} />
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleCoachFileChange}
+                />
                 {uploading && <span className="uploading">Uploading…</span>}
                 {uploadError && <span className="error">{uploadError}</span>}
               </div>
-              {previewUrl ? <div className="preview"><img src={previewUrl} alt="Coach preview" /></div> : null}
-              <input type="hidden" value={form.coachImage} onChange={() => {}}/>
+              {previewUrl ? (
+                <div className="preview">
+                  <img src={previewUrl} alt="Coach preview" />
+                </div>
+              ) : null}
+              <input
+                type="hidden"
+                value={form.coachImage}
+                onChange={() => {}}
+              />
             </div>
 
             {/* Online toggle */}
             <div className="form__group form__group--inline">
               <label className="label">Online active</label>
-              <button type="button" className={clsx('switch', form.onlineActive && 'switch--on')}
-                      onClick={() => setForm((f) => ({ ...f, onlineActive: !f.onlineActive }))} aria-pressed={form.onlineActive}>
+              <button
+                type="button"
+                className={clsx(
+                  'switch',
+                  form.onlineActive && 'switch--on',
+                )}
+                onClick={() =>
+                  setForm((f) => ({
+                    ...f,
+                    onlineActive: !f.onlineActive,
+                  }))
+                }
+                aria-pressed={form.onlineActive}
+              >
                 <span className="switch__thumb" />
               </button>
             </div>
 
             {/* Actions */}
             <div className="form__actions">
-              <button type="button" className="btn" onClick={onClose}>Close</button>
-              <button type="submit" disabled={!canSubmit} className={clsx('btn btn--primary', !canSubmit && 'btn--disabled')}>
+              <button type="button" className="btn" onClick={onClose}>
+                Close
+              </button>
+              <button
+                type="submit"
+                disabled={!canSubmit}
+                className={clsx(
+                  'btn btn--primary',
+                  !canSubmit && 'btn--disabled',
+                )}
+              >
                 {mode === 'edit' ? 'Save changes' : 'Create offer'}
               </button>
             </div>
@@ -481,21 +845,32 @@ export default function OfferCreateDialog({
       </div>
 
       <style jsx>{`
-        .upload-row { display:flex; gap:12px; align-items:center; }
-        .uploading { color:#0ea5e9; font-weight:600; }
-        .error { color:#b91c1c; }
-        .preview { margin-top:8px; }
-        .preview img { width:88px; height:88px; object-fit:cover; border-radius:999px; border:1px solid #e5e7eb; }
+        .upload-row {
+          display: flex;
+          gap: 12px;
+          align-items: center;
+        }
+        .uploading {
+          color: #0ea5e9;
+          font-weight: 600;
+        }
+        .error {
+          color: #b91c1c;
+        }
+        .preview {
+          margin-top: 8px;
+        }
+        .preview img {
+          width: 88px;
+          height: 88px;
+          object-fit: cover;
+          border-radius: 999px;
+          border: 1px solid #e5e7eb;
+        }
       `}</style>
     </div>
   );
 }
-
-
-
-
-
-
 
 
 
