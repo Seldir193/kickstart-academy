@@ -304,69 +304,80 @@ function openPdf(item: DocItem) {
               </div>
             </div>
 
-            {/* Dropdown-Trigger */}
-            <div>
-              <label className="lbl">Dokumente (aktuelle Seite)</label>
+         
+
+          {/* Dropdown-Trigger */}
+          <div>
+            <label className="lbl">Dokumente (aktuelle Seite)</label>
+
+            <div className={'ks-selectbox' + (open ? ' ks-selectbox--open' : '')}>
               <button
                 ref={triggerRef}
                 type="button"
-                className="input"
+                className="input ks-selectbox__trigger"
                 onClick={() => (open ? setOpen(false) : openDropdown())}
                 disabled={loading || !items.length}
-                style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', height: 40 }}
                 aria-haspopup="listbox"
                 aria-expanded={open}
+                style={{ height: 40 }}
               >
-                <span>{loading ? 'Lade…' : `${items.length} Einträge geladen`}</span>
-                <span aria-hidden>▾</span>
+                <span className="ks-selectbox__label">
+                  {loading ? 'Lade…' : `${items.length} Einträge geladen`}
+                </span>
+                <span
+                  className="ks-selectbox__chevron"
+                  aria-hidden="true"
+                />
               </button>
-              <div className="text-gray-600 mt-1">Klick auf einen Eintrag öffnet das PDF in neuem Tab.</div>
+            </div>
+
+            <div className="text-gray-600 mt-1">
+              Klick auf einen Eintrag öffnet das PDF in neuem Tab.
             </div>
           </div>
+        </div>
 
-          {/* Overlay-Liste */}
-          {open && !!items.length && (
-            <div
-              ref={menuRef}
-              role="listbox"
-              style={{
-                position: 'fixed',
-                left: pos.left,
-                top: pos.top,
-                width: pos.width,
-                maxHeight: 44 * 7,
-                overflowY: 'auto',
-                zIndex: 10000,
-                background: '#fff',
-                border: '1px solid rgba(0,0,0,.12)',
-                boxShadow: '0 8px 24px rgba(0,0,0,.12)',
-                borderRadius: 6,
-                touchAction: 'pan-y',
-              }}
-              onWheel={(e) => e.stopPropagation()}
-              onScroll={(e) => e.stopPropagation()}
-            >
-              {items.map((d) => (
-                <div
-                  key={d.id}
-                  role="option"
-                  onClick={() => {
-                    setOpen(false);
-                    openPdf(d);
-                  }}
-                  className="ks-list__item"
-                  style={{ border: '0', borderRadius: 0 }}
-                >
-                  <div className="ks-item__title">{d.title}</div>
-                  <div className="ks-item__meta">
-                    {d.type} · {fmtDate(d.issuedAt)}
-                    {d.offerTitle ? ` · ${d.offerTitle}` : ''}
-                    {d.customerName ? ` · ${d.customerName}` : ''}
-                  </div>
+        {/* Overlay-Liste */}
+        {open && !!items.length && (
+          <div
+            ref={menuRef}
+            role="listbox"
+            className="ks-selectbox__panel"
+            style={{
+              position: 'fixed',
+              left: pos.left,
+              top: pos.top,
+              width: pos.width,
+              maxHeight: 44 * 7, // 7 sichtbare Zeilen wie vorher
+              overflowY: 'auto',
+              zIndex: 10000,
+              touchAction: 'pan-y',
+            }}
+            onWheel={e => e.stopPropagation()}
+            onScroll={e => e.stopPropagation()}
+          >
+            {items.map(d => (
+              <div
+                key={d.id}
+                role="option"
+                onClick={() => {
+                  setOpen(false);
+                  openPdf(d);
+                }}
+                className="ks-list__item"
+                style={{ border: '0', borderRadius: 0 }}
+              >
+                <div className="ks-item__title">{d.title}</div>
+                <div className="ks-item__meta">
+                  {d.type} · {fmtDate(d.issuedAt)}
+                  {d.offerTitle ? ` · ${d.offerTitle}` : ''}
+                  {d.customerName ? ` · ${d.customerName}` : ''}
                 </div>
-              ))}
-            </div>
-          )}
+              </div>
+            ))}
+          </div>
+        )}
+
 
           {/* Ergebnisliste */}
           {loading ? (
