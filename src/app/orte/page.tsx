@@ -127,7 +127,7 @@ export default function OrtePage() {
       <div className="flex items-end justify-between mb-4">
         <h1 className="text-2xl font-bold">Places</h1>
         <button
-          className="btn btn-primary"
+          className="btn"
           onClick={() => { setEditing(null); setDialogOpen(true); }}
         >
           New place
@@ -155,7 +155,7 @@ export default function OrtePage() {
               {selectedIds.size} selected
             </h3>
             <div className="card-actions" style={{ display: 'flex', gap: 8 }}>
-              <button className="btn" onClick={handleBulkDelete}>Delete selected</button>
+              <button className="btn btn--danger" onClick={handleBulkDelete}>Delete selected</button>
               <button className="btn" onClick={clearSelection}>Clear</button>
             </div>
           </div>
