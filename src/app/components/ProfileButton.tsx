@@ -514,7 +514,7 @@ const AVATAR_FALLBACK = '/assets/img/avatar.png';
                     </button>
                     <button
                       type="button"
-                      className="btn-primary btn--sm"
+                      className="btn"
                       onClick={enterEditMode}
                       disabled={loading}
                     >
@@ -533,7 +533,7 @@ const AVATAR_FALLBACK = '/assets/img/avatar.png';
                     </button>
                     <button
                       type="submit"
-                      className="btn-primary btn--sm"
+                      className="btn"
                       disabled={!canSave}
                     >
                       {saving ? 'Speichern…' : 'Speichern'}
