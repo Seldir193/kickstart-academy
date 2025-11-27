@@ -1,3 +1,5 @@
+/* app/page-module.scss (bereinigt & gescoped) */
+
 .page {
   --gray-rgb: 0, 0, 0;
   --gray-alpha-200: rgba(var(--gray-rgb), 0.08);
@@ -27,14 +29,14 @@
   }
 }
 
-.main {
+.page .main {
   display: flex;
   flex-direction: column;
   gap: 32px;
   grid-row-start: 2;
 }
 
-.main ol {
+.page .main ol {
   font-family: var(--font-geist-mono);
   padding-left: 0;
   margin: 0;
@@ -44,11 +46,11 @@
   list-style-position: inside;
 }
 
-.main li:not(:last-of-type) {
+.page .main li:not(:last-of-type) {
   margin-bottom: 8px;
 }
 
-.main code {
+.page .main code {
   font-family: inherit;
   background: var(--gray-alpha-100);
   padding: 2px 4px;
@@ -56,12 +58,13 @@
   font-weight: 600;
 }
 
-.ctas {
+.page .ctas {
   display: flex;
   gap: 16px;
 }
 
-.ctas a {
+/* CTA-Links sind jetzt nur in .page gültig */
+.page .ctas a {
   appearance: none;
   border-radius: 128px;
   height: 48px;
@@ -80,46 +83,46 @@
   font-weight: 500;
 }
 
-a.primary {
+.page a.primary {
   background: var(--foreground);
   color: var(--background);
   gap: 8px;
 }
 
-a.secondary {
+.page a.secondary {
   border-color: var(--gray-alpha-200);
   min-width: 158px;
 }
 
-.footer {
+.page .footer {
   grid-row-start: 3;
   display: flex;
   gap: 24px;
 }
 
-.footer a {
+.page .footer a {
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
-.footer img {
+.page .footer img {
   flex-shrink: 0;
 }
 
 /* Enable hover only on non-touch devices */
 @media (hover: hover) and (pointer: fine) {
-  a.primary:hover {
+  .page a.primary:hover {
     background: var(--button-primary-hover);
     border-color: transparent;
   }
 
-  a.secondary:hover {
+  .page a.secondary:hover {
     background: var(--button-secondary-hover);
     border-color: transparent;
   }
 
-  .footer a:hover {
+  .page .footer a:hover {
     text-decoration: underline;
     text-underline-offset: 4px;
   }
@@ -131,29 +134,29 @@ a.secondary {
     padding-bottom: 80px;
   }
 
-  .main {
+  .page .main {
     align-items: center;
   }
 
-  .main ol {
+  .page .main ol {
     text-align: center;
   }
 
-  .ctas {
+  .page .ctas {
     flex-direction: column;
   }
 
-  .ctas a {
+  .page .ctas a {
     font-size: 14px;
     height: 40px;
     padding: 0 16px;
   }
 
-  a.secondary {
+  .page a.secondary {
     min-width: auto;
   }
 
-  .footer {
+  .page .footer {
     flex-wrap: wrap;
     align-items: center;
     justify-content: center;
@@ -161,7 +164,16 @@ a.secondary {
 }
 
 @media (prefers-color-scheme: dark) {
-  .logo {
+  .page .logo {
     filter: invert();
   }
 }
+
+
+
+
+
+
+
+
+
