@@ -586,71 +586,93 @@ export default function OfferCreateDialog({
               <code>sub_type</code> is optional.
             </p>
 
-            {/* Place (only) + Price */}
-            <div className="grid grid--2">
-         <div className="form__group">
-  <label className="label">Place</label>
 
-  <div
-    ref={placeDropdownRef}
-    className={clsx('ks-selectbox', placeOpen && 'ks-selectbox--open')}
-  >
-    {/* Trigger */}
-    <button
-      type="button"
-      className="ks-selectbox__trigger"
-      onClick={() => setPlaceOpen((o) => !o)}
-      aria-haspopup="listbox"
-      aria-expanded={placeOpen}
+{/* Place + Price */}
+<div className="grid grid--2">
+  {/* Place */}
+  <div className="form__group">
+    <label className="label">Place</label>
+
+    <div
+      ref={placeDropdownRef}
+      className={clsx('ks-selectbox', placeOpen && 'ks-selectbox--open')}
     >
-      <span className="ks-selectbox__label">
-        {selectedPlace
-          ? `${selectedPlace.name} • ${selectedPlace.city}`
-          : '— Select place —'}
-      </span>
-      <span className="ks-selectbox__chevron" aria-hidden="true" />
-    </button>
+      <button
+        type="button"
+        className="ks-selectbox__trigger"
+        onClick={() => setPlaceOpen((o) => !o)}
+        aria-haspopup="listbox"
+        aria-expanded={placeOpen}
+      >
+        <span className="ks-selectbox__label">
+          {selectedPlace
+            ? `${selectedPlace.name} • ${selectedPlace.city}`
+            : '— Select place —'}
+        </span>
+        <span className="ks-selectbox__chevron" aria-hidden="true" />
+      </button>
 
-    {/* Panel */}
-    {placeOpen && (
-      <div className="ks-selectbox__panel" role="listbox">
-        <button
-          type="button"
-          className={clsx(
-            'ks-selectbox__option',
-            !form.placeId && 'ks-selectbox__option--active',
-          )}
-          onClick={() => {
-            onPlaceChange('');
-            setPlaceOpen(false);
-          }}
-        >
-          — Select place —
-        </button>
-
-        {places.map((p) => (
+      {placeOpen && (
+        <div className="ks-selectbox__panel" role="listbox">
           <button
-            key={p._id}
             type="button"
             className={clsx(
               'ks-selectbox__option',
-              form.placeId === p._id && 'ks-selectbox__option--active',
+              !form.placeId && 'ks-selectbox__option--active',
             )}
             onClick={() => {
-              onPlaceChange(p._id);
+              onPlaceChange('');
               setPlaceOpen(false);
             }}
           >
-            {p.name} • {p.city}
+            — Select place —
           </button>
-        ))}
-      </div>
-    )}
+
+          {places.map((p) => (
+            <button
+              key={p._id}
+              type="button"
+              className={clsx(
+                'ks-selectbox__option',
+                form.placeId === p._id && 'ks-selectbox__option--active',
+              )}
+              onClick={() => {
+                onPlaceChange(p._id);
+                setPlaceOpen(false);
+              }}
+            >
+              {p.name} • {p.city}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  </div>
+
+  {/* Price */}
+  <div className="form__group">
+    <label className="label">Price (€)</label>
+    <input
+      type="number"
+      className="input"
+      min={0}
+      step="0.01"
+      placeholder="z. B. 129"
+      value={form.price}
+      onChange={(e) =>
+        setForm((f) => ({
+          ...f,
+          price:
+            e.target.value === '' ? '' : Number(e.target.value),
+        }))
+      }
+    />
   </div>
 </div>
-</div>
 
-            
+
+
+        
 
             {/* Days */}
             <div className="form__group form__group--stack">
@@ -833,7 +855,7 @@ export default function OfferCreateDialog({
                 type="submit"
                 disabled={!canSubmit}
                 className={clsx(
-                  'btn btn--primary',
+                  'btn ',
                   !canSubmit && 'btn--disabled',
                 )}
               >
