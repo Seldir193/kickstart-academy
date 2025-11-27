@@ -421,7 +421,7 @@ function NewsDialog({
               {busy ? 'Bitte warten…' : 'Löschen'}
             </button>
           ) : null}
-          <button className="btn btn-primary" onClick={handleSave} disabled={busy} type="button">
+          <button className="btn" onClick={handleSave} disabled={busy} type="button">
             {busy ? 'Speichere…' : mode === 'create' ? 'Anlegen' : 'Speichern'}
           </button>
         </div>
@@ -553,7 +553,7 @@ export default function NewsAdminPage() {
         {/* Kopfzeile */}
         <div className="dialog-subhead">
           <h1 className="text-2xl font-bold m-0">News verwalten</h1>
-          <button className="btn btn-primary" onClick={() => setCreateOpen(true)} type="button">
+          <button className="btn" onClick={() => setCreateOpen(true)} type="button">
             + Neuer Beitrag
           </button>
         </div>
@@ -595,7 +595,7 @@ export default function NewsAdminPage() {
 
           <button
             type="button"
-            className="btn btn-primary"
+            className="btn btn--danger"
             onClick={deleteSelected}
             disabled={selectedIds.size === 0 || loading}
           >
