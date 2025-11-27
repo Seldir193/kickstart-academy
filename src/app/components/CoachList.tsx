@@ -209,7 +209,7 @@ function isValidPhotoUrl(u?: string): boolean {
         </div>
         <div className="coach-filters__field">
           <label className="label">&nbsp;</label>
-          <button className="btn btn--primary" onClick={() => setCreating(true)}>
+          <button className="btn" onClick={() => setCreating(true)}>
             Neuer Coach
           </button>
         </div>
@@ -222,7 +222,7 @@ function isValidPhotoUrl(u?: string): boolean {
             <h3 className="m-0">{selected.length} ausgewählt</h3>
             <div className="flex gap-2">
               <button className="btn" onClick={() => setSelected([])}>Clear</button>
-              <button className="btn btn--primary" onClick={handleBulkDelete}>Löschen</button>
+              <button className="btn" onClick={handleBulkDelete}>Löschen</button>
             </div>
           </div>
         </section>
