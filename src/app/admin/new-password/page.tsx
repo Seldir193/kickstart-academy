@@ -94,7 +94,7 @@ export default function NewPasswordPage() {
             <button type="button" className="btn" onClick={() => router.push('/admin/login')}>
               Abbrechen
             </button>
-            <button type="submit" className="btn-primary" disabled={!canSubmit || loading}>
+            <button type="submit" className="btn" disabled={!canSubmit || loading}>
               {loading ? 'Speichern…' : 'Passwort ändern'}
             </button>
           </div>
