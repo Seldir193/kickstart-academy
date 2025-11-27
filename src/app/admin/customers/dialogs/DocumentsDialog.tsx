@@ -175,7 +175,7 @@ export default function DocumentsDialog({ customerId, onClose }: Props) {
       <div className="ks-panel card ks-panel--md" onClick={(e)=> e.stopPropagation()}>
         <div className="dialog-subhead">
           <h3 className="text-lg font-bold">Documents</h3>
-          <button className="btn btn-ghost" onClick={onClose}>✕</button>
+          <button className="btn" onClick={onClose}>✕</button>
         </div>
 
         {/* Filters */}
@@ -275,7 +275,7 @@ export default function DocumentsDialog({ customerId, onClose }: Props) {
         {/* Actions */}
         <div className="flex justify-end gap-2 mt-4">
           <a href={csvHref} className="btn">Download CSV</a>
-          <a href={zipHref} className="btn btn-primary">Download ZIP</a>
+          <a href={zipHref} className="btn">Download ZIP</a>
           <button className="btn" onClick={onClose}>Close</button>
         </div>
 

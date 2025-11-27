@@ -75,7 +75,7 @@ export default function DatevExportPage() {
       {err && <div className="mb-3 text-red-600">{err}</div>}
 
       <button
-        className="btn btn-primary"
+        className="btn"
         onClick={runExport}
         disabled={loading}
       >

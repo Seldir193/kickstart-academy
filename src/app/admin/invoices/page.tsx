@@ -436,7 +436,7 @@ function openPdf(item: DocItem) {
               <a href={csvHref} className="btn" suppressHydrationWarning>
                 Download CSV
               </a>
-              <a href={zipHref} className="btn btn-primary" suppressHydrationWarning>
+              <a href={zipHref} className="btn " suppressHydrationWarning>
                 Download ZIP
               </a>
             </div>

@@ -262,7 +262,7 @@ export default function BookingDialog({
             {s !== 'confirmed' && s !== 'cancelled' && s !== 'deleted' && (
               <div className="flex items-center gap-2">
                 <button
-                  className="btn btn-primary"
+                  className="btn"
                   disabled={busy === 'confirm'}
                   onClick={async () => {
                     try {
@@ -380,7 +380,7 @@ export default function BookingDialog({
             {s !== 'deleted' && (
               <div className="flex items-center gap-2">
                 <button
-                  className="btn"
+                  className="btn btn--danger"
                   disabled={busy === 'delete'}
                   onClick={async () => {
                     try {

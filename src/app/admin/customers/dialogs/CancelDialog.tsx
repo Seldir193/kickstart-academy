@@ -274,7 +274,7 @@ const offerButtonText = useMemo(() => {
       <div className="ks-panel card ks-panel--md" onClick={(e)=> e.stopPropagation()}>
         <div className="dialog-subhead">
           <h3 className="text-lg font-bold">Confirm cancellation</h3>
-          <button className="btn btn-ghost" onClick={onClose}>✕</button>
+          <button className="btn" onClick={onClose}>✕</button>
         </div>
 
         {err && <div className="mb-2 text-red-600">{err}</div>}
@@ -413,7 +413,7 @@ const offerButtonText = useMemo(() => {
 
         <div className="flex justify-end gap-2 mt-3">
           <button className="btn" onClick={onClose}>Close</button>
-          <button className="btn btn-primary" disabled={disabled} onClick={submit}>
+          <button className="btn" disabled={disabled} onClick={submit}>
             {saving ? 'Cancelling…' : 'Confirm cancellation'}
           </button>
         </div>

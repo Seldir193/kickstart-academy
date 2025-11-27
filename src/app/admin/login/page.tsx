@@ -211,12 +211,12 @@ export default function AdminLoginPage() {
           </div>
 
           <div className="actions">
-            <button type="submit" className="btn btn-primary" disabled={loading}>
+            <button type="submit" className="btn" disabled={loading}>
               {loading ? 'Signing in…' : 'Login'}
             </button>
             <button
               type="button"
-              className="btn btn-primary"
+              className="btn"
               onClick={() => router.push('/admin/signup')}
               disabled={loading}
             >

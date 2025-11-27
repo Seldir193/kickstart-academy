@@ -1097,7 +1097,7 @@ export default function CustomerDialog({
           </button>
           {mode === 'create' ? (
             <button
-              className="btn btn-primary"
+              className="btn"
               onClick={create}
               disabled={saving}
               type="button"
@@ -1106,7 +1106,7 @@ export default function CustomerDialog({
             </button>
           ) : (
             <button
-              className="btn btn-primary"
+              className="btn"
               onClick={save}
               disabled={saving}
               type="button"

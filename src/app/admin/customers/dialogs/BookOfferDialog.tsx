@@ -132,7 +132,7 @@ export default function BookOfferDialog({ customer, offer, onClose, onChanged }:
       <div className="ks-panel card ks-panel--md" onClick={(e) => e.stopPropagation()}>
         <div className="dialog-subhead">
           <h3 className="text-lg font-bold">Confirm booking</h3>
-          <button className="btn btn-ghost" onClick={onClose}>✕</button>
+          <button className="btn" onClick={onClose}>✕</button>
         </div>
 
         {err && <div className="mb-2 text-red-600">{err}</div>}
@@ -168,7 +168,7 @@ export default function BookOfferDialog({ customer, offer, onClose, onChanged }:
 
         <div className="flex justify-end gap-2 mt-3">
           <button className="btn" onClick={onClose}>Close</button>
-          <button className="btn btn-primary" disabled={disabled} onClick={submit}>
+          <button className="btn" disabled={disabled} onClick={submit}>
             {saving ? 'Booking…' : 'Confirm booking'}
           </button>
         </div>

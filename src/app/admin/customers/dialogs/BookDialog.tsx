@@ -409,7 +409,7 @@ export default function BookDialog({ customerId, onClose, onBooked }: Props) {
       >
         <div className="dialog-subhead">
           <h3 className="text-lg font-bold">Book offer</h3>
-          <button className="btn btn-ghost" onClick={onClose}>
+          <button className="btn " onClick={onClose}>
             ✕
           </button>
         </div>
@@ -737,7 +737,7 @@ export default function BookDialog({ customerId, onClose, onBooked }: Props) {
             Close
           </button>
           <button
-            className="btn btn-primary"
+            className="btn"
             disabled={saving || !selectedOfferId || !selectedDate}
             onClick={submit}
           >

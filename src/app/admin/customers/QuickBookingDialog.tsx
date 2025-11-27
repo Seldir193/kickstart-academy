@@ -67,7 +67,7 @@ export default function QuickBookingDialog({ onClose }: Props) {
       <div className="ks-panel card ks-panel--md" onClick={(e) => e.stopPropagation()}>
         <div className="dialog-subhead">
           <h3 className="text-lg font-bold">Buchung erstellen</h3>
-          <button className="btn btn-ghost" onClick={onClose}>✕</button>
+          <button className="btn" onClick={onClose}>✕</button>
         </div>
 
         {err && <div className="mb-2 text-red-600">{err}</div>}
