@@ -93,7 +93,7 @@ export default function PasswordResetPage() {
                 >
                   Zurück zum Login
                 </button>
-                <button type="submit" className="btn-primary" disabled={loading}>
+                <button type="submit" className="btn" disabled={loading}>
                   {loading ? 'Senden…' : 'E-Mail senden'}
                 </button>
               </div>
@@ -109,7 +109,7 @@ export default function PasswordResetPage() {
               <button className="btn" onClick={() => router.push('/admin/login')}>
                 Zurück zum Login
               </button>
-              <button className="btn-primary" onClick={() => setSent(false)}>
+              <button className="btn" onClick={() => setSent(false)}>
                 Nochmal senden
               </button>
             </div>
