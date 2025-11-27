@@ -245,7 +245,7 @@ export default function PlaceDialog({
                 </button>
 
                 <button
-                  className={clsx('btn btn-primary', (!canSave || saving) && 'btn-disabled')}
+                  className={clsx('btn', (!canSave || saving) && 'btn-disabled')}
                   onClick={handleSave}
                   disabled={!canSave || saving}
                 >
