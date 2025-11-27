@@ -177,7 +177,7 @@ export default function CoachDialog({
           </label>
 
           <label className="col-span-1">
-            <div className="label">MFS Lizenz</div>
+            <div className="label">DFS Lizenz</div>
             <input
               className="input"
               value={values.mfsLicense || ''}
@@ -273,7 +273,7 @@ export default function CoachDialog({
           <button className="btn" onClick={onClose} disabled={uploading}>
             Abbrechen
           </button>
-          <button className="btn btn--primary" onClick={handleSave} disabled={uploading}>
+          <button className="btn" onClick={handleSave} disabled={uploading}>
             {uploading ? 'Lädt…' : 'Speichern'}
           </button>
         </div>
