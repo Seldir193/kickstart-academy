@@ -377,9 +377,9 @@ export default function CustomerDialog({
 
           <div className="ks-actions">
             {mode === 'create' ? (
-              <button className="btn btn-primary" onClick={saveCreate} disabled={saving}>Erstellen</button>
+              <button className="btn" onClick={saveCreate} disabled={saving}>Erstellen</button>
             ) : (
-              <button className="btn btn-primary" onClick={saveUpdate} disabled={saving}>Änderung speichern</button>
+              <button className="btn" onClick={saveUpdate} disabled={saving}>Änderung speichern</button>
             )}
           </div>
         </section>
@@ -428,7 +428,7 @@ export default function CustomerDialog({
                   <input type="date" value={wishDate} onChange={e=> setWishDate(e.target.value)} />
                 </div>
                 <div className="ks-field ks-field--btn">
-                  <button className="btn btn-primary" onClick={addBooking} disabled={!selOffer || saving}>Buchen</button>
+                  <button className="btn" onClick={addBooking} disabled={!selOffer || saving}>Buchen</button>
                 </div>
               </div>
             </div>
