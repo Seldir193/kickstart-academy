@@ -146,7 +146,7 @@ export default function AdminHomePage() {
             </h1>
             <p>Verwalte Trainings, Orte, Kunden und Buchungen an einem Ort.</p>
             <div className="hero-actions">
-              <Link href="/trainings" className="btn btn-primary">Kurs anlegen</Link>
+              <Link href="/trainings" className="btn">Kurs anlegen</Link>
               <Link href="/orte" className="btn">Ort anlegen</Link>
               <button className="btn" onClick={() => setQuickOpen(true)} type="button">Buchung erstellen</button>
               {/* Contact-Button entfernt – CTA ist jetzt im Footer */}
