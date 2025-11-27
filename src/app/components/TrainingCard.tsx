@@ -384,7 +384,7 @@ export default function TrainingCard() {
           <div className="filters__row">
             <div className="filters__field">
               <button
-                className="btn btn--primary"
+                className="btn"
                 onClick={() => setCreateOpen(true)}
               >
                 Create new offer
@@ -570,7 +570,7 @@ export default function TrainingCard() {
                   Clear
                 </button>
                 <button
-                  className="btn btn-primary"
+                  className="btn btn--danger"
                   onClick={handleBulkDelete}
                 >
                   Delete selected
