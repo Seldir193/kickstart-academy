@@ -127,35 +127,37 @@ export default function CustomersPage() {
     <div className="ks-customers-admin p-4 max-w-6xl mx-auto">
       <div className="flex items-center justify-between mb-4">
         <h1 className="text-2xl font-bold">Customers</h1>
-        <button className="btn btn-primary" onClick={() => setCreateOpen(true)}>
+        <button className="btn" onClick={() => setCreateOpen(true)}>
           New customer
         </button>
       </div>
 
-      {/* Tabs */}
-      <div className="flex gap-2 mb-3">
-        <button
-          className={`btn ${tab === 'customers' ? 'btn-primary' : ''}`}
-          onClick={() => switchTab('customers')}
-        >
-          Customers
-        </button>
-        <button
-          className={`btn ${tab === 'newsletter' ? 'btn-primary' : ''}`}
-          onClick={() => switchTab('newsletter')}
-        >
-          Newsletter-Leads
-        </button>
-        <button
-          className={`btn ${tab === 'all' ? 'btn-primary' : ''}`}
-          onClick={() => switchTab('all')}
-        >
-          All
-        </button>
-      </div>
+    
 
 
 
+
+{/* Tabs */}
+<div className="flex gap-2 mb-3">
+  <button
+    className={`btn ${tab === 'customers' ? 'btn--tab-active' : ''}`}
+    onClick={() => switchTab('customers')}
+  >
+    Customers
+  </button>
+  <button
+    className={`btn ${tab === 'newsletter' ? 'btn--tab-active' : ''}`}
+    onClick={() => switchTab('newsletter')}
+  >
+    Newsletter-Leads
+  </button>
+  <button
+    className={`btn ${tab === 'all' ? 'btn--tab-active' : ''}`}
+    onClick={() => switchTab('all')}
+  >
+    All
+  </button>
+</div>
 
 
 
