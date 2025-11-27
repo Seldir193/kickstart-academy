@@ -198,7 +198,7 @@ export default function AdminSignupPage() {
           </div>
 
           <div className="actions">
-            <button className="btn btn-primary" disabled={disabled} aria-busy={disabled}>
+            <button className="btn" disabled={disabled} aria-busy={disabled}>
               {disabled ? 'Creating…' : 'Create account'}
             </button>
             <button
