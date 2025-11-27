@@ -682,7 +682,7 @@ export default function BookPage() {
 
               {/* Button */}
               <div className="book-actions">
-                <button className="btn btn-primary" disabled={status === 'sending' || !!offerError || !offer}>
+                <button className="btn" disabled={status === 'sending' || !!offerError || !offer}>
                   {submitLabel}
                 </button>
                 {status === 'success' && <span className="ok">Anfrage gesendet!</span>}
