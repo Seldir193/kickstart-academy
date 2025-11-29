@@ -21,7 +21,12 @@ const DAYS: { key: DayKey; label: string }[] = [
   { key: 'sun', label: 'Sunday' },
 ];
 
-export type CategoryKey = 'Holiday' | 'Weekly' | 'Individual' | 'ClubPrograms' | 'RentACoach';
+export type CategoryKey =
+  | 'Holiday'
+  | 'Weekly'
+  | 'Individual'
+  | 'ClubPrograms'
+  | 'RentACoach';
 
 type CourseOption = {
   label: string;
@@ -106,14 +111,23 @@ const CATEGORY_LABEL: Record<CategoryKey, string> = {
   RentACoach: 'RentACoach',
 };
 
+/** Vordefinierte Ferienwochen (für Dropdown) */
+const HOLIDAY_WEEK_PRESETS = [
+  'Osterferien',
+  'Pfingstferien',
+  'Sommerferien',
+  'Herbstferien',
+  'Weihnachtsferien',
+] as const;
+
 export type CreateOfferPayload = {
   type: OfferType | '';
   category?: CategoryKey | '';
   sub_type?: string;
 
-  // NEW: place linkage
-  placeId?: string;        // selected place
-  location: string;        // city; auto-filled from place
+  // Place linkage
+  placeId?: string;
+  location: string;
 
   price: number | '';
   days: DayKey[];
@@ -127,13 +141,18 @@ export type CreateOfferPayload = {
   coachName: string;
   coachEmail: string;
   coachImage: string;
+
+  // Ferienwochen-Infos (für Camps + Powertraining)
+  holidayWeekLabel?: string; // z.B. "Osterferien"
+  dateFrom?: string;         // yyyy-mm-dd
+  dateTo?: string;           // yyyy-mm-dd
 };
 
 function clsx(...xs: Array<string | false | undefined | null>) {
   return xs.filter(Boolean).join(' ');
 }
-type AnyRef<T extends HTMLElement> =
-  React.RefObject<T> | React.MutableRefObject<T | null>;
+
+type AnyRef<T extends HTMLElement> = React.RefObject<T> | React.MutableRefObject<T | null>;
 
 function useOnClickOutside<T extends HTMLElement>(ref: AnyRef<T>, handler: () => void) {
   useEffect(() => {
@@ -189,6 +208,9 @@ export default function OfferCreateDialog({
     coachName: '',
     coachEmail: '',
     coachImage: '',
+    holidayWeekLabel: '',
+    dateFrom: '',
+    dateTo: '',
   };
 
   const computeInitial = (): CreateOfferPayload => {
@@ -214,6 +236,9 @@ export default function OfferCreateDialog({
         coachName: initial.coachName ?? '',
         coachEmail: initial.coachEmail ?? '',
         coachImage: initial.coachImage ?? '',
+        holidayWeekLabel: initial.holidayWeekLabel ?? '',
+        dateFrom: initial.dateFrom ?? '',
+        dateTo: initial.dateTo ?? '',
       };
     }
     return base;
@@ -227,6 +252,10 @@ export default function OfferCreateDialog({
   const [categoryOpen, setCategoryOpen] = useState(false);
   const [courseOpen, setCourseOpen] = useState(false);
   const [placeOpen, setPlaceOpen] = useState(false);
+
+  // Ferienwoche: Preset + Custom
+  const [holidayPreset, setHolidayPreset] = useState<string>(''); // "Osterferien" oder "__custom__"
+  const [holidayCustom, setHolidayCustom] = useState<string>(''); // wenn "__custom__"
 
   const [uploading, setUploading] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
@@ -245,10 +274,9 @@ export default function OfferCreateDialog({
   useOnClickOutside(placeDropdownRef, () => setPlaceOpen(false));
 
   const selectedPlace = useMemo(
-  () => places.find((p) => p._id === form.placeId) || null,
-  [places, form.placeId],
-);
-
+    () => places.find((p) => p._id === form.placeId) || null,
+    [places, form.placeId],
+  );
 
   // load places once
   useEffect(() => {
@@ -275,7 +303,10 @@ export default function OfferCreateDialog({
       const init = computeInitial();
       setForm(init);
       setPreviewUrl(normalizeCoachSrc(init.coachImage));
+
       if (init.category) setCategoryUI(init.category as CategoryKey);
+      else setCategoryUI('');
+
       if (init.type) {
         const found = COURSES.find(
           (c) =>
@@ -284,22 +315,43 @@ export default function OfferCreateDialog({
             (init.category ? c.category === init.category : true),
         );
         if (found) setCourseUI(found.value);
+        else setCourseUI('');
       } else {
         setCourseUI('');
       }
+
+      // Ferienwoche: Preset vs Custom vorbereiten
+      if (init.holidayWeekLabel) {
+        const presetHit = HOLIDAY_WEEK_PRESETS.find((p) => p === init.holidayWeekLabel);
+        if (presetHit) {
+          setHolidayPreset(presetHit);
+          setHolidayCustom('');
+        } else {
+          setHolidayPreset('__custom__');
+          setHolidayCustom(init.holidayWeekLabel);
+        }
+      } else {
+        setHolidayPreset('');
+        setHolidayCustom('');
+      }
+
       setUploading(false);
       setUploadError(null);
       setCategoryOpen(false);
       setCourseOpen(false);
+      setPlaceOpen(false);
     } else {
       setForm({ ...blank });
       setPreviewUrl('');
       setCategoryUI('');
       setCourseUI('');
+      setHolidayPreset('');
+      setHolidayCustom('');
       setUploading(false);
       setUploadError(null);
       setCategoryOpen(false);
       setCourseOpen(false);
+      setPlaceOpen(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, mode, JSON.stringify(initial)]);
@@ -336,7 +388,11 @@ export default function OfferCreateDialog({
   function handleCategoryChange(next: CategoryKey | '') {
     setCategoryUI(next);
     setCourseUI('');
-    setForm((f) => ({ ...f, category: next, sub_type: '' }));
+    setForm((f) => ({
+      ...f,
+      category: next,
+      sub_type: '',
+    }));
   }
 
   function handleCourseChange(value: string) {
@@ -345,7 +401,12 @@ export default function OfferCreateDialog({
     if (!def) return;
     const cat = (categoryUI || def.category) as CategoryKey;
     setCategoryUI(cat);
-    setForm((f) => ({ ...f, type: def.type, category: cat, sub_type: def.sub_type || '' }));
+    setForm((f) => ({
+      ...f,
+      type: def.type,
+      category: cat,
+      sub_type: def.sub_type || '',
+    }));
   }
 
   function onPlaceChange(placeId: string) {
@@ -355,6 +416,37 @@ export default function OfferCreateDialog({
       placeId,
       location: p?.city ? p.city : '',
     }));
+  }
+
+  // Ferienwoche: Preset-Change
+  function handleHolidayPresetChange(next: string) {
+    setHolidayPreset(next);
+
+    // Preset gewählt → direkt in holidayWeekLabel übernehmen
+    if (next && next !== '__custom__') {
+      setForm((f) => ({
+        ...f,
+        holidayWeekLabel: next,
+      }));
+      setHolidayCustom('');
+    }
+
+    // "Andere Ferienwoche…" → Feld leeren, wartet auf Custom-Input
+    if (next === '__custom__') {
+      setForm((f) => ({
+        ...f,
+        holidayWeekLabel: '',
+      }));
+    }
+
+    // nichts ausgewählt
+    if (!next) {
+      setForm((f) => ({
+        ...f,
+        holidayWeekLabel: '',
+      }));
+      setHolidayCustom('');
+    }
   }
 
   async function handleCoachFileChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -383,11 +475,20 @@ export default function OfferCreateDialog({
     e.preventDefault();
     if (!canSubmit) return;
 
+    // Finaler Ferienwochen-Name:
+    const finalHolidayName =
+      holidayPreset === '__custom__'
+        ? (holidayCustom || '').trim()
+        : (holidayPreset || form.holidayWeekLabel || '').trim();
+
     const payload: CreateOfferPayload = {
       ...form,
       price: Number(form.price),
       ageFrom: form.ageFrom === '' ? '' : Number(form.ageFrom),
       ageTo: form.ageTo === '' ? '' : Number(form.ageTo),
+      holidayWeekLabel: finalHolidayName || '',
+      dateFrom: form.dateFrom || '',
+      dateTo: form.dateTo || '',
     };
 
     if (mode === 'edit' && initial?._id && onSave) {
@@ -412,6 +513,13 @@ export default function OfferCreateDialog({
   const selectedCourse = courseUI
     ? COURSES.find((c) => c.value === courseUI) || null
     : null;
+
+  // Helper: ist Holiday-Camp? ist Holiday-Powertraining?
+  const isHolidayCamp =
+    form.category === 'Holiday' && form.type === 'Camp';
+  const isHolidayPower =
+    form.category === 'Holiday' && form.sub_type === 'Powertraining';
+  const isHolidayOffer = form.category === 'Holiday';
 
   return (
     <div className="modal">
@@ -586,97 +694,168 @@ export default function OfferCreateDialog({
               <code>sub_type</code> is optional.
             </p>
 
+            {/* Place + Price */}
+            <div className="grid grid--2">
+              {/* Place */}
+              <div className="form__group">
+                <label className="label">Place</label>
 
-{/* Place + Price */}
-<div className="grid grid--2">
-  {/* Place */}
-  <div className="form__group">
-    <label className="label">Place</label>
+                <div
+                  ref={placeDropdownRef}
+                  className={clsx('ks-selectbox', placeOpen && 'ks-selectbox--open')}
+                >
+                  <button
+                    type="button"
+                    className="ks-selectbox__trigger"
+                    onClick={() => setPlaceOpen((o) => !o)}
+                    aria-haspopup="listbox"
+                    aria-expanded={placeOpen}
+                  >
+                    <span className="ks-selectbox__label">
+                      {selectedPlace
+                        ? `${selectedPlace.name} • ${selectedPlace.city}`
+                        : '— Select place —'}
+                    </span>
+                    <span className="ks-selectbox__chevron" aria-hidden="true" />
+                  </button>
 
-    <div
-      ref={placeDropdownRef}
-      className={clsx('ks-selectbox', placeOpen && 'ks-selectbox--open')}
-    >
-      <button
-        type="button"
-        className="ks-selectbox__trigger"
-        onClick={() => setPlaceOpen((o) => !o)}
-        aria-haspopup="listbox"
-        aria-expanded={placeOpen}
-      >
-        <span className="ks-selectbox__label">
-          {selectedPlace
-            ? `${selectedPlace.name} • ${selectedPlace.city}`
-            : '— Select place —'}
-        </span>
-        <span className="ks-selectbox__chevron" aria-hidden="true" />
-      </button>
+                  {placeOpen && (
+                    <div className="ks-selectbox__panel" role="listbox">
+                      <button
+                        type="button"
+                        className={clsx(
+                          'ks-selectbox__option',
+                          !form.placeId && 'ks-selectbox__option--active',
+                        )}
+                        onClick={() => {
+                          onPlaceChange('');
+                          setPlaceOpen(false);
+                        }}
+                      >
+                        — Select place —
+                      </button>
 
-      {placeOpen && (
-        <div className="ks-selectbox__panel" role="listbox">
-          <button
-            type="button"
-            className={clsx(
-              'ks-selectbox__option',
-              !form.placeId && 'ks-selectbox__option--active',
+                      {places.map((p) => (
+                        <button
+                          key={p._id}
+                          type="button"
+                          className={clsx(
+                            'ks-selectbox__option',
+                            form.placeId === p._id && 'ks-selectbox__option--active',
+                          )}
+                          onClick={() => {
+                            onPlaceChange(p._id);
+                            setPlaceOpen(false);
+                          }}
+                        >
+                          {p.name} • {p.city}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Price */}
+              <div className="form__group">
+                <label className="label">Price (€)</label>
+                <input
+                  type="number"
+                  className="input"
+                  min={0}
+                  step="0.01"
+                  placeholder="z. B. 129"
+                  value={form.price}
+                  onChange={(e) =>
+                    setForm((f) => ({
+                      ...f,
+                      price:
+                        e.target.value === '' ? '' : Number(e.target.value),
+                    }))
+                  }
+                />
+              </div>
+            </div>
+
+            {/* Ferienwoche + Datum nur für Holiday (Camp + Powertraining) */}
+            {isHolidayOffer && (
+              <>
+                <div className="form__group">
+                  <label className="label">Ferienwoche</label>
+                  <div className="grid grid--2">
+                    <select
+                      className="input"
+                      value={holidayPreset}
+                      onChange={(e) => handleHolidayPresetChange(e.target.value)}
+                    >
+                      <option value="">— Bitte wählen —</option>
+                      {HOLIDAY_WEEK_PRESETS.map((name) => (
+                        <option key={name} value={name}>
+                          {name}
+                        </option>
+                      ))}
+                      <option value="__custom__">Andere Ferienwoche…</option>
+                    </select>
+
+                    {/* Freitext nur, wenn "__custom__" */}
+                    {holidayPreset === '__custom__' && (
+                      <input
+                        className="input"
+                        placeholder="z. B. Osterferien Intensivcamp"
+                        value={holidayCustom}
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          setHolidayCustom(val);
+                          setForm((f) => ({
+                            ...f,
+                            holidayWeekLabel: val,
+                          }));
+                        }}
+                      />
+                    )}
+                  </div>
+                </div>
+
+                <div className="grid grid--2">
+                  <div className="form__group">
+                    <label className="label">Ferien: Von</label>
+                    <input
+                      type="date"
+                      className="input"
+                      value={form.dateFrom || ''}
+                      onChange={(e) =>
+                        setForm((f) => ({
+                          ...f,
+                          dateFrom: e.target.value,
+                        }))
+                      }
+                    />
+                  </div>
+                  <div className="form__group">
+                    <label className="label">Ferien: Bis</label>
+                    <input
+                      type="date"
+                      className="input"
+                      value={form.dateTo || ''}
+                      onChange={(e) =>
+                        setForm((f) => ({
+                          ...f,
+                          dateTo: e.target.value,
+                        }))
+                      }
+                    />
+                  </div>
+                </div>
+              </>
             )}
-            onClick={() => {
-              onPlaceChange('');
-              setPlaceOpen(false);
-            }}
-          >
-            — Select place —
-          </button>
-
-          {places.map((p) => (
-            <button
-              key={p._id}
-              type="button"
-              className={clsx(
-                'ks-selectbox__option',
-                form.placeId === p._id && 'ks-selectbox__option--active',
-              )}
-              onClick={() => {
-                onPlaceChange(p._id);
-                setPlaceOpen(false);
-              }}
-            >
-              {p.name} • {p.city}
-            </button>
-          ))}
-        </div>
-      )}
-    </div>
-  </div>
-
-  {/* Price */}
-  <div className="form__group">
-    <label className="label">Price (€)</label>
-    <input
-      type="number"
-      className="input"
-      min={0}
-      step="0.01"
-      placeholder="z. B. 129"
-      value={form.price}
-      onChange={(e) =>
-        setForm((f) => ({
-          ...f,
-          price:
-            e.target.value === '' ? '' : Number(e.target.value),
-        }))
-      }
-    />
-  </div>
-</div>
-
-
-
-        
 
             {/* Days */}
             <div className="form__group form__group--stack">
-              <label className="label">Day(s)</label>
+              <label className="label">
+                Day(s){' '}
+                {isHolidayCamp && '– Camp-Tage innerhalb der Ferien'}
+                {isHolidayPower && '– Powertraining-Tage innerhalb der Ferien'}
+              </label>
               <div className="chip-row">
                 {DAYS.map((d) => (
                   <button
@@ -893,12 +1072,3 @@ export default function OfferCreateDialog({
     </div>
   );
 }
-
-
-
-
-
-
-
-
-
