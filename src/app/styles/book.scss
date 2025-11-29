@@ -1,0 +1,409 @@
+.book-embed.is-embed {
+  background: #fff;
+}
+
+.book-grid--single {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 12px;
+}
+
+.book-main {
+  position: relative;
+}
+
+.book-sticky {
+  position: sticky;
+  top: 0;
+  background: #f8fafc;
+  z-index: 5;
+  padding: 12px 0 10px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.book-sub {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 12px;
+  align-items: end;
+}
+
+.book-sub__left {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+
+.book-sub__titles {
+  display: grid;
+  gap: 4px;
+}
+
+.book-back {
+  position: relative;
+  top: 0;
+  left: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  border: 1px solid #e5e7eb;
+  background: #fff;
+  cursor: pointer;
+}
+
+.book-back:hover {
+  background: #fafafa;
+}
+
+.book-sub__right label {
+  display: block;
+  font-size: 12px;
+  color: #475569;
+  margin-bottom: 4px;
+}
+
+.book-sub__right input[type='date'] {
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 8px 10px;
+  min-width: 190px;
+  background: #fff;
+}
+
+.book-h1 {
+  margin: 0 0 4px;
+  font-size: 20px;
+  font-weight: 800;
+}
+
+.book-product {
+  font-weight: 700;
+}
+
+.book-meta {
+  color: #475569;
+  font-size: 14px;
+}
+
+.error--small {
+  display: block;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+.card {
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 14px;
+  margin: 12px 0;
+  background: #fff;
+}
+
+fieldset.card legend {
+  padding: 0 6px;
+  font-weight: 700;
+}
+
+.card--muted {
+  background: #f8fafc;
+}
+
+.field-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px 14px;
+}
+
+.field-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 16px;
+  align-items: center;
+}
+
+.field {
+  display: grid;
+  gap: 6px;
+}
+
+.field input,
+.field select,
+.field textarea {
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 10px 12px;
+  background: #fff;
+}
+
+.dob {
+  display: grid;
+  grid-template-columns: 80px 80px 1fr;
+  gap: 8px;
+}
+
+.radio,
+.checkbox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.muted {
+  color: #64748b;
+}
+
+/* extra Margin statt inline-style */
+.coach-info-text {
+  margin-top: 8px;
+}
+
+.book-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+/* Button-Variante für diese Seite */
+.btn.btn-primary {
+  background: #0ea5e9;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 10px 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    transform 0.08s ease,
+    box-shadow 0.12s ease,
+    background-color 0.12s ease;
+}
+
+.btn.btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(14, 165, 233, 0.25);
+  background: #0c96d2;
+}
+
+.error {
+  color: #b91c1c;
+  font-size: 13px;
+}
+
+/* extra Margin oben für die Fehlermeldung am Ende */
+.error--top {
+  margin-top: 12px;
+}
+
+.ok {
+  color: #065f46;
+  font-weight: 600;
+}
+
+.contact-coach {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.contact-coach__avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 999px;
+  object-fit: cover;
+  background: #f1f5f9;
+  border: 1px solid #eaeaea;
+}
+
+.contact-coach__stack {
+  display: grid;
+  gap: 2px;
+}
+
+.contact-coach__name {
+  display: flex;
+  gap: 8px;
+  line-height: 1.05;
+}
+
+.contact-coach__first {
+  font-weight: 700;
+}
+
+.contact-coach__last {
+  color: #475569;
+  font-size: 13px;
+}
+
+.contact-coach__mail {
+  color: #0ea5e9;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.contact-coach__mail:hover {
+  text-decoration: underline;
+}
+
+.contact-coach__mail--empty {
+  color: #94a3b8;
+}
+
+@media (max-width: 560px) {
+  .book-sub {
+    grid-template-columns: 1fr;
+  }
+
+  .field-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .dob {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+}
+
+
+
+
+
+
+
+
+
+
+/* ===== Camp-spezifische Optionen ===== */
+
+.camp-options {
+  margin-top: 12px;
+}
+
+.camp-divider {
+  border: none;
+  border-top: 1px solid #e5e7eb;
+  margin: 16px 0;
+}
+
+.sibling-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 4px;
+
+  h3 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 700;
+  }
+}
+
+.sibling-fields {
+  margin-top: 12px;
+}
+
+/* Torwartschule-Toggle-Buttons */
+
+.camp-toggle-row {
+  display: inline-flex;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.camp-toggle-btn {
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  padding: 8px 14px;
+  background: #fff;
+  font-size: 14px;
+  cursor: pointer;
+  min-width: 70px;
+}
+
+.camp-toggle-btn.is-active {
+  border-color: #0ea5e9;
+  background: #e0f2fe;
+}
+
+/* Fehler-Text extra oben (statt Inline-Style) */
+.error--top {
+  margin-top: 12px;
+}
+
+
+
+
+
+
+/* Camp-Optionen (hatten wir schon) */
+.camp-options {
+  margin-top: 12px;
+}
+
+.camp-divider {
+  border: none;
+  border-top: 1px solid #e5e7eb;
+  margin: 16px 0;
+}
+
+.sibling-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 4px;
+
+  h3 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 700;
+  }
+}
+
+.sibling-fields {
+  margin-top: 12px;
+}
+
+/* Torwartschule-Toggle-Buttons */
+
+.camp-toggle-row {
+  display: inline-flex;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.camp-toggle-btn {
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  padding: 8px 14px;
+  background: #fff;
+  font-size: 14px;
+  cursor: pointer;
+  min-width: 70px;
+}
+
+.camp-toggle-btn.is-active {
+  border-color: #0ea5e9;
+  background: #e0f2fe;
+}
+
+/* Hinweis + AGB-Block über Button */
+
+.camp-hint {
+  margin-top: 16px;
+  font-size: 14px;
+  color: #475569;
+}
+
+.agb-row {
+  margin-top: 8px;
+  margin-bottom: 12px;
+}
+
+/* Fehler oben */
+.error--top {
+  margin-top: 12px;
+}
