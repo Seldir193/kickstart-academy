@@ -1,16 +1,5 @@
-.book-embed.is-embed {
-  background: #fff;
-}
 
-.book-grid--single {
-  max-width: 720px;
-  margin: 0 auto;
-  padding: 12px;
-}
 
-.book-main {
-  position: relative;
-}
 
 .book-sticky {
   position: sticky;
@@ -160,12 +149,6 @@ fieldset.card legend {
   margin-top: 8px;
 }
 
-.book-actions {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-top: 12px;
-}
 
 /* Button-Variante für diese Seite */
 .btn.btn-primary {
@@ -273,12 +256,11 @@ fieldset.card legend {
 
 
 
-
-
 /* ===== Camp-spezifische Optionen ===== */
 
 .camp-options {
   margin-top: 12px;
+  
 }
 
 .camp-divider {
@@ -407,3 +389,374 @@ fieldset.card legend {
 .error--top {
   margin-top: 12px;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+/* ===========================
+   Generic Select Wrapper für Book-Dialog
+   =========================== */
+
+.book-select {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+}
+
+/* das native <select> */
+.book-select__native {
+  width: 100%;
+  height: 44px;
+  padding: 0 38px 0 12px; /* Platz rechts fürs Icon */
+  border-radius: 10px;
+  border: 1px solid #e3e6e8;
+  background: #fff;
+  font: inherit;
+  color: #2a3036;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+/* Icon-Container */
+.book-select__icon {
+  position: absolute;
+  inset-block: 0;
+  inset-inline-end: 10px;
+  display: flex;
+  align-items: center;
+  pointer-events: none;
+}
+
+/* SVG selbst */
+.book-select__icon img {
+  width: 18px;
+  height: 18px;
+  display: block;
+}
+
+/* Hover: Rand wird dunkler */
+.book-select:hover .book-select__native {
+  border-color: var(--text, #111827);
+}
+
+/* Focus / aktiv: Brand-Navy + Glow */
+.book-select:has(.book-select__native:focus-visible),
+.book-select.book-select--active {
+  /* .book-select--active kannst du auch per JS setzen, falls nötig */
+  outline: 0;
+  border-radius: 10px; /* für den Shadow */
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--brand-navy) 22%, white);
+}
+
+.book-select:has(.book-select__native:focus-visible) .book-select__native,
+.book-select.book-select--active .book-select__native {
+  border-color: var(--brand-navy);
+}
+
+/* ===========================
+   Rotation für CARET-Variante
+   =========================== */
+
+.book-select--caret .book-select__icon img {
+  transition: transform 0.18s ease;
+}
+
+/* wenn du auf dem Wrapper eine Klasse .is-open setzt, dreht sich das Caret */
+.book-select--caret.is-open .book-select__icon img {
+  transform: rotate(180deg);
+}
+
+/* ===========================
+   Chevron-Variante (ohne Rotation)
+   =========================== */
+
+.book-select--chevron .book-select__icon img {
+  /* keine Rotation, nur evtl. Farbe */
+  opacity: 0.9;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .book-select--caret .book-select__icon img {
+    transition: none;
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* =========================================================
+   BOOK-Dialog – Inputs, Dropdowns & Button
+   identisch zu globalen Admin-Forms (.input)
+   ========================================================= */
+
+/* 1) Basis-Look für alle Felder im Book-Formular */
+.book-form .field input,
+.book-form .field select,
+.book-form .field textarea,
+.book-form .book-select__native,
+.book-form input[type='date'] {
+  border-radius: 8px;
+  border: 1px solid #d9dee6;
+  background-color: #fff;
+  font: inherit;
+  color: inherit;
+
+  transition:
+    border-color 0.18s ease,
+    box-shadow 0.18s ease,
+    background-color 0.18s ease;
+}
+
+/* Höhe & Padding nur für einzeilige Felder */
+.book-form .field input,
+.book-form .field select,
+.book-form .book-select__native,
+.book-form input[type='date'],
+.book-form .dob select {
+  height: 40px;
+  padding: 0 12px;
+}
+
+/* Textarea: gleiche Optik, aber flexible Höhe */
+.book-form .field textarea {
+  padding: 8px 12px;
+  min-height: 80px;
+  resize: vertical;
+}
+
+/* Hover – exakt wie: input.input:hover */
+.book-form .field input:hover,
+.book-form .field select:hover,
+.book-form .field textarea:hover,
+.book-form .book-select__native:hover,
+.book-form input[type='date']:hover,
+.book-form .dob select:hover {
+  border-color: var(--text);
+}
+
+/* Focus – exakt wie: input.input:focus */
+.book-form .field input:focus,
+.book-form .field select:focus,
+.book-form .field textarea:focus,
+.book-form .book-select__native:focus,
+.book-form input[type='date']:focus,
+.book-form .dob select:focus {
+  outline: none;
+  border-color: var(--brand-navy);
+  box-shadow: 0 0 0 3px
+    color-mix(in oklab, var(--brand-navy) 22%, #ffffff);
+}
+
+/* Date – klickbar wie globaler Date-Input */
+.book-form input[type='date'] {
+  cursor: pointer;
+}
+.book-form input[type='date']::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+}
+
+/* 2) Book-Select Wrapper – Ring & Hover wie Dropdowns */
+.book-select {
+  position: relative;
+}
+
+/* Hover: Rand dunkler (gleicher Effekt wie bei .input:hover) */
+.book-select:hover .book-select__native {
+  border-color: var(--text);
+}
+
+/* Focus/Open: gleicher Ring wie .family-dropdown / .ks-selectbox */
+.book-select:has(.book-select__native:focus),
+.book-select.book-select--active,
+.book-select.is-open {
+  box-shadow: 0 0 0 3px
+    color-mix(in oklab, var(--brand-navy) 22%, #ffffff);
+  border-radius: 8px;
+}
+
+/* Bei Focus/Open auch den Rand einfärben */
+.book-select:has(.book-select__native:focus) .book-select__native,
+.book-select.is-open .book-select__native {
+  border-color: var(--brand-navy);
+}
+
+/* 3) Primary-Button im Book-Dialog – wie globaler Button-Hover */
+.book-form .btn.btn-primary {
+  appearance: none;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 12px;
+  background: #0ea5e9;
+  color: #fff;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+
+  transition:
+    background-color 0.18s ease,
+    box-shadow 0.18s ease;
+}
+
+/* Hover – gleiche Farbe wie in deinem booking.scss */
+.book-form .btn.btn-primary:hover {
+  background: #0c96d2;
+}
+
+/* Disabled – wie deine .btn-disabled */
+.book-form .btn.btn-primary:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* Focus-Ring wie bei allen Inputs */
+.book-form .btn.btn-primary:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px
+    color-mix(in oklab, var(--brand-navy) 22%, #ffffff);
+}
+
+
+
+
+
+
+
+
+
+
+
+.book-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+
+.book-grid--single {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 12px;
+}
+
+.book-main {
+  position: relative;
+}
+
+
+
+
+
+/* Sicherstellen, dass der Inhalt nicht zu breit wird */
+.book-grid.book-grid--single {
+  width: 100%;
+  max-width: 760px;
+  margin: 0 auto;
+}
+
+
+/* Vollbild-Overlay für den Buchungsdialog */
+.book-embed {
+  position: fixed;
+  inset: 0;              /* top:0; right:0; bottom:0; left:0; */
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;       /* Scrollen, wenn Formular länger ist */
+  background: transparent;
+  z-index: 999;           /* sicher vor allem anderen */
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Im Embed-/Dialog-Modus innen weißer Hintergrund */
+.book-embed.is-embed,
+body.embed-mode .book-embed {
+  background: #fff;
+
+  justify-content: flex-start;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
