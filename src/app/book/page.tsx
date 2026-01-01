@@ -1,17 +1,16 @@
+"use client";
 
-'use client';
-
-import type React from 'react';
-import { useEffect, useMemo, useState } from 'react';
-import { useSearchParams } from 'next/navigation';
-import Script from 'next/script';
+import type React from "react";
+import { useEffect, useMemo, useState } from "react";
+import { useSearchParams } from "next/navigation";
+import Script from "next/script";
 
 import {
   initialForm,
   type FormState,
   type Offer,
   type PtMetaItem,
-} from './bookTypes';
+} from "./bookTypes";
 import {
   calcAge,
   deriveCoach,
@@ -22,13 +21,13 @@ import {
   isPowertraining,
   normDay,
   DAY_LONG,
-} from './bookUtils';
+} from "./bookUtils";
 
-import { ChildSection } from './components/ChildSection';
-import { CampOptionsSection } from './components/CampOptionsSection';
-import { BillingSection } from './components/BillingSection';
-import { AgbRow } from './components/AgbRow';
-import { BookActions } from './components/BookActions';
+import { ChildSection } from "./components/ChildSection";
+import { CampOptionsSection } from "./components/CampOptionsSection";
+import { BillingSection } from "./components/BillingSection";
+import { AgbRow } from "./components/AgbRow";
+import { BookActions } from "./components/BookActions";
 
 export default function BookPage() {
   const params = useSearchParams();
@@ -38,37 +37,37 @@ export default function BookPage() {
   const [offerLoading, setOfferLoading] = useState(true);
   const [offerError, setOfferError] = useState<string | null>(null);
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const [status, setStatus] = useState<'idle' | 'sending' | 'success' | 'error'>(
-    'idle',
-  );
+  const [status, setStatus] = useState<
+    "idle" | "sending" | "success" | "error"
+  >("idle");
 
-  const [today, setToday] = useState<string>('');
+  const [today, setToday] = useState<string>("");
   useEffect(() => {
-    setToday(new Date().toISOString().split('T')[0]);
+    setToday(new Date().toISOString().split("T")[0]);
   }, []);
 
   useEffect(() => {
-    if (status === 'success') {
-      const t = setTimeout(() => setStatus('idle'), 5000);
+    if (status === "success") {
+      const t = setTimeout(() => setStatus("idle"), 5000);
       return () => clearTimeout(t);
     }
   }, [status]);
 
-  const isEmbed = useMemo(() => params.get('embed') === '1', [params]);
+  const isEmbed = useMemo(() => params.get("embed") === "1", [params]);
 
-  const selectedDaysParam = params.get('days') || '';
-  const holidayLabelParam = params.get('holidayLabel') || '';
-  const holidayFromParam = params.get('holidayFrom') || '';
-  const holidayToParam = params.get('holidayTo') || '';
-  const ptMetaRaw = params.get('ptmeta') || '';
+  const selectedDaysParam = params.get("days") || "";
+  const holidayLabelParam = params.get("holidayLabel") || "";
+  const holidayFromParam = params.get("holidayFrom") || "";
+  const holidayToParam = params.get("holidayTo") || "";
+  const ptMetaRaw = params.get("ptmeta") || "";
 
   const selectedDays = useMemo(
     () =>
       selectedDaysParam
-        .split(',')
+        .split(",")
         .map((s) => s.trim())
         .filter(Boolean),
-    [selectedDaysParam],
+    [selectedDaysParam]
   );
 
   const ptMeta: PtMetaItem[] = useMemo(() => {
@@ -78,15 +77,15 @@ export default function BookPage() {
       if (!Array.isArray(parsed)) return [];
       return parsed.map((x: any) => ({
         id: x.id ? String(x.id) : undefined,
-        day: typeof x.day === 'string' ? x.day : '',
-        dateFrom: typeof x.dateFrom === 'string' ? x.dateFrom : '',
-        dateTo: typeof x.dateTo === 'string' ? x.dateTo : '',
-        timeFrom: typeof x.timeFrom === 'string' ? x.timeFrom : '',
-        timeTo: typeof x.timeTo === 'string' ? x.timeTo : '',
+        day: typeof x.day === "string" ? x.day : "",
+        dateFrom: typeof x.dateFrom === "string" ? x.dateFrom : "",
+        dateTo: typeof x.dateTo === "string" ? x.dateTo : "",
+        timeFrom: typeof x.timeFrom === "string" ? x.timeFrom : "",
+        timeTo: typeof x.timeTo === "string" ? x.timeTo : "",
         price:
-          typeof x.price === 'number'
+          typeof x.price === "number"
             ? x.price
-            : typeof x.price === 'string'
+            : typeof x.price === "string"
             ? Number(x.price)
             : undefined,
       }));
@@ -98,23 +97,23 @@ export default function BookPage() {
   // 🔹 URL-basierte Camp-Erkennung – schon da, bevor das Offer geladen ist
   const urlCamp = useMemo(
     () =>
-      (holidayLabelParam !== '' ||
-        holidayFromParam !== '' ||
-        holidayToParam !== '') &&
-      ptMetaRaw === '',
-    [holidayLabelParam, holidayFromParam, holidayToParam, ptMetaRaw],
+      (holidayLabelParam !== "" ||
+        holidayFromParam !== "" ||
+        holidayToParam !== "") &&
+      ptMetaRaw === "",
+    [holidayLabelParam, holidayFromParam, holidayToParam, ptMetaRaw]
   );
 
   // Offer laden
   useEffect(() => {
     const readOfferId = () => {
-      const id = params?.get('offerId') || params?.get('id') || '';
+      const id = params?.get("offerId") || params?.get("id") || "";
       if (id) return id;
-      if (typeof window !== 'undefined') {
+      if (typeof window !== "undefined") {
         const q = new URLSearchParams(window.location.search);
-        return q.get('offerId') || q.get('id') || '';
+        return q.get("offerId") || q.get("id") || "";
       }
-      return '';
+      return "";
     };
 
     const id = readOfferId();
@@ -122,7 +121,7 @@ export default function BookPage() {
 
     if (!id) {
       setOffer(null);
-      setOfferError('Missing offerId in URL.');
+      setOfferError("Missing offerId in URL.");
       setOfferLoading(false);
       return;
     }
@@ -132,14 +131,14 @@ export default function BookPage() {
       try {
         setOfferLoading(true);
         setOfferError(null);
-        const res = await fetch(`/api/offers/${id}`, { cache: 'no-store' });
+        const res = await fetch(`/api/offers/${id}`, { cache: "no-store" });
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data: Offer = await res.json();
         if (!cancelled) setOffer(data);
       } catch {
         if (!cancelled) {
           setOffer(null);
-          setOfferError('Offer not found or API unreachable.');
+          setOfferError("Offer not found or API unreachable.");
         }
       } finally {
         if (!cancelled) setOfferLoading(false);
@@ -153,13 +152,13 @@ export default function BookPage() {
 
   // Volle Formular-Höhe (scrollHeight) an WordPress melden
   useEffect(() => {
-    if (typeof window === 'undefined') return;
+    if (typeof window === "undefined") return;
     if (!isEmbed) return;
 
     const sendHeight = () => {
       try {
         const formEl = document.querySelector(
-          '.book-form',
+          ".book-form"
         ) as HTMLElement | null;
 
         let contentHeight = 0;
@@ -176,26 +175,26 @@ export default function BookPage() {
             body.offsetHeight,
             html.clientHeight,
             html.scrollHeight,
-            html.offsetHeight,
+            html.offsetHeight
           );
         }
 
         const height = contentHeight + 16;
 
-        console.log('BOOK sendHeight (form.scrollHeight):', {
+        console.log("BOOK sendHeight (form.scrollHeight):", {
           contentHeight,
           height,
         });
 
         window.parent?.postMessage(
           {
-            type: 'KS_BOOKING_HEIGHT',
+            type: "KS_BOOKING_HEIGHT",
             height,
           },
-          '*',
+          "*"
         );
       } catch (err) {
-        console.warn('BOOK sendHeight error', err);
+        console.warn("BOOK sendHeight error", err);
       }
     };
 
@@ -203,13 +202,11 @@ export default function BookPage() {
       sendHeight();
     });
 
-    window.addEventListener('resize', sendHeight);
+    window.addEventListener("resize", sendHeight);
 
     let ro: ResizeObserver | null = null;
-    if ('ResizeObserver' in window) {
-      const formEl = document.querySelector(
-        '.book-form',
-      ) as HTMLElement | null;
+    if ("ResizeObserver" in window) {
+      const formEl = document.querySelector(".book-form") as HTMLElement | null;
       if (formEl) {
         ro = new ResizeObserver(() => {
           sendHeight();
@@ -219,7 +216,7 @@ export default function BookPage() {
     }
 
     return () => {
-      window.removeEventListener('resize', sendHeight);
+      window.removeEventListener("resize", sendHeight);
       if (ro) ro.disconnect();
     };
   }, [isEmbed]);
@@ -232,11 +229,11 @@ export default function BookPage() {
   // 🔹 Camp-Erkennung: entweder echte Offer-Infos ODER URL-basierte Heuristik
   const isCampBooking = useMemo(
     () => urlCamp || (holiday && !powertraining),
-    [urlCamp, holiday, powertraining],
+    [urlCamp, holiday, powertraining]
   );
 
   const showWishDate = weekly;
-  const productName = offer?.title || offer?.type || 'Programm';
+  const productName = offer?.title || offer?.type || "Programm";
 
   const selectedDayNames = useMemo(
     () =>
@@ -244,14 +241,14 @@ export default function BookPage() {
         const code = normDay(d);
         const short = code || d;
         const long = DAY_LONG[short] || short;
-        return long + 's';
+        return long + "s";
       }),
-    [selectedDays],
+    [selectedDays]
   );
 
   const holidayTitle = useMemo(
-    () => (offer?.holidayWeekLabel || holidayLabelParam || '').trim(),
-    [offer, holidayLabelParam],
+    () => (offer?.holidayWeekLabel || holidayLabelParam || "").trim(),
+    [offer, holidayLabelParam]
   );
 
   const holidayRangeStr = useMemo(
@@ -260,23 +257,23 @@ export default function BookPage() {
         offer?.dateFrom,
         offer?.dateTo,
         holidayFromParam,
-        holidayToParam,
+        holidayToParam
       ),
-    [offer, holidayFromParam, holidayToParam],
+    [offer, holidayFromParam, holidayToParam]
   );
 
   const sessionLines: string[] = useMemo(() => {
     const lines: string[] = [];
 
     const price =
-      typeof offer?.price === 'number' ? `${offer.price.toFixed(2)}€` : '';
+      typeof offer?.price === "number" ? `${offer.price.toFixed(2)}€` : "";
     const timeLineOffer =
       offer?.timeFrom && offer?.timeTo
         ? `${offer.timeFrom} – ${offer.timeTo}`
-        : '';
+        : "";
 
     if (holiday) {
-      const range = holidayRangeStr ? `(${holidayRangeStr})` : '';
+      const range = holidayRangeStr ? `(${holidayRangeStr})` : "";
       const isCampLikeHoliday = holiday && !powertraining;
 
       let holidayDays: string[] = [];
@@ -285,22 +282,22 @@ export default function BookPage() {
           holidayDays = selectedDayNames;
         } else if (offer?.days?.[0]) {
           const code = normDay(offer.days[0]);
-          const long = code ? DAY_LONG[code] || code : '';
-          if (long) holidayDays = [long + 's'];
+          const long = code ? DAY_LONG[code] || code : "";
+          if (long) holidayDays = [long + "s"];
         }
       }
 
       if (powertraining && ptMeta.length) {
         ptMeta.forEach((m) => {
           const code = normDay(m.day);
-          const long = code ? DAY_LONG[code] || code : '';
-          const dayLabel = long ? `${long}s` : '';
+          const long = code ? DAY_LONG[code] || code : "";
+          const dayLabel = long ? `${long}s` : "";
 
           const rangeStr =
             m.dateFrom || m.dateTo
-              ? buildRangeText(m.dateFrom, m.dateTo, '', '')
+              ? buildRangeText(m.dateFrom, m.dateTo, "", "")
               : holidayRangeStr;
-          const rangeInline = rangeStr ? `(${rangeStr})` : '';
+          const rangeInline = rangeStr ? `(${rangeStr})` : "";
 
           const timeLine =
             m.timeFrom && m.timeTo
@@ -308,7 +305,7 @@ export default function BookPage() {
               : timeLineOffer;
 
           const priceLine =
-            typeof m.price === 'number' && Number.isFinite(m.price)
+            typeof m.price === "number" && Number.isFinite(m.price)
               ? `${m.price.toFixed(2)}€`
               : price;
 
@@ -318,7 +315,7 @@ export default function BookPage() {
           if (timeLine) parts.push(timeLine);
           if (priceLine) parts.push(priceLine);
           if (parts.length) {
-            lines.push(`Anmeldung | ${parts.join(' · ')}`);
+            lines.push(`Anmeldung | ${parts.join(" · ")}`);
           }
         });
         return lines;
@@ -326,40 +323,47 @@ export default function BookPage() {
 
       const parts: string[] = [];
       if (range) parts.push(range);
-      if (holidayDays.length) parts.push(holidayDays.join(', '));
+      if (holidayDays.length) parts.push(holidayDays.join(", "));
       if (timeLineOffer) parts.push(timeLineOffer);
       if (price) parts.push(price);
       if (parts.length) {
-        lines.push(`Anmeldung | ${parts.join(' · ')}`);
+        lines.push(`Anmeldung | ${parts.join(" · ")}`);
       }
       return lines;
     }
 
     const dayCode = normDay(offer?.days?.[0]);
-    const dayLong = dayCode ? DAY_LONG[dayCode] || dayCode : '';
-    const label = dayLong ? `Anmeldung | ${dayLong}:` : 'Anmeldung';
+    const dayLong = dayCode ? DAY_LONG[dayCode] || dayCode : "";
+    const label = dayLong ? `Anmeldung | ${dayLong}:` : "Anmeldung";
     const parts: string[] = [];
     if (timeLineOffer) parts.push(timeLineOffer);
-    if (price) parts.push(price ? `${price}/Monat` : '');
-    lines.push([label, ...parts.filter(Boolean)].join(' · '));
+    if (price) parts.push(price ? `${price}/Monat` : "");
+    lines.push([label, ...parts.filter(Boolean)].join(" · "));
     return lines;
-  }, [offer, holiday, powertraining, holidayRangeStr, selectedDayNames, ptMeta]);
+  }, [
+    offer,
+    holiday,
+    powertraining,
+    holidayRangeStr,
+    selectedDayNames,
+    ptMeta,
+  ]);
 
   const heading = weekly
-    ? 'Kostenfreies Schnuppertraining anfragen'
+    ? "Kostenfreies Schnuppertraining anfragen"
     : holiday
-    ? 'Anmeldung'
-    : 'Anfrage senden';
+    ? "Anmeldung"
+    : "Anfrage senden";
 
   const onChange = (
     e:
       | React.ChangeEvent<HTMLInputElement>
       | React.ChangeEvent<HTMLTextAreaElement>
-      | React.ChangeEvent<HTMLSelectElement>,
+      | React.ChangeEvent<HTMLSelectElement>
   ) => {
     const { name, type } = e.target as HTMLInputElement;
     const value =
-      type === 'checkbox'
+      type === "checkbox"
         ? (e.target as HTMLInputElement).checked
         : e.target.value;
     setForm((prev) => ({ ...prev, [name]: value as any }));
@@ -374,46 +378,50 @@ export default function BookPage() {
     const campLocal =
       (isHolidayProgram(offer) && !isPowertraining(offer)) || urlCamp;
 
-    if (!form.offerId) e.offerId = 'Offer fehlt.';
+    if (!form.offerId) e.offerId = "Offer fehlt.";
     if (!form.email || !/^\S+@\S+\.\S+$/.test(form.email)) {
-      e.email = 'Ungültige E-Mail';
+      e.email = "Ungültige E-Mail";
     }
 
     if (!nonTrialLocal) {
       const ageYears = calcAge(form.birthYear, form.birthMonth, form.birthDay);
       if (ageYears == null) {
-        e.birthYear = e.birthMonth = e.birthDay =
-          'Bitte vollständiges Geburtsdatum wählen';
+        e.birthYear =
+          e.birthMonth =
+          e.birthDay =
+            "Bitte vollständiges Geburtsdatum wählen";
       } else if (ageYears < 5 || ageYears > 19) {
-        e.birthYear = e.birthMonth = e.birthDay =
-          'Alter muss zwischen 5 und 19 liegen';
+        e.birthYear =
+          e.birthMonth =
+          e.birthDay =
+            "Alter muss zwischen 5 und 19 liegen";
       }
 
-      if (!form.childFirst.trim()) e.childFirst = 'Pflichtfeld';
-      if (!form.childLast.trim()) e.childLast = 'Pflichtfeld';
+      if (!form.childFirst.trim()) e.childFirst = "Pflichtfeld";
+      if (!form.childLast.trim()) e.childLast = "Pflichtfeld";
     }
 
     if (weeklyLocal) {
-      if (!form.date) e.date = 'Bitte Datum wählen';
+      if (!form.date) e.date = "Bitte Datum wählen";
       else if (today && form.date < today)
-        e.date = 'Datum darf nicht in der Vergangenheit liegen';
+        e.date = "Datum darf nicht in der Vergangenheit liegen";
     }
 
-    if (!form.accept) e.accept = 'Bitte AGB/Widerruf bestätigen';
+    if (!form.accept) e.accept = "Bitte AGB/Widerruf bestätigen";
 
     if (campLocal) {
       if (!form.tshirtSize) {
-        e.tshirtSize = 'Bitte T-Shirt-Größe wählen';
+        e.tshirtSize = "Bitte T-Shirt-Größe wählen";
       }
       if (form.siblingEnabled) {
         if (!form.siblingFirst.trim()) {
-          e.siblingFirst = 'Pflichtfeld';
+          e.siblingFirst = "Pflichtfeld";
         }
         if (!form.siblingLast.trim()) {
-          e.siblingLast = 'Pflichtfeld';
+          e.siblingLast = "Pflichtfeld";
         }
         if (!form.siblingTshirtSize) {
-          e.siblingTshirtSize = 'Bitte T-Shirt-Größe wählen';
+          e.siblingTshirtSize = "Bitte T-Shirt-Größe wählen";
         }
       }
     }
@@ -442,7 +450,7 @@ export default function BookPage() {
 
     const birth = [form.birthDay, form.birthMonth, form.birthYear]
       .filter(Boolean)
-      .join('.');
+      .join(".");
 
     const siblingBirth = [
       form.siblingBirthDay,
@@ -450,86 +458,88 @@ export default function BookPage() {
       form.siblingBirthYear,
     ]
       .filter(Boolean)
-      .join('.');
+      .join(".");
 
     const firstName = nonTrialLocal
-      ? form.parentFirst || form.childFirst || 'Interessent'
+      ? form.parentFirst || form.childFirst || "Interessent"
       : form.childFirst;
 
     const lastName = nonTrialLocal
-      ? form.parentLast || form.childLast || ''
+      ? form.parentLast || form.childLast || ""
       : form.childLast;
 
     const sendAutoDate = !weeklyLocal;
     const dateToSend = sendAutoDate ? today || null : form.date || null;
 
     const extraHeader = weeklyLocal
-      ? 'Anmeldung Schnuppertraining'
+      ? "Anmeldung Schnuppertraining"
       : holidayLocal
-      ? 'Anmeldung Ferienprogramm'
-      : 'Anfrage';
+      ? "Anmeldung Ferienprogramm"
+      : "Anfrage";
 
     const holidayInfo = holidayLocal
       ? [
-          `Ferien: ${holidayTitle || '-'}`,
+          `Ferien: ${holidayTitle || "-"}`,
           holidayRangeStr ? `Zeitraum: ${holidayRangeStr}` : null,
           selectedDayNames.length
-            ? `Ausgewählte Tage: ${selectedDayNames.join(', ')}`
+            ? `Ausgewählte Tage: ${selectedDayNames.join(", ")}`
             : null,
         ]
           .filter(Boolean)
-          .join('\n')
-      : '';
+          .join("\n")
+      : "";
 
     const siblingDiscount = campLocal && form.siblingEnabled ? 14 : 0;
 
     const goalkeeperCount =
-      (form.goalkeeper === 'yes' ? 1 : 0) +
-      (campLocal &&
-      form.siblingEnabled &&
-      form.siblingGoalkeeper === 'yes'
+      (form.goalkeeper === "yes" ? 1 : 0) +
+      (campLocal && form.siblingEnabled && form.siblingGoalkeeper === "yes"
         ? 1
         : 0);
 
     const campOptionsInfo = campLocal
       ? [
-          `T-Shirt-Größe (Kind): ${form.tshirtSize || '-'}`,
+          `T-Shirt-Größe (Kind): ${form.tshirtSize || "-"}`,
           `Torwartschule (Kind): ${
-            form.goalkeeper === 'yes' ? 'Ja (+40€)' : 'Nein'
+            form.goalkeeper === "yes" ? "Ja (+40€)" : "Nein"
           }`,
           form.siblingEnabled
             ? [
                 `Geschwisterkind: ${form.siblingFirst} ${form.siblingLast}`,
-                `Geschlecht: ${form.siblingGender || '-'}`,
-                `Geburtstag: ${siblingBirth || '-'}`,
-                `T-Shirt: ${form.siblingTshirtSize || '-'}`,
+                `Geschlecht: ${form.siblingGender || "-"}`,
+                `Geburtstag: ${siblingBirth || "-"}`,
+                `T-Shirt: ${form.siblingTshirtSize || "-"}`,
                 `Torwartschule: ${
-                  form.siblingGoalkeeper === 'yes' ? 'Ja (+40€)' : 'Nein'
+                  form.siblingGoalkeeper === "yes" ? "Ja (+40€)" : "Nein"
                 } (Geschwisterrabatt: 14€)`,
-              ].join('\n')
+              ].join("\n")
             : null,
         ]
           .filter(Boolean)
-          .join('\n')
-      : '';
+          .join("\n")
+      : "";
 
     const extra =
       `${extraHeader}\n` +
       `Programm: ${productName}\n` +
-      (holidayInfo ? holidayInfo + '\n' : '') +
-      (campOptionsInfo ? `Camp-Optionen:\n${campOptionsInfo}\n` : '') +
-      `Kind: ${form.childFirst} ${form.childLast} (${form.childGender || '-'}), Geburtstag: ${birth || '-'}\n` +
-      `Kontakt: ${form.salutation || ''} ${form.parentFirst} ${form.parentLast}\n` +
+      (holidayInfo ? holidayInfo + "\n" : "") +
+      (campOptionsInfo ? `Camp-Optionen:\n${campOptionsInfo}\n` : "") +
+      `Kind: ${form.childFirst} ${form.childLast} (${
+        form.childGender || "-"
+      }), Geburtstag: ${birth || "-"}\n` +
+      `Kontakt: ${form.salutation || ""} ${form.parentFirst} ${
+        form.parentLast
+      }\n` +
       `Adresse: ${form.street} ${form.houseNo}, ${form.zip} ${form.city}\n` +
-      `Telefon: ${form.phone}${form.phone2 ? ' / ' + form.phone2 : ''}\n` +
-      `Gutschein: ${form.voucher || '-'}\n` +
-      `Quelle: ${form.source || '-'}`;
+      `Telefon: ${form.phone}${form.phone2 ? " / " + form.phone2 : ""}\n` +
+      `Gutschein: ${form.voucher || "-"}\n` +
+      `Quelle: ${form.source || "-"}`;
 
     try {
-      setStatus('sending');
+      setStatus("sending");
       const res = await fetch(`/api/public/bookings`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           offerId: form.offerId,
           firstName,
@@ -538,7 +548,7 @@ export default function BookPage() {
           age: ageYears,
           date: dateToSend,
           level: form.level,
-          message: [form.message, extra].filter(Boolean).join('\n\n'),
+          message: [form.message, extra].filter(Boolean).join("\n\n"),
           isCampBooking: campLocal,
           tshirtSize: form.tshirtSize || null,
           goalkeeper: form.goalkeeper,
@@ -567,51 +577,49 @@ export default function BookPage() {
             ...prev,
             ...payload.errors,
           }));
-        setStatus('error');
+        setStatus("error");
         return;
       }
 
-      setStatus('success');
+      setStatus("success");
       setForm((prev) => ({
         ...initialForm,
         offerId: prev.offerId,
       }));
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      window.scrollTo({ top: 0, behavior: "smooth" });
     } catch {
-      setStatus('error');
+      setStatus("error");
     }
   };
 
   const range = (a: number, b: number) =>
     Array.from({ length: b - a + 1 }, (_, i) => a + i);
-  const DAY_OPTS = range(1, 31).map((n) => String(n).padStart(2, '0'));
-  const MONTH_OPTS = range(1, 12).map((n) => String(n).padStart(2, '0'));
-  const YEAR_OPTS = range(1980, 2025)
-    .reverse()
-    .map(String);
+  const DAY_OPTS = range(1, 31).map((n) => String(n).padStart(2, "0"));
+  const MONTH_OPTS = range(1, 12).map((n) => String(n).padStart(2, "0"));
+  const YEAR_OPTS = range(1980, 2025).reverse().map(String);
 
   const coach = deriveCoach(offer || undefined);
 
   const submitLabel =
-    status === 'sending'
-      ? 'Senden…'
+    status === "sending"
+      ? "Senden…"
       : holiday
-      ? 'Kostenpflichtig Buchen'
-      : 'Anfragen';
+      ? "Kostenpflichtig Buchen"
+      : "Anfragen";
 
   const handleCaretClick = (e: React.MouseEvent<HTMLElement>) => {
     const wrapper = e.currentTarget.parentElement;
     if (!wrapper) return;
-    wrapper.classList.toggle('is-open');
+    wrapper.classList.toggle("is-open");
   };
 
   const handleCaretBlur = (e: React.FocusEvent<HTMLElement>) => {
     const wrapper = e.currentTarget.parentElement;
     if (!wrapper) return;
-    wrapper.classList.remove('is-open');
+    wrapper.classList.remove("is-open");
   };
 
-  const isSubmitDisabled = status === 'sending' || !!offerError || !offer;
+  const isSubmitDisabled = status === "sending" || !!offerError || !offer;
 
   return (
     <>
@@ -641,7 +649,7 @@ export default function BookPage() {
         }}
       />
 
-      <section className={`book-embed ${isEmbed ? 'is-embed' : ''}`}>
+      <section className={`book-embed ${isEmbed ? "is-embed" : ""}`}>
         <div className="book-grid book-grid--single">
           <div className="book-main">
             <form className="book-form" onSubmit={onSubmit} noValidate>
@@ -649,44 +657,13 @@ export default function BookPage() {
               <div className="book-sticky">
                 <div className="book-sub">
                   <div className="book-sub__left">
-                    <button
-                      type="button"
-                      className="book-back"
-                      onClick={() =>
-                        window.parent?.postMessage(
-                          { type: 'KS_BOOKING_BACK' },
-                          '*',
-                        )
-                      }
-                      aria-label="Zurück"
-                      title="Zurück"
-                    >
-                      <svg
-                        viewBox="0 0 24 24"
-                        width="18"
-                        height="18"
-                        aria-hidden="true"
-                      >
-                        <path
-                          d="M15 18l-6-6 6-6"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                      </svg>
-                    </button>
-
                     <div className="book-sub__titles">
                       <h2 className="book-h1">{heading}</h2>
 
                       {holiday ? (
                         <>
                           {holidayTitle && (
-                            <div className="book-product">
-                              {holidayTitle}
-                            </div>
+                            <div className="book-product">{holidayTitle}</div>
                           )}
                         </>
                       ) : (
@@ -717,10 +694,7 @@ export default function BookPage() {
                           onBlur={handleCaretBlur}
                           required
                         />
-                        <span
-                          className="book-select__icon"
-                          aria-hidden="true"
-                        >
+                        <span className="book-select__icon" aria-hidden="true">
                           <img src="/icons/select-caret.svg" alt="" />
                         </span>
                       </div>
@@ -833,28 +807,3 @@ export default function BookPage() {
     </>
   );
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
