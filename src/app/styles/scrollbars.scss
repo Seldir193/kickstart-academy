@@ -1,0 +1,142 @@
+:root {
+  --ks-scrollbar-thumb: rgba(0, 0, 0, 0.28);
+  --ks-scrollbar-thumb-hover: rgba(0, 0, 0, 0.38);
+  --ks-scrollbar-track: transparent;
+  --ks-scrollbar-size: 8px;
+}
+
+@mixin ks_scroll_thin {
+  scrollbar-width: thin;
+  scrollbar-color: var(--ks-scrollbar-thumb) var(--ks-scrollbar-track);
+
+  &::-webkit-scrollbar {
+    width: var(--ks-scrollbar-size);
+    height: var(--ks-scrollbar-size);
+  }
+
+  &::-webkit-scrollbar-track {
+    background: var(--ks-scrollbar-track);
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: var(--ks-scrollbar-thumb);
+    border-radius: 999px;
+    border: 2px solid transparent;
+    background-clip: content-box;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: var(--ks-scrollbar-thumb-hover);
+    background-clip: content-box;
+  }
+}
+
+.ks-scroll-thin {
+  @include ks_scroll_thin;
+}
+
+.ks-panel,
+.ks-panel-lg,
+.dialog-body,
+.profile-sheet__body,
+.ks-training-select__menu,
+.ks-training-select__menu--grouped,
+.ks-selectbox__panel,
+html,
+body,
+.site-main {
+  @include ks_scroll_thin;
+}
+
+:root {
+  --ks-scrollbar-thumb: rgba(0, 0, 0, 0.28);
+  --ks-scrollbar-thumb-hover: rgba(0, 0, 0, 0.38);
+  --ks-scrollbar-track: transparent;
+  --ks-scrollbar-size: 8px;
+}
+
+:where(
+    .book-embed,
+    .book-embed
+      :is(
+        [style*="overflow"],
+        [style*="overflow-y"],
+        [class*="body"],
+        [class*="content"],
+        [class*="scroll"],
+        [class*="panel"],
+        [class*="form"]
+      )
+  ) {
+  scrollbar-width: thin;
+  scrollbar-color: var(--ks-scrollbar-thumb) var(--ks-scrollbar-track);
+}
+
+:where(
+    .book-embed,
+    .book-embed
+      :is(
+        [style*="overflow"],
+        [style*="overflow-y"],
+        [class*="body"],
+        [class*="content"],
+        [class*="scroll"],
+        [class*="panel"],
+        [class*="form"]
+      )
+  )::-webkit-scrollbar {
+  width: var(--ks-scrollbar-size);
+  height: var(--ks-scrollbar-size);
+}
+
+:where(
+    .book-embed,
+    .book-embed
+      :is(
+        [style*="overflow"],
+        [style*="overflow-y"],
+        [class*="body"],
+        [class*="content"],
+        [class*="scroll"],
+        [class*="panel"],
+        [class*="form"]
+      )
+  )::-webkit-scrollbar-track {
+  background: var(--ks-scrollbar-track);
+}
+
+:where(
+    .book-embed,
+    .book-embed
+      :is(
+        [style*="overflow"],
+        [style*="overflow-y"],
+        [class*="body"],
+        [class*="content"],
+        [class*="scroll"],
+        [class*="panel"],
+        [class*="form"]
+      )
+  )::-webkit-scrollbar-thumb {
+  background: var(--ks-scrollbar-thumb);
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+:where(
+    .book-embed,
+    .book-embed
+      :is(
+        [style*="overflow"],
+        [style*="overflow-y"],
+        [class*="body"],
+        [class*="content"],
+        [class*="scroll"],
+        [class*="panel"],
+        [class*="form"]
+      )
+  )::-webkit-scrollbar-thumb:hover {
+  background: var(--ks-scrollbar-thumb-hover);
+  background-clip: content-box;
+}
