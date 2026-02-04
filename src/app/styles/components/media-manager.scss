@@ -1,0 +1,16 @@
+.media-manager {
+  display: grid;
+  gap: 10px;
+}
+
+.media-manager__list {
+  display: grid;
+  gap: 8px;
+}
+
+.media-manager__row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
