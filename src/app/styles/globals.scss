@@ -1,26 +1,45 @@
 //globals.scss
+
 @use "./foundation" as *;
- @use "./globals.base" as *;
-   @use "./header" as *;
-    @use "./offers" as *;
-    @use "./booking" as *;
-    @use "./book" as *;
-    //@use "./bookDialog" as *;
-     // @use "./customerDialog" as *;
-     @use "./profile" as *;
-      @use "./footer" as *; 
-      @use "./home" as *;
-       @use "./news" as *;
-        @use "./coaches" as *;
-        //@use "./invoices" as *; 
+@use "./globals.base" as *;
+@use "./header" as *;
+@use "./offers" as *;
+@use "./booking" as *;
+@use "./book" as *;
+//@use "./bookDialog" as *;
+// @use "./customerDialog" as *;
+@use "./profile" as *;
+@use "./footer" as *;
+@use "./home" as *;
+
+@use "./coaches" as *;
+//@use "./invoices" as *;
 //@use "./customers" as *;
 //@use "./trainingCard" as *;
 @use "./admin-forms" as *;
-       @import "./buttons";
+//@import "./buttons";
+@use "./buttons" as *;
+@use "./ks-datepicker" as *;
+@use "./invoices" as *;
+@use "./customer-dialog" as *;
+@use "./scrollbars" as *;
+@use "./imprint" as *;
 
+@use "./admin-auth" as *;
+@use "./login" as *;
+
+@use "./components/news-admin" as *;
+@use "./components/news-dialog" as *;
+@use "./components/news-list" as *;
+@use "./components/news-detail" as *;
+@use "./components/media-manager" as *;
+@use "./components/markdown-editor" as *;
+@use "./components/news" as *;
+@use "./places" as *;
+@use "./online-bookings.scss" as *;
 
 :root {
-  --brand-navy: #0F1E2E;
+  --brand-navy: #0f1e2e;
   --text: #222;
   /* optional, falls du auch --brand brauchst */
   --brand: #0ea5e9;
