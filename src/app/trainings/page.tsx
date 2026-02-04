@@ -1,19 +1,20 @@
-
-
-
 // src/app/trainings/page.tsx
 import { redirect } from "next/navigation";
 
 type TrainingsRedirectProps = {
-  searchParams?: Record<string, string | string[] | undefined>;
+  searchParams?: Promise<Record<string, string | string[] | undefined>>;
 };
 
-export default function TrainingsRedirectPage({ searchParams = {} }: TrainingsRedirectProps) {
+export default async function TrainingsRedirectPage({
+  searchParams,
+}: TrainingsRedirectProps) {
+  const sp = (await searchParams) ?? {};
+
   const qs = new URLSearchParams();
 
-  for (const [key, value] of Object.entries(searchParams)) {
+  for (const [key, value] of Object.entries(sp)) {
     if (Array.isArray(value)) {
-      value.forEach(v => v != null && qs.append(key, String(v)));
+      value.forEach((v) => v != null && qs.append(key, String(v)));
     } else if (value != null) {
       qs.set(key, String(value));
     }
