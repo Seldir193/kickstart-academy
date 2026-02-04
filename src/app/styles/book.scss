@@ -1,3 +1,5 @@
+//src\app\styles\book.scss
+
 .book-sticky {
   position: sticky;
   top: 0;
@@ -84,11 +86,20 @@ fieldset.card legend {
   gap: 10px 14px;
 }
 
+/* Standard: field-row bleibt nebeneinander */
 .field-row {
   display: flex;
   flex-wrap: wrap;
   gap: 10px 16px;
   align-items: center;
+  flex-direction: row; /* wichtig */
+}
+
+/* NUR AGB-Row: untereinander (Checkbox + Error darunter) */
+.field-row.agb-row {
+  flex-direction: column;
+  align-items: flex-start; /* damit links bündig bleibt */
+  gap: 6px;
 }
 
 .field {
@@ -136,7 +147,9 @@ fieldset.card legend {
   padding: 10px 16px;
   font-weight: 700;
   cursor: pointer;
-  transition: transform 0.08s ease, box-shadow 0.12s ease,
+  transition:
+    transform 0.08s ease,
+    box-shadow 0.12s ease,
     background-color 0.12s ease;
 }
 
@@ -277,63 +290,6 @@ fieldset.card legend {
   background: #e0f2fe;
 }
 
-/* Fehler-Text extra oben (statt Inline-Style) */
-.error--top {
-  margin-top: 12px;
-}
-
-/* Camp-Optionen (hatten wir schon) */
-.camp-options {
-  margin-top: 12px;
-}
-
-.camp-divider {
-  border: none;
-  border-top: 1px solid #e5e7eb;
-  margin: 16px 0;
-}
-
-.sibling-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  margin-top: 4px;
-
-  h3 {
-    margin: 0;
-    font-size: 16px;
-    font-weight: 700;
-  }
-}
-
-.sibling-fields {
-  margin-top: 12px;
-}
-
-/* Torwartschule-Toggle-Buttons */
-
-.camp-toggle-row {
-  display: inline-flex;
-  gap: 8px;
-  margin-top: 4px;
-}
-
-.camp-toggle-btn {
-  border-radius: 8px;
-  border: 1px solid #e5e7eb;
-  padding: 8px 14px;
-  background: #fff;
-  font-size: 14px;
-  cursor: pointer;
-  min-width: 70px;
-}
-
-.camp-toggle-btn.is-active {
-  border-color: #0ea5e9;
-  background: #e0f2fe;
-}
-
 /* Hinweis + AGB-Block über Button */
 
 .camp-hint {
@@ -345,11 +301,6 @@ fieldset.card legend {
 .agb-row {
   margin-top: 8px;
   margin-bottom: 12px;
-}
-
-/* Fehler oben */
-.error--top {
-  margin-top: 12px;
 }
 
 /* ===========================
@@ -402,9 +353,8 @@ fieldset.card legend {
 /* Focus / aktiv: Brand-Navy + Glow */
 .book-select:has(.book-select__native:focus-visible),
 .book-select.book-select--active {
-  /* .book-select--active kannst du auch per JS setzen, falls nötig */
   outline: 0;
-  border-radius: 10px; /* für den Shadow */
+  border-radius: 10px;
   box-shadow: 0 0 0 3px color-mix(in oklab, var(--brand-navy) 22%, white);
 }
 
@@ -421,7 +371,6 @@ fieldset.card legend {
   transition: transform 0.18s ease;
 }
 
-/* wenn du auf dem Wrapper eine Klasse .is-open setzt, dreht sich das Caret */
 .book-select--caret.is-open .book-select__icon img {
   transform: rotate(180deg);
 }
@@ -431,11 +380,9 @@ fieldset.card legend {
    =========================== */
 
 .book-select--chevron .book-select__icon img {
-  /* keine Rotation, nur evtl. Farbe */
   opacity: 0.9;
 }
 
-/* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
   .book-select--caret .book-select__icon img {
     transition: none;
@@ -447,7 +394,6 @@ fieldset.card legend {
    identisch zu globalen Admin-Forms (.input)
    ========================================================= */
 
-/* 1) Basis-Look für alle Felder im Book-Formular */
 .book-form .field input,
 .book-form .field select,
 .book-form .field textarea,
@@ -458,12 +404,12 @@ fieldset.card legend {
   background-color: #fff;
   font: inherit;
   color: inherit;
-
-  transition: border-color 0.18s ease, box-shadow 0.18s ease,
+  transition:
+    border-color 0.18s ease,
+    box-shadow 0.18s ease,
     background-color 0.18s ease;
 }
 
-/* Höhe & Padding nur für einzeilige Felder */
 .book-form .field input,
 .book-form .field select,
 .book-form .book-select__native,
@@ -473,14 +419,12 @@ fieldset.card legend {
   padding: 0 12px;
 }
 
-/* Textarea: gleiche Optik, aber flexible Höhe */
 .book-form .field textarea {
   padding: 8px 12px;
   min-height: 80px;
   resize: vertical;
 }
 
-/* Hover – exakt wie: input.input:hover */
 .book-form .field input:hover,
 .book-form .field select:hover,
 .book-form .field textarea:hover,
@@ -490,7 +434,6 @@ fieldset.card legend {
   border-color: var(--text);
 }
 
-/* Focus – exakt wie: input.input:focus */
 .book-form .field input:focus,
 .book-form .field select:focus,
 .book-form .field textarea:focus,
@@ -502,7 +445,6 @@ fieldset.card legend {
   box-shadow: 0 0 0 3px color-mix(in oklab, var(--brand-navy) 22%, #ffffff);
 }
 
-/* Date – klickbar wie globaler Date-Input */
 .book-form input[type="date"] {
   cursor: pointer;
 }
@@ -511,16 +453,10 @@ fieldset.card legend {
 }
 
 /* 2) Book-Select Wrapper – Ring & Hover wie Dropdowns */
-.book-select {
-  position: relative;
-}
-
-/* Hover: Rand dunkler (gleicher Effekt wie bei .input:hover) */
 .book-select:hover .book-select__native {
   border-color: var(--text);
 }
 
-/* Focus/Open: gleicher Ring wie .family-dropdown / .ks-selectbox */
 .book-select:has(.book-select__native:focus),
 .book-select.book-select--active,
 .book-select.is-open {
@@ -528,7 +464,6 @@ fieldset.card legend {
   border-radius: 8px;
 }
 
-/* Bei Focus/Open auch den Rand einfärben */
 .book-select:has(.book-select__native:focus) .book-select__native,
 .book-select.is-open .book-select__native {
   border-color: var(--brand-navy);
@@ -545,23 +480,21 @@ fieldset.card legend {
   font: inherit;
   font-weight: 700;
   cursor: pointer;
-
-  transition: background-color 0.18s ease, box-shadow 0.18s ease;
+  transition:
+    background-color 0.18s ease,
+    box-shadow 0.18s ease;
 }
 
-/* Hover – gleiche Farbe wie in deinem booking.scss */
 .book-form .btn.btn-primary:hover {
   background: #0c96d2;
 }
 
-/* Disabled – wie deine .btn-disabled */
 .book-form .btn.btn-primary:disabled {
   opacity: 0.55;
   cursor: not-allowed;
   box-shadow: none;
 }
 
-/* Focus-Ring wie bei allen Inputs */
 .book-form .btn.btn-primary:focus-visible {
   outline: none;
   box-shadow: 0 0 0 3px color-mix(in oklab, var(--brand-navy) 22%, #ffffff);
@@ -584,28 +517,70 @@ fieldset.card legend {
   position: relative;
 }
 
-/* Sicherstellen, dass der Inhalt nicht zu breit wird */
 .book-grid.book-grid--single {
   width: 100%;
   max-width: 760px;
   margin: 0 auto;
 }
 
-/* Vollbild-Overlay für den Buchungsdialog */
 .book-embed {
   position: fixed;
-  inset: 0; /* top:0; right:0; bottom:0; left:0; */
+  inset: 0;
   margin: 0;
   padding: 0;
-  overflow-y: auto; /* Scrollen, wenn Formular länger ist */
+  overflow-y: auto;
   background: transparent;
-  z-index: 999; /* sicher vor allem anderen */
+  z-index: 999;
 }
 
-/* Im Embed-/Dialog-Modus innen weißer Hintergrund */
 .book-embed.is-embed,
 body.embed-mode .book-embed {
   background: #fff;
-
   justify-content: flex-start;
+}
+
+/* ks-selectbox drop-up */
+.ks-selectbox {
+  position: relative; // falls noch nicht gesetzt
+}
+
+.ks-selectbox--up .ks-selectbox__panel {
+  top: auto;
+  bottom: calc(100% + 8px);
+}
+
+/* ===== DOB (TT/MM/JJJJ) – kompakte Selects sauber zentrieren ===== */
+
+@media (min-width: 561px) {
+  .book-form .dob {
+    grid-template-columns: 96px 96px 1fr;
+  }
+}
+
+.book-form .dob .book-select__native {
+  text-align: center;
+  text-align-last: center;
+  padding-left: 8px;
+  padding-right: 34px;
+}
+
+.book-form .dob .book-select__icon {
+  inset-inline-end: 8px;
+}
+
+/* BOOK: ks-selectbox soll exakt wie Inputs aussehen (40px) */
+.book-form .ks-selectbox__trigger {
+  height: 40px; /* statt 50px */
+  padding: 0 12px; /* wie .book-form inputs */
+  font-weight: inherit; /* optional: falls es zu bold wirkt */
+}
+
+/* Label sauber vertikal */
+.book-form .ks-selectbox__label {
+  line-height: 1;
+  display: block;
+}
+
+.book-form .ks-selectbox__chevron {
+  margin-left: auto;
 }
