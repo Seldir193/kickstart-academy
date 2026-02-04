@@ -1,0 +1,24 @@
+.md-editor {
+  display: grid;
+  gap: 10px;
+}
+
+.md-editor__toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.md-editor__tools {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.md-editor__textarea {
+  width: 100%;
+  resize: vertical;
+  min-height: 220px;
+}
