@@ -1,0 +1,298 @@
+/* app/styles/news-list.scss */
+
+/*
+  Ziele:
+  - Table-Look mit fixen Header-Spalten
+  - Trennlinien immer sichtbar (Hover darf sie nicht "killen")
+  - Kein Springen: List-Höhe stabil + Scrollbar-Gutter stabil
+  - Select-Mode: roter Block mit weißem "Gap"-Streifen unten für Überblick
+  - Konflikte aus globals.base.scss (border:0 !important) innerhalb .news-list überschreiben
+*/
+
+.news-list {
+  background: #fff;
+
+  .news-list__table {
+    width: 100%;
+  }
+
+  /* Header */
+  .news-list__head {
+    display: grid;
+    grid-template-columns: 1.6fr 0.85fr 0.7fr 0.7fr 1fr 56px;
+    gap: 0;
+    padding: 10px 16px;
+    border-bottom: 1px solid rgba(15, 30, 46, 0.12);
+    background: #fff;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+  }
+
+  .news-list__h {
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    color: rgba(15, 30, 46, 0.62);
+    user-select: none;
+  }
+
+  /* List wrapper – stabil gegen "springen" */
+  .list {
+    display: block;
+    padding: 0 !important;
+    margin: 0 !important;
+    background: transparent;
+  }
+
+  .list--bleed {
+    padding: 0 !important;
+    margin: 0 !important;
+    background: transparent;
+  }
+
+  /* Row = echte "Table-Row" */
+  .news-list__row {
+    /* Wichtig: globals.base setzt border:0 !important -> hier hart überschreiben */
+    border: 0 !important;
+    border-bottom: 1px solid rgba(15, 30, 46, 0.1) !important;
+    border-radius: 0 !important;
+    margin: 0 !important;
+    box-shadow: none !important;
+
+    /* Table-Grid */
+    display: grid !important;
+    grid-template-columns: 1.6fr 0.85fr 0.7fr 0.7fr 1fr 56px;
+    align-items: center;
+    gap: 0;
+    padding: 12px 16px !important;
+    position: relative;
+
+    /* Hover-Hintergrund ohne die Linie zu verlieren */
+    background-clip: padding-box;
+    background: #fff;
+
+    /* Separat-Linie als Pseudo-Element -> bleibt IMMER sichtbar */
+    &::after {
+      content: "";
+      position: absolute;
+      left: 16px;
+      right: 16px;
+      bottom: 0;
+      height: 1px;
+      background: rgba(15, 30, 46, 0.1);
+      pointer-events: none;
+    }
+
+    /* Kein Trennstrich oben am Anfang (wie du wolltest) */
+    &:first-child {
+      &::before {
+        content: none;
+      }
+    }
+  }
+
+  /* Hover */
+  .news-list__row.is-fullhover:hover {
+    background: rgba(0, 0, 0, 0.02);
+  }
+
+  .news-list__row.is-fullhover:focus-visible {
+    outline: 2px solid rgba(15, 30, 46, 0.18);
+    outline-offset: -2px;
+    background: rgba(0, 0, 0, 0.02);
+  }
+
+  /* Cells */
+  .news-list__cell {
+    min-width: 0;
+  }
+
+  .news-list__cell--action {
+    display: inline-flex;
+    justify-content: flex-end;
+  }
+
+  .news-list__title {
+    font-weight: 800;
+    line-height: 1.1;
+  }
+
+  .news-list__excerpt {
+    margin-top: 6px;
+    font-size: 13px;
+    color: rgba(15, 30, 46, 0.7);
+    line-height: 1.25;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    //-webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+
+    &.is-empty {
+      opacity: 0;
+      user-select: none;
+    }
+  }
+
+  .news-list__pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 28px;
+    padding: 0 10px;
+    border-radius: 999px;
+    background: rgba(0, 0, 0, 0.05);
+    color: rgba(15, 30, 46, 0.8);
+    font-size: 12px;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+
+  .news-list__status {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 28px;
+    padding: 0 10px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 800;
+    white-space: nowrap;
+
+    &.is-on {
+      background: rgba(34, 197, 94, 0.12);
+      color: rgba(21, 128, 61, 0.95);
+    }
+
+    &.is-off {
+      background: rgba(100, 116, 139, 0.14);
+      color: rgba(51, 65, 85, 0.95);
+    }
+  }
+
+  .news-list__muted {
+    opacity: 0.65;
+  }
+
+  .news-list__actions--hidden {
+    width: 56px;
+  }
+
+  /* Selected: Premium – roter Block + "Gap"-Streifen unten (ohne Layout-Sprung) */
+  .news-list__row.is-selected {
+    /* Rot + unten 8px weiß "Gap" */
+    background-image: linear-gradient(
+      to bottom,
+      #fdecec 0%,
+      #fdecec calc(100% - 8px),
+      #ffffff calc(100% - 8px),
+      #ffffff 100%
+    );
+
+    /* rote Kanten, aber Trennlinie bleibt */
+    &::after {
+      background: rgba(220, 38, 38, 0.28);
+    }
+  }
+
+  .news-list__row.is-selected:hover {
+    background-image: linear-gradient(
+      to bottom,
+      rgba(239, 68, 68, 0.14) 0%,
+      rgba(239, 68, 68, 0.14) calc(100% - 8px),
+      #ffffff calc(100% - 8px),
+      #ffffff 100%
+    );
+  }
+
+  /* Edit icon Verhalten bleibt wie global, aber hier "sicher" */
+  .edit-trigger {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 160ms ease;
+  }
+
+  .news-list__row.is-fullhover:hover .edit-trigger,
+  .news-list__row.is-fullhover:focus .edit-trigger,
+  .news-list__row.is-fullhover:focus-within .edit-trigger {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .edit-trigger:focus,
+  .edit-trigger:focus-visible {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  @media (hover: none) {
+    .edit-trigger {
+      opacity: 1;
+      pointer-events: auto;
+    }
+  }
+
+  /* Responsive: Header ausblenden, Rows stacken */
+  @media (max-width: 980px) {
+    .news-list__head {
+      display: none;
+    }
+
+    .news-list__row {
+      grid-template-columns: 1fr 56px;
+      row-gap: 8px;
+      padding: 14px 16px !important;
+
+      &::after {
+        left: 16px;
+        right: 16px;
+      }
+    }
+
+    .news-list__cell--cat,
+    .news-list__cell--date,
+    .news-list__cell--status,
+    .news-list__cell--author {
+      grid-column: 1 / 2;
+      font-size: 13px;
+      color: rgba(15, 30, 46, 0.75);
+    }
+
+    .news-list__cell--title {
+      grid-column: 1 / 2;
+    }
+
+    .news-list__cell--action {
+      grid-column: 2 / 3;
+      grid-row: 1 / 2;
+      align-self: start;
+      justify-content: flex-end;
+    }
+
+    .news-list__cell--cat::before {
+      content: "Kategorie: ";
+      font-weight: 800;
+      color: rgba(15, 30, 46, 0.55);
+    }
+
+    .news-list__cell--date::before {
+      content: "Datum: ";
+      font-weight: 800;
+      color: rgba(15, 30, 46, 0.55);
+    }
+
+    .news-list__cell--status::before {
+      content: "Status: ";
+      font-weight: 800;
+      color: rgba(15, 30, 46, 0.55);
+    }
+
+    .news-list__cell--author::before {
+      content: "Autor: ";
+      font-weight: 800;
+      color: rgba(15, 30, 46, 0.55);
+    }
+  }
+}
