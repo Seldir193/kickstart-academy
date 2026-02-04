@@ -1,0 +1,138 @@
+/* src/app/styles/imprint.scss
+   Legal Pages (Impressum / Datenschutz / AGB)
+   ✅ Breite folgt dem globalen .container (max-width: 1440px)
+   ✅ Content-Card ist FULL-WIDTH im Container (kein 1100px-Center)
+*/
+
+/* === Shared spacing for legal sections === */
+.ks-impressum,
+.ks-privacy,
+.ks-agb {
+  width: 100%;
+  padding: 28px 0;
+}
+
+/* === Head / Title === */
+.ks-impressum__head,
+.ks-privacy__head,
+.ks-agb__head {
+  margin-bottom: 16px;
+}
+
+.ks-impressum__title,
+.ks-privacy__title,
+.ks-agb__title {
+  margin: 0;
+  font-size: clamp(26px, 3vw, 40px);
+  font-weight: 800;
+  letter-spacing: 0.01em;
+  color: #111;
+}
+
+/* === Content Card (FULL WIDTH inside .container) === */
+.ks-impressum__content,
+.ks-privacy__content,
+.ks-agb__content {
+  width: 100%;
+  max-width: none; /* ✅ wichtig: nicht 1100px */
+  margin: 0; /* ✅ wichtig: nicht zentriert/auto */
+
+  background: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 16px;
+  padding: 22px 20px;
+  line-height: 1.65;
+  color: #222;
+}
+
+/* Headings */
+.ks-impressum__content h2,
+.ks-privacy__content h2,
+.ks-agb__content h2 {
+  margin: 18px 0 8px;
+  font-size: 18px;
+  font-weight: 800;
+  color: #111;
+}
+
+/* Optional: falls h3/h4 vorkommen (z. B. Datenschutz) */
+.ks-impressum__content h3,
+.ks-privacy__content h3,
+.ks-agb__content h3 {
+  margin: 14px 0 6px;
+  font-size: 16px;
+  font-weight: 800;
+  color: #111;
+}
+
+.ks-impressum__content h4,
+.ks-privacy__content h4,
+.ks-agb__content h4 {
+  margin: 12px 0 6px;
+  font-size: 14px;
+  font-weight: 800;
+  color: #111;
+}
+
+/* Text */
+.ks-impressum__content p,
+.ks-privacy__content p,
+.ks-agb__content p {
+  margin: 10px 0;
+  color: #374151;
+}
+
+/* Lists */
+.ks-impressum__content ul,
+.ks-privacy__content ul,
+.ks-agb__content ul {
+  margin: 10px 0;
+  padding-left: 18px;
+  color: #374151;
+}
+
+.ks-impressum__content li,
+.ks-privacy__content li,
+.ks-agb__content li {
+  margin: 6px 0;
+}
+
+/* Links */
+.ks-impressum__content a,
+.ks-privacy__content a,
+.ks-agb__content a {
+  color: #111;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.ks-impressum__content a:hover,
+.ks-privacy__content a:hover,
+.ks-agb__content a:hover {
+  opacity: 0.85;
+}
+
+.ks-impressum__content a:focus-visible,
+.ks-privacy__content a:focus-visible,
+.ks-agb__content a:focus-visible {
+  outline: 2px solid #000;
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+/* HR (falls vorhanden, z. B. Datenschutz) */
+.ks-privacy__hr {
+  border: 0;
+  border-top: 1px solid rgba(0, 0, 0, 0.12);
+  margin: 18px 0;
+}
+
+/* Mobile */
+@media (max-width: 700px) {
+  .ks-impressum__content,
+  .ks-privacy__content,
+  .ks-agb__content {
+    padding: 18px 14px;
+    border-radius: 14px;
+  }
+}
