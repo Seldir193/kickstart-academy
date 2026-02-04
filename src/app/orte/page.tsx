@@ -1,14 +1,17 @@
 // src/app/orte/page.tsx
-import { redirect } from 'next/navigation';
+import { redirect } from "next/navigation";
 
 type OrteRedirectProps = {
-  searchParams?: Record<string, string | string[] | undefined>;
+  searchParams?: Promise<Record<string, string | string[] | undefined>>;
 };
 
-export default function OrteRedirectPage({ searchParams = {} }: OrteRedirectProps) {
+export default async function OrteRedirectPage({
+  searchParams,
+}: OrteRedirectProps) {
+  const resolved = (await searchParams) ?? {};
   const qs = new URLSearchParams();
 
-  for (const [key, value] of Object.entries(searchParams)) {
+  for (const [key, value] of Object.entries(resolved)) {
     if (Array.isArray(value)) {
       value.forEach((v) => {
         if (v != null) qs.append(key, String(v));
@@ -19,29 +22,7 @@ export default function OrteRedirectPage({ searchParams = {} }: OrteRedirectProp
   }
 
   const query = qs.toString();
-  const target = query ? `/admin/orte?${query}` : '/admin/orte';
+  const target = query ? `/admin/orte?${query}` : "/admin/orte";
 
   redirect(target);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
