@@ -1,0 +1,129 @@
+/* ==========================================================================
+   Invoices – scoped Overrides
+   Nutzt bestehendes ks-datepicker.scss (global).
+   Hier nur: Invoices-spezifisch (Year-Popover wie OfferCreateDialog)
+   ========================================================================== */
+
+.ks.invoices {
+  /* Hover wie überall */
+  .ks-datepicker__trigger:hover {
+    border-color: var(--text);
+  }
+
+  /* Panel soll im Admin immer über allem liegen */
+  .ks-datepicker__panel {
+    z-index: 10000;
+  }
+
+  /* Title ist ein Button (Year-Popover Toggle) */
+  .ks-datepicker__title {
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+    font: inherit;
+    font-weight: 700;
+    color: #0f172a;
+    padding: 6px 8px;
+    border-radius: 8px;
+  }
+
+  .ks-datepicker__title:hover {
+    background: #f8fafc;
+  }
+
+  /* Nav Icons */
+  .ks-datepicker__nav img {
+    width: 18px;
+    height: 18px;
+    display: block;
+  }
+
+  .ks-datepicker__nav--prev img {
+    transform: rotate(180deg);
+  }
+
+  /* ===========================
+     Year Popover – wie OfferCreateDialog (LISTE, nicht GRID)
+     (Werte identisch zu ks-datepicker.scss: max-height 220, gap 6, height 34)
+     =========================== */
+
+  .ks-datepicker__years {
+    display: grid;
+    gap: 10px; /* identisch */
+  }
+
+  .ks-datepicker__yearinput {
+    height: 40px; /* identisch */
+    width: 100%;
+  }
+
+  /* ✅ WICHTIG: kein 4er-grid → 1 Spalte wie Bild 3 */
+  .ks-datepicker__yearlist {
+    max-height: 220px; /* identisch */
+    overflow: auto;
+
+    display: grid;
+    grid-template-columns: 1fr; /* ✅ macht es wie OfferCreateDialog */
+    gap: 6px; /* identisch */
+    padding-right: 2px; /* identisch */
+  }
+
+  /* Year-Button bleibt von den Basiswerten her identisch,
+     aber als "volle Breite Leiste" */
+  .ks-datepicker__year {
+    height: 34px; /* identisch */
+    width: 100%;
+    border-radius: 10px; /* identisch */
+
+    border: 1px solid transparent; /* identisch */
+    background: transparent; /* identisch */
+
+    cursor: pointer;
+    font: inherit;
+
+    /* ✅ nur Layout, keine neuen Farben */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .ks-datepicker__year:hover {
+    border-color: #d9dee6; /* identisch */
+    background: #f8fafc; /* identisch */
+  }
+
+  .ks-datepicker__year.is-active {
+    background: var(--brand-navy); /* identisch */
+    color: #fff; /* identisch */
+  }
+}
+
+.ks-doc-open {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 160ms ease, background-color 160ms ease;
+}
+
+.list__item:hover .ks-doc-open,
+.list__item:focus-within .ks-doc-open {
+  opacity: 1;
+}
+
+.ks-doc-open:hover {
+  background: rgba(0, 0, 0, 0.06);
+}
+
+/* Touch-Geräte: Icon immer sichtbar */
+@media (hover: none) {
+  .ks-doc-open {
+    opacity: 1;
+  }
+}
