@@ -1,19 +1,21 @@
+/* src/app/styles/header.scss
+   Fokus/Hover exakt wie WordPress:
+   - Hover NICHT, wenn active oder focus/focus-visible
+   - Fokus darf Hover nicht „übernehmen“
+*/
 
-
-
-/* relies on variables from foundation.scss: 
+/* relies on variables from foundation.scss:
    --header-height, --header-bg, --mega-z, --mega-gap, --mega-backdrop, --mega-bg, --mega-link */
 
-/* Fixed header (overrides sticky from globals.base.scss) */
 .site-header {
   position: fixed;
-  top: 0; left: 0; right: 0;
+  top: 0;
+  left: 0;
+  right: 0;
   z-index: calc(var(--mega-z) + 1);
   background: var(--header-bg);
   border-bottom: 1px solid #eaeaea;
 }
-
-
 
 .header-inner {
   display: flex;
@@ -25,28 +27,113 @@
 .site-header .header-inner {
   max-width: 1440px;
   margin: 0 auto;
+
+  min-height: var(--header-height);
   padding: 0 16px;
+  display: flex;
+  align-items: center;
 }
 
-
 /* Push page content below the fixed header */
-body { padding-top: var(--header-height); }
 
-/* --- Nav helpers / focus --- */
-.nav-link:focus { outline: none; }
-.nav-link:focus-visible {
+/* Layout helpers */
+.nav--row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.nav__links {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.nav__spacer {
+  flex: 1 1 auto;
+}
+.header__actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Logo */
+.site-header .brand {
+  display: inline-flex;
+  align-items: center;
+}
+.site-header .brand img {
+  height: 50px;
+  width: 50px;
+  display: block;
+}
+
+/* =========================
+   NAV LINK – WP-like behavior
+   ========================= */
+
+.site-header .nav .nav-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+
+  padding: 8px 12px;
+  border-radius: 999px;
+  text-decoration: none;
+
+  color: #111;
+
+  transition-property: background-color;
+  transition-duration: 240ms;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-delay: 70ms; /* WP-like: reduziert Flackern */
+}
+
+/* Active (falls du es so willst; wenn du Active-Style woanders hast, kannst du das lassen) */
+.site-header .nav .nav-link.active {
+  background: #111;
+  color: #fff;
+}
+
+/* Hover nur für NICHT-active UND NICHT fokussiert */
+.site-header .nav .nav-link:not(.active):not(:focus):not(:focus-visible):hover {
+  background: rgba(0, 0, 0, 0.04);
+  transition-delay: 0ms;
+}
+
+/* Sicherheitsnetz: sobald Fokus drauf ist -> Hover-Background AUS */
+.site-header .nav .nav-link:focus:hover,
+.site-header .nav .nav-link:focus-visible:hover {
+  background: transparent;
+}
+
+/* Focus: wie WP (Ring nur bei focus-visible) */
+.site-header .nav .nav-link:focus {
+  outline: none;
+}
+.site-header .nav .nav-link:focus-visible {
   outline: 2px solid #000;
   outline-offset: 2px;
 }
 
-/* Layout helpers (nur falls nicht schon im Markup verwendet) */
-.nav--row        { display: flex; align-items: center; gap: 12px; }
-.nav__links      { display: flex; align-items: center; gap: 8px; }
-.nav__spacer     { flex: 1 1 auto; }
-.header__actions { display: flex; align-items: center; gap: 8px; }
+/* Optional: wenn active + hover, soll active bleiben (kein graues Hover drüber) */
+.site-header .nav .nav-link.active:hover {
+  background: #111;
+}
 
-/* --- Simple dropdown neben einem Nav-Item --- */
-.nav-item--group { position: relative; }
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .site-header .nav .nav-link {
+    transition: none;
+  }
+}
+
+/* =========================
+   Optional: Simple dropdown styles (falls du es nutzt)
+   ========================= */
+
+.nav-item--group {
+  position: relative;
+}
 
 .nav-link--button {
   background: transparent;
@@ -55,41 +142,37 @@ body { padding-top: var(--header-height); }
   color: inherit;
   cursor: pointer;
   padding: 8px 12px;
-  border-radius: 8px;
-  transition: background-color 120ms ease;
+  border-radius: 999px;
+  transition: background-color 240ms cubic-bezier(0.4, 0, 0.2, 1);
 }
-.nav-link--button:hover { background: rgba(0,0,0,0.04); }
 
-.nav-dropdown {
-  position: absolute;
-  top: 100%;
-  right: 0;
-  left: auto;
-  z-index: calc(var(--mega-z) + 2);
-  display: flex;
-  gap: 8px;
-  padding: 8px 0;
-  background: #fff;
-  border-top: 1px solid #eaeaea;
-  white-space: nowrap;
+.nav-link--button:not(:focus):not(:focus-visible):hover {
+  background: rgba(0, 0, 0, 0.04);
 }
-.nav-dropdown__link {
-  display: inline-block;
-  text-decoration: none;
-  padding: 8px 12px;
-  border-radius: 8px;
-  color: #333;
-  transition: background-color 120ms ease, color 120ms ease;
-}
-.nav-dropdown__link:hover { background: rgba(0,0,0,0.04); }
 
-/* --- Mega dropdown (full width unter dem Header) --- */
-.mega { display: none; }
-.mega.is-open { display: block; }
+.nav-link--button:focus {
+  outline: none;
+}
+.nav-link--button:focus-visible {
+  outline: 2px solid #000;
+  outline-offset: 2px;
+}
+
+/* =========================
+   Mega dropdown (falls vorhanden)
+   ========================= */
+
+.mega {
+  display: none;
+}
+.mega.is-open {
+  display: block;
+}
 
 .mega__backdrop {
   position: fixed;
-  left: 0; right: 0;
+  left: 0;
+  right: 0;
   top: calc(var(--header-height) + var(--mega-gap));
   bottom: 0;
   background: var(--mega-backdrop);
@@ -98,7 +181,8 @@ body { padding-top: var(--header-height); }
 
 .mega__panel {
   position: fixed;
-  left: 0; right: 0;
+  left: 0;
+  right: 0;
   width: 100vw;
   background: var(--mega-bg);
   z-index: var(--mega-z); /* header ist +1 */
@@ -114,54 +198,95 @@ body { padding-top: var(--header-height); }
   text-align: left;
 }
 
-.mega__col { min-width: 0; }
-.mega__heading { font-weight: 700; margin: 0 0 6px; }
-.mega__list { list-style: none; margin: 0; padding: 0; }
-.mega__item { margin-top: 6px; }
-.mega__link { color: var(--mega-link); text-decoration: none; }
-.mega__link:hover { text-decoration: underline; }
-
-@media (max-width: 900px)  { .mega__inner { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-@media (max-width: 560px)  { .mega__inner { grid-template-columns: 1fr; } }
-
-/* Embed-Mode: Header ausblenden (bleibt wie bisher) */
-body.embed-mode .site-header { display: none !important; }
-
-
-
-/* --- Header nav hover (nur Hover-Optik, Design unverändert) --- */
-/* Pill-Hover für normale Links (nicht .active) */
-.site-header .nav .nav-link:not(.active):hover {
-  background: rgba(0, 0, 0, 0.04);
-  border-radius: 999px; /* pill look on hover */
+.mega__col {
+  min-width: 0;
+}
+.mega__heading {
+  font-weight: 700;
+  margin: 0 0 6px;
+}
+.mega__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.mega__item {
+  margin-top: 6px;
+}
+.mega__link {
+  color: var(--mega-link);
+  text-decoration: none;
+}
+.mega__link:hover {
+  text-decoration: underline;
 }
 
-/* Falls der Dropdown-Trigger ein Button ist */
-.site-header .nav .nav-link--button:not(.active):hover {
-  background: rgba(0, 0, 0, 0.04);
-  border-radius: 999px;
+@media (max-width: 900px) {
+  .mega__inner {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 560px) {
+  .mega__inner {
+    grid-template-columns: 1fr;
+  }
 }
 
-/* Optional: Brand-Hover (kannst du weglassen, wenn du es nicht möchtest) */
-.site-header .brand:hover {
-  background: rgba(0, 0, 0, 0.04);
-  border-radius: 999px;
+/* Embed mode */
+body.embed-mode .site-header {
+  display: none !important;
 }
 
+.profile-avatar.profile-avatar--sm img {
+  object-fit: cover;
+}
 
+.nav-item--group {
+  position: relative;
+}
 
+.nav-more {
+  position: absolute;
+  top: calc(100% + 12px);
+  right: 0;
+  min-width: 220px;
+  background: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 12px;
+  padding: 8px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  display: none;
+  z-index: calc(var(--mega-z) + 2);
+}
 
+.nav-more.is-open {
+  display: grid;
+  gap: 4px;
+}
 
-
-
-/* Logo-Größe im Header angleichen */
-.site-header .brand {
+.nav-more__item {
   display: inline-flex;
   align-items: center;
-}
-.site-header .brand img {
-  height: 50px; /* passend zu min-height:64px der header-inner */
-  width: 50px;
-  display: block;
+  padding: 10px 12px;
+  border-radius: 10px;
+  text-decoration: none;
+  color: #111;
 }
 
+.nav-more__item:hover {
+  background: rgba(0, 0, 0, 0.04);
+}
+
+.nav-more__item.is-active {
+  background: #111;
+  color: #fff;
+}
+
+.nav-more__item:focus {
+  outline: none;
+}
+
+.nav-more__item:focus-visible {
+  outline: 2px solid #000;
+  outline-offset: 2px;
+}
