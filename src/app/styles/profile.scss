@@ -1,35 +1,24 @@
-/* =========================================
-   Base / layout (global, wie vorher)
-   ========================================= */
 html,
 body {
   overflow-x: hidden;
 }
 
-/* One-column form in the profile sheet */
+:root {
+  --sheet-overlap: 2px;
+}
+
 .form-columns.form-columns--single {
   display: grid;
   grid-template-columns: 1fr;
   gap: 16px;
 }
 
-/* Two equal-width action buttons */
 .profile-actions.profile-actions--full {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 10px;
 }
 
-/* =========================================
-   ProfileButton – trigger, overlay, sheet
-   ========================================= */
-
-/* Variablen kommen aus foundation.scss; nur Overlap ist lokal nötig */
-:root {
-  --sheet-overlap: 2px; /* sheet & overlay sitzen knapp unter dem Header */
-}
-
-/* Trigger */
 .profile-trigger {
   display: inline-flex;
   align-items: center;
@@ -41,16 +30,15 @@ body {
   cursor: pointer;
   transition: background-color 120ms ease;
 }
+
 .profile-trigger:hover {
   background: rgba(0, 0, 0, 0.04);
 }
 
-/* gleiche Pill-Höhe wie .nav-link (8px 12px) */
 .profile-trigger--sm {
   gap: 8px;
 }
 
-/* Trigger avatar */
 .profile-avatar,
 .profile-card__avatar {
   position: relative;
@@ -67,20 +55,17 @@ body {
   justify-content: center;
 }
 
-/* kleiner Avatar im Header */
 .profile-avatar.profile-avatar--sm {
   width: 28px;
   height: 28px;
 }
 
-/* Initials fallback */
 .profile-initials {
   font-size: 13px;
   font-weight: 700;
   color: #3f51b5;
 }
 
-/* Name neben dem Trigger */
 .profile-name {
   display: none;
   font-weight: 600;
@@ -90,16 +75,17 @@ body {
   text-overflow: ellipsis;
   overflow: hidden;
 }
+
 .profile-name--sm {
   font-size: 0.9rem;
 }
+
 @media (min-width: 640px) {
   .profile-name {
     display: inline-block;
   }
 }
 
-/* Overlay */
 .profile-overlay {
   position: fixed;
   left: 0;
@@ -112,12 +98,12 @@ body {
   transition: opacity 180ms ease;
   z-index: calc(var(--mega-z) + 1);
 }
+
 .profile-overlay.is-open {
   opacity: 1;
   pointer-events: auto;
 }
 
-/* Rechte Sheet-Pane */
 .profile-sheet {
   position: fixed;
   right: 0;
@@ -133,6 +119,7 @@ body {
   display: flex;
   flex-direction: column;
 }
+
 .profile-sheet.is-open {
   transform: translateX(0);
 }
@@ -145,35 +132,59 @@ body {
   padding: 14px 16px;
   border-bottom: 1px solid #eee;
 }
+
 .profile-sheet__title {
   font-size: 1.05rem;
   font-weight: 600;
 }
+
 .profile-sheet__close {
   border: 0;
   background: transparent;
   padding: 6px 8px;
-  border-radius: 8px;
+  border-radius: 999px;
   cursor: pointer;
 }
-.profile-sheet__close:hover {
+
+.profile-sheet__close:hover,
+.profile-sheet__close:focus-visible {
   background: rgba(0, 0, 0, 0.06);
 }
 
 .profile-sheet__body {
   padding: 20px 24px 24px;
   overflow: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.28) transparent;
 }
 
-/* =========================================
-   Profile card & form
-   ========================================= */
+.profile-sheet__body::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.profile-sheet__body::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.profile-sheet__body::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.28);
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+.profile-sheet__body::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.38);
+  background-clip: content-box;
+}
 
 .profile-card {
   display: flex;
   align-items: center;
   gap: 16px;
 }
+
 .profile-card__avatar {
   width: 80px;
   height: 80px;
@@ -184,10 +195,12 @@ body {
   align-items: center;
   justify-content: center;
 }
+
 .profile-card--sm .profile-card__avatar img {
   width: 64px;
   height: 64px;
   border-radius: 9999px;
+  object-fit: cover;
 }
 
 .profile-card__initials {
@@ -195,14 +208,17 @@ body {
   font-weight: 800;
   color: #3f51b5;
 }
+
 .profile-card__meta {
   min-width: 0;
 }
+
 .profile-card__name-row {
   display: flex;
   align-items: center;
   gap: 8px;
 }
+
 .profile-card__name {
   font-size: 1.1rem;
   font-weight: 600;
@@ -212,7 +228,6 @@ body {
   text-overflow: ellipsis;
 }
 
-/* Badge (online/offline) */
 .profile-badge {
   display: inline-flex;
   align-items: center;
@@ -221,10 +236,12 @@ body {
   padding: 2px 8px;
   border-radius: 999px;
 }
+
 .profile-badge.is-online {
   background: #dcfce7;
   color: #166534;
 }
+
 .profile-badge.is-offline {
   background: #e5e7eb;
   color: #374151;
@@ -240,45 +257,58 @@ body {
   text-overflow: ellipsis;
 }
 
-/* Kompakte Form */
 .form--narrow {
   max-width: 460px;
 }
 
-/* Kompakte Controls */
 .card--sm {
   padding: 12px;
 }
+
 .lbl--sm {
   font-size: 0.85rem;
 }
+
 .input--sm {
   padding: 8px 10px;
   font-size: 0.95rem;
 }
+
 .input-file--sm {
   font-size: 0.9rem;
 }
+
 .btn--sm {
   padding: 6px 10px;
   font-size: 0.9rem;
+  cursor: pointer;
 }
 
-/* Readonly & errors – NUR im Profil-Sheet überschreiben */
 .profile-sheet .input--readonly {
   background: #f5f5f5;
   color: #666;
   pointer-events: none;
 }
+
+.profile-sheet .input--readonly:hover,
+.profile-sheet .input--readonly:focus,
+.profile-sheet .input--readonly:focus-visible {
+  background: #f5f5f5;
+  border-color: inherit;
+  box-shadow: none;
+  outline: none;
+  filter: none;
+}
+
 .input--error {
   border-color: #ef4444;
 }
+
 .help.error {
   color: #ef4444;
   font-size: 0.85rem;
 }
 
-/* Actions unter dem Formular */
 .profile-actions {
   display: flex;
   justify-content: flex-end;
@@ -286,7 +316,6 @@ body {
   margin-top: 18px;
 }
 
-/* Fallback-Button */
 .profile-btn {
   display: inline-flex;
   align-items: center;
@@ -298,20 +327,17 @@ body {
   cursor: pointer;
   transition: background-color 120ms ease, border-color 120ms ease;
 }
+
 .profile-btn:hover {
   background: #f7f7f7;
   border-color: #e0e0e0;
 }
 
-/* Header-Schatten ausblenden, wenn Sheet offen */
 .profile-open .site-header {
   border-bottom-color: transparent;
   box-shadow: none;
 }
 
-/* =========================================
-   Online status dot
-   ========================================= */
 .profile-status-dot {
   position: absolute;
   right: 3px;
@@ -322,12 +348,15 @@ body {
   border: 2px solid #fff;
   pointer-events: none;
 }
+
 .profile-status-dot.is-online {
   background: #22c55e;
 }
+
 .profile-status-dot.is-offline {
   background: #9ca3af;
 }
+
 .profile-card__avatar .profile-status-dot {
   right: 4px;
   bottom: 4px;
@@ -336,18 +365,36 @@ body {
   border-width: 3px;
 }
 
-/* =========================================
-   Scroll lock bei offenem Sheet
-   ========================================= */
 .profile-open body {
   overflow: hidden;
   overscroll-behavior: contain;
   touch-action: none;
 }
 
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
 
+.upload-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
 
-
-
-
-
+.upload-filename {
+  font-size: 13px;
+  opacity: 0.85;
+  max-width: 360px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
