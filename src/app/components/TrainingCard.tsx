@@ -1,47 +1,28 @@
 // src/app/components/TrainingCard.tsx
-'use client';
+"use client";
 
-import React, {
-  useEffect,
-  useMemo,
-  useState,
-  useRef,
-} from 'react';
-import {
-  GROUPED_COURSE_OPTIONS,
-  ALL_COURSE_OPTIONS,
-} from '@/app/lib/courseOptions';
-import OfferCreateDialog, {
-  CreateOfferPayload,
-} from '@/app/components/OfferCreateDialog';
-import { useSearchParams } from 'next/navigation';
+import React, { useEffect, useRef, useState } from "react";
+import OfferCreateDialog from "@/app/components/OfferCreateDialog";
+import type { CreateOfferPayload } from "@/app/components/offer-create-dialog/types";
 
-type Offer = {
-  _id: string;
-  title?: string;
-  type?: string;
-  sub_type?: string;
-  category?: string;
-  legacy_type?: string;
-  location?: string;
-  price?: number;
-  days?: string[];
-  timeFrom?: string;
-  timeTo?: string;
-  ageFrom?: number | null;
-  ageTo?: number | null;
-  info?: string;
-  onlineActive?: boolean;
-  coachName?: string;
-  coachEmail?: string;
-  coachImage?: string;
-  placeId?: string;
-};
+import type { Offer } from "@/app/components/training-card/types";
 
-type OffersResponse = { items: Offer[]; total: number };
+import { useDropdownOutsideClose } from "@/app/components/training-card/hooks/useDropdownOutsideClose";
+import { useBootstrapFromURL } from "@/app/components/training-card/hooks/useBootstrapFromURL";
+import { useCities } from "@/app/components/training-card/hooks/useCities";
+import { useOffers } from "@/app/components/training-card/hooks/useOffers";
 
-function clsx(...xs: Array<string | false | undefined | null>) {
-  return xs.filter(Boolean).join(' ');
+import TrainingFilters from "@/app/components/training-card/ui/TrainingFilters";
+import BulkActionsBar from "@/app/components/training-card/ui/BulkActionsBar";
+import TrainingResults from "@/app/components/training-card/ui/TrainingResults";
+import TrainingPager from "@/app/components/training-card/ui/TrainingPager";
+
+type OfferCreateDialogInitial = NonNullable<
+  React.ComponentProps<typeof OfferCreateDialog>["initial"]
+>;
+
+function asDialog<T>(v: unknown) {
+  return v as T;
 }
 
 export default function TrainingCard() {
@@ -51,9 +32,9 @@ export default function TrainingCard() {
   const [editing, setEditing] = useState<Offer | null>(null);
 
   // Filters / list
-  const [q, setQ] = useState('');
-  const [courseValue, setCourseValue] = useState<string>(''); // value from ALL_COURSE_OPTIONS or ''
-  const [locationFilter, setLocationFilter] = useState<string>('');
+  const [q, setQ] = useState("");
+  const [courseValue, setCourseValue] = useState<string>("");
+  const [locationFilter, setLocationFilter] = useState<string>("");
   const [locations, setLocations] = useState<string[]>([]);
 
   const [page, setPage] = useState(1);
@@ -67,9 +48,11 @@ export default function TrainingCard() {
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
 
   // URL→Initial-State
-  const searchParams = useSearchParams();
-  const [bootstrappedFromURL, setBootstrappedFromURL] = useState(false);
-  const pendingOpenIdRef = React.useRef<string | null>(null);
+  const { pendingOpenIdRef } = useBootstrapFromURL({
+    setQ,
+    setLocationFilter,
+    setCourseValue,
+  });
 
   // Custom-Dropdowns: Locations + Courses
   const [locationOpen, setLocationOpen] = useState(false);
@@ -78,157 +61,46 @@ export default function TrainingCard() {
   const courseDropdownRef = useRef<HTMLDivElement | null>(null);
 
   /* ==== Outside-Click: Dropdowns schließen ==== */
-  useEffect(() => {
-    function handleDown(ev: MouseEvent) {
-      const t = ev.target as Node;
-      if (
-        locationDropdownRef.current &&
-        locationDropdownRef.current.contains(t)
-      ) {
-        return;
-      }
-      if (courseDropdownRef.current && courseDropdownRef.current.contains(t)) {
-        return;
-      }
-      setLocationOpen(false);
-      setCourseOpen(false);
-    }
-    document.addEventListener('mousedown', handleDown);
-    return () => document.removeEventListener('mousedown', handleDown);
-  }, []);
-
-  /* ==== URL-Initialisierung ==== */
-  useEffect(() => {
-    if (bootstrappedFromURL) return;
-    if (!searchParams) return;
-
-    const sp = searchParams;
-
-    const qParam = sp.get('q');
-    const locParam = sp.get('location') || sp.get('city');
-    const course = sp.get('course');
-    const type = sp.get('type');
-    const cat = sp.get('category');
-    const sub = sp.get('sub_type');
-    const openId = sp.get('open');
-
-    if (qParam) setQ(qParam);
-    if (locParam) setLocationFilter(locParam);
-
-    if (course) {
-      setCourseValue(course);
-    } else if (type) {
-      setCourseValue(type);
-    } else if (cat && sub) {
-      setCourseValue(sub);
-    }
-
-    if (openId) pendingOpenIdRef.current = openId;
-
-    setBootstrappedFromURL(true);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchParams, bootstrappedFromURL]);
+  useDropdownOutsideClose({
+    locationDropdownRef,
+    courseDropdownRef,
+    closeLocation: () => setLocationOpen(false),
+    closeCourse: () => setCourseOpen(false),
+  });
 
   // Orte (Cities)
-  useEffect(() => {
-    const ctrl = new AbortController();
-    (async () => {
-      try {
-        const r = await fetch('/api/admin/places?page=1&pageSize=500', {
-          cache: 'no-store',
-          signal: ctrl.signal,
-        });
-        const j = await r.json().catch(() => ({}));
-        const arr: any[] = Array.isArray(j?.items) ? j.items : [];
-        const cityList = arr
-          .map(p => String(p?.city ?? '').trim())
-          .filter(s => s.length > 0);
-        const unique = Array.from(new Set(cityList)).sort((a, b) =>
-          a.localeCompare(b),
-        );
-        setLocations(unique);
-      } catch {
-        setLocations([]);
-      }
-    })();
-    return () => ctrl.abort();
-  }, []);
-
-  // Query-Builder
-  function buildQueryParams() {
-    const params = new URLSearchParams();
-    if (q.trim().length >= 2) params.set('q', q.trim());
-    if (locationFilter) params.set('location', locationFilter);
-    params.set('page', String(page));
-    params.set('limit', String(limit));
-
-    const chosen = ALL_COURSE_OPTIONS.find(x => x.value === courseValue);
-    if (chosen) {
-      if (chosen.mode === 'type') {
-        params.set('type', chosen.value);
-      } else {
-        params.set('category', chosen.category);
-        params.set('sub_type', chosen.value);
-      }
-    }
-    return params;
-  }
+  useCities({ setLocations });
 
   // Offers laden
-  useEffect(() => {
-    const ctrl = new AbortController();
-    const t = setTimeout(async () => {
-      setLoading(true);
-      try {
-        const params = buildQueryParams();
-        const r = await fetch(`/api/admin/offers?${params.toString()}`, {
-          cache: 'no-store',
-          signal: ctrl.signal,
-        });
-        if (!r.ok) {
-          setItems([]);
-          setTotal(0);
-        } else {
-          const raw = await r.json().catch(() => ({}));
-          const d: OffersResponse = Array.isArray(raw)
-            ? { items: raw as Offer[], total: (raw as Offer[]).length }
-            : {
-                items: Array.isArray(raw.items) ? raw.items : [],
-                total: Number(raw.total || 0),
-              };
-          setItems(d.items);
-          setTotal(d.total);
-          // Auswahl zurücksetzen, wenn Seite/Daten wechseln
-          setSelectedIds([]);
-        }
-      } catch {
-        setItems([]);
-        setTotal(0);
-        setSelectedIds([]);
-      } finally {
-        setLoading(false);
-      }
-    }, 200);
-    return () => {
-      clearTimeout(t);
-      ctrl.abort();
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [q, courseValue, locationFilter, page, limit, refreshTick]);
+  useOffers({
+    q,
+    courseValue,
+    locationFilter,
+    page,
+    limit,
+    refreshTick,
+    setLoading,
+    setItems,
+    setTotal,
+    setSelectedIds,
+  });
 
   // ?open=<offerId> → direkt Edit
   useEffect(() => {
     if (!pendingOpenIdRef.current || !items.length) return;
+
     const id = pendingOpenIdRef.current;
-    const found = items.find(o => o._id === id);
+    const found = items.find((o) => o._id === id);
+
     if (found) {
       setEditing(found);
       setEditOpen(true);
       pendingOpenIdRef.current = null;
     }
-  }, [items]);
+  }, [items, pendingOpenIdRef]);
 
   const pageCount = Math.max(1, Math.ceil(total / limit));
+
   const startEdit = (o: Offer) => {
     setEditing(o);
     setEditOpen(true);
@@ -237,140 +109,142 @@ export default function TrainingCard() {
   async function handleCreate(payload: CreateOfferPayload) {
     try {
       const res = await fetch(`/api/admin/offers`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        cache: 'no-store',
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        cache: "no-store",
         body: JSON.stringify({
           ...payload,
-          ageFrom: payload.ageFrom === '' ? null : Number(payload.ageFrom),
-          ageTo: payload.ageTo === '' ? null : Number(payload.ageTo),
-          price: payload.price === '' ? 0 : Number(payload.price),
+          ageFrom: payload.ageFrom === "" ? null : Number(payload.ageFrom),
+          ageTo: payload.ageTo === "" ? null : Number(payload.ageTo),
+          price: payload.price === "" ? 0 : Number(payload.price),
         }),
       });
+
       if (!res.ok) {
         const err = await res.json().catch(() => ({}));
-        console.error('Create offer failed', err);
+        console.error("Create offer failed", err);
       }
     } finally {
       setCreateOpen(false);
       setPage(1);
-      setQ('');
-      setRefreshTick(x => x + 1);
+      setQ("");
+      setRefreshTick((x) => x + 1);
     }
   }
 
   async function handleSave(id: string, payload: CreateOfferPayload) {
     try {
       const res = await fetch(`/api/admin/offers/${encodeURIComponent(id)}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        cache: 'no-store',
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        cache: "no-store",
         body: JSON.stringify({
           ...payload,
-          ageFrom: payload.ageFrom === '' ? null : Number(payload.ageFrom),
-          ageTo: payload.ageTo === '' ? null : Number(payload.ageTo),
-          price: payload.price === '' ? 0 : Number(payload.price),
+          ageFrom: payload.ageFrom === "" ? null : Number(payload.ageFrom),
+          ageTo: payload.ageTo === "" ? null : Number(payload.ageTo),
+          price: payload.price === "" ? 0 : Number(payload.price),
         }),
       });
+
       if (!res.ok) {
         const err = await res.json().catch(() => ({}));
-        console.error('Update offer failed', err);
+        console.error("Update offer failed", err);
       }
     } finally {
       setEditOpen(false);
       setEditing(null);
-      setRefreshTick(x => x + 1);
-    }
-  }
-
-  async function handleDelete(o: Offer) {
-    const ok = window.confirm(`Delete offer "${o.title ?? o.type}"?`);
-    if (!ok) return;
-    try {
-      const res = await fetch(
-        `/api/admin/offers/${encodeURIComponent(o._id)}`,
-        {
-          method: 'DELETE',
-          cache: 'no-store',
-        },
-      );
-      if (!res.ok) {
-        const err = await res.json().catch(() => ({}));
-        console.error('Delete failed', err);
-      } else {
-        setItems(prev => prev.filter(x => x._id !== o._id));
-        setTotal(t => Math.max(0, t - 1));
-        setSelectedIds(prev => prev.filter(id => id !== o._id));
-      }
-    } catch (e) {
-      console.error('Delete error', e);
+      setRefreshTick((x) => x + 1);
     }
   }
 
   // Bulk-Delete (nur aktuelle Seite)
   async function handleBulkDelete() {
     if (selectedIds.length === 0) return;
-    const ok = window.confirm(
-      `Delete ${selectedIds.length} selected offer(s)?`,
-    );
-    if (!ok) return;
+
     for (const id of selectedIds) {
       try {
-        const res = await fetch(
-          `/api/admin/offers/${encodeURIComponent(id)}`,
-          {
-            method: 'DELETE',
-            cache: 'no-store',
-          },
-        );
+        const res = await fetch(`/api/admin/offers/${encodeURIComponent(id)}`, {
+          method: "DELETE",
+          cache: "no-store",
+        });
+
         if (!res.ok) {
           const err = await res.json().catch(() => ({}));
-          console.error('Bulk delete failed for', id, err);
+          console.error("Bulk delete failed for", id, err);
         }
       } catch (e) {
-        console.error('Bulk delete error for', id, e);
+        console.error("Bulk delete error for", id, e);
       }
     }
-    setRefreshTick(x => x + 1);
+
+    setRefreshTick((x) => x + 1);
     setSelectedIds([]);
   }
 
-  const avatarSrc = (o: Offer) => (o.coachImage ? o.coachImage : '');
+  const avatarSrc = (o: Offer) => (o.coachImage ? o.coachImage : "");
 
   // Auswahl-Helpers
   const allSelected = items.length > 0 && selectedIds.length === items.length;
+
   const toggleSelect = (id: string, checked: boolean) => {
-    setSelectedIds(prev =>
-      checked ? Array.from(new Set([...prev, id])) : prev.filter(x => x !== id),
+    setSelectedIds((prev) =>
+      checked
+        ? Array.from(new Set([...prev, id]))
+        : prev.filter((x) => x !== id)
     );
   };
+
   const toggleSelectAll = (checked: boolean) => {
     if (!checked) {
       setSelectedIds([]);
       return;
     }
-    setSelectedIds(items.map(x => x._id));
+    setSelectedIds(items.map((x) => x._id));
   };
 
-  /* ======= Labels für Custom-Dropdowns ======= */
-
-  const locationLabel = useMemo(() => {
-    if (!locationFilter) return 'All locations';
-    return locationFilter;
-  }, [locationFilter]);
-
-  const courseLabel = useMemo(() => {
-    if (!courseValue) return 'All courses';
-    const found =
-      ALL_COURSE_OPTIONS.find(o => o.value === courseValue) || null;
-    return found?.label || 'All courses';
-  }, [courseValue]);
+  // ✅ initial muss "undefined" sein (nicht null) und type muss "" | OfferType | undefined sein
+  const editingInitial: React.ComponentProps<
+    typeof OfferCreateDialog
+  >["initial"] = editing
+    ? ({
+        _id: editing._id,
+        type: asDialog<OfferCreateDialogInitial["type"]>(editing.type ?? ""),
+        location: editing.location ?? "",
+        placeId: editing.placeId ?? "",
+        price: asDialog<OfferCreateDialogInitial["price"]>(
+          typeof editing.price === "number" ? editing.price : ""
+        ),
+        days: asDialog<OfferCreateDialogInitial["days"]>(
+          Array.isArray(editing.days) ? editing.days : []
+        ),
+        timeFrom: editing.timeFrom ?? "",
+        timeTo: editing.timeTo ?? "",
+        ageFrom: asDialog<OfferCreateDialogInitial["ageFrom"]>(
+          typeof editing.ageFrom === "number" ? editing.ageFrom : ""
+        ),
+        ageTo: asDialog<OfferCreateDialogInitial["ageTo"]>(
+          typeof editing.ageTo === "number" ? editing.ageTo : ""
+        ),
+        info: editing.info ?? "",
+        onlineActive:
+          typeof editing.onlineActive === "boolean"
+            ? editing.onlineActive
+            : true,
+        coachName: editing.coachName ?? "",
+        coachEmail: editing.coachEmail ?? "",
+        coachImage: editing.coachImage ?? "",
+        category: asDialog<OfferCreateDialogInitial["category"]>(
+          editing.category ?? ""
+        ),
+        sub_type: asDialog<OfferCreateDialogInitial["sub_type"]>(
+          editing.sub_type ?? ""
+        ),
+      } satisfies OfferCreateDialogInitial)
+    : undefined;
 
   return (
     <div className="ks ks-training-admin">
-      {/* == wie booking: schmaler, zentrierter Hauptbereich == */}
       <div className="p-4 max-w-6xl mx-auto">
-        {/* Intro (wie booking) */}
         <header className="mb-4">
           <h1 className="text-2xl font-bold m-0">Trainings</h1>
           <p className="text-gray-700 m-0">
@@ -379,418 +253,52 @@ export default function TrainingCard() {
           </p>
         </header>
 
-        {/* Filter */}
-        <section className="filters">
-          <div className="filters__row">
-            <div className="filters__field">
-              <button
-                className="btn"
-                onClick={() => setCreateOpen(true)}
-              >
-                Create new offer
-              </button>
-            </div>
+        <TrainingFilters
+          q={q}
+          setQ={setQ}
+          setPage={setPage}
+          createOpen={createOpen}
+          setCreateOpen={setCreateOpen}
+          locations={locations}
+          locationFilter={locationFilter}
+          setLocationFilter={setLocationFilter}
+          courseValue={courseValue}
+          setCourseValue={setCourseValue}
+          locationOpen={locationOpen}
+          setLocationOpen={setLocationOpen}
+          courseOpen={courseOpen}
+          setCourseOpen={setCourseOpen}
+          locationDropdownRef={locationDropdownRef}
+          courseDropdownRef={courseDropdownRef}
+        />
 
-            <div className="filters__field filters__field--grow">
-              <label className="label">
-                Search offers (min. 2 letters)
-              </label>
-              <input
-                value={q}
-                onChange={e => {
-                  setQ(e.target.value);
-                  setPage(1);
-                }}
-                className="input"
-                placeholder="e.g., Summer Camp or street/city/zip"
-              />
-            </div>
-          </div>
+        <BulkActionsBar
+          selectedCount={selectedIds.length}
+          onClear={() => setSelectedIds([])}
+          onBulkDelete={handleBulkDelete}
+        />
 
-          {/* Locations – Custom Dropdown */}
-          <div className="filters__field">
-            <label className="label">Locations</label>
-            <div
-              className={clsx(
-                'ks-training-select',
-                locationOpen && 'ks-training-select--open',
-              )}
-              ref={locationDropdownRef}
-            >
-              <button
-                type="button"
-                className="ks-training-select__trigger"
-                onClick={() => {
-                  setLocationOpen(open => !open);
-                  setCourseOpen(false);
-                }}
-              >
-                <span className="ks-training-select__label">
-                  {locationLabel}
-                </span>
-                <span
-                  className="ks-training-select__chevron"
-                  aria-hidden="true"
-                />
-              </button>
+        <TrainingResults
+          loading={loading}
+          items={items}
+          selectedIds={selectedIds}
+          allSelected={allSelected}
+          onToggleAll={toggleSelectAll}
+          onToggleOne={toggleSelect}
+          onStartEdit={startEdit}
+          onOpenEdit={(it) => {
+            setEditing(it);
+            setEditOpen(true);
+          }}
+          avatarSrc={avatarSrc}
+        />
 
-              {locationOpen && (
-                <ul className="ks-training-select__menu" role="listbox">
-                  <li>
-                    <button
-                      type="button"
-                      className={clsx(
-                        'ks-training-select__option',
-                        !locationFilter && 'is-selected',
-                      )}
-                      onClick={() => {
-                        setLocationFilter('');
-                        setPage(1);
-                        setLocationOpen(false);
-                      }}
-                    >
-                      All locations
-                    </button>
-                  </li>
-                  {locations.map(loc => (
-                    <li key={loc}>
-                      <button
-                        type="button"
-                        className={clsx(
-                          'ks-training-select__option',
-                          locationFilter === loc && 'is-selected',
-                        )}
-                        onClick={() => {
-                          setLocationFilter(loc);
-                          setPage(1);
-                          setLocationOpen(false);
-                        }}
-                      >
-                        {loc}
-                      </button>
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div>
-          </div>
-
-          {/* Courses – Custom Dropdown (gruppiert wie vorher) */}
-          <div className="filters__field">
-            <label className="label">Courses</label>
-            <div
-              className={clsx(
-                'ks-training-select',
-                courseOpen && 'ks-training-select--open',
-              )}
-              ref={courseDropdownRef}
-            >
-              <button
-                type="button"
-                className="ks-training-select__trigger"
-                onClick={() => {
-                  setCourseOpen(open => !open);
-                  setLocationOpen(false);
-                }}
-              >
-                <span className="ks-training-select__label">
-                  {courseLabel}
-                </span>
-                <span
-                  className="ks-training-select__chevron"
-                  aria-hidden="true"
-                />
-              </button>
-
-              {courseOpen && (
-                <div className="ks-training-select__menu ks-training-select__menu--grouped">
-                  <button
-                    type="button"
-                    className={clsx(
-                      'ks-training-select__option ks-training-select__option--top',
-                      !courseValue && 'is-selected',
-                    )}
-                    onClick={() => {
-                      setCourseValue('');
-                      setPage(1);
-                      setCourseOpen(false);
-                    }}
-                  >
-                    All courses
-                  </button>
-
-                  {GROUPED_COURSE_OPTIONS.map(group => (
-                    <div
-                      key={group.label}
-                      className="ks-training-select__group"
-                    >
-                      <div className="ks-training-select__group-label">
-                        {group.label}
-                      </div>
-                      {group.items.map(opt => (
-                        <button
-                          key={opt.value}
-                          type="button"
-                          className={clsx(
-                            'ks-training-select__option',
-                            courseValue === opt.value && 'is-selected',
-                          )}
-                          onClick={() => {
-                            setCourseValue(opt.value);
-                            setPage(1);
-                            setCourseOpen(false);
-                          }}
-                        >
-                          {opt.label}
-                        </button>
-                      ))}
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          </div>
-        </section>
-
-        {/* Bulk-Aktionen (sichtbar wenn Auswahl) */}
-        {selectedIds.length > 0 && (
-          <section className="card" aria-live="polite">
-            <div className="card-head">
-              <h3 className="card-title m-0">
-                {selectedIds.length} selected
-              </h3>
-              <div
-                className="card-actions"
-                style={{ display: 'flex', gap: 8 }}
-              >
-                <button
-                  className="btn"
-                  onClick={() => setSelectedIds([])}
-                >
-                  Clear
-                </button>
-                <button
-                  className="btn btn--danger"
-                  onClick={handleBulkDelete}
-                >
-                  Delete selected
-                </button>
-              </div>
-            </div>
-          </section>
-        )}
-
-        {/* Results */}
-        <section className="card p-0 overflow-hidden">
-          {loading ? (
-            <div className="card__empty">Loading…</div>
-          ) : items.length === 0 ? (
-            <div className="card__empty">No offers found.</div>
-          ) : (
-            <>
-              {/* Kopfzeile: "Alle auswählen" */}
-              <div
-                className="list-header"
-                style={{
-                  paddingLeft: 'calc(var(--card-pad) + 1rem)',
-                  paddingRight: 'calc(var(--card-pad) + 1rem)',
-                  paddingTop: 8,
-                  paddingBottom: 8,
-                  borderBottom: '1px solid #eef2f7',
-                }}
-              >
-                <label
-                  className="label"
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: 10,
-                    margin: 0,
-                    cursor: 'pointer',
-                  }}
-                >
-                  <input
-                    type="checkbox"
-                    checked={allSelected}
-                    aria-label="Alle auswählen"
-                    onChange={e =>
-                      toggleSelectAll(e.target.checked)
-                    }
-                    onClick={e => e.stopPropagation()}
-                  />
-                  Alle auswählen
-                </label>
-              </div>
-
-              <ul className="list list--bleed">
-                {items.map(it => {
-                  const isChecked = selectedIds.includes(it._id);
-                  return (
-                    <li
-                      key={it._id}
-                      className="list__item chip is-fullhover is-interactive"
-                      onClick={() => startEdit(it)}
-                      onKeyDown={e => {
-                        if (
-                          e.key === 'Enter' ||
-                          e.key === ' '
-                        ) {
-                          e.preventDefault();
-                          startEdit(it);
-                        }
-                      }}
-                      tabIndex={0}
-                      role="button"
-                      aria-label={`Edit offer ${
-                        it.title ?? it.type
-                      }`}
-                    >
-                      {/* Checkbox links */}
-                      <input
-                        type="checkbox"
-                        checked={isChecked}
-                        aria-label="Zeile auswählen"
-                        onClick={e => e.stopPropagation()}
-                        onChange={e =>
-                          toggleSelect(
-                            it._id,
-                            e.target.checked,
-                          )
-                        }
-                        style={{ marginRight: 10 }}
-                      />
-
-                      {/* Avatar */}
-                      {avatarSrc(it) ? (
-                        <img
-                          src={avatarSrc(it)}
-                          alt={
-                            it.coachName
-                              ? `Coach ${it.coachName}`
-                              : 'Coach avatar'
-                          }
-                          className="list__avatar"
-                        />
-                      ) : (
-                        <div
-                          className="list__avatar list__avatar--ph"
-                          aria-hidden="true"
-                        />
-                      )}
-
-                      {/* Text */}
-                      <div className="list__body">
-                        <div className="list__title">
-                          {it.title ?? 'Offer'}
-                        </div>
-                        <div className="list__meta">
-                          {[it.type, it.location]
-                            .filter(Boolean)
-                            .join(' • ')}{' '}
-                          {typeof it.price === 'number' ? (
-                            <>· {it.price} €</>
-                          ) : (
-                            <>· Price on request</>
-                          )}
-                          {it.coachName ? (
-                            <> · Coach: {it.coachName}</>
-                          ) : null}
-                          {it.category ? (
-                            <> · {it.category}</>
-                          ) : null}
-                          {it.sub_type ? (
-                            <> · {it.sub_type}</>
-                          ) : null}
-                        </div>
-                      </div>
-
-                      {/* Actions rechts */}
-                      <div
-                        className="list__actions"
-                        onClick={e => e.stopPropagation()}
-                        onKeyDown={e => e.stopPropagation()}
-                      >
-                        <span
-                          className="edit-trigger"
-                          role="button"
-                          tabIndex={0}
-                          title="Edit"
-                          aria-label="Edit"
-                          onClick={() => {
-                            setEditing(it);
-                            setEditOpen(true);
-                          }}
-                          onKeyDown={e => {
-                            if (
-                              e.key === 'Enter' ||
-                              e.key === ' '
-                            ) {
-                              e.preventDefault();
-                              setEditing(it);
-                              setEditOpen(true);
-                            }
-                          }}
-                        >
-                          <img
-                            src="/icons/edit.svg"
-                            alt=""
-                            aria-hidden="true"
-                            className="icon-img"
-                          />
-                        </span>
-                      </div>
-                    </li>
-                  );
-                })}
-              </ul>
-            </>
-          )}
-        </section>
-
-        {/* Pagination */}
-        <div className="pager pager--arrows">
-          <button
-            type="button"
-            className="btn"
-            aria-label="Previous page"
-            disabled={page <= 1}
-            onClick={() =>
-              setPage(p => Math.max(1, p - 1))
-            }
-          >
-            <img
-              src="/icons/arrow_right_alt.svg"
-              alt=""
-              aria-hidden="true"
-              className="icon-img icon-img--left"
-            />
-          </button>
-
-          <div
-            className="pager__count"
-            aria-live="polite"
-            aria-atomic="true"
-          >
-            {page} / {pageCount}
-          </div>
-
-          <button
-            type="button"
-            className="btn"
-            aria-label="Next page"
-            disabled={page >= pageCount}
-            onClick={() =>
-              setPage(p => Math.min(pageCount, p + 1))
-            }
-          >
-            <img
-              src="/icons/arrow_right_alt.svg"
-              alt=""
-              aria-hidden="true"
-              className="icon-img"
-            />
-          </button>
-        </div>
+        <TrainingPager
+          page={page}
+          pageCount={pageCount}
+          onPrev={() => setPage((p) => Math.max(1, p - 1))}
+          onNext={() => setPage((p) => Math.min(pageCount, p + 1))}
+        />
       </div>
 
       {/* Create */}
@@ -805,33 +313,7 @@ export default function TrainingCard() {
       <OfferCreateDialog
         open={editOpen}
         mode="edit"
-        initial={
-          editing
-            ? {
-                _id: editing._id,
-                type: (editing.type as any) ?? '',
-                location: editing.location ?? '',
-                placeId: editing.placeId ?? '',
-                price: editing.price ?? '',
-                days: (editing.days as any) ?? [],
-                timeFrom: editing.timeFrom ?? '',
-                timeTo: editing.timeTo ?? '',
-                ageFrom: (editing.ageFrom as any) ?? '',
-                ageTo: (editing.ageTo as any) ?? '',
-                info: editing.info ?? '',
-                onlineActive:
-                  typeof editing.onlineActive ===
-                  'boolean'
-                    ? editing.onlineActive
-                    : true,
-                coachName: editing.coachName ?? '',
-                coachEmail: editing.coachEmail ?? '',
-                coachImage: editing.coachImage ?? '',
-                category: (editing.category as any) ?? '',
-                sub_type: (editing.sub_type as any) ?? '',
-              }
-            : null
-        }
+        initial={editingInitial}
         onClose={() => {
           setEditOpen(false);
           setEditing(null);
@@ -841,11 +323,3 @@ export default function TrainingCard() {
     </div>
   );
 }
-
-
-
-
-
-
-
-
