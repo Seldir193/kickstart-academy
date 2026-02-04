@@ -1,4 +1,3 @@
-
 /* ==========================================================================
    Admin Forms – zentrale Styles für alle Admin-Formulare
    - .input (input, select, textarea, button)
@@ -6,7 +5,6 @@
    - Custom-Dropdowns (Family, ks-selectbox, ks-family-select,
      ks-filter-select, ks-training-select)
    ========================================================================== */
-
 
 /* ========================================================================== */
 /* 1) Globale Basis für alle Felder mit className="input"                    */
@@ -43,8 +41,7 @@ textarea.input:focus,
 button.input:focus {
   outline: none;
   border-color: var(--brand-navy);
-  box-shadow: 0 0 0 3px
-    color-mix(in oklab, var(--brand-navy) 22%, #ffffff);
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--brand-navy) 22%, #ffffff);
 }
 
 /* Disabled-Inputs – optional leicht „grau“ */
@@ -57,26 +54,24 @@ button.input:disabled {
 }
 
 /* Date-Inputs – Hand-Cursor + klickbares Kalender-Icon */
-input.input[type='date'] {
+input.input[type="date"] {
   cursor: pointer;
 }
 
-input.input[type='date']::-webkit-calendar-picker-indicator {
+input.input[type="date"]::-webkit-calendar-picker-indicator {
   cursor: pointer;
 }
-
 
 /* ========================================================================== */
 /* 2) Spezieller Date-Input im BookDialog (Start-Date, Höhe 50px)            */
 /* ========================================================================== */
 
-.ks-modal-root .ks-panel .input[type='date'] {
+.ks-modal-root .ks-panel .input[type="date"] {
   height: 50px;
   border-radius: 8px;
   padding: 0 12px;
   background-color: #fff;
 }
-
 
 /* ========================================================================== */
 /* 3) Family-Dropdown (CustomerDialog: .family-dropdown...)                  */
@@ -176,16 +171,13 @@ input.input[type='date']::-webkit-calendar-picker-indicator {
 .family-dropdown.family-dropdown--open .family-dropdown-trigger,
 .family-dropdown:focus-within .family-dropdown-trigger {
   border-color: var(--brand-navy);
-  box-shadow: 0 0 0 3px
-    color-mix(in oklab, var(--brand-navy) 22%, #ffffff);
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--brand-navy) 22%, #ffffff);
 }
 
 .family-dropdown.family-dropdown--open .family-dropdown-menu,
 .family-dropdown:focus-within .family-dropdown-menu {
   border-color: color-mix(in oklab, var(--brand-navy) 20%, #d9dee6);
 }
-
-
 
 /* Caret Grundzustand */
 .family-dropdown .family-dropdown-caret {
@@ -199,8 +191,6 @@ input.input[type='date']::-webkit-calendar-picker-indicator {
   transform: rotate(180deg);
 }
 
-
-
 /* ========================================================================== */
 /* 4) ks-selectbox (BookDialog – Courses & Offer Selectbox)                  */
 /* ========================================================================== */
@@ -212,7 +202,7 @@ input.input[type='date']::-webkit-calendar-picker-indicator {
 }
 
 .ks-selectbox__trigger {
-  height: 50px;
+  height: 40px;
   padding: 0 14px 0 16px;
   width: 100%;
   border: 1px solid #d9dee6;
@@ -227,7 +217,9 @@ input.input[type='date']::-webkit-calendar-picker-indicator {
   font-weight: 700;
   line-height: 1;
 
-  transition: border-color 0.18s ease, box-shadow 0.18s ease;
+  transition:
+    border-color 0.18s ease,
+    box-shadow 0.18s ease;
 }
 
 .ks-selectbox__trigger:hover {
@@ -257,7 +249,9 @@ input.input[type='date']::-webkit-calendar-picker-indicator {
   border-left: 5px solid transparent;
   border-right: 5px solid transparent;
   border-top: 6px solid #5b6472;
-  transition: transform 0.18s ease, border-top-color 0.18s ease;
+  transition:
+    transform 0.18s ease,
+    border-top-color 0.18s ease;
 }
 
 /* Panel (max. 5 Einträge, Scroll) */
@@ -347,7 +341,6 @@ input.input[type='date']::-webkit-calendar-picker-indicator {
   box-shadow: none;
 }
 
-
 /* ========================================================================== */
 /* 5) ks-family-select (BookDialog "Booking for" – Kind auswählen)           */
 /* ========================================================================== */
@@ -375,7 +368,9 @@ input.input[type='date']::-webkit-calendar-picker-indicator {
   font-weight: 500;
   line-height: 1.2;
 
-  transition: border-color 0.18s ease, box-shadow 0.18s ease;
+  transition:
+    border-color 0.18s ease,
+    box-shadow 0.18s ease;
 }
 
 /* schöner Overflow */
@@ -401,7 +396,9 @@ input.input[type='date']::-webkit-calendar-picker-indicator {
   border-left: 5px solid transparent;
   border-right: 5px solid transparent;
   border-top: 6px solid #5b6472;
-  transition: transform 0.18s ease, border-top-color 0.18s ease;
+  transition:
+    transform 0.18s ease,
+    border-top-color 0.18s ease;
 }
 
 /* Menü */
@@ -459,8 +456,7 @@ input.input[type='date']::-webkit-calendar-picker-indicator {
 /* Offen / Focus-Status */
 .ks-family-select:focus-within .ks-family-select__trigger {
   border-color: var(--brand-navy);
-  box-shadow: 0 0 0 3px
-    color-mix(in oklab, var(--brand-navy) 22%, white);
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--brand-navy) 22%, white);
 }
 
 .ks-family-select:focus-within .ks-family-select__menu {
@@ -471,7 +467,6 @@ input.input[type='date']::-webkit-calendar-picker-indicator {
   border-top-color: var(--brand-navy);
   transform: rotate(180deg);
 }
-
 
 /* ========================================================================== */
 /* 6) Newsletter-Filter-Dropdown (Customers: .ks-filter-select...)           */
@@ -500,7 +495,9 @@ input.input[type='date']::-webkit-calendar-picker-indicator {
   font-weight: 600;
   line-height: 1;
 
-  transition: border-color 0.18s ease, box-shadow 0.18s ease;
+  transition:
+    border-color 0.18s ease,
+    box-shadow 0.18s ease;
 }
 
 /* Label */
@@ -524,7 +521,9 @@ input.input[type='date']::-webkit-calendar-picker-indicator {
   border-left: 5px solid transparent;
   border-right: 5px solid transparent;
   border-top: 6px solid #5b6472;
-  transition: transform 0.18s ease, border-top-color 0.18s ease;
+  transition:
+    transform 0.18s ease,
+    border-top-color 0.18s ease;
 }
 
 /* Menü */
@@ -595,7 +594,6 @@ input.input[type='date']::-webkit-calendar-picker-indicator {
   border-color: color-mix(in oklab, var(--brand-navy) 20%, #d9dee6);
 }
 
-
 /* ========================================================================== */
 /* 7) Training-Select (Locations & Courses: .ks-training-select...)          */
 /* ========================================================================== */
@@ -622,7 +620,9 @@ input.input[type='date']::-webkit-calendar-picker-indicator {
   font-weight: 600;
   line-height: 1;
 
-  transition: border-color 0.18s ease, box-shadow 0.18s ease;
+  transition:
+    border-color 0.18s ease,
+    box-shadow 0.18s ease;
 }
 
 .ks-training-select__trigger:hover {
@@ -645,7 +645,9 @@ input.input[type='date']::-webkit-calendar-picker-indicator {
   border-left: 5px solid transparent;
   border-right: 5px solid transparent;
   border-top: 6px solid #5b6472;
-  transition: transform 0.18s ease, border-top-color 0.18s ease;
+  transition:
+    transform 0.18s ease,
+    border-top-color 0.18s ease;
 }
 
 /* Menü */
@@ -724,30 +726,21 @@ input.input[type='date']::-webkit-calendar-picker-indicator {
 }
 
 /* Offen-Status */
-.ks-training-select.ks-training-select--open
-  .ks-training-select__trigger,
+.ks-training-select.ks-training-select--open .ks-training-select__trigger,
 .ks-training-select.ks-training-select--open
   .ks-training-select__trigger:hover {
   border-color: var(--brand-navy);
-  box-shadow: 0 0 0 3px
-    color-mix(in oklab, var(--brand-navy) 22%, white);
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--brand-navy) 22%, white);
 }
 
-.ks-training-select.ks-training-select--open
-  .ks-training-select__chevron {
+.ks-training-select.ks-training-select--open .ks-training-select__chevron {
   border-top-color: var(--brand-navy);
   transform: rotate(180deg);
 }
 
-.ks-training-select.ks-training-select--open
-  .ks-training-select__menu {
-  border-color: color-mix(
-    in oklab,
-    var(--brand-navy) 20%,
-    #d9dee6
-  );
+.ks-training-select.ks-training-select--open .ks-training-select__menu {
+  border-color: color-mix(in oklab, var(--brand-navy) 20%, #d9dee6);
 }
-
 
 /* ========================================================================== */
 /* 8) Spezielle Filter-Feld-Höhe (Customers & Training)                      */
@@ -756,7 +749,7 @@ input.input[type='date']::-webkit-calendar-picker-indicator {
 /* Customers: Suchfeld & Newsletter-Select in einer Zeile */
 .ks-customers-filter-row .input {
   height: 40px;
-  padding: 0 12px;
+  //padding: 0 12px;
   border-radius: 8px;
 }
 
@@ -764,35 +757,18 @@ input.input[type='date']::-webkit-calendar-picker-indicator {
 .ks-training-admin .filters .input {
   height: 40px;
   border-radius: 8px;
-  padding: 0 12px;
+  //padding: 0 12px;
 }
-
 
 /* ========================================================================== */
 /* 9) Invoices – spezieller Dropdown-Trigger für "Dokumente (aktuelle Seite)"*/
 /* ========================================================================== */
 
-button.input[aria-haspopup='listbox'] {
+button.input[aria-haspopup="listbox"] {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 /* Option Basis */
 .ks-selectbox__option {
@@ -815,26 +791,80 @@ button.input[aria-haspopup='listbox'] {
   background: #f4f7fb;
 }
 
-/* Ausgewählte Option: schwarz + weiße Schrift (bleibt sichtbar auch ohne Hover) */
-.ks-selectbox__option.ks-selectbox__option--active {
-  background: #111827;
-  color: #ffffff;
+.ks-selectbox__chevron img {
+  width: 18px;
+  height: 18px;
+  display: block;
 }
 
+/* CustomerDialog – DOB (TT/MM/JJJJ) passt in grid-cols-3 */
 
+.ks-customer-dialog .ks-dob {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 80px 80px minmax(0, 1fr); /* Tag/Monat fix klein, Jahr flexibel */
 
+  gap: 8px;
+  align-items: center;
+}
 
+.ks-customer-dialog .ks-dob .ks-native-select {
+  min-width: 0; /* wichtig, sonst overflow in CSS Grid */
+}
 
+.ks-customer-dialog .ks-dob .ks-native-select__control {
+  width: 100%;
+  min-width: 0; /* wichtig */
+  height: 40px;
+  padding: 0 34px 0 12px;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: none;
+}
 
+.ks-customer-dialog .ks-dob .ks-native-select__control::-ms-expand {
+  display: none;
+}
 
+/* Hover nur für NICHT-active Optionen */
+.ks-selectbox__option:not(.ks-selectbox__option--active):hover {
+  background: rgba(0, 0, 0, 0.06); /* oder deine Hover-Farbe */
+}
 
+/* Active bleibt immer gleich – auch bei Hover */
+.ks-selectbox__option.ks-selectbox__option--active,
+.ks-selectbox__option.ks-selectbox__option--active:hover {
+  background: #000;
+  color: #fff;
+}
 
+/* Hover nur für NICHT-active Items */
+.family-dropdown-item:not(.family-dropdown-item--active):hover {
+  background: rgba(0, 0, 0, 0.06); /* nimm hier deine echte Hover-Farbe */
+}
 
+/* Active bleibt immer schwarz – auch bei Hover */
+.family-dropdown-item--active,
+.family-dropdown-item--active:hover {
+  background: #000;
+  color: #fff;
+}
 
+/* Booking option: 2. Zeile (Meta) */
+.ks-selectbox__opt-meta {
+  font-size: 12px;
+  color: #666;
+  white-space: normal;
+}
 
+/* 1. Zeile (Title) – falls du auch den inline-style entfernen willst */
+.ks-selectbox__opt-title {
+  font-weight: 600;
+  white-space: normal;
+}
 
-
-
-
-
-
+/* Wenn Option aktiv ist: Meta soll NICHT grau sein */
+.ks-selectbox__option--active .ks-selectbox__opt-meta {
+  color: inherit;
+}
