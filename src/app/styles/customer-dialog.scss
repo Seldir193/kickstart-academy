@@ -1,0 +1,265 @@
+/* CustomerDialog – ausgelagert (ohne inline styles)
+   Hinweis: Thin scrollbar ist zentral auf dem echten Scroll-Container (.ks-panel / .ks-panel-lg).
+*/
+
+.ks-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 4000;
+  display: grid;
+  place-items: center;
+
+  .ks-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+  }
+
+  .ks-panel {
+    position: relative;
+    z-index: 1;
+    background: #fff;
+    border: 1px solid #eaeaea;
+    border-radius: 12px;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.18);
+    padding: 16px;
+    width: min(920px, calc(100% - 24px));
+    max-height: calc(100dvh - 24px);
+    overflow: auto;
+  }
+
+  .ks-close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+    font-size: 18px;
+  }
+
+  .ks-title {
+    margin: 0 0 6px;
+    font-size: 20px;
+    font-weight: 800;
+  }
+
+  .ks-section {
+    margin-top: 10px;
+  }
+
+  .ks-h3 {
+    font-size: 16px;
+    font-weight: 800;
+    margin: 0 0 6px;
+  }
+
+  .ks-h4 {
+    font-size: 14px;
+    font-weight: 800;
+    margin: 0 0 6px;
+  }
+
+  .ks-fs {
+    border: 1px solid #eaeaea;
+    border-radius: 10px;
+    padding: 12px;
+
+    > legend {
+      font-weight: 700;
+      padding: 0 6px;
+    }
+  }
+
+  /* ersetzt style={{ marginTop: 12 }} */
+  .ks-fs--mt {
+    margin-top: 12px;
+  }
+
+  .ks-grid {
+    display: grid;
+    gap: 10px 14px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .ks-field {
+    display: grid;
+    gap: 6px;
+
+    &--btn {
+      align-self: end;
+    }
+  }
+
+  .ks-check {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+
+  label {
+    font-size: 14px;
+  }
+
+  input,
+  select,
+  textarea {
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    padding: 10px 12px;
+    background: #fff;
+  }
+
+  .ks-actions {
+    margin-top: 10px;
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+  }
+
+  .btn {
+    appearance: none;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    padding: 8px 12px;
+    background: #fff;
+    cursor: pointer;
+    font-weight: 700;
+
+    &:hover {
+      background: #f8fafc;
+    }
+  }
+
+  .btn-primary {
+    background: #0ea5e9;
+    color: #fff;
+    border: none;
+
+    &:hover {
+      background: #0c96d2;
+    }
+  }
+
+  .btn-danger {
+    background: #fee2e2;
+    color: #991b1b;
+    border: none;
+  }
+
+  .muted {
+    color: #64748b;
+  }
+
+  .error {
+    color: #b91c1c;
+  }
+
+  .ks-table {
+    border: 1px solid #eaeaea;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  .ks-thead,
+  .ks-row {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr auto;
+    gap: 0;
+  }
+
+  .ks-thead > div {
+    font-weight: 700;
+    padding: 10px;
+    background: #f8fafc;
+    border-bottom: 1px solid #e5e7eb;
+  }
+
+  .ks-row > div {
+    padding: 10px;
+    border-bottom: 1px solid #f1f5f9;
+  }
+
+  .ks-row:last-child > div {
+    border-bottom: 0;
+  }
+
+  .ks-row__actions {
+    display: flex;
+    gap: 8px;
+  }
+
+  .ks-fs--mt {
+    margin-top: 12px;
+  }
+
+  .ks-sub {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.25);
+    display: grid;
+    place-items: center;
+    z-index: 4100;
+  }
+
+  .ks-sub__panel {
+    background: #fff;
+    border: 1px solid #eaeaea;
+    border-radius: 12px;
+    padding: 14px;
+    width: min(480px, calc(100% - 24px));
+  }
+
+  @media (max-width: 560px) {
+    .ks-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .ks-thead,
+    .ks-row {
+      grid-template-columns: 1.6fr 1fr 0.9fr auto;
+    }
+  }
+}
+
+/* =========================
+   Thin Scrollbars – Customer Dialog
+   (auf den echten Scroll-Containern)
+========================= */
+
+.ks-modal .ks-panel,
+.ks-panel,
+.ks-panel-lg {
+  scrollbar-width: thin; /* Firefox */
+  scrollbar-color: rgba(0, 0, 0, 0.28) transparent;
+}
+
+/* Webkit (Chrome, Edge, Safari) */
+.ks-modal .ks-panel::-webkit-scrollbar,
+.ks-panel::-webkit-scrollbar,
+.ks-panel-lg::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.ks-modal .ks-panel::-webkit-scrollbar-track,
+.ks-panel::-webkit-scrollbar-track,
+.ks-panel-lg::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.ks-modal .ks-panel::-webkit-scrollbar-thumb,
+.ks-panel::-webkit-scrollbar-thumb,
+.ks-panel-lg::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.28);
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+.ks-modal .ks-panel::-webkit-scrollbar-thumb:hover,
+.ks-panel::-webkit-scrollbar-thumb:hover,
+.ks-panel-lg::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.38);
+  background-clip: content-box;
+}
