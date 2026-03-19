@@ -12,7 +12,7 @@
 @use "./footer" as *;
 @use "./home" as *;
 
-@use "./coaches" as *;
+//@use "./coaches" as *;
 //@use "./invoices" as *;
 //@use "./customers" as *;
 //@use "./trainingCard" as *;
@@ -35,10 +35,38 @@
 @use "./components/media-manager" as *;
 @use "./components/markdown-editor" as *;
 @use "./components/news" as *;
+
 @use "./places" as *;
 @use "./online-bookings.scss" as *;
 
-:root {
+@use "./admin/news-tooltip.scss" as *;
+
+@use "./member/members.scss";
+@use "./member/members-list.scss" as *;
+@use "./member/members-filters.scss" as *;
+@use "./member/members-dialogs.scss" as *;
+
+@use "./coaches/layout.scss" as *;
+@use "./coaches/list.scss" as *;
+@use "./coaches/dialogs.scss" as *;
+
+@use "./franchise-location/dialog.scss" as *;
+@use "./franchise-location/layout.scss" as *;
+@use "./franchise-location/list.scss" as *;
+@use "./admin/void.scss" as *;
+@use "./admin/documents-dialog.scss" as *;
+@use "./admin/customer-dialog.scss" as *;
+@use "./invoices/invoices-dialog.scss" as *;
+@use "./training-card.scss" as *;
+@use "./admin-home.scss" as *;
+@use "./public/weekly-start.scss" as *;
+@use "./public/book-status.scss" as *;
+@use "./public/contract.scss" as *;
+@use "./weekly-cancel.scss" as *;
+@use "./offer-create-dialog.scss" as *;
+@use "./weekly-revoke.scss" as *;
+
+root {
   --brand-navy: #0f1e2e;
   --text: #222;
   /* optional, falls du auch --brand brauchst */

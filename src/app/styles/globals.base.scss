@@ -1,13 +1,8 @@
+// src/app/styles/globals.base.scss
 body {
   overflow-y: auto;
   scrollbar-gutter: auto;
 }
-
-// html,
-// body {
-//   scrollbar-width: thin;
-//   scrollbar-color: rgba(0, 0, 0, 0.28) transparent;
-// }
 
 @supports not (scrollbar-gutter: stable both-edges) {
   html,
@@ -779,8 +774,6 @@ tr:focus-within .ks-row-action {
   position: relative;
 }
 
-// .bookings-admin {
-//   .input-with-icon__input {
-//     padding-left: 40px !important;
-//   }
-// }
+:root {
+  --admin-sep: rgba(0, 0, 0, 0.08);
+}

@@ -1,0 +1,30 @@
+.offer-create-dialog__help {
+  margin-top: -6px;
+}
+
+.upload-row {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.uploading {
+  color: #0ea5e9;
+  font-weight: 600;
+}
+
+.error {
+  color: #b91c1c;
+}
+
+.preview {
+  margin-top: 8px;
+}
+
+.preview img {
+  width: 88px;
+  height: 88px;
+  object-fit: cover;
+  border-radius: 999px;
+  border: 1px solid #e5e7eb;
+}

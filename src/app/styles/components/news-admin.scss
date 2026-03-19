@@ -1,3 +1,4 @@
+// src/app/styles/components/news-admin.scss
 .news-admin__actions {
   margin-bottom: 8px;
   gap: 8px;
@@ -5,4 +6,10 @@
 
 .news-admin__hint {
   display: none;
+}
+
+.news-admin__top-actions {
+  .bulkbar .btn {
+    transition: none;
+  }
 }

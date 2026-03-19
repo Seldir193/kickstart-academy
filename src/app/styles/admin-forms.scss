@@ -1,3 +1,5 @@
+//src\app\styles\admin-forms.scss
+
 /* ==========================================================================
    Admin Forms – zentrale Styles für alle Admin-Formulare
    - .input (input, select, textarea, button)
@@ -740,6 +742,7 @@ input.input[type="date"]::-webkit-calendar-picker-indicator {
 
 .ks-training-select.ks-training-select--open .ks-training-select__menu {
   border-color: color-mix(in oklab, var(--brand-navy) 20%, #d9dee6);
+  z-index: 9999;
 }
 
 /* ========================================================================== */
@@ -868,3 +871,127 @@ button.input[aria-haspopup="listbox"] {
 .ks-selectbox__option--active .ks-selectbox__opt-meta {
   color: inherit;
 }
+
+//neu
+
+.admin-scope {
+  .admin-card {
+    border-color: var(--admin-sep);
+  }
+
+  .admin-card .th,
+  .admin-card .td {
+    border-bottom: 1px solid var(--admin-sep);
+  }
+
+  .admin-card tbody tr:last-child .td {
+    border-bottom: 0;
+  }
+
+  .admin-card thead tr {
+    border-bottom: 1px solid var(--admin-sep);
+  }
+}
+
+.ks-customers-loading-row {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--admin-sep);
+  font-weight: 600;
+}
+
+.ks-customers-loading-pill {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 6px 10px;
+  border: 1px solid var(--admin-sep);
+  border-radius: 999px;
+  background: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1;
+  opacity: 0;
+  transform: translateY(-2px);
+  transition:
+    opacity 140ms ease,
+    transform 140ms ease;
+  pointer-events: none;
+}
+
+.ks-customers-card.is-loading .ks-customers-loading-pill {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.ks-customers-card {
+  position: relative;
+  overflow: hidden;
+}
+
+/* NUR hier begrenzen + scrollen */
+.ks-customers-table-scroll {
+  overflow-y: auto;
+  max-height: calc(100dvh - 430px);
+  min-height: 0;
+
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.28) transparent;
+}
+
+.ks-customers-table-scroll::-webkit-scrollbar {
+  width: 8px;
+}
+
+.ks-customers-table-scroll::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.28);
+  border-radius: 999px;
+}
+
+.ks-customers-table-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.ks-customers-table-scroll thead th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: #f9fafb;
+}
+
+// .ks-customers-card {
+//   position: relative;
+//   display: flex;
+//   flex-direction: column;
+
+//   /* Card darf nicht die Seite “sprengen”, sondern im Viewport bleiben */
+//   max-height: calc(100dvh - 320px);
+//   overflow: hidden;
+// }
+
+// .ks-customers-table-scroll {
+//   overflow-y: auto;
+//   max-height: calc(100dvh - 430px);
+//   min-height: 0;
+//   scrollbar-width: thin;
+//   scrollbar-color: rgba(0, 0, 0, 0.28) transparent;
+// }
+
+// .ks-customers-table-scroll::-webkit-scrollbar {
+//   width: 8px;
+// }
+
+// .ks-customers-table-scroll::-webkit-scrollbar-thumb {
+//   background: rgba(0, 0, 0, 0.28);
+//   border-radius: 999px;
+// }
+
+// .ks-customers-table-scroll::-webkit-scrollbar-track {
+//   background: transparent;
+// }
+
+// .ks-customers-table-scroll thead th {
+//   position: sticky;
+//   top: 0;
+//   z-index: 2;
+//   background: #f9fafb;
+// }

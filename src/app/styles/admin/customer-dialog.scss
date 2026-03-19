@@ -1,0 +1,141 @@
+//src\app\styles\admin\customer-dialog.scss
+.ks-booking-select__triggerLabel {
+  display: block;
+}
+
+.ks-booking-select__row {
+  display: block;
+}
+
+.ks-booking-select__top {
+  display: grid;
+  grid-template-columns: 1fr 104px;
+  align-items: center;
+  gap: 10px;
+}
+
+.ks-booking-select__title {
+  font-weight: 700;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ks-booking-select__invoiceCol {
+  display: flex;
+  justify-content: flex-end;
+  flex-shrink: 0;
+}
+
+.ks-booking-select__invoice {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 999px;
+  border: 1px solid rgba(0, 0, 0, 0.18);
+  background: rgba(255, 255, 255, 0.9);
+  min-width: 92px;
+  text-align: center;
+  color: rgba(0, 0, 0, 0.92);
+}
+
+.ks-booking-select__bottom {
+  font-size: 12px;
+  opacity: 0.8;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin-top: 2px;
+}
+
+.ks-booking-select__bottom--cancelled {
+  opacity: 0.6;
+}
+
+//neu
+.ks-storno__filters {
+  display: grid;
+  //grid-template-columns: 2fr 1fr 1fr;
+  grid-template-columns: minmax(260px, 2fr) minmax(140px, 1fr) minmax(
+      140px,
+      1fr
+    );
+  gap: 8px;
+  align-items: end;
+}
+
+.ks-storno__filter {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.ks-storno__menu {
+  padding: 0;
+}
+
+.ks-storno__menu .ks-storno__option {
+  border-bottom: 1px solid var(--admin-sep);
+  border-radius: 0;
+}
+
+.ks-storno__menu .ks-storno__option:last-child {
+  border-bottom: 0;
+}
+
+.ks-booking-select__row {
+  width: 100%;
+}
+
+.ks-booking-select__top {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.ks-booking-select__title {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ks-booking-select__invoiceCol {
+  flex: 0 0 auto;
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+}
+
+.ks-booking-select__invoice {
+  white-space: nowrap;
+}
+
+.ks-storno__filters > .ks-storno__filter {
+  min-width: 0;
+}
+
+.ks-storno__filters .ks-selectbox {
+  width: 100%;
+}
+
+.ks-storno__filters .ks-selectbox__trigger {
+  width: 100%;
+}
+
+.ks-storno__section {
+  display: grid;
+  gap: 8px;
+}
+
+.ks-storno__filters .ks-selectbox,
+.ks-storno__filters .ks-selectbox__trigger {
+  width: 100%;
+}
+
+.ks-storno .grid {
+  grid-template-columns: unset !important;
+}

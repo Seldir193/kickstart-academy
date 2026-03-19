@@ -1,41 +1,56 @@
-// src/app/components/TrainingCard.tsx
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import OfferCreateDialog from "@/app/components/OfferCreateDialog";
 import type { CreateOfferPayload } from "@/app/components/offer-create-dialog/types";
-
-import type { Offer } from "@/app/components/training-card/types";
-
+import type {
+  Offer,
+  TrainingSortKey,
+} from "@/app/components/training-card/types";
 import { useDropdownOutsideClose } from "@/app/components/training-card/hooks/useDropdownOutsideClose";
 import { useBootstrapFromURL } from "@/app/components/training-card/hooks/useBootstrapFromURL";
 import { useCities } from "@/app/components/training-card/hooks/useCities";
 import { useOffers } from "@/app/components/training-card/hooks/useOffers";
-
 import TrainingFilters from "@/app/components/training-card/ui/TrainingFilters";
-import BulkActionsBar from "@/app/components/training-card/ui/BulkActionsBar";
 import TrainingResults from "@/app/components/training-card/ui/TrainingResults";
 import TrainingPager from "@/app/components/training-card/ui/TrainingPager";
+import { sortTrainingItems } from "@/app/components/training-card/utils";
 
 type OfferCreateDialogInitial = NonNullable<
   React.ComponentProps<typeof OfferCreateDialog>["initial"]
 >;
 
-function asDialog<T>(v: unknown) {
-  return v as T;
+function asDialog<T>(value: unknown) {
+  return value as T;
+}
+
+function toNumberOrNull(value: number | "") {
+  return value === "" ? null : Number(value);
+}
+
+function toPrice(value: number | "") {
+  return value === "" ? 0 : Number(value);
+}
+
+function buildOfferPayload(payload: CreateOfferPayload) {
+  return {
+    ...payload,
+    ageFrom: toNumberOrNull(payload.ageFrom),
+    ageTo: toNumberOrNull(payload.ageTo),
+    price: toPrice(payload.price),
+  };
 }
 
 export default function TrainingCard() {
-  // Dialogs
   const [createOpen, setCreateOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
   const [editing, setEditing] = useState<Offer | null>(null);
 
-  // Filters / list
   const [q, setQ] = useState("");
-  const [courseValue, setCourseValue] = useState<string>("");
-  const [locationFilter, setLocationFilter] = useState<string>("");
+  const [courseValue, setCourseValue] = useState("");
+  const [locationFilter, setLocationFilter] = useState("");
   const [locations, setLocations] = useState<string[]>([]);
+  const [sort, setSort] = useState<TrainingSortKey>("newest");
 
   const [page, setPage] = useState(1);
   const [limit] = useState(10);
@@ -44,34 +59,34 @@ export default function TrainingCard() {
   const [loading, setLoading] = useState(false);
   const [refreshTick, setRefreshTick] = useState(0);
 
-  // Auswahl (Checkboxen)
+  const [selectMode, setSelectMode] = useState(false);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
 
-  // URL→Initial-State
   const { pendingOpenIdRef } = useBootstrapFromURL({
     setQ,
     setLocationFilter,
     setCourseValue,
   });
 
-  // Custom-Dropdowns: Locations + Courses
   const [locationOpen, setLocationOpen] = useState(false);
   const [courseOpen, setCourseOpen] = useState(false);
+  const [sortOpen, setSortOpen] = useState(false);
+
   const locationDropdownRef = useRef<HTMLDivElement | null>(null);
   const courseDropdownRef = useRef<HTMLDivElement | null>(null);
+  const sortDropdownRef = useRef<HTMLDivElement | null>(null);
 
-  /* ==== Outside-Click: Dropdowns schließen ==== */
   useDropdownOutsideClose({
     locationDropdownRef,
     courseDropdownRef,
+    sortDropdownRef,
     closeLocation: () => setLocationOpen(false),
     closeCourse: () => setCourseOpen(false),
+    closeSort: () => setSortOpen(false),
   });
 
-  // Orte (Cities)
   useCities({ setLocations });
 
-  // Offers laden
   useOffers({
     q,
     courseValue,
@@ -85,124 +100,124 @@ export default function TrainingCard() {
     setSelectedIds,
   });
 
-  // ?open=<offerId> → direkt Edit
   useEffect(() => {
     if (!pendingOpenIdRef.current || !items.length) return;
-
-    const id = pendingOpenIdRef.current;
-    const found = items.find((o) => o._id === id);
-
-    if (found) {
-      setEditing(found);
-      setEditOpen(true);
-      pendingOpenIdRef.current = null;
-    }
+    const found = items.find((item) => item._id === pendingOpenIdRef.current);
+    if (!found) return;
+    setEditing(found);
+    setEditOpen(true);
+    pendingOpenIdRef.current = null;
   }, [items, pendingOpenIdRef]);
 
-  const pageCount = Math.max(1, Math.ceil(total / limit));
+  useEffect(() => {
+    setSelectMode(false);
+    setSelectedIds([]);
+  }, [page, q, courseValue, locationFilter, sort]);
 
-  const startEdit = (o: Offer) => {
-    setEditing(o);
+  const pageCount = useMemo(
+    () => Math.max(1, Math.ceil(total / limit)),
+    [total, limit],
+  );
+
+  const sortedItems = useMemo(
+    () => sortTrainingItems(items, sort),
+    [items, sort],
+  );
+
+  function startEdit(item: Offer) {
+    setEditing(item);
     setEditOpen(true);
-  };
+  }
+
+  function closeEdit() {
+    setEditOpen(false);
+    setEditing(null);
+  }
+
+  function incrementRefresh() {
+    setRefreshTick((value) => value + 1);
+  }
+
+  function toggleRowSelection(id: string) {
+    setSelectedIds((prev) =>
+      prev.includes(id) ? prev.filter((value) => value !== id) : [...prev, id],
+    );
+  }
 
   async function handleCreate(payload: CreateOfferPayload) {
     try {
-      const res = await fetch(`/api/admin/offers`, {
+      const response = await fetch("/api/admin/offers", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         cache: "no-store",
-        body: JSON.stringify({
-          ...payload,
-          ageFrom: payload.ageFrom === "" ? null : Number(payload.ageFrom),
-          ageTo: payload.ageTo === "" ? null : Number(payload.ageTo),
-          price: payload.price === "" ? 0 : Number(payload.price),
-        }),
+        body: JSON.stringify(buildOfferPayload(payload)),
       });
 
-      if (!res.ok) {
-        const err = await res.json().catch(() => ({}));
-        console.error("Create offer failed", err);
+      if (!response.ok) {
+        const error = await response.json().catch(() => ({}));
+        console.error("Create offer failed", error);
       }
     } finally {
       setCreateOpen(false);
       setPage(1);
       setQ("");
-      setRefreshTick((x) => x + 1);
+      incrementRefresh();
     }
   }
 
   async function handleSave(id: string, payload: CreateOfferPayload) {
     try {
-      const res = await fetch(`/api/admin/offers/${encodeURIComponent(id)}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        cache: "no-store",
-        body: JSON.stringify({
-          ...payload,
-          ageFrom: payload.ageFrom === "" ? null : Number(payload.ageFrom),
-          ageTo: payload.ageTo === "" ? null : Number(payload.ageTo),
-          price: payload.price === "" ? 0 : Number(payload.price),
-        }),
-      });
+      const response = await fetch(
+        `/api/admin/offers/${encodeURIComponent(id)}`,
+        {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          cache: "no-store",
+          body: JSON.stringify(buildOfferPayload(payload)),
+        },
+      );
 
-      if (!res.ok) {
-        const err = await res.json().catch(() => ({}));
-        console.error("Update offer failed", err);
+      if (!response.ok) {
+        const error = await response.json().catch(() => ({}));
+        console.error("Update offer failed", error);
       }
     } finally {
-      setEditOpen(false);
-      setEditing(null);
-      setRefreshTick((x) => x + 1);
+      closeEdit();
+      incrementRefresh();
     }
   }
 
-  // Bulk-Delete (nur aktuelle Seite)
-  async function handleBulkDelete() {
-    if (selectedIds.length === 0) return;
+  async function handleDeleteMany(ids: string[]) {
+    if (!ids.length) return;
 
-    for (const id of selectedIds) {
+    for (const id of ids) {
       try {
-        const res = await fetch(`/api/admin/offers/${encodeURIComponent(id)}`, {
-          method: "DELETE",
-          cache: "no-store",
-        });
+        const response = await fetch(
+          `/api/admin/offers/${encodeURIComponent(id)}`,
+          {
+            method: "DELETE",
+            cache: "no-store",
+          },
+        );
 
-        if (!res.ok) {
-          const err = await res.json().catch(() => ({}));
-          console.error("Bulk delete failed for", id, err);
+        if (!response.ok) {
+          const error = await response.json().catch(() => ({}));
+          console.error("Bulk delete failed for", id, error);
         }
-      } catch (e) {
-        console.error("Bulk delete error for", id, e);
+      } catch (error) {
+        console.error("Bulk delete error for", id, error);
       }
     }
 
-    setRefreshTick((x) => x + 1);
+    incrementRefresh();
     setSelectedIds([]);
+    setSelectMode(false);
   }
 
-  const avatarSrc = (o: Offer) => (o.coachImage ? o.coachImage : "");
+  function avatarSrc(item: Offer) {
+    return item.coachImage ? item.coachImage : "";
+  }
 
-  // Auswahl-Helpers
-  const allSelected = items.length > 0 && selectedIds.length === items.length;
-
-  const toggleSelect = (id: string, checked: boolean) => {
-    setSelectedIds((prev) =>
-      checked
-        ? Array.from(new Set([...prev, id]))
-        : prev.filter((x) => x !== id)
-    );
-  };
-
-  const toggleSelectAll = (checked: boolean) => {
-    if (!checked) {
-      setSelectedIds([]);
-      return;
-    }
-    setSelectedIds(items.map((x) => x._id));
-  };
-
-  // ✅ initial muss "undefined" sein (nicht null) und type muss "" | OfferType | undefined sein
   const editingInitial: React.ComponentProps<
     typeof OfferCreateDialog
   >["initial"] = editing
@@ -212,18 +227,15 @@ export default function TrainingCard() {
         location: editing.location ?? "",
         placeId: editing.placeId ?? "",
         price: asDialog<OfferCreateDialogInitial["price"]>(
-          typeof editing.price === "number" ? editing.price : ""
-        ),
-        days: asDialog<OfferCreateDialogInitial["days"]>(
-          Array.isArray(editing.days) ? editing.days : []
+          typeof editing.price === "number" ? editing.price : "",
         ),
         timeFrom: editing.timeFrom ?? "",
         timeTo: editing.timeTo ?? "",
         ageFrom: asDialog<OfferCreateDialogInitial["ageFrom"]>(
-          typeof editing.ageFrom === "number" ? editing.ageFrom : ""
+          typeof editing.ageFrom === "number" ? editing.ageFrom : "",
         ),
         ageTo: asDialog<OfferCreateDialogInitial["ageTo"]>(
-          typeof editing.ageTo === "number" ? editing.ageTo : ""
+          typeof editing.ageTo === "number" ? editing.ageTo : "",
         ),
         info: editing.info ?? "",
         onlineActive:
@@ -234,74 +246,97 @@ export default function TrainingCard() {
         coachEmail: editing.coachEmail ?? "",
         coachImage: editing.coachImage ?? "",
         category: asDialog<OfferCreateDialogInitial["category"]>(
-          editing.category ?? ""
+          editing.category ?? "",
         ),
         sub_type: asDialog<OfferCreateDialogInitial["sub_type"]>(
-          editing.sub_type ?? ""
+          editing.sub_type ?? "",
         ),
       } satisfies OfferCreateDialogInitial)
     : undefined;
 
   return (
-    <div className="ks ks-training-admin">
-      <div className="p-4 max-w-6xl mx-auto">
-        <header className="mb-4">
-          <h1 className="text-2xl font-bold m-0">Trainings</h1>
-          <p className="text-gray-700 m-0">
-            Choose a session and book your spot. No account required (coming
-            soon).
-          </p>
-        </header>
+    <div className="news-admin ks ks-training-admin">
+      <main className="container">
+        <div className="dialog-subhead news-admin__subhead">
+          <h1 className="text-2xl font-bold m-0 news-admin__title">
+            Trainings
+          </h1>
+
+          <button
+            className="btn"
+            type="button"
+            onClick={() => setCreateOpen(true)}
+            disabled={loading}
+          >
+            <img
+              src="/icons/plus.svg"
+              alt=""
+              aria-hidden="true"
+              className="btn__icon"
+            />
+            Neues Training
+          </button>
+        </div>
 
         <TrainingFilters
           q={q}
           setQ={setQ}
           setPage={setPage}
-          createOpen={createOpen}
-          setCreateOpen={setCreateOpen}
           locations={locations}
           locationFilter={locationFilter}
           setLocationFilter={setLocationFilter}
           courseValue={courseValue}
           setCourseValue={setCourseValue}
+          sort={sort}
+          setSort={setSort}
           locationOpen={locationOpen}
           setLocationOpen={setLocationOpen}
           courseOpen={courseOpen}
           setCourseOpen={setCourseOpen}
+          sortOpen={sortOpen}
+          setSortOpen={setSortOpen}
           locationDropdownRef={locationDropdownRef}
           courseDropdownRef={courseDropdownRef}
+          sortDropdownRef={sortDropdownRef}
         />
 
-        <BulkActionsBar
-          selectedCount={selectedIds.length}
-          onClear={() => setSelectedIds([])}
-          onBulkDelete={handleBulkDelete}
-        />
+        <section className="news-admin__section">
+          <div className="news-admin__section-head-number">
+            <span className="news-admin__section-meta">
+              {total ? `(${total})` : ""}
+            </span>
+          </div>
 
-        <TrainingResults
-          loading={loading}
-          items={items}
-          selectedIds={selectedIds}
-          allSelected={allSelected}
-          onToggleAll={toggleSelectAll}
-          onToggleOne={toggleSelect}
-          onStartEdit={startEdit}
-          onOpenEdit={(it) => {
-            setEditing(it);
-            setEditOpen(true);
-          }}
-          avatarSrc={avatarSrc}
-        />
+          <div
+            className={
+              "news-admin__box news-admin__box--scroll3" +
+              (!loading && !items.length ? " is-empty" : "")
+            }
+          >
+            <TrainingResults
+              loading={loading}
+              items={sortedItems}
+              selectedIds={selectedIds}
+              selectMode={selectMode}
+              onToggleSelectMode={() => setSelectMode((value) => !value)}
+              onDeleteMany={handleDeleteMany}
+              onOpen={startEdit}
+              onToggleOne={toggleRowSelection}
+              avatarSrc={avatarSrc}
+            />
+          </div>
 
-        <TrainingPager
-          page={page}
-          pageCount={pageCount}
-          onPrev={() => setPage((p) => Math.max(1, p - 1))}
-          onNext={() => setPage((p) => Math.min(pageCount, p + 1))}
-        />
-      </div>
+          <div className="pager pager--arrows mt-3">
+            <TrainingPager
+              page={page}
+              pageCount={pageCount}
+              onPrev={() => setPage((value) => Math.max(1, value - 1))}
+              onNext={() => setPage((value) => Math.min(pageCount, value + 1))}
+            />
+          </div>
+        </section>
+      </main>
 
-      {/* Create */}
       <OfferCreateDialog
         open={createOpen}
         mode="create"
@@ -309,17 +344,379 @@ export default function TrainingCard() {
         onCreate={handleCreate}
       />
 
-      {/* Edit */}
-      <OfferCreateDialog
-        open={editOpen}
-        mode="edit"
-        initial={editingInitial}
-        onClose={() => {
-          setEditOpen(false);
-          setEditing(null);
-        }}
-        onSave={handleSave}
-      />
+      {editOpen && editing ? (
+        <OfferCreateDialog
+          key={editing._id}
+          open={editOpen}
+          mode="edit"
+          initial={editingInitial}
+          onClose={closeEdit}
+          onSave={handleSave}
+        />
+      ) : null}
     </div>
   );
 }
+
+// // src/app/components/TrainingCard.tsx
+// "use client";
+
+// import React, { useEffect, useMemo, useRef, useState } from "react";
+// import OfferCreateDialog from "@/app/components/OfferCreateDialog";
+// import type { CreateOfferPayload } from "@/app/components/offer-create-dialog/types";
+// import type {
+//   Offer,
+//   TrainingSortKey,
+// } from "@/app/components/training-card/types";
+// import { useDropdownOutsideClose } from "@/app/components/training-card/hooks/useDropdownOutsideClose";
+// import { useBootstrapFromURL } from "@/app/components/training-card/hooks/useBootstrapFromURL";
+// import { useCities } from "@/app/components/training-card/hooks/useCities";
+// import { useOffers } from "@/app/components/training-card/hooks/useOffers";
+// import TrainingFilters from "@/app/components/training-card/ui/TrainingFilters";
+// import TrainingResults from "@/app/components/training-card/ui/TrainingResults";
+// import TrainingPager from "@/app/components/training-card/ui/TrainingPager";
+// import { sortTrainingItems } from "@/app/components/training-card/utils";
+
+// type OfferCreateDialogInitial = NonNullable<
+//   React.ComponentProps<typeof OfferCreateDialog>["initial"]
+// >;
+
+// function asDialog<T>(value: unknown) {
+//   return value as T;
+// }
+
+// function toNumberOrNull(value: number | "") {
+//   return value === "" ? null : Number(value);
+// }
+
+// function toPrice(value: number | "") {
+//   return value === "" ? 0 : Number(value);
+// }
+
+// function buildOfferPayload(payload: CreateOfferPayload) {
+//   return {
+//     ...payload,
+//     ageFrom: toNumberOrNull(payload.ageFrom),
+//     ageTo: toNumberOrNull(payload.ageTo),
+//     price: toPrice(payload.price),
+//   };
+// }
+
+// export default function TrainingCard() {
+//   const [createOpen, setCreateOpen] = useState(false);
+//   const [editOpen, setEditOpen] = useState(false);
+//   const [editing, setEditing] = useState<Offer | null>(null);
+
+//   const [q, setQ] = useState("");
+//   const [courseValue, setCourseValue] = useState("");
+//   const [locationFilter, setLocationFilter] = useState("");
+//   const [locations, setLocations] = useState<string[]>([]);
+//   const [sort, setSort] = useState<TrainingSortKey>("newest");
+
+//   const [page, setPage] = useState(1);
+//   const [limit] = useState(10);
+//   const [items, setItems] = useState<Offer[]>([]);
+//   const [total, setTotal] = useState(0);
+//   const [loading, setLoading] = useState(false);
+//   const [refreshTick, setRefreshTick] = useState(0);
+
+//   const [selectMode, setSelectMode] = useState(false);
+//   const [selectedIds, setSelectedIds] = useState<string[]>([]);
+
+//   const { pendingOpenIdRef } = useBootstrapFromURL({
+//     setQ,
+//     setLocationFilter,
+//     setCourseValue,
+//   });
+
+//   const [locationOpen, setLocationOpen] = useState(false);
+//   const [courseOpen, setCourseOpen] = useState(false);
+//   const [sortOpen, setSortOpen] = useState(false);
+
+//   const locationDropdownRef = useRef<HTMLDivElement | null>(null);
+//   const courseDropdownRef = useRef<HTMLDivElement | null>(null);
+//   const sortDropdownRef = useRef<HTMLDivElement | null>(null);
+
+//   useDropdownOutsideClose({
+//     locationDropdownRef,
+//     courseDropdownRef,
+//     sortDropdownRef,
+//     closeLocation: () => setLocationOpen(false),
+//     closeCourse: () => setCourseOpen(false),
+//     closeSort: () => setSortOpen(false),
+//   });
+
+//   useCities({ setLocations });
+
+//   useOffers({
+//     q,
+//     courseValue,
+//     locationFilter,
+//     page,
+//     limit,
+//     refreshTick,
+//     setLoading,
+//     setItems,
+//     setTotal,
+//     setSelectedIds,
+//   });
+
+//   useEffect(() => {
+//     if (!pendingOpenIdRef.current || !items.length) return;
+//     const found = items.find((item) => item._id === pendingOpenIdRef.current);
+//     if (!found) return;
+//     setEditing(found);
+//     setEditOpen(true);
+//     pendingOpenIdRef.current = null;
+//   }, [items, pendingOpenIdRef]);
+
+//   useEffect(() => {
+//     setSelectMode(false);
+//     setSelectedIds([]);
+//   }, [page, q, courseValue, locationFilter, sort]);
+
+//   const pageCount = useMemo(
+//     () => Math.max(1, Math.ceil(total / limit)),
+//     [total, limit],
+//   );
+//   const sortedItems = useMemo(
+//     () => sortTrainingItems(items, sort),
+//     [items, sort],
+//   );
+
+//   function startEdit(item: Offer) {
+//     setEditing(item);
+//     setEditOpen(true);
+//   }
+
+//   function closeEdit() {
+//     setEditOpen(false);
+//     setEditing(null);
+//   }
+
+//   function incrementRefresh() {
+//     setRefreshTick((value) => value + 1);
+//   }
+
+//   function toggleRowSelection(id: string) {
+//     setSelectedIds((prev) =>
+//       prev.includes(id) ? prev.filter((value) => value !== id) : [...prev, id],
+//     );
+//   }
+
+//   async function handleCreate(payload: CreateOfferPayload) {
+//     try {
+//       const response = await fetch("/api/admin/offers", {
+//         method: "POST",
+//         headers: { "Content-Type": "application/json" },
+//         cache: "no-store",
+//         body: JSON.stringify(buildOfferPayload(payload)),
+//       });
+
+//       if (!response.ok) {
+//         const error = await response.json().catch(() => ({}));
+//         console.error("Create offer failed", error);
+//       }
+//     } finally {
+//       setCreateOpen(false);
+//       setPage(1);
+//       setQ("");
+//       incrementRefresh();
+//     }
+//   }
+
+//   async function handleSave(id: string, payload: CreateOfferPayload) {
+//     try {
+//       const response = await fetch(
+//         `/api/admin/offers/${encodeURIComponent(id)}`,
+//         {
+//           method: "PATCH",
+//           headers: { "Content-Type": "application/json" },
+//           cache: "no-store",
+//           body: JSON.stringify(buildOfferPayload(payload)),
+//         },
+//       );
+
+//       if (!response.ok) {
+//         const error = await response.json().catch(() => ({}));
+//         console.error("Update offer failed", error);
+//       }
+//     } finally {
+//       closeEdit();
+//       incrementRefresh();
+//     }
+//   }
+
+//   async function handleDeleteMany(ids: string[]) {
+//     if (!ids.length) return;
+
+//     for (const id of ids) {
+//       try {
+//         const response = await fetch(
+//           `/api/admin/offers/${encodeURIComponent(id)}`,
+//           {
+//             method: "DELETE",
+//             cache: "no-store",
+//           },
+//         );
+
+//         if (!response.ok) {
+//           const error = await response.json().catch(() => ({}));
+//           console.error("Bulk delete failed for", id, error);
+//         }
+//       } catch (error) {
+//         console.error("Bulk delete error for", id, error);
+//       }
+//     }
+
+//     incrementRefresh();
+//     setSelectedIds([]);
+//     setSelectMode(false);
+//   }
+
+//   function avatarSrc(item: Offer) {
+//     return item.coachImage ? item.coachImage : "";
+//   }
+
+//   const editingInitial: React.ComponentProps<
+//     typeof OfferCreateDialog
+//   >["initial"] = editing
+//     ? ({
+//         _id: editing._id,
+//         type: asDialog<OfferCreateDialogInitial["type"]>(editing.type ?? ""),
+//         location: editing.location ?? "",
+//         placeId: editing.placeId ?? "",
+//         price: asDialog<OfferCreateDialogInitial["price"]>(
+//           typeof editing.price === "number" ? editing.price : "",
+//         ),
+//         days: asDialog<OfferCreateDialogInitial["days"]>(
+//           Array.isArray(editing.days) ? editing.days : [],
+//         ),
+//         timeFrom: editing.timeFrom ?? "",
+//         timeTo: editing.timeTo ?? "",
+//         ageFrom: asDialog<OfferCreateDialogInitial["ageFrom"]>(
+//           typeof editing.ageFrom === "number" ? editing.ageFrom : "",
+//         ),
+//         ageTo: asDialog<OfferCreateDialogInitial["ageTo"]>(
+//           typeof editing.ageTo === "number" ? editing.ageTo : "",
+//         ),
+//         info: editing.info ?? "",
+//         onlineActive:
+//           typeof editing.onlineActive === "boolean"
+//             ? editing.onlineActive
+//             : true,
+//         coachName: editing.coachName ?? "",
+//         coachEmail: editing.coachEmail ?? "",
+//         coachImage: editing.coachImage ?? "",
+//         category: asDialog<OfferCreateDialogInitial["category"]>(
+//           editing.category ?? "",
+//         ),
+//         sub_type: asDialog<OfferCreateDialogInitial["sub_type"]>(
+//           editing.sub_type ?? "",
+//         ),
+//       } satisfies OfferCreateDialogInitial)
+//     : undefined;
+
+//   return (
+//     <div className="news-admin ks ks-training-admin">
+//       <main className="container">
+//         <div className="dialog-subhead news-admin__subhead">
+//           <h1 className="text-2xl font-bold m-0 news-admin__title">
+//             Trainings
+//           </h1>
+
+//           <button
+//             className="btn"
+//             type="button"
+//             onClick={() => setCreateOpen(true)}
+//             disabled={loading}
+//           >
+//             <img
+//               src="/icons/plus.svg"
+//               alt=""
+//               aria-hidden="true"
+//               className="btn__icon"
+//             />
+//             Neues Training
+//           </button>
+//         </div>
+
+//         <TrainingFilters
+//           q={q}
+//           setQ={setQ}
+//           setPage={setPage}
+//           locations={locations}
+//           locationFilter={locationFilter}
+//           setLocationFilter={setLocationFilter}
+//           courseValue={courseValue}
+//           setCourseValue={setCourseValue}
+//           sort={sort}
+//           setSort={setSort}
+//           locationOpen={locationOpen}
+//           setLocationOpen={setLocationOpen}
+//           courseOpen={courseOpen}
+//           setCourseOpen={setCourseOpen}
+//           sortOpen={sortOpen}
+//           setSortOpen={setSortOpen}
+//           locationDropdownRef={locationDropdownRef}
+//           courseDropdownRef={courseDropdownRef}
+//           sortDropdownRef={sortDropdownRef}
+//         />
+
+//         <section className="news-admin__section">
+//           <div className="news-admin__section-head-number">
+//             <span className="news-admin__section-meta">
+//               {total ? `(${total})` : ""}
+//             </span>
+//           </div>
+
+//           <div
+//             className={
+//               "news-admin__box news-admin__box--scroll3" +
+//               (!loading && !items.length ? " is-empty" : "")
+//             }
+//           >
+//             <TrainingResults
+//               loading={loading}
+//               items={sortedItems}
+//               selectedIds={selectedIds}
+//               selectMode={selectMode}
+//               onToggleSelectMode={() => setSelectMode((value) => !value)}
+//               onDeleteMany={handleDeleteMany}
+//               onOpen={startEdit}
+//               onToggleOne={toggleRowSelection}
+//               avatarSrc={avatarSrc}
+//             />
+//           </div>
+
+//           <div className="pager pager--arrows mt-3">
+//             <TrainingPager
+//               page={page}
+//               pageCount={pageCount}
+//               onPrev={() => setPage((value) => Math.max(1, value - 1))}
+//               onNext={() => setPage((value) => Math.min(pageCount, value + 1))}
+//             />
+//           </div>
+//         </section>
+//       </main>
+
+//       <OfferCreateDialog
+//         open={createOpen}
+//         mode="create"
+//         onClose={() => setCreateOpen(false)}
+//         onCreate={handleCreate}
+//       />
+
+//       {editOpen && editing ? (
+//         <OfferCreateDialog
+//           key={editing._id}
+//           open={editOpen}
+//           mode="edit"
+//           initial={editingInitial}
+//           onClose={closeEdit}
+//           onSave={handleSave}
+//         />
+//       ) : null}
+//     </div>
+//   );
+// }

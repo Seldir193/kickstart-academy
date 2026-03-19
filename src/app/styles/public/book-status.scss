@@ -1,0 +1,73 @@
+/* src/styles/public/book-status.scss */
+
+.book-status-page {
+  min-height: 70vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 16px;
+}
+
+.book-status-card {
+  width: 100%;
+  max-width: 560px;
+  border: 1px solid rgba(15, 30, 46, 0.12);
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 28px;
+  box-shadow: 0 10px 30px rgba(15, 30, 46, 0.08);
+}
+
+.book-status-title {
+  margin: 0 0 10px 0;
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--brand-navy, #0f1e2e);
+  letter-spacing: -0.01em;
+  text-align: center;
+}
+
+.book-status-text {
+  margin: 0 0 10px 0;
+  font-size: 15px;
+  line-height: 1.5;
+  color: rgba(15, 30, 46, 0.78);
+}
+
+.book-status-actions {
+  margin-top: 18px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.book-status-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 42px;
+  padding: 0 16px;
+  border-radius: 12px;
+  background: var(--brand-navy, #0f1e2e);
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  transition:
+    transform 0.06s ease,
+    background 0.12s ease;
+}
+
+.book-status-primary:hover {
+  background: #0b1622;
+}
+
+.book-status-primary:active {
+  transform: translateY(1px);
+}
+
+.book-status-primary:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(15, 30, 46, 0.18);
+}

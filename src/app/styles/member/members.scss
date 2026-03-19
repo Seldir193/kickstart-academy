@@ -1,0 +1,42 @@
+// // //src\app\styles\member\members.scss
+.members-admin {
+  .news-admin__subhead {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .news-admin__title {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .news-admin__alarm {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: rgba(0, 0, 0, 0.06);
+  }
+
+  .news-admin__alarm-badge {
+    font-weight: 800;
+    font-size: 12px;
+  }
+}
+
+.members-admin__footer {
+  margin-top: 12px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.members-admin {
+  .news-admin__box--scroll3 {
+    max-height: none;
+    overflow: visible;
+  }
+}

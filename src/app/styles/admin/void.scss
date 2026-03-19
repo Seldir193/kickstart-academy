@@ -1,0 +1,22 @@
+.ks-storno {
+  .ks-storno__trigger--cancelled {
+    opacity: 0.6;
+  }
+
+  .ks-storno__menu {
+    max-height: 220px;
+    overflow-y: auto;
+    z-index: 10000;
+    touch-action: pan-y;
+  }
+
+  .ks-storno__option {
+    text-align: left;
+    white-space: normal;
+  }
+
+  .ks-storno__opt-title {
+    font-weight: 600;
+    white-space: normal;
+  }
+}

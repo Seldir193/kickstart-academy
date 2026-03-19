@@ -1,0 +1,206 @@
+//src\app\admin\(app)\invoices\components\InvoicesFilters.tsx
+"use client";
+
+import React, { useMemo } from "react";
+import KsDatePicker from "@/app/admin/(app)/invoices/components/KsDatePicker";
+import TypeChips from "./TypeChips";
+
+type Props = {
+  typeParticipation: boolean;
+  typeCancellation: boolean;
+  typeStorno: boolean;
+  typeDunning: boolean;
+  typeCreditNote: boolean;
+
+  setTypeParticipation: (v: boolean) => void;
+  setTypeCancellation: (v: boolean) => void;
+  setTypeStorno: (v: boolean) => void;
+  setTypeDunning: (v: boolean) => void;
+  setTypeCreditNote: (v: boolean) => void;
+
+  q: string;
+  setQ: (v: string) => void;
+  from: string;
+  setFrom: (v: string) => void;
+  to: string;
+  setTo: (v: string) => void;
+  onAnyChangeResetPage: () => void;
+};
+
+export default function InvoicesFilters(props: Props) {
+  const toYear = useMemo(() => new Date().getFullYear() + 2, []);
+
+  function onSearchChange(v: string) {
+    props.setQ(v);
+    props.onAnyChangeResetPage();
+  }
+
+  function onFromChange(nextIso: string) {
+    props.setFrom(nextIso);
+    props.onAnyChangeResetPage();
+  }
+
+  function onToChange(nextIso: string) {
+    props.setTo(nextIso);
+    props.onAnyChangeResetPage();
+  }
+
+  return (
+    <div className="form ks-invoices__formNoTop">
+      <div className="grid ks-invoices__gridTwoCols">
+        <div className="card p-2">
+          <label className="lbl block mb-1">Types</label>
+          <TypeChips
+            participation={props.typeParticipation}
+            cancellation={props.typeCancellation}
+            storno={props.typeStorno}
+            dunning={props.typeDunning}
+            creditNote={props.typeCreditNote}
+            setParticipation={props.setTypeParticipation}
+            setCancellation={props.setTypeCancellation}
+            setStorno={props.setTypeStorno}
+            setDunning={props.setTypeDunning}
+            setCreditNote={props.setTypeCreditNote}
+            onAnyChange={props.onAnyChangeResetPage}
+          />
+        </div>
+
+        <div className="card p-2">
+          <label className="lbl block mb-1">Search & Date</label>
+
+          <div className="input-with-icon mb-2">
+            <img
+              src="/icons/search.svg"
+              alt=""
+              aria-hidden="true"
+              className="input-with-icon__icon"
+            />
+            <input
+              className="input input-with-icon__input"
+              placeholder="Suche (Nummer, Kunde, E-Mail, Angebot)…"
+              value={props.q}
+              onChange={(e) => onSearchChange(e.target.value)}
+            />
+          </div>
+
+          <div className="grid ks-invoices__gridDates">
+            <KsDatePicker
+              value={props.from}
+              onChange={onFromChange}
+              fromYear={1970}
+              toYear={toYear}
+            />
+            <KsDatePicker
+              value={props.to}
+              onChange={onToChange}
+              fromYear={1970}
+              toYear={toYear}
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// //src\app\admin\(app)\invoices\components\InvoicesFilters.tsx
+// "use client";
+
+// import React, { useMemo } from "react";
+// import KsDatePicker from "@/app/admin/(app)/invoices/components/KsDatePicker";
+// //import { TypeChips } from "@/app/admin/(app)/customers/dialogs/documentsDialog/components/TypeChips";
+// import TypeChips from "./TypeChips";
+
+// type Props = {
+//   typeParticipation: boolean;
+//   typeCancellation: boolean;
+//   typeStorno: boolean;
+//   typeDunning: boolean;
+
+//   setTypeParticipation: (v: boolean) => void;
+//   setTypeCancellation: (v: boolean) => void;
+//   setTypeStorno: (v: boolean) => void;
+//   setTypeDunning: (v: boolean) => void;
+
+//   q: string;
+//   setQ: (v: string) => void;
+//   from: string;
+//   setFrom: (v: string) => void;
+//   to: string;
+//   setTo: (v: string) => void;
+//   onAnyChangeResetPage: () => void;
+// };
+
+// export default function InvoicesFilters(props: Props) {
+//   const toYear = useMemo(() => new Date().getFullYear() + 2, []);
+
+//   function onSearchChange(v: string) {
+//     props.setQ(v);
+//     props.onAnyChangeResetPage();
+//   }
+
+//   function onFromChange(nextIso: string) {
+//     props.setFrom(nextIso);
+//     props.onAnyChangeResetPage();
+//   }
+
+//   function onToChange(nextIso: string) {
+//     props.setTo(nextIso);
+//     props.onAnyChangeResetPage();
+//   }
+
+//   return (
+//     <div className="form ks-invoices__formNoTop">
+//       <div className="grid ks-invoices__gridTwoCols">
+//         <div className="card p-2">
+//           <label className="lbl block mb-1">Types</label>
+//           <TypeChips
+//             participation={props.typeParticipation}
+//             cancellation={props.typeCancellation}
+//             storno={props.typeStorno}
+//             dunning={props.typeDunning}
+//             setParticipation={props.setTypeParticipation}
+//             setCancellation={props.setTypeCancellation}
+//             setStorno={props.setTypeStorno}
+//             setDunning={props.setTypeDunning}
+//             onAnyChange={props.onAnyChangeResetPage}
+//           />
+//         </div>
+
+//         <div className="card p-2">
+//           <label className="lbl block mb-1">Search & Date</label>
+
+//           <div className="input-with-icon mb-2">
+//             <img
+//               src="/icons/search.svg"
+//               alt=""
+//               aria-hidden="true"
+//               className="input-with-icon__icon"
+//             />
+//             <input
+//               className="input input-with-icon__input"
+//               placeholder="Suche (Nummer, Kunde, E-Mail, Angebot)…"
+//               value={props.q}
+//               onChange={(e) => onSearchChange(e.target.value)}
+//             />
+//           </div>
+
+//           <div className="grid ks-invoices__gridDates">
+//             <KsDatePicker
+//               value={props.from}
+//               onChange={onFromChange}
+//               fromYear={1970}
+//               toYear={toYear}
+//             />
+//             <KsDatePicker
+//               value={props.to}
+//               onChange={onToChange}
+//               fromYear={1970}
+//               toYear={toYear}
+//             />
+//           </div>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// }

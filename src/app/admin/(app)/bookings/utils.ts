@@ -1,0 +1,113 @@
+//src\app\admin\(app)\bookings\utils.ts
+"use client";
+
+import type { Booking, ProgramFilter, Status, StatusOrAll } from "./types";
+
+export function safeText(v: unknown) {
+  return String(v ?? "").trim();
+}
+
+export function asStatus(s?: Booking["status"]): Status {
+  return (s ?? "pending") as Status;
+}
+
+export function formatDateDe(value?: string) {
+  if (!value) return "—";
+  const s = String(value);
+  const d = new Date(s.length === 10 ? `${s}T00:00:00` : s);
+  if (Number.isNaN(d.getTime())) return value;
+  return new Intl.DateTimeFormat("de-DE", { dateStyle: "medium" }).format(d);
+}
+
+export function programLabel(program: ProgramFilter) {
+  const map: Record<ProgramFilter, string> = {
+    all: "All courses",
+    weekly_foerdertraining: "Foerdertraining",
+    weekly_kindergarten: "Soccer Kindergarten",
+    weekly_goalkeeper: "Goalkeeper Training",
+    weekly_development_athletik: "Development Training • Athletik",
+    ind_1to1: "1:1 Training",
+    ind_1to1_athletik: "1:1 Training Athletik",
+    ind_1to1_goalkeeper: "1:1 Training Torwart",
+    club_rentacoach: "Rent-a-Coach",
+    club_trainingcamps: "Training Camps",
+    club_coacheducation: "Coach Education",
+  };
+  return map[program] || "All courses";
+}
+
+export function statusLabel(params: {
+  status: StatusOrAll;
+  total: number;
+  totalAll: number | null;
+  counts: Partial<Record<Status, number>>;
+}) {
+  const { status, total, totalAll, counts } = params;
+  if (status === "all") return `All (${totalAll ?? total})`;
+  const n = counts[status] ?? 0;
+  return `${capitalize(status)} (${n})`;
+}
+
+export function capitalize(s: string) {
+  const t = String(s || "");
+  return t ? t[0].toUpperCase() + t.slice(1) : t;
+}
+
+function messageProgramName(msg?: string) {
+  const m = String(msg || "").match(/Programm:\s*(.+)/i);
+  return m ? m[1].trim() : "";
+}
+
+// export function programAbbr(b: Booking) {
+//   const name = messageProgramName(b.message);
+//   const low = name.toLowerCase();
+//   if (!low) return "—";
+//   if (hasAny(low, ["fördertraining", "foerdertraining"])) return "FÖ";
+//   if (
+//     hasAny(low, ["kindergarten", "fußballkindergarten", "fussballkindergarten"])
+//   )
+//     return "KDG";
+//   if (hasAny(low, ["torwart", "goalkeeper"])) return "TW";
+//   if (hasAny(low, ["athletik", "athletic"])) return "ATH";
+//   if (hasAny(low, ["rentacoach", "rent-a-coach"])) return "RAC";
+//   if (hasAny(low, ["coach education"])) return "CE";
+//   if (hasAny(low, ["camp", "feriencamp", "holiday camp"])) return "CMP";
+//   if (hasAny(low, ["powertraining", "power training"])) return "PWR";
+//   return cleanAbbr(name);
+// }
+
+export function programAbbr(b: Booking) {
+  const raw =
+    safeText(b.offerTitle) ||
+    safeText(b.offerType) ||
+    messageProgramName(b.message);
+
+  const name = raw.split("•")[0].trim();
+  const low = name.toLowerCase();
+
+  if (!low) return "—";
+  if (hasAny(low, ["fördertraining", "foerdertraining"])) return "FO";
+  if (
+    hasAny(low, ["kindergarten", "fußballkindergarten", "fussballkindergarten"])
+  )
+    return "KIN";
+  if (hasAny(low, ["torwart", "goalkeeper"])) return "TOR";
+  if (hasAny(low, ["athletik", "athletic"])) return "ATH";
+  if (hasAny(low, ["1:1", "1to1", "personal training", "individual"])) {
+    return "PER";
+  }
+  if (hasAny(low, ["rentacoach", "rent-a-coach"])) return "RAC";
+  if (hasAny(low, ["coach education"])) return "EDU";
+  if (hasAny(low, ["camp", "feriencamp", "holiday camp"])) return "CAM";
+  if (hasAny(low, ["powertraining", "power training"])) return "PER";
+  return cleanAbbr(name);
+}
+function hasAny(text: string, parts: string[]) {
+  return parts.some((p) => text.includes(p));
+}
+
+function cleanAbbr(name: string) {
+  const clean = name.replace(/[^a-zA-ZäöüÄÖÜß]/g, "").toUpperCase();
+  if (!clean) return "—";
+  return clean.slice(0, 3);
+}

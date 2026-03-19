@@ -1,17 +1,8 @@
-/* ============================
-   Admin Bookings – Inputs
-   (gleiche Optik wie andere Admin-Forms)
-   ============================ */
-
-/* ============================
-   Admin Bookings – Inputs & Dropdowns
-   ============================ */
+//src\app\styles\online-bookings.scss
 
 .bookings-admin {
-  /* Alle Input-Felder in der Filterleiste & Tabelle */
   .input {
-    height: 40px; /* gleiche Höhe wie Dropdown */
-    //padding: 0 12px;
+    height: 40px;
     border-radius: 8px;
     border: 1px solid #d9dee6;
     background-color: #fff;
@@ -32,13 +23,14 @@
     box-shadow: 0 0 0 3px color-mix(in oklab, var(--brand-navy) 22%, #ffffff);
   }
 
-  /* Trigger der ks-selectbox auf die gleiche Höhe bringen */
   .ks-selectbox__trigger {
     height: 40px;
   }
 }
 
 .bookings-admin {
+  --booking-sep: var(--admin-sep);
+
   .news-list__head,
   .news-list__row {
     grid-template-columns: 1.3fr 1.5fr 90px 110px 140px 170px 56px;
@@ -75,22 +67,27 @@
   }
 
   .list.list--bleed > .list__item + .list__item {
-    border-top: 0 !important;
+    border-top: 1px solid var(--booking-sep) !important;
   }
 
   .news-list__row {
     position: relative;
 
     &::after {
-      content: "";
-      position: absolute;
-      left: 16px;
-      right: 16px;
-      bottom: 0;
-      height: 2px;
-      background: rgba(15, 30, 46, 0.1);
-      pointer-events: none;
-      z-index: 2;
+      content: none !important;
     }
+  }
+
+  .news-admin .news-list .list.list--bleed .list__item.chip.is-fullhover:hover,
+  .news-admin .news-list .list.list--bleed .list__item.chip.is-fullhover:focus,
+  .news-admin
+    .news-list
+    .list.list--bleed
+    .list__item.chip.is-fullhover:focus-visible,
+  .news-admin
+    .news-list
+    .list.list--bleed
+    .list__item.chip.is-fullhover:focus-within {
+    border-top-color: var(--booking-sep) !important;
   }
 }

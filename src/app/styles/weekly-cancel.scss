@@ -1,0 +1,122 @@
+.weekly-cancel {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  background: #f5f7fb;
+  padding: 24px;
+}
+
+.weekly-cancel__card {
+  width: 100%;
+  max-width: 640px;
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 32px;
+  box-shadow: 0 14px 40px rgba(15, 23, 42, 0.08);
+}
+
+.weekly-cancel__badge {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 700;
+  color: #111827;
+  background: #eef2ff;
+  border-radius: 999px;
+  padding: 8px 12px;
+  margin-bottom: 16px;
+}
+
+.weekly-cancel__title {
+  margin: 0 0 14px;
+  font-size: 28px;
+  line-height: 1.2;
+  color: #111827;
+}
+
+.weekly-cancel__message {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+.weekly-cancel__message--loading,
+.weekly-cancel__message--success {
+  color: #374151;
+}
+
+.weekly-cancel__message--error {
+  color: #b91c1c;
+}
+
+.weekly-cancel__info {
+  margin-top: 18px;
+  padding: 16px;
+  background: #f9fafb;
+  border-radius: 14px;
+  border: 1px solid #e5e7eb;
+}
+
+.weekly-cancel__info-label {
+  font-size: 13px;
+  color: #6b7280;
+  margin-bottom: 6px;
+}
+
+.weekly-cancel__info-value {
+  font-size: 18px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.weekly-cancel__note {
+  margin-top: 24px;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #6b7280;
+}
+
+.weekly-cancel__actions {
+  margin-top: 28px;
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.weekly-cancel__button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 160px;
+  padding: 12px 18px;
+  border-radius: 12px;
+  text-decoration: none;
+  font-weight: 700;
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.weekly-cancel__button:hover {
+  transform: translateY(-1px);
+}
+
+.weekly-cancel__button--primary {
+  background: #111827;
+  color: #ffffff;
+}
+
+.weekly-cancel__button--primary:hover {
+  background: #1f2937;
+}
+
+.weekly-cancel__button--secondary {
+  background: #ffffff;
+  color: #111827;
+  border: 1px solid #d1d5db;
+}
+
+.weekly-cancel__button--secondary:hover {
+  background: #f9fafb;
+}

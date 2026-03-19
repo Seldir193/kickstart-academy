@@ -1,16 +1,14 @@
 // src/app/components/places/PlaceDialog.tsx
-'use client';
+"use client";
 
-import React, { useEffect, useMemo, useState } from 'react';
-import dynamic from 'next/dynamic';
-import type { Place } from '@/types/place';
+import React, { useEffect, useMemo, useState } from "react";
+import dynamic from "next/dynamic";
+import type { Place } from "@/types/place";
 
-// Falls MapPreview im selben Ordner liegt, passt der relative Import so.
-// Wenn dein Pfad anders ist, bitte anpassen (z. B. '@/app/components/places/MapPreview').
-const MapPreview = dynamic(() => import('./MapPreview'), { ssr: false });
+const MapPreview = dynamic(() => import("./MapPreview"), { ssr: false });
 
 function clsx(...xs: Array<string | false | undefined | null>) {
-  return xs.filter(Boolean).join(' ');
+  return xs.filter(Boolean).join(" ");
 }
 
 type PlaceForm = {
@@ -36,36 +34,39 @@ export default function PlaceDialog({
 }) {
   const blank: PlaceForm = {
     _id: undefined,
-    name: '',
-    address: '',
-    zip: '',
-    city: '',
+    name: "",
+    address: "",
+    zip: "",
+    city: "",
     lat: undefined,
     lng: undefined,
   };
 
   const [form, setForm] = useState<PlaceForm>(blank);
 
-  // address check state
   const [checking, setChecking] = useState(false);
   const [checkError, setCheckError] = useState<string | null>(null);
 
-  // save state
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!open) return;
-    // map initial Place -> PlaceForm
     const f: PlaceForm = initial
       ? {
           _id: initial._id || undefined,
-          name: initial.name || '',
-          address: initial.address || '',
-          zip: initial.zip || '',
-          city: initial.city || '',
-          lat: typeof initial.lat === 'number' ? initial.lat : initial.lat ?? undefined,
-          lng: typeof initial.lng === 'number' ? initial.lng : initial.lng ?? undefined,
+          name: initial.name || "",
+          address: initial.address || "",
+          zip: initial.zip || "",
+          city: initial.city || "",
+          lat:
+            typeof initial.lat === "number"
+              ? initial.lat
+              : (initial.lat ?? undefined),
+          lng:
+            typeof initial.lng === "number"
+              ? initial.lng
+              : (initial.lng ?? undefined),
         }
       : { ...blank };
 
@@ -92,11 +93,11 @@ export default function PlaceDialog({
     try {
       const q = `${form.address}, ${form.zip} ${form.city}`;
       const url = `https://nominatim.openstreetmap.org/search?format=jsonv2&q=${encodeURIComponent(
-        q
+        q,
       )}&limit=1&addressdetails=0`;
       const r = await fetch(url, {
         headers: {
-          Accept: 'application/json',
+          Accept: "application/json",
         },
       });
       const j = await r.json();
@@ -104,10 +105,10 @@ export default function PlaceDialog({
       if (hit && hit.lat && hit.lon) {
         setForm((f) => ({ ...f, lat: Number(hit.lat), lng: Number(hit.lon) }));
       } else {
-        setCheckError('Address not found. Please refine.');
+        setCheckError("Address not found. Please refine.");
       }
     } catch (e: any) {
-      setCheckError(e?.message || 'Address check failed');
+      setCheckError(e?.message || "Address check failed");
     } finally {
       setChecking(false);
     }
@@ -124,30 +125,32 @@ export default function PlaceDialog({
         address: form.address.trim(),
         zip: form.zip.trim(),
         city: form.city.trim(),
-        // Nur echte Zahlen übertragen – sonst weglassen (Backend setzt nichts)
-        ...(typeof form.lat === 'number' ? { lat: form.lat } : {}),
-        ...(typeof form.lng === 'number' ? { lng: form.lng } : {}),
+        ...(typeof form.lat === "number" ? { lat: form.lat } : {}),
+        ...(typeof form.lng === "number" ? { lng: form.lng } : {}),
       };
 
       let resp: Response;
       if (form._id) {
-        resp = await fetch(`/api/admin/places/${encodeURIComponent(form._id)}`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload),
-          cache: 'no-store',
-        });
+        resp = await fetch(
+          `/api/admin/places/${encodeURIComponent(form._id)}`,
+          {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+            cache: "no-store",
+          },
+        );
       } else {
         resp = await fetch(`/api/admin/places`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload),
-          cache: 'no-store',
+          cache: "no-store",
         });
       }
 
       if (!resp.ok) {
-        const t = await resp.text().catch(() => '');
+        const t = await resp.text().catch(() => "");
         let j: any = null;
         try {
           j = t ? JSON.parse(t) : null;
@@ -157,14 +160,14 @@ export default function PlaceDialog({
         const msg =
           j?.error ||
           (resp.status === 409
-            ? 'Place already exists (same name/ZIP/city).'
+            ? "Place already exists (same name/ZIP/city)."
             : `Save failed (${resp.status})`);
         throw new Error(msg);
       }
 
       onSaved();
     } catch (e: any) {
-      setSaveError(e?.message || 'Save failed');
+      setSaveError(e?.message || "Save failed");
     } finally {
       setSaving(false);
     }
@@ -173,29 +176,44 @@ export default function PlaceDialog({
   if (!open) return null;
 
   return (
-    <div className="modal">
+    <div className="modal" onMouseDown={onClose}>
       <div className="modal__overlay" />
-      <div className="modal__wrap">
+      <div className="modal__wrap" onMouseDown={(e) => e.stopPropagation()}>
         <div
           className="modal__panel"
           role="dialog"
           aria-modal="true"
-          aria-label={form._id ? 'Edit place' : 'Create place'}
+          aria-label={form._id ? "Edit place" : "Create place"}
+          onMouseDown={(e) => e.stopPropagation()}
         >
-          <button type="button" className="modal__close" aria-label="Close" onClick={onClose}>
-            ✕
+          <button
+            type="button"
+            className="modal__close"
+            aria-label="Close"
+            onClick={onClose}
+          >
+            <img
+              src="/icons/close.svg"
+              alt=""
+              aria-hidden="true"
+              className="icon-img"
+            />
           </button>
-          <h2 className="modal__title">{form._id ? 'Edit place' : 'Create place'}</h2>
+
+          <h2 className="modal__title">
+            {form._id ? "Edit place" : "Create place"}
+          </h2>
 
           <div className="form-columns">
-            {/* Left: form */}
             <div className="card">
               <div className="field">
                 <label className="lbl">Club / Place name</label>
                 <input
                   className="input"
                   value={form.name}
-                  onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
+                  onChange={(e) =>
+                    setForm((f) => ({ ...f, name: e.target.value }))
+                  }
                   placeholder="e.g., SV Example"
                 />
               </div>
@@ -205,18 +223,25 @@ export default function PlaceDialog({
                 <input
                   className="input"
                   value={form.address}
-                  onChange={(e) => setForm((f) => ({ ...f, address: e.target.value }))}
+                  onChange={(e) =>
+                    setForm((f) => ({ ...f, address: e.target.value }))
+                  }
                   placeholder="Street and number"
                 />
               </div>
 
-              <div className="form-columns" style={{ gridTemplateColumns: '1fr 2fr', gap: 12 }}>
+              <div
+                className="form-columns"
+                style={{ gridTemplateColumns: "1fr 2fr", gap: 12 }}
+              >
                 <div className="field">
                   <label className="lbl">ZIP</label>
                   <input
                     className="input"
                     value={form.zip}
-                    onChange={(e) => setForm((f) => ({ ...f, zip: e.target.value }))}
+                    onChange={(e) =>
+                      setForm((f) => ({ ...f, zip: e.target.value }))
+                    }
                     placeholder="e.g., 47167"
                   />
                 </div>
@@ -225,35 +250,52 @@ export default function PlaceDialog({
                   <input
                     className="input"
                     value={form.city}
-                    onChange={(e) => setForm((f) => ({ ...f, city: e.target.value }))}
+                    onChange={(e) =>
+                      setForm((f) => ({ ...f, city: e.target.value }))
+                    }
                     placeholder="e.g., Duisburg"
                   />
                 </div>
               </div>
 
               <div className="form__actions">
-                <button className="btn" onClick={onClose} disabled={saving || checking}>
+                <button
+                  className="btn"
+                  onClick={onClose}
+                  disabled={saving || checking}
+                >
                   Close
                 </button>
 
                 <button
-                  className={clsx('btn', (checking || saving) && 'btn-disabled')}
+                  className={clsx(
+                    "btn",
+                    (checking || saving) && "btn-disabled",
+                  )}
                   onClick={handleCheckAddress}
                   disabled={checking || saving}
                 >
-                  {checking ? 'Checking…' : 'Check address'}
+                  {checking ? "Checking…" : "Check address"}
                 </button>
 
                 <button
-                  className={clsx('btn', (!canSave || saving) && 'btn-disabled')}
+                  className={clsx(
+                    "btn",
+                    (!canSave || saving) && "btn-disabled",
+                  )}
                   onClick={handleSave}
                   disabled={!canSave || saving}
                 >
-                  {form._id ? (saving ? 'Saving…' : 'Save changes') : saving ? 'Saving…' : 'Save place'}
+                  {form._id
+                    ? saving
+                      ? "Saving…"
+                      : "Save changes"
+                    : saving
+                      ? "Saving…"
+                      : "Save place"}
                 </button>
               </div>
 
-              {/* Inline errors */}
               {checkError ? (
                 <p className="error" style={{ marginTop: 8 }}>
                   {checkError}
@@ -266,18 +308,21 @@ export default function PlaceDialog({
               ) : null}
             </div>
 
-            {/* Right: map */}
             <div className="card">
               <MapPreview
-                lat={typeof form.lat === 'number' ? form.lat : undefined}
-                lng={typeof form.lng === 'number' ? form.lng : undefined}
+                lat={typeof form.lat === "number" ? form.lat : undefined}
+                lng={typeof form.lng === "number" ? form.lng : undefined}
                 address={`${form.address}, ${form.zip} ${form.city}`}
               />
-              {/* Optional: kleine Anzeige der Koordinaten */}
-              {(typeof form.lat === 'number' || typeof form.lng === 'number') && (
+              {(typeof form.lat === "number" ||
+                typeof form.lng === "number") && (
                 <div className="text-sm text-gray-700" style={{ marginTop: 8 }}>
-                  {typeof form.lat === 'number' ? `lat: ${form.lat.toFixed(6)}` : null}{' '}
-                  {typeof form.lng === 'number' ? `lng: ${form.lng.toFixed(6)}` : null}
+                  {typeof form.lat === "number"
+                    ? `lat: ${form.lat.toFixed(6)}`
+                    : null}{" "}
+                  {typeof form.lng === "number"
+                    ? `lng: ${form.lng.toFixed(6)}`
+                    : null}
                 </div>
               )}
             </div>
@@ -287,16 +332,3 @@ export default function PlaceDialog({
     </div>
   );
 }
-
-
-
-
-
-
-
-
-
-
-
-
-

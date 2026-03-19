@@ -1,48 +1,107 @@
-// app/api/admin/bookings/[id]/confirm/route.ts
-export const runtime = 'nodejs';
-export const dynamic = 'force-dynamic';
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
 
-import { NextResponse, type NextRequest } from 'next/server';
-import { getProviderIdFromCookies } from '@/app/api/lib/auth';
+import { NextResponse, type NextRequest } from "next/server";
+import { getProviderIdFromCookies } from "@/app/api/lib/auth";
 
 function apiBase() {
   const raw =
     process.env.NEXT_BACKEND_API_BASE ||
     process.env.NEXT_PUBLIC_API_URL ||
-    'http://127.0.0.1:5000/api';
-  return raw.replace(/\/+$/, '');
+    "http://127.0.0.1:5000/api";
+  return raw.replace(/\/+$/, "");
 }
 
-// POST /api/admin/bookings/:id/confirm[?resend=1] -> backend POST /bookings/:id/confirm
-export async function POST(req: NextRequest, { params }: { params: { id: string } }) {
+type Ctx = {
+  params: Promise<{ id: string }>;
+};
+
+// POST /api/admin/bookings/:id/confirm[?resend=1&manual=1] -> backend POST /bookings/:id/confirm
+export async function POST(req: NextRequest, ctx: Ctx) {
   const pid = await getProviderIdFromCookies();
-  if (!pid) return NextResponse.json({ ok:false, error:'Unauthorized' }, { status:401 });
+  if (!pid) {
+    return NextResponse.json(
+      { ok: false, error: "Unauthorized" },
+      { status: 401 },
+    );
+  }
 
-  const resend = req.nextUrl.searchParams.get('resend') === '1';
-  const qs = resend ? '?resend=1' : '';
+  const { id } = await ctx.params;
 
-  const r = await fetch(`${apiBase()}/bookings/${encodeURIComponent(params.id)}/confirm${qs}`, {
-    method: 'POST',
-    headers: { 'X-Provider-Id': pid, 'Accept': 'application/json' },
-    cache: 'no-store',
-  });
+  const resend = req.nextUrl.searchParams.get("resend") === "1";
+  const manual = req.nextUrl.searchParams.get("manual") === "1";
+
+  const params = new URLSearchParams();
+  if (resend) params.set("resend", "1");
+  if (manual) params.set("manual", "1");
+
+  const qs = params.toString() ? `?${params.toString()}` : "";
+
+  const r = await fetch(
+    `${apiBase()}/bookings/${encodeURIComponent(id)}/confirm${qs}`,
+    {
+      method: "POST",
+      headers: { "X-Provider-Id": pid, Accept: "application/json" },
+      cache: "no-store",
+    },
+  );
 
   const text = await r.text();
   return new NextResponse(text, {
     status: r.status,
-    headers: { 'content-type': r.headers.get('content-type') || 'application/json' },
+    headers: {
+      "content-type": r.headers.get("content-type") || "application/json",
+    },
   });
 }
 
+// // app/api/admin/bookings/[id]/confirm/route.ts
+// export const runtime = "nodejs";
+// export const dynamic = "force-dynamic";
 
+// import { NextResponse, type NextRequest } from "next/server";
+// import { getProviderIdFromCookies } from "@/app/api/lib/auth";
 
+// function apiBase() {
+//   const raw =
+//     process.env.NEXT_BACKEND_API_BASE ||
+//     process.env.NEXT_PUBLIC_API_URL ||
+//     "http://127.0.0.1:5000/api";
+//   return raw.replace(/\/+$/, "");
+// }
 
+// type Ctx = {
+//   params: Promise<{ id: string }>;
+// };
 
+// // POST /api/admin/bookings/:id/confirm[?resend=1] -> backend POST /bookings/:id/confirm
+// export async function POST(req: NextRequest, ctx: Ctx) {
+//   const pid = await getProviderIdFromCookies();
+//   if (!pid)
+//     return NextResponse.json(
+//       { ok: false, error: "Unauthorized" },
+//       { status: 401 }
+//     );
 
+//   const { id } = await ctx.params;
 
+//   const resend = req.nextUrl.searchParams.get("resend") === "1";
+//   const qs = resend ? "?resend=1" : "";
 
+//   const r = await fetch(
+//     `${apiBase()}/bookings/${encodeURIComponent(id)}/confirm${qs}`,
+//     {
+//       method: "POST",
+//       headers: { "X-Provider-Id": pid, Accept: "application/json" },
+//       cache: "no-store",
+//     }
+//   );
 
-
-
-
-
+//   const text = await r.text();
+//   return new NextResponse(text, {
+//     status: r.status,
+//     headers: {
+//       "content-type": r.headers.get("content-type") || "application/json",
+//     },
+//   });
+// }

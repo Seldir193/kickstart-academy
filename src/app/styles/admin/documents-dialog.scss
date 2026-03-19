@@ -1,0 +1,317 @@
+//src\app\styles\admin\documents-dialog.scss
+
+.documents-dialog {
+  .ks-documents-overlay {
+    position: fixed;
+    z-index: 10000;
+    overflow-y: auto;
+    touch-action: pan-y;
+    left: var(--sb-left);
+    top: var(--sb-top);
+    width: var(--sb-width);
+  }
+
+  .ks-documents-overlay--docs {
+    max-height: calc(44px * 7);
+  }
+
+  .ks-documents-overlay--perpage {
+    max-height: calc(44px * 6);
+  }
+
+  .ks-documents-overlay--sort {
+    max-height: calc(44px * 6);
+  }
+
+  .ks-documents-option {
+    display: block;
+    text-align: left;
+    width: 100%;
+  }
+
+  .ks-documents-title {
+    font-weight: 600;
+    white-space: normal;
+  }
+
+  .ks-documents-meta {
+    font-size: 12px;
+    color: #666;
+  }
+
+  .ks-documents__dates {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .ks-documents-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+  }
+
+  .ks-documents-row__left {
+    min-width: 0;
+    flex: 1;
+  }
+
+  .ks-documents-row__right {
+    flex: 0 0 auto;
+    margin-left: auto;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .ks-documents-invoice {
+    white-space: nowrap;
+  }
+
+  .ks-storno__filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: flex-start;
+  }
+
+  .ks-storno__filter {
+    flex: 1 1 320px;
+    min-width: 0;
+  }
+
+  .ks-filter-chip {
+    border: 1px solid var(--admin-sep);
+    border-radius: 999px;
+    padding: 6px 10px;
+    line-height: 1;
+    background: transparent;
+  }
+
+  .ks-filter-chip--active {
+    background: rgba(0, 0, 0, 0.06);
+  }
+}
+
+.documents-dialog .ks-filter-chips {
+  display: grid !important;
+  grid-auto-flow: row !important;
+  grid-template-columns: 1fr !important;
+  gap: 8px !important;
+  justify-items: start !important;
+}
+
+.documents-dialog .ks-filter-chips > .ks-filter-chip {
+  display: block !important;
+  width: fit-content !important;
+}
+
+//neu
+.ks-doc-select__option {
+  padding: 10px 12px;
+}
+
+.ks-doc-select__row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+}
+
+.ks-doc-select__top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.ks-doc-select__title {
+  flex: 1;
+  font-weight: 600;
+  line-height: 1.25;
+
+  white-space: normal;
+  overflow: visible;
+  text-overflow: unset;
+  word-break: break-word;
+}
+
+.ks-doc-select__badgeCol {
+  flex: 0 0 auto;
+  display: flex;
+  justify-content: flex-end;
+  min-width: 140px;
+}
+
+.ks-doc-select__badge {
+  display: inline-flex;
+  align-items: center;
+  max-width: 220px;
+
+  padding: 2px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  line-height: 18px;
+  font-weight: 600;
+
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  background: rgba(0, 0, 0, 0.04);
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ks-doc-select__bottom {
+  font-size: 12px;
+  opacity: 0.75;
+
+  white-space: normal;
+  overflow: visible;
+  text-overflow: unset;
+  word-break: break-word;
+}
+
+.ks-doc-select__badgeCol {
+  flex: 0 0 auto;
+  display: flex;
+  justify-content: flex-end;
+  min-width: 180px;
+}
+
+.ks-doc-select__badge {
+  display: inline-flex;
+  align-items: center;
+
+  padding: 2px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  line-height: 18px;
+  font-weight: 600;
+
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  background: rgba(0, 0, 0, 0.04);
+
+  white-space: nowrap;
+  max-width: 280px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.documents-dialog .ks-documents-meta {
+  display: none !important;
+}
+
+.documents-dialog .ks-documents-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.documents-dialog .ks-documents-row__left {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.documents-dialog .ks-documents-row__right,
+.documents-dialog .ks-doc-select__badgeCol {
+  flex: 0 0 260px; // <-- feste Breite (immer gleich)
+  width: 260px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.documents-dialog .ks-documents-invoice,
+.documents-dialog .ks-doc-select__badge {
+  width: 100%; // <-- Badge nutzt volle Spaltenbreite
+  justify-content: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.documents-dialog .ks-doc-select__row {
+  width: 100%;
+}
+
+.documents-dialog .ks-doc-select__top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.documents-dialog .ks-doc-select__title {
+  flex: 1 1 auto;
+  min-width: 0;
+  white-space: normal;
+  overflow: visible;
+  text-overflow: unset;
+}
+
+.documents-dialog .ks-doc-select__badgeCol {
+  flex: 0 0 220px; /* ✅ fixe Breite für alle */
+  display: flex;
+  justify-content: flex-end;
+}
+
+.documents-dialog .ks-doc-select__badge {
+  display: inline-flex;
+  align-items: center;
+  max-width: 220px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+//neu
+.ks-doc-select__top--single {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.ks-doc-select__title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.ks-doc-select__titleText {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ks-doc-select__typeIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  flex: 0 0 20px;
+}
+
+.ks-doc-select__typeIcon img {
+  width: 18px;
+  height: 18px;
+  display: block;
+}
+
+.ks-doc-select__badgeCol {
+  flex: 0 0 170px; /* feste Breite: immer gleich */
+  display: flex;
+  justify-content: flex-end;
+}
+
+.ks-doc-select__badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  max-width: 170px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

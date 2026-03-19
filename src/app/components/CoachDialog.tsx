@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import React from 'react';
+import React from "react";
 
 type Coach = {
   slug: string;
@@ -26,7 +26,7 @@ export default function CoachDialog({
   onSubmit,
 }: {
   open: boolean;
-  mode: 'create' | 'edit';
+  mode: "create" | "edit";
   initial?: Partial<Coach>;
   onClose: () => void;
   onSubmit: (values: Partial<Coach>) => Promise<void>;
@@ -47,13 +47,14 @@ export default function CoachDialog({
     setValues((prev) => ({ ...prev, [k]: v }));
   }
 
-  const title = mode === 'create' ? 'Neuer Coach' : 'Coach bearbeiten';
+  const title = mode === "create" ? "Neuer Coach" : "Coach bearbeiten";
 
   function isValidPhotoUrl(u?: string): boolean {
-  if (!u) return false;
-  return /^data:image\//.test(u) || /^https?:\/\//.test(u) || u.startsWith('/');
-}
-
+    if (!u) return false;
+    return (
+      /^data:image\//.test(u) || /^https?:\/\//.test(u) || u.startsWith("/")
+    );
+  }
 
   if (!open) return null;
 
@@ -65,17 +66,17 @@ export default function CoachDialog({
   async function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (!file) return;
-    if (!file.type.startsWith('image/')) {
-      alert('Bitte eine Bilddatei auswählen.');
+    if (!file.type.startsWith("image/")) {
+      alert("Bitte eine Bilddatei auswählen.");
       return;
     }
     setFileName(file.name);
     setUploading(true);
     try {
       const dataUrl = await readFileAsDataURL(file);
-      set('photoUrl', dataUrl as unknown as string);
+      set("photoUrl", dataUrl as unknown as string);
     } catch {
-      alert('Bild konnte nicht gelesen werden.');
+      alert("Bild konnte nicht gelesen werden.");
     } finally {
       setUploading(false);
     }
@@ -84,32 +85,52 @@ export default function CoachDialog({
   function readFileAsDataURL(file: File) {
     return new Promise<string>((resolve, reject) => {
       const reader = new FileReader();
-      reader.onerror = () => reject(new Error('read error'));
-      reader.onload = () => resolve(String(reader.result || ''));
+      reader.onerror = () => reject(new Error("read error"));
+      reader.onload = () => resolve(String(reader.result || ""));
       reader.readAsDataURL(file);
     });
   }
 
   function clearPhoto() {
-    set('photoUrl', '');
-    setFileName('');
+    set("photoUrl", "");
+    setFileName("");
   }
 
   // Dateiname auf Form "Sel....png" kürzen
   function formatFileName(name: string) {
-    if (!name) return '';
-    const dot = name.lastIndexOf('.');
+    if (!name) return "";
+    const dot = name.lastIndexOf(".");
     const base = dot > 0 ? name.slice(0, dot) : name;
-    const ext  = dot > 0 ? name.slice(dot) : '';
+    const ext = dot > 0 ? name.slice(dot) : "";
     if (base.length <= 6) return name; // kurze Namen unverändert
-    return `${base.slice(0, 3)}....${ext || ''}`;
+    return `${base.slice(0, 3)}....${ext || ""}`;
   }
 
   return (
     <div className="dialog-backdrop" onClick={onClose}>
       <div className="dialog" onClick={(e) => e.stopPropagation()}>
-        <div className="dialog-head">
+        {/* <div className="dialog-head">
           <h3 className="dialog-title m-0">{title}</h3>
+        </div> */}
+
+        <div className="dialog-head">
+          <div className="flex items-center justify-between gap-3">
+            <h3 className="dialog-title m-0">{title}</h3>
+
+            <button
+              type="button"
+              className="modal__close"
+              aria-label="Close"
+              onClick={onClose}
+            >
+              <img
+                src="/icons/close.svg"
+                alt=""
+                aria-hidden="true"
+                className="icon-img"
+              />
+            </button>
+          </div>
         </div>
 
         <div className="dialog-body grid grid-cols-2 gap-3">
@@ -117,8 +138,8 @@ export default function CoachDialog({
             <div className="label">Vorname</div>
             <input
               className="input"
-              value={values.firstName || ''}
-              onChange={(e) => set('firstName', e.target.value)}
+              value={values.firstName || ""}
+              onChange={(e) => set("firstName", e.target.value)}
             />
           </label>
 
@@ -126,17 +147,19 @@ export default function CoachDialog({
             <div className="label">Nachname</div>
             <input
               className="input"
-              value={values.lastName || ''}
-              onChange={(e) => set('lastName', e.target.value)}
+              value={values.lastName || ""}
+              onChange={(e) => set("lastName", e.target.value)}
             />
           </label>
 
           <label className="col-span-2">
-            <div className="label">Name (optional, überschreibt Vor/Nachname)</div>
+            <div className="label">
+              Name (optional, überschreibt Vor/Nachname)
+            </div>
             <input
               className="input"
-              value={values.name || ''}
-              onChange={(e) => set('name', e.target.value)}
+              value={values.name || ""}
+              onChange={(e) => set("name", e.target.value)}
             />
           </label>
 
@@ -144,8 +167,8 @@ export default function CoachDialog({
             <div className="label">Position</div>
             <input
               className="input"
-              value={values.position || 'Trainer'}
-              onChange={(e) => set('position', e.target.value)}
+              value={values.position || "Trainer"}
+              onChange={(e) => set("position", e.target.value)}
             />
           </label>
 
@@ -153,8 +176,8 @@ export default function CoachDialog({
             <div className="label">Seit (z. B. 2021)</div>
             <input
               className="input"
-              value={values.since || ''}
-              onChange={(e) => set('since', e.target.value)}
+              value={values.since || ""}
+              onChange={(e) => set("since", e.target.value)}
             />
           </label>
 
@@ -162,8 +185,8 @@ export default function CoachDialog({
             <div className="label">Abschluss</div>
             <input
               className="input"
-              value={values.degree || ''}
-              onChange={(e) => set('degree', e.target.value)}
+              value={values.degree || ""}
+              onChange={(e) => set("degree", e.target.value)}
             />
           </label>
 
@@ -171,8 +194,8 @@ export default function CoachDialog({
             <div className="label">DFB Lizenz</div>
             <input
               className="input"
-              value={values.dfbLicense || ''}
-              onChange={(e) => set('dfbLicense', e.target.value)}
+              value={values.dfbLicense || ""}
+              onChange={(e) => set("dfbLicense", e.target.value)}
             />
           </label>
 
@@ -180,8 +203,8 @@ export default function CoachDialog({
             <div className="label">DFS Lizenz</div>
             <input
               className="input"
-              value={values.mfsLicense || ''}
-              onChange={(e) => set('mfsLicense', e.target.value)}
+              value={values.mfsLicense || ""}
+              onChange={(e) => set("mfsLicense", e.target.value)}
             />
           </label>
 
@@ -189,8 +212,8 @@ export default function CoachDialog({
             <div className="label">Lieblingsverein</div>
             <input
               className="input"
-              value={values.favClub || ''}
-              onChange={(e) => set('favClub', e.target.value)}
+              value={values.favClub || ""}
+              onChange={(e) => set("favClub", e.target.value)}
             />
           </label>
 
@@ -198,8 +221,8 @@ export default function CoachDialog({
             <div className="label">Lieblingstrainer</div>
             <input
               className="input"
-              value={values.favCoach || ''}
-              onChange={(e) => set('favCoach', e.target.value)}
+              value={values.favCoach || ""}
+              onChange={(e) => set("favCoach", e.target.value)}
             />
           </label>
 
@@ -207,36 +230,29 @@ export default function CoachDialog({
             <div className="label">Lieblingstrick</div>
             <input
               className="input"
-              value={values.favTrick || ''}
-              onChange={(e) => set('favTrick', e.target.value)}
+              value={values.favTrick || ""}
+              onChange={(e) => set("favTrick", e.target.value)}
             />
           </label>
 
           {/* Foto: Vorschau, Upload (custom Button + gekürzter Dateiname), Entfernen darunter */}
           <div className="col-span-2">
-            <div className="label">Foto</div>
-
             {/* Vorschau */}
-        
-{isValidPhotoUrl(values.photoUrl) ? (
-  <img
-    src={values.photoUrl!}
-    alt="Coach Foto"
-    className="coach-table__avatar"
-    onError={(e) => {
-      // Falls eine scheinbar gültige URL 404 liefert → leise auf Placeholder umschalten
-      const el = e.currentTarget;
-      el.replaceWith(Object.assign(document.createElement('span'), {
-        className: 'coach-table__avatar coach-table__avatar--ph',
-        ariaHidden: 'true'
-      }) as unknown as Node);
-    }}
-  />
-) : (
-  <span className="coach-table__avatar coach-table__avatar--ph" aria-hidden="true" />
-)}
 
-
+            <img
+              src={
+                isValidPhotoUrl(values.photoUrl)
+                  ? (values.photoUrl as string)
+                  : "/assets/img/avatar.png"
+              }
+              alt="Coach Foto"
+              className="coach-table__avatar"
+              onError={(e) => {
+                const fallback = "/assets/img/avatar.png";
+                if (e.currentTarget.src.endsWith(fallback)) return; // verhindert Loop
+                e.currentTarget.src = fallback;
+              }}
+            />
 
             {/* Uploadzeile: eigener Button + gekürzter Dateiname */}
             <div className="mt-3">
@@ -251,7 +267,7 @@ export default function CoachDialog({
                 />
               </label>
               <span className="ml-2">
-                {fileName ? formatFileName(fileName) : 'Keine Datei gewählt'}
+                {fileName ? formatFileName(fileName) : "Bild auswählen"}
               </span>
             </div>
 
@@ -274,25 +290,10 @@ export default function CoachDialog({
             Abbrechen
           </button>
           <button className="btn" onClick={handleSave} disabled={uploading}>
-            {uploading ? 'Lädt…' : 'Speichern'}
+            {uploading ? "Lädt…" : "Speichern"}
           </button>
         </div>
       </div>
     </div>
   );
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

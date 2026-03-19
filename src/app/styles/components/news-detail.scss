@@ -1,3 +1,4 @@
+// src/app/styles/components/news-detail.scss
 #news-detail.ks-news-single {
   background: #fff;
 }
@@ -352,7 +353,9 @@
   background: #fff;
   font-size: 13px;
   font-weight: 600;
-  transition: background-color 160ms ease, border-color 160ms ease,
+  transition:
+    background-color 160ms ease,
+    border-color 160ms ease,
     transform 160ms ease;
 }
 

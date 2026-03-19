@@ -1,0 +1,233 @@
+// src/app/styles/training-card.scss
+.ks-training-admin {
+  .news-list__head,
+  .news-list__row {
+    grid-template-columns: 72px 1.45fr 1.1fr 1.45fr 56px;
+  }
+
+  .news-list__h--right {
+    text-align: right;
+  }
+
+  .news-list__cell {
+    min-width: 0;
+  }
+
+  .news-list__title,
+  .news-list__excerpt {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .news-list__excerpt {
+    opacity: 0.85;
+  }
+
+  .list__avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 999px;
+    object-fit: cover;
+    display: block;
+    background: #f3f4f6;
+  }
+
+  .news-list__actions--hidden {
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  .news-admin__box--scroll3 {
+    min-height: 0;
+    max-height: calc(100vh - 420px);
+    overflow: auto;
+    scrollbar-gutter: auto;
+    overscroll-behavior: contain;
+  }
+
+  .news-admin__section-head-number {
+    display: flex;
+    align-items: baseline;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-bottom: 8px;
+  }
+
+  .input-with-icon {
+    position: relative;
+  }
+
+  .input-with-icon__icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 20px;
+    height: 20px;
+    opacity: 0.7;
+    pointer-events: none;
+    transition:
+      opacity 125ms ease,
+      filter 125ms ease;
+  }
+
+  .input-with-icon__input {
+    padding-left: 40px;
+  }
+
+  .input-with-icon:focus-within .input-with-icon__icon {
+    opacity: 1;
+    filter: brightness(0) saturate(100%);
+  }
+
+  .ks-training-select {
+    position: relative;
+    min-width: 0;
+  }
+
+  .ks-training-select__trigger {
+    width: 100%;
+    min-height: 40px;
+  }
+
+  .ks-training-select__label {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .ks-training-select__menu {
+    max-height: 320px;
+    overflow: auto;
+    z-index: 40;
+  }
+
+  .ks-training-select__menu--grouped {
+    max-height: 360px;
+  }
+}
+
+.modal__close {
+  img {
+    width: 25px;
+    height: 25px;
+    opacity: 0.72;
+    transition: opacity 125ms ease-out;
+  }
+
+  &:hover img,
+  &:focus-visible img {
+    opacity: 1;
+  }
+}
+
+//neu
+
+.ks-training-admin {
+  .news-list__head,
+  .news-list__row {
+    grid-template-columns: 72px 1.6fr 1.2fr 140px 160px 56px;
+  }
+
+  .news-list__h--right {
+    text-align: right;
+  }
+
+  .news-list__cell {
+    min-width: 0;
+    display: flex;
+  }
+
+  .news-list__title,
+  .news-list__excerpt {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .news-list__excerpt {
+    opacity: 0.85;
+  }
+
+  .list__avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 999px;
+    object-fit: cover;
+    display: block;
+    background: #f3f4f6;
+  }
+
+  .news-list__actions--hidden {
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  .news-admin__box--scroll3 {
+    min-height: 0;
+    max-height: calc(100vh - 420px);
+    overflow: auto;
+    scrollbar-gutter: auto;
+    overscroll-behavior: contain;
+  }
+
+  .input-with-icon {
+    position: relative;
+  }
+
+  .input-with-icon__icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 20px;
+    height: 20px;
+    opacity: 0.7;
+    pointer-events: none;
+    transition:
+      opacity 125ms ease,
+      filter 125ms ease;
+  }
+
+  .input-with-icon__input {
+    padding-left: 40px;
+  }
+
+  .input-with-icon:focus-within .input-with-icon__icon {
+    opacity: 1;
+    filter: brightness(0) saturate(100%);
+  }
+
+  .ks-training-select {
+    position: relative;
+    min-width: 0;
+  }
+
+  .ks-training-select__trigger {
+    width: 100%;
+    min-height: 40px;
+  }
+
+  .ks-training-select__label {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .ks-training-select__menu {
+    max-height: 320px;
+    overflow: auto;
+    z-index: 40;
+  }
+
+  .ks-training-select__menu--grouped {
+    max-height: 360px;
+  }
+
+  .list.list--bleed .list__item.chip.is-fullhover {
+    gap: unset;
+  }
+}

@@ -1,0 +1,40 @@
+.book-status-page {
+  min-height: 70vh;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+}
+
+.book-status-card {
+  width: 100%;
+  max-width: 720px;
+  background: #fff;
+  border: 1px solid #e7e7e7;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+}
+
+.book-status-card h1 {
+  margin: 0 0 12px;
+}
+
+.book-status-card p {
+  margin: 0 0 12px;
+  line-height: 1.5;
+}
+
+.book-status-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 16px;
+}
+
+.book-status-actions a {
+  display: inline-block;
+  padding: 10px 14px;
+  border-radius: 10px;
+  text-decoration: none;
+  border: 1px solid #dcdcdc;
+}

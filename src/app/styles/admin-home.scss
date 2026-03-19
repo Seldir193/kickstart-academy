@@ -1,0 +1,31 @@
+.admin-home__recent {
+  .news-list__head {
+    align-items: center;
+  }
+
+  .news-list__h {
+    line-height: 1;
+  }
+
+  .news-list__head,
+  .news-list__row {
+    grid-template-columns: 72px 1.6fr 1.2fr 140px 160px 56px;
+  }
+
+  .news-list__cell {
+    padding-right: 12px;
+    display: flex;
+  }
+
+  .news-list__title {
+    line-height: 1.25;
+  }
+
+  .news-list__excerpt {
+    margin-top: 2px;
+  }
+
+  .list.list--bleed .list__item.chip.is-fullhover {
+    gap: unset;
+  }
+}

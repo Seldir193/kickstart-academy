@@ -1,7 +1,8 @@
 // app/book/components/CampOptionsSection.tsx
-import type React from 'react';
-import type { FormState } from '../bookTypes';
-import { TSHIRT_OPTIONS } from '../bookTypes';
+import type React from "react";
+import { useEffect, useRef, useState } from "react";
+import type { FormState } from "../bookTypes";
+import { TSHIRT_OPTIONS } from "../bookTypes";
 
 type Props = {
   form: FormState;
@@ -13,12 +14,120 @@ type Props = {
     e:
       | React.ChangeEvent<HTMLInputElement>
       | React.ChangeEvent<HTMLSelectElement>
-      | React.ChangeEvent<HTMLTextAreaElement>,
+      | React.ChangeEvent<HTMLTextAreaElement>
   ) => void;
   setForm: React.Dispatch<React.SetStateAction<FormState>>;
   handleCaretClick: (e: React.MouseEvent<HTMLElement>) => void;
   handleCaretBlur: (e: React.FocusEvent<HTMLElement>) => void;
 };
+
+type KsOption = { value: string; label: string };
+
+function useOnClickOutside<T extends HTMLElement>(
+  ref: React.RefObject<T | null>,
+  handler: () => void
+) {
+  useEffect(() => {
+    function onPointerDown(e: PointerEvent) {
+      const el = ref.current;
+      if (!el) return;
+      if (!el.contains(e.target as Node)) handler();
+    }
+    document.addEventListener("pointerdown", onPointerDown);
+    return () => document.removeEventListener("pointerdown", onPointerDown);
+  }, [ref, handler]);
+}
+
+function emitSelectChange(
+  onChange: Props["onChange"],
+  name: string,
+  value: string
+) {
+  onChange({
+    target: { name, value, type: "select-one" },
+  } as any);
+}
+
+function KsSelectbox({
+  name,
+  value,
+  placeholder,
+  options,
+  onChange,
+}: {
+  name: string;
+  value: string;
+  placeholder: string;
+  options: KsOption[];
+  onChange: Props["onChange"];
+}) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement | null>(null);
+
+  useOnClickOutside(ref, () => setOpen(false));
+
+  useEffect(() => {
+    if (!open) return;
+    function onKey(e: KeyboardEvent) {
+      if (e.key === "Escape") setOpen(false);
+    }
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [open]);
+
+  const label = value ? value : placeholder;
+
+  return (
+    <div
+      ref={ref}
+      className={`ks-selectbox ${open ? "ks-selectbox--open" : ""}`}
+    >
+      <button
+        type="button"
+        className="ks-selectbox__trigger"
+        onClick={() => setOpen((o) => !o)}
+        aria-haspopup="listbox"
+        aria-expanded={open}
+      >
+        <span className="ks-selectbox__label">{label}</span>
+        <span className="ks-selectbox__chevron" aria-hidden="true" />
+      </button>
+
+      {open && (
+        <div className="ks-selectbox__panel" role="listbox">
+          <button
+            type="button"
+            className={`ks-selectbox__option ${
+              !value ? "ks-selectbox__option--active" : ""
+            }`}
+            onClick={() => {
+              emitSelectChange(onChange, name, "");
+              setOpen(false);
+            }}
+          >
+            {placeholder}
+          </button>
+
+          {options.map((opt) => (
+            <button
+              key={opt.value}
+              type="button"
+              className={`ks-selectbox__option ${
+                value === opt.value ? "ks-selectbox__option--active" : ""
+              }`}
+              onClick={() => {
+                emitSelectChange(onChange, name, opt.value);
+                setOpen(false);
+              }}
+            >
+              {opt.label}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
 
 export function CampOptionsSection({
   form,
@@ -38,26 +147,16 @@ export function CampOptionsSection({
       {/* T-Shirt-Größe Hauptkind */}
       <div className="field">
         <label>T-Shirt-Größe*</label>
-        <div className="book-select book-select--caret">
-          <select
-            name="tshirtSize"
-            value={form.tshirtSize}
-            onChange={onChange}
-            className="book-select__native"
-            onClick={handleCaretClick}
-            onBlur={handleCaretBlur}
-          >
-            <option value="">Bitte einen Eintrag auswählen</option>
-            {TSHIRT_OPTIONS.map((opt) => (
-              <option key={opt} value={opt}>
-                {opt}
-              </option>
-            ))}
-          </select>
-          <span className="book-select__icon" aria-hidden="true">
-            <img src="/icons/select-caret.svg" alt="" />
-          </span>
-        </div>
+
+        {/* ✅ ks-selectbox statt native select */}
+        <KsSelectbox
+          name="tshirtSize"
+          value={form.tshirtSize}
+          placeholder="Bitte einen Eintrag auswählen"
+          options={TSHIRT_OPTIONS.map((opt) => ({ value: opt, label: opt }))}
+          onChange={onChange}
+        />
+
         {errors.tshirtSize && (
           <span className="error">{errors.tshirtSize}</span>
         )}
@@ -70,12 +169,12 @@ export function CampOptionsSection({
           <button
             type="button"
             className={`camp-toggle-btn ${
-              form.goalkeeper === 'no' ? 'is-active' : ''
+              form.goalkeeper === "no" ? "is-active" : ""
             }`}
             onClick={() =>
               setForm((prev) => ({
                 ...prev,
-                goalkeeper: 'no',
+                goalkeeper: "no",
               }))
             }
           >
@@ -84,12 +183,12 @@ export function CampOptionsSection({
           <button
             type="button"
             className={`camp-toggle-btn ${
-              form.goalkeeper === 'yes' ? 'is-active' : ''
+              form.goalkeeper === "yes" ? "is-active" : ""
             }`}
             onClick={() =>
               setForm((prev) => ({
                 ...prev,
-                goalkeeper: 'yes',
+                goalkeeper: "yes",
               }))
             }
           >
@@ -123,7 +222,7 @@ export function CampOptionsSection({
                 type="radio"
                 name="siblingGender"
                 value="weiblich"
-                checked={form.siblingGender === 'weiblich'}
+                checked={form.siblingGender === "weiblich"}
                 onChange={onChange}
               />
               weiblich
@@ -133,7 +232,7 @@ export function CampOptionsSection({
                 type="radio"
                 name="siblingGender"
                 value="männlich"
-                checked={form.siblingGender === 'männlich'}
+                checked={form.siblingGender === "männlich"}
                 onChange={onChange}
               />
               männlich
@@ -144,64 +243,31 @@ export function CampOptionsSection({
             <label>Geburtstag</label>
             <div className="dob">
               {/* TT Geschwister */}
-              <div className="book-select book-select--chevron">
-                <select
-                  name="siblingBirthDay"
-                  value={form.siblingBirthDay}
-                  onChange={onChange}
-                  className="book-select__native"
-                >
-                  <option value="">TT</option>
-                  {DAY_OPTS.map((d) => (
-                    <option key={d} value={d}>
-                      {d}
-                    </option>
-                  ))}
-                </select>
-                <span className="book-select__icon" aria-hidden="true">
-                  <img src="/icons/chevron-down.svg" alt="" />
-                </span>
-              </div>
+              <KsSelectbox
+                name="siblingBirthDay"
+                value={form.siblingBirthDay}
+                placeholder="TT"
+                options={DAY_OPTS.map((d) => ({ value: d, label: d }))}
+                onChange={onChange}
+              />
 
               {/* MM Geschwister */}
-              <div className="book-select book-select--chevron">
-                <select
-                  name="siblingBirthMonth"
-                  value={form.siblingBirthMonth}
-                  onChange={onChange}
-                  className="book-select__native"
-                >
-                  <option value="">MM</option>
-                  {MONTH_OPTS.map((m) => (
-                    <option key={m} value={m}>
-                      {m}
-                    </option>
-                  ))}
-                </select>
-                <span className="book-select__icon" aria-hidden="true">
-                  <img src="/icons/chevron-down.svg" alt="" />
-                </span>
-              </div>
+              <KsSelectbox
+                name="siblingBirthMonth"
+                value={form.siblingBirthMonth}
+                placeholder="MM"
+                options={MONTH_OPTS.map((m) => ({ value: m, label: m }))}
+                onChange={onChange}
+              />
 
               {/* JJJJ Geschwister */}
-              <div className="book-select book-select--chevron">
-                <select
-                  name="siblingBirthYear"
-                  value={form.siblingBirthYear}
-                  onChange={onChange}
-                  className="book-select__native"
-                >
-                  <option value="">JJJJ</option>
-                  {YEAR_OPTS.map((y) => (
-                    <option key={y} value={y}>
-                      {y}
-                    </option>
-                  ))}
-                </select>
-                <span className="book-select__icon" aria-hidden="true">
-                  <img src="/icons/chevron-down.svg" alt="" />
-                </span>
-              </div>
+              <KsSelectbox
+                name="siblingBirthYear"
+                value={form.siblingBirthYear}
+                placeholder="JJJJ"
+                options={YEAR_OPTS.map((y) => ({ value: y, label: y }))}
+                onChange={onChange}
+              />
             </div>
           </div>
 
@@ -234,26 +300,19 @@ export function CampOptionsSection({
           {/* T-Shirt + Torwartschule Geschwister */}
           <div className="field">
             <label>T-Shirt-Größe (Geschwister)*</label>
-            <div className="book-select book-select--caret">
-              <select
-                name="siblingTshirtSize"
-                value={form.siblingTshirtSize}
-                onChange={onChange}
-                className="book-select__native"
-                onClick={handleCaretClick}
-                onBlur={handleCaretBlur}
-              >
-                <option value="">Bitte einen Eintrag auswählen</option>
-                {TSHIRT_OPTIONS.map((opt) => (
-                  <option key={opt} value={opt}>
-                    {opt}
-                  </option>
-                ))}
-              </select>
-              <span className="book-select__icon" aria-hidden="true">
-                <img src="/icons/select-caret.svg" alt="" />
-              </span>
-            </div>
+
+            {/* ✅ ks-selectbox statt native select */}
+            <KsSelectbox
+              name="siblingTshirtSize"
+              value={form.siblingTshirtSize}
+              placeholder="Bitte einen Eintrag auswählen"
+              options={TSHIRT_OPTIONS.map((opt) => ({
+                value: opt,
+                label: opt,
+              }))}
+              onChange={onChange}
+            />
+
             {errors.siblingTshirtSize && (
               <span className="error">{errors.siblingTshirtSize}</span>
             )}
@@ -265,12 +324,12 @@ export function CampOptionsSection({
               <button
                 type="button"
                 className={`camp-toggle-btn ${
-                  form.siblingGoalkeeper === 'no' ? 'is-active' : ''
+                  form.siblingGoalkeeper === "no" ? "is-active" : ""
                 }`}
                 onClick={() =>
                   setForm((prev) => ({
                     ...prev,
-                    siblingGoalkeeper: 'no',
+                    siblingGoalkeeper: "no",
                   }))
                 }
               >
@@ -279,12 +338,12 @@ export function CampOptionsSection({
               <button
                 type="button"
                 className={`camp-toggle-btn ${
-                  form.siblingGoalkeeper === 'yes' ? 'is-active' : ''
+                  form.siblingGoalkeeper === "yes" ? "is-active" : ""
                 }`}
                 onClick={() =>
                   setForm((prev) => ({
                     ...prev,
-                    siblingGoalkeeper: 'yes',
+                    siblingGoalkeeper: "yes",
                   }))
                 }
               >

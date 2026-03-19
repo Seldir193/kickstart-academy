@@ -1,6 +1,7 @@
 // app/book/components/ChildSection.tsx
-import type React from 'react';
-import type { FormState } from '../bookTypes';
+import type React from "react";
+import { useEffect, useRef, useState } from "react";
+import type { FormState } from "../bookTypes";
 
 type Props = {
   form: FormState;
@@ -12,9 +13,117 @@ type Props = {
     e:
       | React.ChangeEvent<HTMLInputElement>
       | React.ChangeEvent<HTMLSelectElement>
-      | React.ChangeEvent<HTMLTextAreaElement>,
+      | React.ChangeEvent<HTMLTextAreaElement>
   ) => void;
 };
+
+type KsOption = { value: string; label: string };
+
+function useOnClickOutside<T extends HTMLElement>(
+  ref: React.RefObject<T | null>,
+  handler: () => void
+) {
+  useEffect(() => {
+    function onPointerDown(e: PointerEvent) {
+      const el = ref.current;
+      if (!el) return;
+      if (!el.contains(e.target as Node)) handler();
+    }
+    document.addEventListener("pointerdown", onPointerDown);
+    return () => document.removeEventListener("pointerdown", onPointerDown);
+  }, [ref, handler]);
+}
+
+function emitSelectChange(
+  onChange: Props["onChange"],
+  name: string,
+  value: string
+) {
+  onChange({
+    target: { name, value, type: "select-one" },
+  } as any);
+}
+
+function KsSelectbox({
+  name,
+  value,
+  placeholder,
+  options,
+  onChange,
+}: {
+  name: string;
+  value: string;
+  placeholder: string;
+  options: KsOption[];
+  onChange: Props["onChange"];
+}) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement | null>(null);
+
+  useOnClickOutside(ref, () => setOpen(false));
+
+  useEffect(() => {
+    if (!open) return;
+    function onKey(e: KeyboardEvent) {
+      if (e.key === "Escape") setOpen(false);
+    }
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [open]);
+
+  const label = value ? value : placeholder;
+
+  return (
+    <div
+      ref={ref}
+      className={`ks-selectbox ${open ? "ks-selectbox--open" : ""}`}
+    >
+      <button
+        type="button"
+        className="ks-selectbox__trigger"
+        onClick={() => setOpen((o) => !o)}
+        aria-haspopup="listbox"
+        aria-expanded={open}
+      >
+        <span className="ks-selectbox__label">{label}</span>
+        <span className="ks-selectbox__chevron" aria-hidden="true" />
+      </button>
+
+      {open && (
+        <div className="ks-selectbox__panel" role="listbox">
+          <button
+            type="button"
+            className={`ks-selectbox__option ${
+              !value ? "ks-selectbox__option--active" : ""
+            }`}
+            onClick={() => {
+              emitSelectChange(onChange, name, "");
+              setOpen(false);
+            }}
+          >
+            {placeholder}
+          </button>
+
+          {options.map((opt) => (
+            <button
+              key={opt.value}
+              type="button"
+              className={`ks-selectbox__option ${
+                value === opt.value ? "ks-selectbox__option--active" : ""
+              }`}
+              onClick={() => {
+                emitSelectChange(onChange, name, opt.value);
+                setOpen(false);
+              }}
+            >
+              {opt.label}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
 
 export function ChildSection({
   form,
@@ -34,7 +143,7 @@ export function ChildSection({
             type="radio"
             name="childGender"
             value="weiblich"
-            checked={form.childGender === 'weiblich'}
+            checked={form.childGender === "weiblich"}
             onChange={onChange}
           />
           weiblich
@@ -44,7 +153,7 @@ export function ChildSection({
             type="radio"
             name="childGender"
             value="männlich"
-            checked={form.childGender === 'männlich'}
+            checked={form.childGender === "männlich"}
             onChange={onChange}
           />
           männlich
@@ -56,65 +165,33 @@ export function ChildSection({
           <label>Geburtstag</label>
           <div className="dob">
             {/* TT */}
-            <div className="book-select book-select--chevron">
-              <select
-                name="birthDay"
-                value={form.birthDay}
-                onChange={onChange}
-                className="book-select__native"
-              >
-                <option value="">TT</option>
-                {DAY_OPTS.map((d) => (
-                  <option key={d} value={d}>
-                    {d}
-                  </option>
-                ))}
-              </select>
-              <span className="book-select__icon" aria-hidden="true">
-                <img src="/icons/chevron-down.svg" alt="" />
-              </span>
-            </div>
+            <KsSelectbox
+              name="birthDay"
+              value={form.birthDay}
+              placeholder="TT"
+              options={DAY_OPTS.map((d) => ({ value: d, label: d }))}
+              onChange={onChange}
+            />
 
             {/* MM */}
-            <div className="book-select book-select--chevron">
-              <select
-                name="birthMonth"
-                value={form.birthMonth}
-                onChange={onChange}
-                className="book-select__native"
-              >
-                <option value="">MM</option>
-                {MONTH_OPTS.map((m) => (
-                  <option key={m} value={m}>
-                    {m}
-                  </option>
-                ))}
-              </select>
-              <span className="book-select__icon" aria-hidden="true">
-                <img src="/icons/chevron-down.svg" alt="" />
-              </span>
-            </div>
+            <KsSelectbox
+              name="birthMonth"
+              value={form.birthMonth}
+              placeholder="MM"
+              options={MONTH_OPTS.map((m) => ({ value: m, label: m }))}
+              onChange={onChange}
+            />
 
             {/* JJJJ */}
-            <div className="book-select book-select--chevron">
-              <select
-                name="birthYear"
-                value={form.birthYear}
-                onChange={onChange}
-                className="book-select__native"
-              >
-                <option value="">JJJJ</option>
-                {YEAR_OPTS.map((y) => (
-                  <option key={y} value={y}>
-                    {y}
-                  </option>
-                ))}
-              </select>
-              <span className="book-select__icon" aria-hidden="true">
-                <img src="/icons/chevron-down.svg" alt="" />
-              </span>
-            </div>
+            <KsSelectbox
+              name="birthYear"
+              value={form.birthYear}
+              placeholder="JJJJ"
+              options={YEAR_OPTS.map((y) => ({ value: y, label: y }))}
+              onChange={onChange}
+            />
           </div>
+
           {(errors.birthDay || errors.birthMonth || errors.birthYear) && (
             <span className="error">Bitte gültiges Geburtsdatum wählen</span>
           )}
@@ -122,14 +199,22 @@ export function ChildSection({
 
         <div className="field">
           <label>Vorname (Kind)*</label>
-          <input name="childFirst" value={form.childFirst} onChange={onChange} />
-          {errors.childFirst && <span className="error">{errors.childFirst}</span>}
+          <input
+            name="childFirst"
+            value={form.childFirst}
+            onChange={onChange}
+          />
+          {errors.childFirst && (
+            <span className="error">{errors.childFirst}</span>
+          )}
         </div>
 
         <div className="field">
           <label>Nachname (Kind)*</label>
           <input name="childLast" value={form.childLast} onChange={onChange} />
-          {errors.childLast && <span className="error">{errors.childLast}</span>}
+          {errors.childLast && (
+            <span className="error">{errors.childLast}</span>
+          )}
         </div>
       </div>
     </fieldset>

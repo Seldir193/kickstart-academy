@@ -2,11 +2,11 @@
 
 /* Farben wie im WordPress-Frontend */
 :root {
-  --brand-gold: #FDE100;
-  --brand-gold-700: #E5C200;
+  --brand-gold: #fde100;
+  --brand-gold-700: #e5c200;
   --brand-black: #111111;
-  --brand-white: #FFFFFF;
-  --brand-muted: #6B7280;
+  --brand-white: #ffffff;
+  --brand-muted: #6b7280;
 }
 
 /* ====================== */
@@ -16,9 +16,9 @@
 .btn {
   /* gleiche Variablen-Logik wie .ks-btn im WordPress */
   --btn-border: var(--brand-gold);
-  --btn-fill:   var(--brand-black);   /* Schwarz wischt rein */
-  --btn-text:   var(--brand-black);   /* Text idle */
-  --btn-text-h: var(--brand-white);   /* Text auf Schwarz */
+  --btn-fill: var(--brand-black); /* Schwarz wischt rein */
+  --btn-text: var(--brand-black); /* Text idle */
+  --btn-text-h: var(--brand-white); /* Text auf Schwarz */
 
   --btn-radius: 8px;
   --btn-bw: 2px;
@@ -41,34 +41,20 @@
   /* Wipe: Schwarz von LINKS nach RECHTS (wie im Frontend) */
   background-image: linear-gradient(var(--btn-fill), var(--btn-fill));
   background-repeat: no-repeat;
-  background-position: left center;      /* Start links */
-  background-size: 0% 100%;             /* Start: kein Schwarz sichtbar */
+  background-position: left center; /* Start links */
+  background-size: 0% 100%; /* Start: kein Schwarz sichtbar */
   background-clip: padding-box;
   -webkit-background-clip: padding-box;
 
   transition:
     background-size 0.28s ease,
-    color           0.22s ease,
-    border-color    0.22s ease;
+    color 0.22s ease,
+    border-color 0.22s ease;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 /* Hover: Schwarz wischt von links nach rechts rein, Text wird weiß */
 .btn:hover:not(:disabled) {
-  background-size: 100% 100%;           /* Wipe → voll schwarz */
+  background-size: 100% 100%; /* Wipe → voll schwarz */
   color: var(--btn-text-h);
   border-color: transparent;
 }
@@ -97,9 +83,9 @@
 
   /* Variablen für den Wipe anpassen */
   --btn-border: #b91c1c;
-  --btn-fill:   #000000;    /* Wipe-Farbe = SCHWARZ */
-  --btn-text:   #ffffff;    /* Text idle = weiß */
-  --btn-text-h: #ffffff;    /* Text auf Schwarz = weiß */
+  --btn-fill: #000000; /* Wipe-Farbe = SCHWARZ */
+  --btn-text: #ffffff; /* Text idle = weiß */
+  --btn-text-h: #ffffff; /* Text auf Schwarz = weiß */
 
   color: var(--btn-text);
 }
@@ -109,33 +95,6 @@
   background-size: 100% 100%;
   border-color: transparent;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 /* Hero-Buttons: kein schwarzer Wipe, aber dezenter Hover-Effekt */
 .hero .btn {
@@ -149,13 +108,13 @@
 
   transition:
     background-color 0.2s ease,
-    box-shadow       0.2s ease,
-    transform        0.15s ease;
+    box-shadow 0.2s ease,
+    transform 0.15s ease;
 }
 
 /* Hover: Gold etwas dunkler + leichter Lift */
 .hero .btn:hover:not(:disabled) {
-  background-color:var(--brand-gold-700);  /* etwas dunkleres Gold */
+  background-color: var(--brand-gold-700); /* etwas dunkleres Gold */
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.28);
   transform: translateY(-1px);
 }
@@ -172,24 +131,13 @@
   outline-offset: 2px;
 }
 
-
-
-
-
-
-
-
-
-
-
 /* app/admin/styles/buttons.scss */
 
 /* Basis-Button (.btn) */
 .btn {
   /* … dein bisheriger Code (Padding, Border, Wipe, etc.) … */
 
-  font-size: 14px;        /* gleiche Größe für alle Buttons */
+  font-size: 14px; /* gleiche Größe für alle Buttons */
   font-family: inherit;
-  font-weight: 700;       /* wie gehabt */
+  font-weight: 700; /* wie gehabt */
 }
-

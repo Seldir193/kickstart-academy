@@ -1,3 +1,4 @@
+//src\app\components\training-card\hooks\useOffers.ts
 "use client";
 
 import { useEffect } from "react";

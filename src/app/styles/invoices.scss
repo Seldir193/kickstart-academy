@@ -109,7 +109,9 @@
   background: transparent;
   cursor: pointer;
   opacity: 0;
-  transition: opacity 160ms ease, background-color 160ms ease;
+  transition:
+    opacity 160ms ease,
+    background-color 160ms ease;
 }
 
 .list__item:hover .ks-doc-open,
@@ -126,4 +128,173 @@
   .ks-doc-open {
     opacity: 1;
   }
+}
+
+//nez
+.ks.invoices {
+  .ks-invoices__item {
+    border-bottom: 1px solid var(--admin-sep) !important;
+  }
+
+  .list.list--bleed > .ks-invoices__item:last-child {
+    border-bottom: 0 !important;
+  }
+}
+
+.ks.invoices {
+  .ks-filter-chips {
+    display: grid !important;
+    grid-auto-flow: row !important;
+    grid-template-columns: 1fr !important;
+    gap: 8px !important;
+    justify-items: start !important;
+  }
+
+  .ks-filter-chips > .ks-filter-chip {
+    display: block !important;
+    width: fit-content !important;
+    border: 1px solid var(--admin-sep) !important;
+    border-radius: 999px !important;
+    padding: 6px 10px !important;
+    line-height: 1 !important;
+    background: transparent !important;
+  }
+
+  .ks-filter-chip--active {
+    background: rgba(0, 0, 0, 0.06) !important;
+  }
+}
+
+.ks.invoices {
+  .ks-filter-chips > .ks-filter-chip.ks-filter-chip--active {
+    background: rgba(0, 0, 0, 0.06) !important;
+  }
+}
+
+.ks.invoices {
+  .ks-filter-chips > .ks-filter-chip {
+    cursor: pointer !important;
+  }
+}
+
+//neu
+
+.ks-invoices__formNoTop {
+  margin-top: 0;
+}
+
+.ks-invoices__gridTwoCols {
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.ks-invoices__gridDates {
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.ks-invoices__mt12 {
+  margin-top: 12px;
+}
+
+.ks-invoices__selectRow {
+  display: grid;
+  grid-template-columns: 1fr 220px;
+  gap: 12px;
+}
+
+.ks-invoices__selectTrigger {
+  height: 40px;
+  cursor: pointer;
+}
+
+.ks-invoices__perPageTrigger {
+  height: 40px;
+  width: 120px;
+  cursor: pointer;
+}
+
+.ks-invoices__overlay {
+  position: fixed;
+  left: var(--ksLeft);
+  top: var(--ksTop);
+  width: var(--ksWidth);
+  z-index: 10000;
+  overflow-y: auto;
+  touch-action: pan-y;
+  scrollbar-width: thin;
+}
+
+.ks-documents-overlay--docs.ks-invoices__overlay {
+  max-height: 308px;
+}
+
+.ks-documents-overlay--sort.ks-invoices__overlay {
+  max-height: 264px;
+}
+
+.ks-documents-overlay--perpage.ks-invoices__overlay {
+  max-height: 88px;
+}
+
+.ks-invoices__cursorPointer {
+  cursor: pointer;
+}
+
+.ks-invoices__sepTop {
+  border-bottom: 0;
+  margin-top: 14px;
+}
+
+.ks-invoices__listWrap {
+  min-height: var(--invMinHeight, auto);
+}
+
+.ks-invoices__withSep {
+  border-bottom: 1px solid var(--admin-sep, rgba(0, 0, 0, 0.08));
+  cursor: pointer;
+}
+
+.ks-invoices__rowBody {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.ks-invoices__rowIcon {
+  margin-top: 2px;
+}
+
+.ks-invoices__rowMain {
+  min-width: 0;
+  flex: 1;
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.ks-invoices__rowLeft {
+  min-width: 0;
+}
+
+.ks-invoices__docTextCol {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.ks-invoices__loadingLine {
+  height: 20px;
+  visibility: var(--invLoadingVisibility);
+}
+
+.ks-invoices__loadingLine::before {
+  content: "Lade…";
+}
+
+.ks-doc-select__badgeCol {
+  gap: 10px;
 }

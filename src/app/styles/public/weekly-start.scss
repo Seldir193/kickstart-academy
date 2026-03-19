@@ -1,0 +1,99 @@
+// /* src/app/weekly/start/StartClient.module.scss */
+// .page {
+//   min-height: 70vh;
+//   display: flex;
+//   align-items: center;
+//   justify-content: center;
+//   padding: 40px 16px;
+// }
+
+// .card {
+//   width: 100%;
+//   max-width: 420px;
+//   border: 1px solid #e5e7eb;
+//   background: #ffffff;
+//   border-radius: 16px;
+//   padding: 24px;
+//   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+// }
+
+// .loadingRow {
+//   display: flex;
+//   align-items: center;
+//   gap: 12px;
+// }
+
+// .loadingText {
+//   font-size: 14px;
+//   color: #374151;
+// }
+
+// .spinner {
+//   width: 16px;
+//   height: 16px;
+//   border-radius: 999px;
+//   border: 2px solid #d1d5db;
+//   border-top-color: #111827;
+//   animation: spin 0.9s linear infinite;
+// }
+
+// @keyframes spin {
+//   to {
+//     transform: rotate(360deg);
+//   }
+// }
+
+// .errorBox {
+//   display: flex;
+//   flex-direction: column;
+//   gap: 16px;
+// }
+
+// .errorText {
+//   font-size: 14px;
+//   color: #dc2626;
+// }
+
+// .actions {
+//   display: flex;
+//   flex-direction: column;
+//   gap: 10px;
+// }
+
+// .primaryBtn,
+// .secondaryBtn {
+//   display: inline-flex;
+//   align-items: center;
+//   justify-content: center;
+//   height: 40px;
+//   border-radius: 12px;
+//   padding: 0 14px;
+//   font-size: 14px;
+//   font-weight: 600;
+//   text-decoration: none;
+// }
+
+// .primaryBtn {
+//   background: #111827;
+//   color: #ffffff;
+// }
+
+// .primaryBtn:hover {
+//   background: #0b1220;
+// }
+
+// .secondaryBtn {
+//   background: #ffffff;
+//   border: 1px solid #e5e7eb;
+//   color: #111827;
+// }
+
+// .secondaryBtn:hover {
+//   background: #f9fafb;
+// }
+
+// .primaryBtn:focus,
+// .secondaryBtn:focus {
+//   outline: none;
+//   box-shadow: 0 0 0 2px rgba(17, 24, 39, 0.18);
+// }
