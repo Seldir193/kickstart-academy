@@ -490,6 +490,13 @@ export default function BookDialog({
     return isPowertrainingOffer(selectedOffer);
   }, [selectedOffer]);
 
+  const isOneTimeVoucherOffer =
+    !isCamp &&
+    !isPowertraining &&
+    (selectedOffer?.category === "RentACoach" ||
+      selectedOffer?.category === "ClubPrograms" ||
+      selectedOffer?.category === "Individual");
+
   const holidayLabel = useMemo(() => {
     return resolveHolidayLabel(selectedOffer);
   }, [selectedOffer]);
@@ -951,6 +958,43 @@ export default function BookDialog({
                   <span className="camp-summary-item__value">
                     {holidayRange || "—"}
                   </span>
+                </div>
+              </div>
+
+              <div className="camp-block camp-block--footer">
+                <div className="camp-block__title">Buchungsangaben</div>
+
+                <div className="camp-grid camp-grid--top">
+                  <div className="field">
+                    <label className="lbl">Gutschein</label>
+                    <input
+                      className="input"
+                      value={voucher}
+                      onChange={(e) => setVoucher(e.target.value)}
+                    />
+                  </div>
+
+                  <div className="field">
+                    <label className="lbl">Quelle</label>
+                    <input
+                      className="input"
+                      value={source}
+                      onChange={(e) => setSource(e.target.value)}
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        )}
+
+        {isOneTimeVoucherOffer && (
+          <section className="camp-options camp-options--premium">
+            <div className="camp-card">
+              <div className="camp-card__head">
+                <div>
+                  <div className="camp-card__eyebrow">Einmalbuchung</div>
+                  <div className="camp-card__title">Buchungsdetails</div>
                 </div>
               </div>
 
