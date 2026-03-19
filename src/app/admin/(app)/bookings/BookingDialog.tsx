@@ -195,6 +195,70 @@ function inferVenue(booking: Booking) {
 //   return booking.source === "admin_booking" ? "Intern" : "Online";
 // }
 
+// function inferBookingType(booking: Booking) {
+//   const program = inferProgram(booking).toLowerCase();
+//   const offerType = safeText(booking.offerType).toLowerCase();
+//   const offerTitle = safeText(booking.offerTitle).toLowerCase();
+//   const venue = safeText(booking.venue).toLowerCase();
+//   const joined = `${program} ${offerType} ${offerTitle} ${venue}`.trim();
+
+//   if (booking.meta?.subscriptionEligible) return "Weekly";
+
+//   if (
+//     /foerdertraining|kindergarten|torwarttraining|foerdertraining_athletik/.test(
+//       joined,
+//     )
+//   ) {
+//     return "Weekly";
+//   }
+
+//   if (
+//     /personaltraining|personal training|einzeltraining|1:1|1to1|individual|coach education|rent-a-coach|rentacoach/.test(
+//       joined,
+//     )
+//   ) {
+//     return "One-Time";
+//   }
+
+//   if (booking.meta?.paymentApprovalRequired) return "One-Time";
+
+//   return booking.source === "admin_booking" ? "Intern" : "Online";
+// }
+
+// function inferBookingType(booking: Booking) {
+//   const program = inferProgram(booking).toLowerCase();
+//   const offerType = safeText(booking.offerType).toLowerCase();
+//   const offerTitle = safeText(booking.offerTitle).toLowerCase();
+//   const venue = safeText(booking.venue).toLowerCase();
+//   const joined = `${program} ${offerType} ${offerTitle} ${venue}`.trim();
+
+//   if (booking.meta?.subscriptionEligible) return "Weekly";
+
+//   if (/clubprogram|club program|coach education|coacheducation/.test(joined)) {
+//     return "Weekly";
+//   }
+
+//   if (
+//     /foerdertraining|kindergarten|torwarttraining|foerdertraining_athletik/.test(
+//       joined,
+//     )
+//   ) {
+//     return "Weekly";
+//   }
+
+//   if (
+//     /personaltraining|personal training|einzeltraining|1:1|1to1|individual|rent-a-coach|rentacoach/.test(
+//       joined,
+//     )
+//   ) {
+//     return "One-Time";
+//   }
+
+//   if (booking.meta?.paymentApprovalRequired) return "One-Time";
+
+//   return booking.source === "admin_booking" ? "Intern" : "Online";
+// }
+
 function inferBookingType(booking: Booking) {
   const program = inferProgram(booking).toLowerCase();
   const offerType = safeText(booking.offerType).toLowerCase();
@@ -213,7 +277,7 @@ function inferBookingType(booking: Booking) {
   }
 
   if (
-    /personaltraining|personal training|einzeltraining|1:1|1to1|individual|coach education|rent-a-coach|rentacoach/.test(
+    /personaltraining|personal training|einzeltraining|1:1|1to1|individual|coach education|coacheducation|rent-a-coach|rentacoach|clubprogram|club program/.test(
       joined,
     )
   ) {
