@@ -10,6 +10,9 @@ type Props = {
   dunning: boolean;
   creditNote: boolean;
 
+  invoice: boolean;
+  setInvoice: (v: boolean) => void;
+
   setParticipation: (v: boolean) => void;
   setCancellation: (v: boolean) => void;
   setStorno: (v: boolean) => void;
@@ -42,11 +45,13 @@ function Chip({
 
 export default function TypeChips({
   participation,
+  invoice,
   cancellation,
   storno,
   dunning,
   creditNote,
   setParticipation,
+  setInvoice,
   setCancellation,
   setStorno,
   setDunning,
@@ -60,6 +65,14 @@ export default function TypeChips({
         label="Participation"
         onClick={() => {
           setParticipation(!participation);
+          onAnyChange();
+        }}
+      />
+      <Chip
+        active={invoice}
+        label="Invoice"
+        onClick={() => {
+          setInvoice(!invoice);
           onAnyChange();
         }}
       />

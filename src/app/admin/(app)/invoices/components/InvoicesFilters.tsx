@@ -12,6 +12,9 @@ type Props = {
   typeDunning: boolean;
   typeCreditNote: boolean;
 
+  typeInvoice: boolean;
+  setTypeInvoice: (v: boolean) => void;
+
   setTypeParticipation: (v: boolean) => void;
   setTypeCancellation: (v: boolean) => void;
   setTypeStorno: (v: boolean) => void;
@@ -56,6 +59,8 @@ export default function InvoicesFilters(props: Props) {
             storno={props.typeStorno}
             dunning={props.typeDunning}
             creditNote={props.typeCreditNote}
+            invoice={props.typeInvoice}
+            setInvoice={props.setTypeInvoice}
             setParticipation={props.setTypeParticipation}
             setCancellation={props.setTypeCancellation}
             setStorno={props.setTypeStorno}

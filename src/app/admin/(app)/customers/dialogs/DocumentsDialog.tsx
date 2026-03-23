@@ -1,7 +1,6 @@
 // src/app/admin/(app)/customers/dialogs/DocumentsDialog.tsx
 "use client";
 
-//import React, { useEffect, useMemo, useState } from "react";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import KsDatePicker from "@/app/admin/(app)/invoices/components/KsDatePicker";
 import { useFixedSelectbox } from "../hooks/useFixedSelectbox";
@@ -18,14 +17,6 @@ import { TypeChips } from "./documentsDialog/components/TypeChips";
 import { useBookDialogFamily } from "./bookDialog/hooks/useBookDialogFamily";
 import { useDropdownOutsideClose } from "./bookDialog/hooks/useDropdownOutsideClose";
 import type { FamilyChild, FamilyMember } from "./bookDialog/types";
-
-// type Props = {
-//   customerId: string;
-//   childUid?: string;
-//   childFirst?: string;
-//   childLast?: string;
-//   onClose: () => void;
-// };
 
 type Props = {
   customerId: string;
@@ -188,62 +179,6 @@ function trimTitle(d: DocItem) {
   return noAddress.trim();
 }
 
-// function docScore(d: DocItem) {
-//   let score = 0;
-//   const rawDate =
-//     (d as any).date ||
-//     (d as any).createdAt ||
-//     (d as any).invoiceDate ||
-//     (d as any).issuedAt ||
-//     "";
-
-//   if (docNoFrom(d)) score += 8;
-//   if (String(d.href || "").trim()) score += 4;
-//   if (String(d.title || "").trim()) score += 2;
-//   if (String(rawDate).trim()) score += 1;
-//   return score;
-// }
-
-// function docIdentity(d: DocItem) {
-//   const type = String(d.type || "")
-//     .trim()
-//     .toLowerCase();
-//   const no = String(docNoFrom(d) || "")
-//     .trim()
-//     .toLowerCase();
-//   const href = String(d.href || "")
-//     .trim()
-//     .toLowerCase();
-//   const title = trimTitle(d).toLowerCase();
-
-//   const rawDate =
-//     (d as any).date ||
-//     (d as any).createdAt ||
-//     (d as any).invoiceDate ||
-//     (d as any).issuedAt ||
-//     "";
-
-//   const date = String(rawDate).trim();
-
-//   if (no) return `${type}::${no}`;
-//   if (href) return `${type}::${href}`;
-//   return `${type}::${title}::${date}`;
-// }
-// function dedupeDocs(items: DocItem[]) {
-//   const best = new Map<string, DocItem>();
-
-//   for (const item of items) {
-//     const key = docIdentity(item);
-//     const prev = best.get(key);
-
-//     if (!prev || docScore(item) > docScore(prev)) {
-//       best.set(key, item);
-//     }
-//   }
-
-//   return Array.from(best.values());
-// }
-
 function DocumentRow({ d }: { d: DocItem }) {
   const title = trimTitle(d);
   const badge = badgeTextFrom(d);
@@ -266,26 +201,13 @@ function DocumentRow({ d }: { d: DocItem }) {
   );
 }
 
-// function rowKeyForDoc(d: DocItem, index: number) {
-//   const id = String(d.id || "").trim();
-//   const type = String(d.type || "")
-//     .trim()
-//     .toLowerCase();
-//   const no = String(docNoFrom(d) || "").trim();
-//   const href = String(d.href || "").trim();
-//   const title = String(d.title || "").trim();
-
-// //   return [id, type, no, href, title, index].join("::");
-// }
-
 export default function DocumentsDialog({
   customerId,
-  // childUid,
-  // childFirst,
-  // childLast,
+
   onClose,
 }: Props) {
   const [typeParticipation, setTypeParticipation] = useState(true);
+  const [typeInvoice, setTypeInvoice] = useState(true);
   const [typeCancellation, setTypeCancellation] = useState(true);
   const [typeStorno, setTypeStorno] = useState(true);
   const [typeDunning, setTypeDunning] = useState(true);
@@ -408,8 +330,10 @@ export default function DocumentsDialog({
   useOverlayVars(sortSelect);
 
   const selectedTypes = useMemo(() => {
-    const t: string[] = [];
+    // const t: string[] = [];
+    const t: string[] = ["invoice"];
     if (typeParticipation) t.push("participation");
+    if (typeInvoice) t.push("invoice");
     if (typeCancellation) t.push("cancellation");
     if (typeStorno) t.push("storno");
     if (typeDunning) t.push("dunning");
@@ -419,6 +343,7 @@ export default function DocumentsDialog({
   }, [
     typeParticipation,
     typeCancellation,
+    typeInvoice,
     typeStorno,
     typeDunning,
     typeCreditNote,
@@ -427,51 +352,11 @@ export default function DocumentsDialog({
 
   const sort = useMemo(() => sortParamFrom(sortOrder), [sortOrder]);
 
-  // const fetchQuery = useMemo(() => {
-  //   return qs({
-  //     page: 1,
-  //     limit: 1000,
-  //     type: selectedTypes.join(","),
-  //     from,
-  //     to,
-  //     q,
-  //     sort,
-  //     childUid: childUid || "",
-  //     childFirst: childFirst || "",
-  //     childLast: childLast || "",
-  //   });
-  // }, [selectedTypes, from, to, q, sort, childUid, childFirst, childLast]);
-
   const activeChildUid =
     bookingTarget === "child" ? safeText(activeChild?.uid) : "";
   const activeParentEmail = safeText(
     selectedParent?.parent?.email,
   ).toLowerCase();
-
-  // const fetchQuery = useMemo(() => {
-  //   return qs({
-  //     page: 1,
-  //     limit: 1000,
-  //     type: selectedTypes.join(","),
-  //     from,
-  //     to,
-  //     q,
-  //     sort,
-  //   });
-  // }, [selectedTypes, from, to, q, sort]);
-
-  // const fetchQuery = useMemo(() => {
-  //   return qs({
-  //     page: 1,
-  //     limit: 1000,
-  //     type: selectedTypes.join(","),
-  //     from,
-  //     to,
-  //     q,
-  //     sort,
-  //     childUid: activeChildUid,
-  //   });
-  // }, [selectedTypes, from, to, q, sort, activeChildUid]);
 
   const fetchQuery = useMemo(() => {
     return qs({
@@ -496,40 +381,6 @@ export default function DocumentsDialog({
     activeChildUid,
     activeParentEmail,
   ]);
-
-  // const downloadQuery = useMemo(() => {
-  //   return qs({
-  //     type: selectedTypes.join(","),
-  //     from,
-  //     to,
-  //     q,
-  //     sort,
-  //     childUid: childUid || "",
-  //     childFirst: childFirst || "",
-  //     childLast: childLast || "",
-  //   });
-  // }, [selectedTypes, from, to, q, sort, childUid, childFirst, childLast]);
-
-  // const downloadQuery = useMemo(() => {
-  //   return qs({
-  //     type: selectedTypes.join(","),
-  //     from,
-  //     to,
-  //     q,
-  //     sort,
-  //   });
-  // }, [selectedTypes, from, to, q, sort]);
-
-  // const downloadQuery = useMemo(() => {
-  //   return qs({
-  //     type: selectedTypes.join(","),
-  //     from,
-  //     to,
-  //     q,
-  //     sort,
-  //     childUid: activeChildUid,
-  //   });
-  // }, [selectedTypes, from, to, q, sort, activeChildUid]);
 
   const downloadQuery = useMemo(() => {
     return qs({
@@ -556,6 +407,8 @@ export default function DocumentsDialog({
   const filteredItems = useMemo(() => {
     return items.filter((item) => {
       const type = String(item.type || "").toLowerCase();
+      // if (type === "invoice") return true;
+      if (type === "invoice") return typeInvoice;
       if (type === "participation") return typeParticipation;
       if (type === "cancellation") return typeCancellation;
       if (type === "storno") return typeStorno;
@@ -606,20 +459,6 @@ export default function DocumentsDialog({
     )}/documents.zip?${fullQuery}`;
   }, [customerId, downloadQuery, visibleDocIds]);
 
-  // useEffect(() => {
-  //   setItems([]);
-  //   setHasLoadedOnce(false);
-  //   setErr(null);
-  //   setPage(1);
-  // }, [customerId, childUid, childFirst, childLast]);
-
-  // useEffect(() => {
-  //   setItems([]);
-  //   setHasLoadedOnce(false);
-  //   setErr(null);
-  //   setPage(1);
-  // }, [customerId]);
-
   useEffect(() => {
     setItems([]);
     setHasLoadedOnce(false);
@@ -652,8 +491,7 @@ export default function DocumentsDialog({
         if (cancelled) return;
 
         setItems(Array.isArray(data.items) ? data.items : []);
-        // const rawItems = Array.isArray(data.items) ? data.items : [];
-        // setItems(dedupeDocs(rawItems));
+
         setHasLoadedOnce(true);
       } catch (e: any) {
         if (cancelled) return;
@@ -863,6 +701,8 @@ export default function DocumentsDialog({
                 dunning={typeDunning}
                 contract={typeContract}
                 creditNote={typeCreditNote}
+                invoice={typeInvoice}
+                setInvoice={setTypeInvoice}
                 setParticipation={setTypeParticipation}
                 setCancellation={setTypeCancellation}
                 setStorno={setTypeStorno}

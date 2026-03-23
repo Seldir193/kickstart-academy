@@ -1,16 +1,17 @@
-// src/app/admin/(app)/customers/dialogs/documentsDialog/components/TypeChips.tsx
 "use client";
 
 import React from "react";
 
 type Props = {
   participation: boolean;
+  invoice: boolean;
   cancellation: boolean;
   storno: boolean;
   dunning: boolean;
   contract: boolean;
   creditNote: boolean;
   setParticipation: (v: boolean) => void;
+  setInvoice: (v: boolean) => void;
   setCancellation: (v: boolean) => void;
   setStorno: (v: boolean) => void;
   setDunning: (v: boolean) => void;
@@ -42,12 +43,14 @@ function Chip({
 
 export function TypeChips({
   participation,
+  invoice,
   cancellation,
   storno,
   dunning,
   contract,
   creditNote,
   setParticipation,
+  setInvoice,
   setCancellation,
   setStorno,
   setDunning,
@@ -62,6 +65,14 @@ export function TypeChips({
         label="Participation"
         onClick={() => {
           setParticipation(!participation);
+          onAnyChange();
+        }}
+      />
+      <Chip
+        active={invoice}
+        label="Invoice"
+        onClick={() => {
+          setInvoice(!invoice);
           onAnyChange();
         }}
       />
@@ -101,7 +112,7 @@ export function TypeChips({
         active={contract}
         label="Contract"
         onClick={() => {
-          if (typeof setContract === "function") setContract(!contract);
+          setContract(!contract);
           onAnyChange();
         }}
       />
@@ -109,7 +120,7 @@ export function TypeChips({
   );
 }
 
-// //src\app\admin\(app)\customers\dialogs\documentsDialog\components\TypeChips.tsx
+// // src/app/admin/(app)/customers/dialogs/documentsDialog/components/TypeChips.tsx
 // "use client";
 
 // import React from "react";
@@ -119,10 +130,14 @@ export function TypeChips({
 //   cancellation: boolean;
 //   storno: boolean;
 //   dunning: boolean;
+//   contract: boolean;
+//   creditNote: boolean;
 //   setParticipation: (v: boolean) => void;
 //   setCancellation: (v: boolean) => void;
 //   setStorno: (v: boolean) => void;
 //   setDunning: (v: boolean) => void;
+//   setContract: (v: boolean) => void;
+//   setCreditNote: (v: boolean) => void;
 //   onAnyChange: () => void;
 // };
 
@@ -152,10 +167,14 @@ export function TypeChips({
 //   cancellation,
 //   storno,
 //   dunning,
+//   contract,
+//   creditNote,
 //   setParticipation,
 //   setCancellation,
 //   setStorno,
 //   setDunning,
+//   setContract,
+//   setCreditNote,
 //   onAnyChange,
 // }: Props) {
 //   return (
@@ -165,6 +184,14 @@ export function TypeChips({
 //         label="Participation"
 //         onClick={() => {
 //           setParticipation(!participation);
+//           onAnyChange();
+//         }}
+//       />
+//       <Chip
+//         active={invoice}
+//         label="Invoice"
+//         onClick={() => {
+//           setInvoice(!invoice);
 //           onAnyChange();
 //         }}
 //       />
@@ -189,6 +216,22 @@ export function TypeChips({
 //         label="Dunning"
 //         onClick={() => {
 //           setDunning(!dunning);
+//           onAnyChange();
+//         }}
+//       />
+//       <Chip
+//         active={creditNote}
+//         label="Credit Note"
+//         onClick={() => {
+//           setCreditNote(!creditNote);
+//           onAnyChange();
+//         }}
+//       />
+//       <Chip
+//         active={contract}
+//         label="Contract"
+//         onClick={() => {
+//           if (typeof setContract === "function") setContract(!contract);
 //           onAnyChange();
 //         }}
 //       />

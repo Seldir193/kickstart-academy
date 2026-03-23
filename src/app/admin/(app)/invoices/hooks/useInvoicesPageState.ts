@@ -8,6 +8,7 @@ import type { DunningFilter, PaymentFilter } from "../utils/invoiceFilters";
 
 export function useInvoicesPageState() {
   const [typeParticipation, setTypeParticipation] = useState(true);
+  const [typeInvoice, setTypeInvoice] = useState(true);
   const [typeCancellation, setTypeCancellation] = useState(true);
   const [typeStorno, setTypeStorno] = useState(true);
   const [typeDunning, setTypeDunning] = useState(true);
@@ -29,11 +30,18 @@ export function useInvoicesPageState() {
   const serverTypes = useMemo(() => {
     const next: string[] = [];
     if (typeParticipation) next.push("participation");
+    if (typeInvoice) next.push("invoice");
     if (typeCancellation) next.push("cancellation");
     if (typeStorno) next.push("storno");
     if (typeCreditNote) next.push("creditnote");
     return next;
-  }, [typeParticipation, typeCancellation, typeStorno, typeCreditNote]);
+  }, [
+    typeParticipation,
+    typeInvoice,
+    typeCancellation,
+    typeStorno,
+    typeCreditNote,
+  ]);
 
   const uiTypes = useMemo(() => {
     const next = [...serverTypes];
@@ -59,6 +67,9 @@ export function useInvoicesPageState() {
     typeStorno,
     typeDunning,
     typeCreditNote,
+
+    typeInvoice,
+    setTypeInvoice,
 
     setTypeParticipation,
     setTypeCancellation,

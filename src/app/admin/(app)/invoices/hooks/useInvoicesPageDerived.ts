@@ -12,6 +12,7 @@ import { normalizePdfTarget, type DocItem } from "../utils/invoiceUi";
 
 type Types = {
   typeParticipation: boolean;
+  typeInvoice: boolean;
   typeCancellation: boolean;
   typeStorno: boolean;
   typeDunning: boolean;
@@ -21,6 +22,7 @@ type Types = {
 function typeAllowed(row: InvoiceRow, types: Types) {
   const t = String((row as any)?.type || "").toLowerCase();
   if (t === "participation") return types.typeParticipation;
+  if (t === "invoice") return types.typeInvoice;
   if (t === "cancellation") return types.typeCancellation;
   if (t === "storno") return types.typeStorno;
   if (t === "dunning") return types.typeDunning;

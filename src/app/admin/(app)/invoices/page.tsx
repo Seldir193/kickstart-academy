@@ -55,6 +55,7 @@ export default function AdminInvoicesPage() {
     dunningFilter: s.dunningFilter,
     types: {
       typeParticipation: s.typeParticipation,
+      typeInvoice: s.typeInvoice,
       typeCancellation: s.typeCancellation,
       typeStorno: s.typeStorno,
       typeDunning: s.typeDunning,
@@ -112,6 +113,8 @@ export default function AdminInvoicesPage() {
           typeStorno={s.typeStorno}
           typeDunning={s.typeDunning}
           typeCreditNote={s.typeCreditNote}
+          typeInvoice={s.typeInvoice}
+          setTypeInvoice={s.setTypeInvoice}
           setTypeParticipation={s.setTypeParticipation}
           setTypeCancellation={s.setTypeCancellation}
           setTypeStorno={s.setTypeStorno}
