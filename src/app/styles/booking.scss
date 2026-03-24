@@ -303,7 +303,7 @@
 
   .news-list__head,
   .news-list__row {
-    grid-template-columns: 1.3fr 1.5fr 140px 110px 140px 170px 56px !important;
+    grid-template-columns: 1.3fr 1.5fr 140px 110px 140px 170px 140px 56px !important;
   }
 
   .news-list__h--right {
@@ -399,11 +399,11 @@
       align-items: center;
       justify-content: flex-end;
       padding-right: 10px;
-      grid-column: 7;
+      grid-column: 8;
     }
 
     .news-list__cell--action {
-      grid-column: 7;
+      grid-column: 8;
     }
   }
 }
