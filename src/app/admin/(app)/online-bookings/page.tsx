@@ -295,7 +295,7 @@ export default function AdminOnlineBookingsPage() {
   const sortItemStyle = { flex: "0 0 200px", minWidth: 180 } as const;
 
   return (
-    <div className="news-admin ks bookings-admin">
+    <div className="news-admin ks online-bookings-admin">
       {notice ? (
         <div
           className={notice.type === "ok" ? "ok" : "error"}
