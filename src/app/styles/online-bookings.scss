@@ -31,9 +31,19 @@
 .bookings-admin {
   --booking-sep: var(--admin-sep);
 
+  // .news-list__head,
+  // .news-list__row {
+  //   grid-template-columns: 1.3fr 1.5fr 90px 110px 140px 170px 56px;
+  // }
+
+  // .news-list__head,
+  // .news-list__row {
+  //   grid-template-columns: 1.3fr 1.5fr 90px 140px 110px 140px 140px 170px 56px;
+  // }
+
   .news-list__head,
   .news-list__row {
-    grid-template-columns: 1.3fr 1.5fr 90px 110px 140px 170px 56px;
+    grid-template-columns: 1.3fr 1.5fr 90px 140px 110px 140px 140px 170px 56px;
   }
 
   .news-list__h--right {
@@ -89,5 +99,18 @@
     .list.list--bleed
     .list__item.chip.is-fullhover:focus-within {
     border-top-color: var(--booking-sep) !important;
+  }
+}
+
+.news-list__cell--action {
+  grid-column: 9;
+}
+
+@media (min-width: 920px) {
+  .news-list__cell--action {
+    grid-column: 9;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
   }
 }

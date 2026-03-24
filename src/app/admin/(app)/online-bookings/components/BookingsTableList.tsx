@@ -6,7 +6,13 @@ import { useEffect, useMemo, useRef } from "react";
 import BulkActions from "@/app/admin/(app)/news/components/BulkActions";
 import { useSelection } from "@/app/admin/(app)/news/hooks/useSelection";
 import type { Booking } from "../types";
-import { asStatus, formatDateDE, programAbbr, safeText } from "../utils";
+import {
+  asStatus,
+  // formatDateDE,
+  programAbbr,
+  safeText,
+  formatDateOnlyDE,
+} from "../utils";
 
 type Props = {
   items: Booking[];
@@ -27,6 +33,22 @@ function get_restore_ids(items: Booking[], ids: Set<string>) {
   return items
     .filter((b) => ids.has(b._id) && b.status === "deleted")
     .map((b) => b._id);
+}
+
+function render_payment(b: Booking) {
+  const payment = String(b?.paymentStatus || "")
+    .trim()
+    .toLowerCase();
+  if (!payment) return "—";
+
+  const class_name =
+    payment === "paid"
+      ? "badge badge-success"
+      : payment === "returned"
+        ? "badge badge-danger"
+        : "badge";
+
+  return <span className={class_name}>{payment}</span>;
 }
 
 export default function BookingsTableList({
@@ -126,7 +148,9 @@ export default function BookingsTableList({
           }}
           count={count}
           isAllSelected={sel.isAllSelected}
-          disabled={busy || items.length === 0}
+          busy={busy}
+          isEmpty={items.length === 0}
+          //disabled={busy || items.length === 0}
           onToggleAll={toggle_all}
           onClear={clear_selection}
           showClear={show_clear}
@@ -148,7 +172,7 @@ export default function BookingsTableList({
       <div className="news-table__scroll">
         <section className="card news-list">
           <div className="news-list__table">
-            <div className="news-list__head" aria-hidden="true">
+            {/* <div className="news-list__head" aria-hidden="true">
               <div className="news-list__h">Name</div>
               <div className="news-list__h">Email</div>
               <div className="news-list__h">Age</div>
@@ -156,6 +180,18 @@ export default function BookingsTableList({
               <div className="news-list__h">Status</div>
               <div className="news-list__h">Created</div>
               <div className="news-list__h news-list__h--right">Aktion</div>
+            </div> */}
+
+            <div className="news-list__head" aria-hidden="true">
+              <div className="news-list__h">Name</div>
+              <div className="news-list__h">Email</div>
+              <div className="news-list__h">Age</div>
+              <div className="news-list__h">Date</div>
+              <div className="news-list__h">Program</div>
+              <div className="news-list__h">Status</div>
+              <div className="news-list__h">Payment</div>
+              <div className="news-list__h">Created</div>
+              <div className="news-list__h news-list__h--right">Action</div>
             </div>
 
             <ul className="list list--bleed">
@@ -197,7 +233,7 @@ export default function BookingsTableList({
                       {safeText(b.email) || "—"}
                     </div>
 
-                    <div className="news-list__cell bookings-mono">
+                    {/* <div className="news-list__cell bookings-mono">
                       {Number.isFinite(Number(b.age)) ? String(b.age) : "—"}
                     </div>
 
@@ -209,6 +245,26 @@ export default function BookingsTableList({
 
                     <div className="news-list__cell">
                       {formatDateDE(b.createdAt)}
+                    </div> */}
+
+                    <div className="news-list__cell bookings-mono">
+                      {Number.isFinite(Number(b.age)) ? String(b.age) : "—"}
+                    </div>
+
+                    <div className="news-list__cell bookings-mono">
+                      {formatDateOnlyDE(b.date)}
+                    </div>
+
+                    <div className="news-list__cell bookings-mono">
+                      {programAbbr(b)}
+                    </div>
+
+                    <div className="news-list__cell">{asStatus(b.status)}</div>
+
+                    <div className="news-list__cell">{render_payment(b)}</div>
+
+                    <div className="news-list__cell">
+                      {formatDateOnlyDE(b.createdAt)}
                     </div>
 
                     {!hide_edit ? (
