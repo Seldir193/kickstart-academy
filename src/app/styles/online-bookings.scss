@@ -1,6 +1,19 @@
 .online-bookings-admin {
   --booking-sep: var(--admin-sep);
 
+  .ks-online-bookings-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+    margin-top: 8px;
+    margin-bottom: 12px;
+  }
+
+  .news-admin__filter {
+    margin: 0;
+  }
+
   .news-list__head {
     padding: 10px 12px;
     align-items: center;
@@ -8,22 +21,12 @@
 
   .news-list__head,
   .news-list__row {
-    grid-template-columns: 1.25fr 1.5fr 80px 120px 130px 130px 130px 130px 56px !important;
+    grid-template-columns:
+      1.25fr 1.5fr 80px 120px 130px
+      130px 130px 130px 56px !important;
   }
 
-  .list.list--bleed .list__item.chip.is-fullhover.news-list__row {
-    display: grid !important;
-    align-items: center !important;
-    justify-content: unset !important;
-    gap: 0 !important;
-    width: 100%;
-    min-height: 60px;
-    padding: 12px 12px !important;
-    padding-left: 12px !important;
-    padding-right: 12px !important;
-    position: relative;
-  }
-
+  .list.list--bleed .list__item.chip.is-fullhover.news-list__row,
   .news-list__row {
     display: grid !important;
     align-items: center !important;
@@ -31,12 +34,12 @@
     gap: 0 !important;
     width: 100%;
     min-height: 60px;
-    padding: 12px 12px !important;
+    padding: 12px !important;
     position: relative;
+  }
 
-    &::after {
-      content: none !important;
-    }
+  .news-list__row::after {
+    content: none !important;
   }
 
   .news-list__h {
@@ -57,17 +60,6 @@
     min-width: 0;
     min-height: 24px;
     line-height: 1.2;
-  }
-
-  .news-list__cell--name,
-  .news-list__cell--email,
-  .news-list__cell--age,
-  .news-list__cell--date,
-  .news-list__cell--program,
-  .news-list__cell--status,
-  .news-list__cell--payment,
-  .news-list__cell--created {
-    align-items: center;
   }
 
   .news-list__cell--email {
@@ -106,14 +98,11 @@
     line-height: 1;
   }
 
-  .edit-trigger {
+  .edit-trigger,
+  .icon-img {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-  }
-
-  .icon-img {
-    display: block;
   }
 
   .bookings-mono {
@@ -126,7 +115,7 @@
 
   .news-admin__box--scroll3 {
     min-height: 0;
-    max-height: calc(100vh - 420px);
+    max-height: calc(100dvh - 260px);
     overflow: auto;
     scrollbar-gutter: auto;
     overscroll-behavior: contain;
@@ -157,116 +146,18 @@
     box-shadow: 0 0 0 3px color-mix(in oklab, var(--brand-navy) 22%, #ffffff);
   }
 
-  .news-admin .news-list .list.list--bleed .list__item.chip.is-fullhover:hover,
-  .news-admin .news-list .list.list--bleed .list__item.chip.is-fullhover:focus,
-  .news-admin
-    .news-list
-    .list.list--bleed
-    .list__item.chip.is-fullhover:focus-visible,
-  .news-admin
-    .news-list
-    .list.list--bleed
-    .list__item.chip.is-fullhover:focus-within {
-    border-top-color: var(--booking-sep) !important;
+  .pager.pager--arrows {
+    margin-bottom: 8px;
+  }
+
+  .news-admin {
+    .news-list {
+      .list.list--bleed .list__item.chip.is-fullhover:hover,
+      .list.list--bleed .list__item.chip.is-fullhover:focus,
+      .list.list--bleed .list__item.chip.is-fullhover:focus-visible,
+      .list.list--bleed .list__item.chip.is-fullhover:focus-within {
+        border-top-color: var(--booking-sep) !important;
+      }
+    }
   }
 }
-
-// .online-bookings-admin {
-//   --booking-sep: var(--admin-sep);
-
-//   .input {
-//     height: 40px;
-//     border-radius: 8px;
-//     border: 1px solid #d9dee6;
-//     background-color: #fff;
-//     transition:
-//       border-color 0.18s ease,
-//       box-shadow 0.18s ease,
-//       background-color 0.18s ease;
-//   }
-
-//   .input:hover {
-//     border-color: var(--text);
-//   }
-
-//   .input:focus {
-//     outline: none;
-//     border-color: var(--brand-navy);
-//     box-shadow: 0 0 0 3px color-mix(in oklab, var(--brand-navy) 22%, #ffffff);
-//   }
-
-//   .ks-selectbox__trigger {
-//     height: 40px;
-//   }
-
-//   .news-list__head,
-//   .news-list__row {
-//     grid-template-columns: 1.3fr 1.5fr 90px 140px 110px 140px 140px 150px 128px;
-//   }
-
-//   .news-list__h--right {
-//     grid-column: 9;
-//     justify-self: end;
-//     text-align: right;
-//     padding-left: 20px;
-//   }
-
-//   .bookings-mono {
-//     font-variant-numeric: tabular-nums;
-//     font-family:
-//       ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
-//       "Courier New", monospace;
-//     opacity: 0.9;
-//   }
-
-//   .news-list__cell--email {
-//     overflow: hidden;
-//     text-overflow: ellipsis;
-//     white-space: nowrap;
-//   }
-
-//   .news-admin__box--scroll3 {
-//     min-height: 0;
-//     max-height: calc(100vh - 420px);
-//     overflow: auto;
-//     scrollbar-gutter: auto;
-//     overscroll-behavior: contain;
-//   }
-
-//   .list.list--bleed .list__item.chip.is-fullhover {
-//     gap: 0;
-//   }
-
-//   .list.list--bleed > .list__item + .list__item {
-//     border-top: 1px solid var(--booking-sep) !important;
-//   }
-
-//   .news-list__row {
-//     position: relative;
-
-//     &::after {
-//       content: none !important;
-//     }
-//   }
-
-//   .news-list__cell--action {
-//     grid-column: 9;
-//     display: flex;
-//     justify-content: flex-end;
-//     align-items: center;
-//     padding-left: 20px;
-//   }
-
-//   .news-admin .news-list .list.list--bleed .list__item.chip.is-fullhover:hover,
-//   .news-admin .news-list .list.list--bleed .list__item.chip.is-fullhover:focus,
-//   .news-admin
-//     .news-list
-//     .list.list--bleed
-//     .list__item.chip.is-fullhover:focus-visible,
-//   .news-admin
-//     .news-list
-//     .list.list--bleed
-//     .list__item.chip.is-fullhover:focus-within {
-//     border-top-color: var(--booking-sep) !important;
-//   }
-// }
