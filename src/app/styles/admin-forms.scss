@@ -665,7 +665,6 @@ input.input[type="date"]::-webkit-calendar-picker-indicator {
   box-shadow: 0 0 0 3px color-mix(in oklab, var(--brand-navy) 22%, white);
 }
 
-.ks-training-select.ks-training-select--open .ks-training-select__trigger,
 .ks-training-select.ks-training-select--open .ks-training-select__chevron {
   border-top-color: var(--brand-navy);
   transform: rotate(180deg);
