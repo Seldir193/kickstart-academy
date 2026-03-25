@@ -170,6 +170,12 @@ export default function NewsTableList({
           showClear={showClear}
           onDelete={deleteSelected}
           canDelete={!!onDeleteMany}
+          toggleLabel="Select news"
+          selectedLabel="selected"
+          selectAllLabel="Select all"
+          clearAllLabel="Clear all"
+          deleteLabel="Delete"
+          cancelLabel="Cancel"
         />
       </div>
 

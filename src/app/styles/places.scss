@@ -1,6 +1,43 @@
-//src\app\styles\places.scss
-//src\app\styles\places.scss
 .places-admin {
+  .ks-places-toolbar {
+    display: grid;
+    grid-template-columns: minmax(260px, 1fr) auto auto;
+    align-items: center;
+    gap: 12px;
+    margin-top: 8px;
+    margin-bottom: 12px;
+
+    .input {
+      height: 40px;
+      border-radius: 8px;
+    }
+  }
+
+  .ks-places-toolbar__search {
+    min-width: 0;
+
+    .input-with-icon__input {
+      width: 100%;
+    }
+  }
+
+  .ks-places-toolbar__sort {
+    min-width: 180px;
+
+    .ks-training-select {
+      max-width: 220px;
+    }
+  }
+
+  .ks-places-toolbar__action {
+    display: flex;
+    justify-content: flex-end;
+
+    .btn {
+      white-space: nowrap;
+    }
+  }
+
   .news-list__head,
   .news-list__row {
     grid-template-columns: 140px 1.2fr 1.6fr 120px 180px 56px;
@@ -31,19 +68,20 @@
 
   .news-admin__box--scroll3 {
     min-height: 0;
-    max-height: calc(100vh - 420px);
+    max-height: calc(100dvh - 260px);
     overflow: auto;
     scrollbar-gutter: auto;
     overscroll-behavior: contain;
   }
 
-  .list.list--bleed .list__item.chip.is-fullhover {
-    gap: 0;
-  }
+  .list.list--bleed {
+    .list__item.chip.is-fullhover {
+      gap: 0;
+    }
 
-  /* Separator: global --admin-sep, nur 1 Linie (kein ::after) */
-  .list.list--bleed > .list__item + .list__item {
-    border-top: 1px solid var(--admin-sep) !important;
+    > .list__item + .list__item {
+      border-top: 1px solid var(--admin-sep) !important;
+    }
   }
 
   .news-list__row {
@@ -53,6 +91,16 @@
 
     &::after {
       content: none !important;
+    }
+  }
+
+  .pager.pager--arrows {
+    margin-bottom: 8px;
+  }
+
+  .bulkbar {
+    .btn {
+      transition: none;
     }
   }
 }
@@ -124,139 +172,35 @@
   }
 }
 
-.places-admin {
-  .bulkbar .btn {
-    transition: none;
+@media (max-width: 980px) {
+  .places-admin {
+    .ks-places-toolbar {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .ks-places-toolbar__search {
+      grid-column: 1 / -1;
+    }
   }
 }
 
-// .places-admin {
-//   .news-list__head,
-//   .news-list__row {
-//     grid-template-columns: 140px 1.2fr 1.6fr 120px 180px 56px;
-//   }
+@media (max-width: 760px) {
+  .places-admin {
+    .ks-places-toolbar {
+      grid-template-columns: 1fr;
+      align-items: stretch;
+    }
 
-//   .news-list__h--right {
-//     text-align: right;
-//   }
+    .ks-places-toolbar__sort {
+      max-width: 100%;
 
-//   .places-mono {
-//     font-variant-numeric: tabular-nums;
-//     font-family:
-//       ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
-//       "Courier New", monospace;
-//     opacity: 0.9;
-//   }
+      .ks-training-select {
+        max-width: 100%;
+      }
+    }
 
-//   .news-list__cell--addr,
-//   .news-list__cell--city {
-//     overflow: hidden;
-//     text-overflow: ellipsis;
-//     white-space: nowrap;
-//   }
-
-//   .news-admin__box--scroll3 {
-//     min-height: 0;
-//     max-height: calc(100vh - 420px);
-//     overflow: auto;
-//     scrollbar-gutter: auto;
-//     overscroll-behavior: contain;
-//   }
-
-//   .list.list--bleed .list__item.chip.is-fullhover {
-//     gap: 0;
-//   }
-
-//   .list.list--bleed > .list__item + .list__item {
-//     border-top: 0 !important;
-//   }
-
-//   .news-list__row {
-//     position: relative;
-
-//     &::after {
-//       content: "";
-//       position: absolute;
-//       left: 16px;
-//       right: 16px;
-//       bottom: 0;
-//       height: 2px;
-//       background: rgba(15, 30, 46, 0.1);
-//       pointer-events: none;
-//       z-index: 2;
-//     }
-//   }
-// }
-
-// .modal__close {
-//   img {
-//     width: 25px;
-//     height: 25px;
-//     opacity: 0.72;
-//     transition: opacity 125ms ease-out;
-//   }
-
-//   &:hover img,
-//   &:focus-visible img {
-//     opacity: 1;
-//   }
-// }
-
-// .btn {
-//   display: flex;
-//   align-items: center;
-//   gap: 10px;
-
-//   .btn__icon {
-//     width: 25px;
-//     height: 25px;
-//     display: inline-block;
-//   }
-
-//   &:hover .btn__icon,
-//   &:focus .btn__icon,
-//   &:focus-visible .btn__icon {
-//     filter: invert(1);
-//   }
-// }
-
-// .news-admin__section-head-number {
-//   display: flex;
-//   align-items: baseline;
-//   justify-content: flex-end;
-//   gap: 12px;
-//   margin-bottom: 8px;
-// }
-
-// .input-with-icon {
-//   position: relative;
-
-//   &__icon {
-//     position: absolute;
-//     left: 12px;
-//     top: 50%;
-//     transform: translateY(-50%);
-//     width: 20px;
-//     height: 20px;
-//     opacity: 0.7;
-//     pointer-events: none;
-//     transition:
-//       opacity 125ms ease,
-//       filter 125ms ease;
-//   }
-
-//   &__input {
-//     padding-left: 40px;
-//   }
-
-//   &:focus-within &__icon {
-//     opacity: 1;
-//     filter: brightness(0) saturate(100%);
-//   }
-// }
-
-// .places-admin {
-//   .bulkbar .btn {
-//     transition: none;
-//   }
-// }
+    .ks-places-toolbar__action {
+      justify-content: flex-start;
+    }
+  }
+}
