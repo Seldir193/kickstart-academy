@@ -838,7 +838,8 @@ button.input[aria-haspopup="listbox"] {
 
 .ks-customers-table-scroll {
   overflow-y: auto;
-  max-height: calc(100dvh - 430px);
+  //  max-height: calc(100dvh - 430px);
+  max-height: calc(100dvh - 260px);
   min-height: 0;
 
   scrollbar-width: thin;
@@ -863,4 +864,104 @@ button.input[aria-haspopup="listbox"] {
   top: 0;
   z-index: 2;
   background: #f9fafb;
+}
+
+//neu
+
+.ks-customers-toolbar {
+  display: grid;
+  grid-template-columns: auto minmax(260px, 1fr) auto auto;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.ks-customers-toolbar__tabs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  flex-wrap: nowrap;
+}
+
+.ks-customers-toolbar__tabs .btn {
+  white-space: nowrap;
+}
+
+.ks-customers-toolbar__search {
+  min-width: 0;
+}
+
+.ks-customers-toolbar__search .input-with-icon__input {
+  width: 100%;
+}
+
+.ks-customers-toolbar__filter {
+  min-width: 120px;
+}
+
+.ks-customers-toolbar__filter .ks-filter-select {
+  max-width: 120px;
+}
+
+.ks-customers-toolbar__action {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.ks-customers-toolbar__action .btn {
+  white-space: nowrap;
+}
+
+.ks-customers-toolbar .input {
+  height: 40px;
+  border-radius: 8px;
+}
+
+.ks-customers-toolbar-select {
+  display: flex;
+  align-items: center;
+}
+
+@media (max-width: 1180px) {
+  .ks-customers-toolbar {
+    grid-template-columns: 1fr 1fr;
+    align-items: stretch;
+  }
+
+  .ks-customers-toolbar__tabs {
+    grid-column: 1 / -1;
+    flex-wrap: wrap;
+  }
+
+  .ks-customers-toolbar__search {
+    grid-column: 1 / -1;
+  }
+
+  .ks-customers-toolbar__action {
+    justify-content: flex-end;
+  }
+}
+
+@media (max-width: 700px) {
+  .ks-customers-toolbar {
+    grid-template-columns: 1fr;
+  }
+
+  .ks-customers-toolbar__filter .ks-filter-select {
+    max-width: 100%;
+  }
+
+  .ks-customers-toolbar__action {
+    justify-content: flex-start;
+  }
+}
+
+.ks-customers-toolbar {
+  display: grid;
+  grid-template-columns: auto minmax(260px, 1fr) auto auto;
+  align-items: center;
+  gap: 12px;
+  margin-top: 8px;
+  margin-bottom: 12px;
 }
