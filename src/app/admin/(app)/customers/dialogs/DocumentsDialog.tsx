@@ -900,25 +900,39 @@ export default function DocumentsDialog({
         )}
 
         <div className="flex items-center justify-between mt-3">
-          <div className="flex items-center gap-2">
+          <div className="pager pager--arrows">
             <button
+              type="button"
               className="btn"
+              aria-label="Previous page"
               onClick={() => setPage((p) => prevPage(p))}
               disabled={page <= 1}
             >
-              Prev
+              <img
+                src="/icons/arrow_right_alt.svg"
+                alt=""
+                aria-hidden="true"
+                className="icon-img icon-img--left"
+              />
             </button>
 
-            <div>
+            <div className="pager__count" aria-live="polite" aria-atomic="true">
               Page {page} / {totalPages}
             </div>
 
             <button
+              type="button"
               className="btn"
+              aria-label="Next page"
               onClick={() => setPage((p) => nextPage(p, totalPages))}
               disabled={page >= totalPages}
             >
-              Next
+              <img
+                src="/icons/arrow_right_alt.svg"
+                alt=""
+                aria-hidden="true"
+                className="icon-img"
+              />
             </button>
           </div>
 
