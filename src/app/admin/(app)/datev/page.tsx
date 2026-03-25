@@ -17,6 +17,9 @@ function lastOfMonth(d = new Date()) {
   return new Date(d.getFullYear(), d.getMonth() + 1, 0);
 }
 
+function getDownloadIconSrc(isActive: boolean) {
+  return isActive ? "/icons/download-light.svg" : "/icons/download-dark.svg";
+}
 export default function DatevExportPage() {
   const today = new Date();
 
@@ -24,6 +27,7 @@ export default function DatevExportPage() {
   const [to, setTo] = useState(fmtISO(lastOfMonth(today)));
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useState<string | null>(null);
+  const [isDownloadActive, setIsDownloadActive] = useState(false);
 
   const fileName = useMemo(() => {
     return `datev-export_${from}_bis_${to}.zip`;
@@ -94,8 +98,26 @@ export default function DatevExportPage() {
 
       {err && <div className="mb-3 text-red-600">{err}</div>}
 
-      <button className="btn" onClick={runExport} disabled={loading}>
+      {/* <button className="btn" onClick={runExport} disabled={loading}>
         {loading ? "Export läuft…" : "ZIP herunterladen"}
+      </button> */}
+
+      <button
+        className="btn ks-invoices__downloadBtn"
+        onClick={runExport}
+        disabled={loading}
+        onMouseEnter={() => setIsDownloadActive(true)}
+        onMouseLeave={() => setIsDownloadActive(false)}
+        onFocus={() => setIsDownloadActive(true)}
+        onBlur={() => setIsDownloadActive(false)}
+      >
+        <img
+          src={getDownloadIconSrc(isDownloadActive)}
+          alt=""
+          aria-hidden="true"
+          className="ks-invoices__downloadIcon"
+        />
+        <span>{loading ? "Export läuft…" : "ZIP herunterladen"}</span>
       </button>
     </div>
   );
