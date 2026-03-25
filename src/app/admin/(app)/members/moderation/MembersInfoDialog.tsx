@@ -1,4 +1,3 @@
-//src\app\admin\(app)\members\moderation\MembersInfoDialog.tsx
 "use client";
 
 import React, { useMemo } from "react";
@@ -31,7 +30,7 @@ function badgeClass(u: AdminMember) {
 
 function titleOf(u: AdminMember) {
   const n = val(u?.fullName);
-  return n !== "—" ? n : "Mitglied";
+  return n !== "—" ? n : "Member";
 }
 
 export default function MembersInfoDialog({ open, item, onClose }: Props) {
@@ -54,63 +53,63 @@ export default function MembersInfoDialog({ open, item, onClose }: Props) {
     <div className="modal fl-info" role="dialog" aria-modal="true">
       <div className="modal__overlay" onClick={onClose} />
 
-      <div className="modal__panel modal__panel--md">
+      <div className="fl-info__panel">
         <div className="card fl-info__card">
           <div className="fl-info__head">
             <div className="fl-info__head-left">
-              <div className="fl-info__title">{data.title}</div>
-              <div className="fl-info__subtitle">Nur Ansicht</div>
-            </div>
-
-            <div className="fl-info__head-right">
-              <span className={`fl-info__badge ${badgeClass(item)}`}>
-                {data.role}
-              </span>
-
-              <div className="dialog-head__actions">
-                <button
-                  type="button"
-                  className="modal__close"
-                  aria-label="Close"
-                  onClick={onClose}
-                >
-                  <img
-                    src="/icons/close.svg"
-                    alt=""
-                    aria-hidden="true"
-                    className="icon-img"
-                  />
-                </button>
+              <div className="fl-info__eyebrow">Member details</div>
+              <div className="fl-info__title-row">
+                <h2 className="fl-info__title">{data.title}</h2>
+                <span className={`fl-info__badge ${badgeClass(item)}`}>
+                  {data.role}
+                </span>
               </div>
+              <div className="fl-info__subtitle">Read only</div>
             </div>
+
+            <button
+              type="button"
+              className="modal__close fl-info__close"
+              aria-label="Close"
+              onClick={onClose}
+            >
+              <img
+                src="/icons/close.svg"
+                alt=""
+                aria-hidden="true"
+                className="icon-img"
+              />
+            </button>
           </div>
 
           <div className="fl-info__body">
             <div className="fl-info__grid">
               <section className="fl-info__section">
-                <div className="fl-info__section-title">Profil</div>
+                <div className="fl-info__section-title">Profile</div>
 
                 <div className="fl-info__list">
                   <div className="fl-info__row">
-                    <div className="fl-info__label">E-Mail</div>
+                    <div className="fl-info__label">Email</div>
                     <div className="fl-info__value">{data.email}</div>
                   </div>
 
                   <div className="fl-info__row">
-                    <div className="fl-info__label">Rolle</div>
+                    <div className="fl-info__label">Role</div>
                     <div className="fl-info__value">{data.role}</div>
                   </div>
 
                   <div className="fl-info__row">
                     <div className="fl-info__label">Owner</div>
                     <div className="fl-info__value">
-                      {data.isOwner ? "Ja" : "Nein"}
+                      {data.isOwner ? "Yes" : "No"}
                     </div>
                   </div>
 
                   <div className="fl-info__row">
                     <div className="fl-info__label">ID</div>
-                    <div className="fl-info__value">{data.id}</div>
+                    <div className="fl-info__value fl-info__value--mono">
+                      {data.id}
+                    </div>
                   </div>
                 </div>
               </section>
@@ -121,7 +120,17 @@ export default function MembersInfoDialog({ open, item, onClose }: Props) {
                 <div className="fl-info__list">
                   <div className="fl-info__row is-multiline">
                     <div className="fl-info__label">Avatar URL</div>
-                    <div className="fl-info__value">{data.avatarUrl}</div>
+                    <div className="fl-info__value fl-info__value--break">
+                      {data.avatarUrl !== "—" ? (
+                        <img
+                          src={data.avatarUrl}
+                          alt=""
+                          className="fl-info__avatar-preview"
+                        />
+                      ) : (
+                        <div className="fl-info__value">—</div>
+                      )}
+                    </div>
                   </div>
                 </div>
               </section>
