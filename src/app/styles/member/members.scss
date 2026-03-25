@@ -1,30 +1,41 @@
-// // //src\app\styles\member\members.scss
 .members-admin {
-  .news-admin__subhead {
+  .members-admin__toolbar {
     display: flex;
     align-items: center;
-    justify-content: space-between;
     gap: 12px;
+    margin-top: 8px;
+    margin-bottom: 12px;
   }
 
-  .news-admin__title {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
+  .mt-3 {
+    margin-top: 0.75rem;
+    margin-bottom: 8px;
   }
 
-  .news-admin__alarm {
+  .ks-customers-table-scroll {
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+
+  .members-admin__badge {
     display: inline-flex;
     align-items: center;
     gap: 8px;
     padding: 4px 10px;
     border-radius: 999px;
     background: rgba(0, 0, 0, 0.06);
+    flex: 0 0 auto;
   }
 
-  .news-admin__alarm-badge {
+  .members-admin__badge-text {
     font-weight: 800;
     font-size: 12px;
+    white-space: nowrap;
+  }
+
+  .news-admin__box--scroll3 {
+    max-height: none;
+    overflow: visible;
   }
 }
 
@@ -34,9 +45,62 @@
   justify-content: flex-end;
 }
 
-.members-admin {
-  .news-admin__box--scroll3 {
-    max-height: none;
-    overflow: visible;
+@media (max-width: 980px) {
+  .members-admin {
+    .members-admin__toolbar {
+      flex-wrap: wrap;
+      align-items: stretch;
+    }
   }
 }
+
+@media (max-width: 760px) {
+  .members-admin {
+    .members-admin__badge {
+      align-self: flex-start;
+    }
+  }
+}
+
+// // // //src\app\styles\member\members.scss
+// .members-admin {
+//   .news-admin__subhead {
+//     display: flex;
+//     align-items: center;
+//     justify-content: space-between;
+//     gap: 12px;
+//   }
+
+//   .news-admin__title {
+//     display: inline-flex;
+//     align-items: center;
+//     gap: 10px;
+//   }
+
+//   .news-admin__alarm {
+//     display: inline-flex;
+//     align-items: center;
+//     gap: 8px;
+//     padding: 4px 10px;
+//     border-radius: 999px;
+//     background: rgba(0, 0, 0, 0.06);
+//   }
+
+//   .news-admin__alarm-badge {
+//     font-weight: 800;
+//     font-size: 12px;
+//   }
+// }
+
+// .members-admin__footer {
+//   margin-top: 12px;
+//   display: flex;
+//   justify-content: flex-end;
+// }
+
+// .members-admin {
+//   .news-admin__box--scroll3 {
+//     max-height: none;
+//     overflow: visible;
+//   }
+// }

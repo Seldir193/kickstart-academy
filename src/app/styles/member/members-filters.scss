@@ -1,15 +1,19 @@
 .members-admin {
-  .members-filters__row {
+  .members-filters {
     display: flex;
+    align-items: center;
     gap: 12px;
-    align-items: flex-end;
-    margin-bottom: 16px;
-    flex-wrap: wrap;
+    flex: 1 1 auto;
+    min-width: 0;
   }
 
   .members-filters__search {
     flex: 1 1 420px;
-    min-width: 320px;
+    min-width: 280px;
+  }
+
+  .members-filters__search .input-with-icon__input {
+    width: 100%;
   }
 
   .members-filters__dd {
@@ -18,12 +22,26 @@
   }
 
   .members-filters__dd--sort {
-    flex: 0 0 260px;
+    flex-basis: 260px;
     min-width: 220px;
   }
+}
 
-  @media (max-width: 760px) {
-    .members-filters__search,
+@media (max-width: 980px) {
+  .members-admin {
+    .members-filters {
+      flex-wrap: wrap;
+    }
+
+    .members-filters__search {
+      flex: 1 1 100%;
+      min-width: 0;
+    }
+  }
+}
+
+@media (max-width: 760px) {
+  .members-admin {
     .members-filters__dd,
     .members-filters__dd--sort {
       flex: 1 1 100%;
@@ -31,3 +49,38 @@
     }
   }
 }
+
+// //src\app\styles\member\members-filters.scss
+// .members-admin {
+//   .members-filters__row {
+//     display: flex;
+//     gap: 12px;
+//     align-items: flex-end;
+//     margin-bottom: 16px;
+//     flex-wrap: wrap;
+//   }
+
+//   .members-filters__search {
+//     flex: 1 1 420px;
+//     min-width: 320px;
+//   }
+
+//   .members-filters__dd {
+//     flex: 0 0 220px;
+//     min-width: 200px;
+//   }
+
+//   .members-filters__dd--sort {
+//     flex: 0 0 260px;
+//     min-width: 220px;
+//   }
+
+//   @media (max-width: 760px) {
+//     .members-filters__search,
+//     .members-filters__dd,
+//     .members-filters__dd--sort {
+//       flex: 1 1 100%;
+//       min-width: 0;
+//     }
+//   }
+// }

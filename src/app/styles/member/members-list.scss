@@ -1,4 +1,3 @@
-// //src\app\styles\member\members-list.scss
 .members-list {
   background: #fff;
 
@@ -14,7 +13,6 @@
     grid-template-columns: 1.2fr 1.2fr 0.7fr 0.7fr 148px;
     gap: 0;
     padding: 10px 16px;
-    // border-bottom: 1px solid rgba(15, 30, 46, 0.14);
     border-bottom: 1px solid var(--admin-sep);
     background: #f9fafb;
   }
@@ -52,7 +50,6 @@
     border-radius: 0 !important;
     background: #fff;
     background-clip: padding-box;
-    // box-shadow: none !important;
     box-shadow: inset 0 -1px 0 rgba(15, 30, 46, 0.14) !important;
   }
 
@@ -231,23 +228,276 @@
       justify-content: flex-end;
     }
 
-    .members-list__cell--email::before,
-    .members-list__cell--status::before,
-    .members-list__cell--role::before {
+    .members-list__cell--email::before {
+      content: "Email: ";
       font-weight: 800;
       color: rgba(15, 30, 46, 0.55);
     }
 
-    .members-list__cell--email::before {
-      content: "Email: ";
-    }
-
     .members-list__cell--status::before {
       content: "Status: ";
+      font-weight: 800;
+      color: rgba(15, 30, 46, 0.55);
     }
 
     .members-list__cell--role::before {
       content: "Role: ";
+      font-weight: 800;
+      color: rgba(15, 30, 46, 0.55);
     }
   }
 }
+
+// // //src\app\styles\member\members-list.scss
+// .members-list {
+//   background: #fff;
+
+//   .members-list__table {
+//     width: 100%;
+//   }
+
+//   .members-list__head {
+//     position: sticky;
+//     top: 0;
+//     z-index: 1;
+//     display: grid;
+//     grid-template-columns: 1.2fr 1.2fr 0.7fr 0.7fr 148px;
+//     gap: 0;
+//     padding: 10px 16px;
+
+//     border-bottom: 1px solid var(--admin-sep);
+//     background: #f9fafb;
+//   }
+
+//   .members-list__h {
+//     font-size: 12px;
+//     font-weight: 800;
+//     letter-spacing: 0.02em;
+//     text-transform: uppercase;
+//     color: rgba(15, 30, 46, 0.62);
+//     user-select: none;
+//   }
+
+//   .members-list__h--right {
+//     text-align: right;
+//   }
+
+//   .list,
+//   .list--bleed {
+//     display: block;
+//     padding: 0 !important;
+//     margin: 0 !important;
+//     background: transparent;
+//   }
+
+//   .members-list__row {
+//     position: relative;
+//     display: grid !important;
+//     grid-template-columns: 1.2fr 1.2fr 0.7fr 0.7fr 148px;
+//     align-items: center;
+//     gap: 0;
+//     padding: 12px 16px !important;
+//     margin: 0 !important;
+//     border: 0 !important;
+//     border-radius: 0 !important;
+//     background: #fff;
+//     background-clip: padding-box;
+
+//     box-shadow: inset 0 -1px 0 rgba(15, 30, 46, 0.14) !important;
+//   }
+
+//   .members-list__row.is-fullhover:hover,
+//   .members-list__row.is-fullhover:focus-visible {
+//     background: rgba(0, 0, 0, 0.02);
+//   }
+
+//   .members-list__row.is-fullhover:focus-visible {
+//     outline: 2px solid rgba(15, 30, 46, 0.18);
+//     outline-offset: -2px;
+//   }
+
+//   .list.list--bleed .list__item.chip.is-fullhover:focus,
+//   .list.list--bleed .list__item.chip.is-fullhover:focus-visible {
+//     outline: none !important;
+//     outline-offset: 0 !important;
+//   }
+
+//   .members-list__row.is-fullhover:hover .edit-trigger,
+//   .members-list__row.is-fullhover:focus .edit-trigger,
+//   .members-list__row.is-fullhover:focus-within .edit-trigger {
+//     opacity: 1;
+//     pointer-events: auto;
+//   }
+
+//   .members-list__cell {
+//     min-width: 0;
+//   }
+
+//   .members-list__cell--action {
+//     display: inline-flex;
+//     align-items: center;
+//     justify-content: flex-end;
+//     gap: 8px;
+//     flex-wrap: nowrap;
+//   }
+
+//   .members-list__title {
+//     font-weight: 800;
+//     line-height: 1.1;
+//     max-width: 100%;
+//     overflow: hidden;
+//     text-overflow: ellipsis;
+//     white-space: nowrap;
+//   }
+
+//   .members-list__mono {
+//     display: block;
+//     font-size: 13px;
+//     color: rgba(15, 30, 46, 0.75);
+//     overflow: hidden;
+//     text-overflow: ellipsis;
+//     white-space: nowrap;
+//     font-family:
+//       ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+//       "Courier New", monospace;
+//   }
+
+//   .members-list__status {
+//     display: inline-flex;
+//     align-items: center;
+//     justify-content: center;
+//     height: 28px;
+//     padding: 0 10px;
+//     border-radius: 999px;
+//     font-size: 12px;
+//     font-weight: 800;
+//     white-space: nowrap;
+//   }
+
+//   .members-list__status.is-provider {
+//     background: rgba(100, 116, 139, 0.14);
+//     color: rgba(51, 65, 85, 0.95);
+//   }
+
+//   .members-list__status.is-super {
+//     background: rgba(34, 197, 94, 0.12);
+//     color: rgba(21, 128, 61, 0.95);
+//   }
+
+//   .members-list__status.is-owner {
+//     background: rgba(0, 0, 0, 0.06);
+//     color: rgba(15, 30, 46, 0.9);
+//   }
+
+//   .members-list__status.is-active {
+//     opacity: 0.9;
+//   }
+
+//   .members-list__status.is-inactive {
+//     opacity: 0.65;
+//     text-decoration: line-through;
+//   }
+
+//   .members-list.is-busy .edit-trigger {
+//     opacity: 0 !important;
+//     pointer-events: none !important;
+//   }
+
+//   .edit-trigger {
+//     opacity: 0;
+//     pointer-events: none;
+//     flex: 0 0 auto;
+//     width: 2.5rem;
+//     height: 2.5rem;
+//     border-radius: 9999px;
+//     display: inline-flex;
+//     align-items: center;
+//     justify-content: center;
+//     padding: 0;
+//     line-height: 0;
+//     transition:
+//       opacity 160ms ease,
+//       background-color 140ms ease;
+//   }
+
+//   .edit-trigger:hover {
+//     background: rgba(0, 0, 0, 0.06);
+//   }
+
+//   .edit-trigger:focus,
+//   .edit-trigger:focus-visible {
+//     opacity: 1;
+//     pointer-events: auto;
+//   }
+
+//   .edit-trigger:focus-visible {
+//     outline: 2px solid rgba(17, 17, 17, 0.35);
+//     outline-offset: 2px;
+//     background: rgba(0, 0, 0, 0.06);
+//   }
+
+//   .edit-trigger.is-disabled {
+//     opacity: 0.45;
+//     pointer-events: auto;
+//   }
+
+//   .edit-trigger .icon-img {
+//     width: 1.25rem;
+//     height: 1.25rem;
+//     display: block;
+//   }
+
+//   @media (hover: none) {
+//     .edit-trigger {
+//       opacity: 1;
+//       pointer-events: auto;
+//     }
+//   }
+
+//   @media (max-width: 980px) {
+//     .members-list__head {
+//       display: none;
+//     }
+
+//     .members-list__row {
+//       grid-template-columns: 1fr 148px;
+//       row-gap: 8px;
+//       padding: 14px 16px !important;
+//     }
+
+//     .members-list__cell--name,
+//     .members-list__cell--email,
+//     .members-list__cell--status,
+//     .members-list__cell--role {
+//       grid-column: 1 / 2;
+//       font-size: 13px;
+//       color: rgba(15, 30, 46, 0.75);
+//     }
+
+//     .members-list__cell--action {
+//       grid-column: 2 / 3;
+//       grid-row: 1 / 2;
+//       align-self: start;
+//       justify-content: flex-end;
+//     }
+
+//     .members-list__cell--email::before,
+//     .members-list__cell--status::before,
+//     .members-list__cell--role::before {
+//       font-weight: 800;
+//       color: rgba(15, 30, 46, 0.55);
+//     }
+
+//     .members-list__cell--email::before {
+//       content: "Email: ";
+//     }
+
+//     .members-list__cell--status::before {
+//       content: "Status: ";
+//     }
+
+//     .members-list__cell--role::before {
+//       content: "Role: ";
+//     }
+//   }
+// }
