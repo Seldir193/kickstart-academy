@@ -37,6 +37,11 @@ type ParentOption = {
   label: string;
 };
 
+type DownloadButtonProps = {
+  href: string;
+  label: string;
+};
+
 function safeText(v: unknown) {
   return String(v ?? "").trim();
 }
@@ -179,6 +184,10 @@ function trimTitle(d: DocItem) {
   return noAddress.trim();
 }
 
+function getDownloadIconSrc(isActive: boolean) {
+  return isActive ? "/icons/download-light.svg" : "/icons/download-dark.svg";
+}
+
 function DocumentRow({ d }: { d: DocItem }) {
   const title = trimTitle(d);
   const badge = badgeTextFrom(d);
@@ -198,6 +207,29 @@ function DocumentRow({ d }: { d: DocItem }) {
         </div>
       </div>
     </div>
+  );
+}
+
+function DownloadButton({ href, label }: DownloadButtonProps) {
+  const [isActive, setIsActive] = useState(false);
+
+  return (
+    <a
+      href={href}
+      className="btn ks-invoices__downloadBtn"
+      onMouseEnter={() => setIsActive(true)}
+      onMouseLeave={() => setIsActive(false)}
+      onFocus={() => setIsActive(true)}
+      onBlur={() => setIsActive(false)}
+    >
+      <img
+        src={getDownloadIconSrc(isActive)}
+        alt=""
+        aria-hidden="true"
+        className="ks-invoices__downloadIcon"
+      />
+      <span>{label}</span>
+    </a>
   );
 }
 
@@ -949,12 +981,8 @@ export default function DocumentsDialog({
         </div>
 
         <div className="flex justify-end gap-2 mt-4">
-          <a href={csvHref} className="btn">
-            Download CSV
-          </a>
-          <a href={zipHref} className="btn">
-            Download ZIP
-          </a>
+          <DownloadButton href={csvHref} label="Download CSV" />
+          <DownloadButton href={zipHref} label="Download ZIP" />
 
           <button
             type="button"

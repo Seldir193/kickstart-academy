@@ -298,3 +298,15 @@
 .ks-doc-select__badgeCol {
   gap: 10px;
 }
+
+.ks-invoices__downloadBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ks-invoices__downloadIcon {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
