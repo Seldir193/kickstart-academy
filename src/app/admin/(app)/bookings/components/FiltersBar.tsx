@@ -15,23 +15,18 @@ type Props = {
   q: string;
   onSearchChange: (v: string) => void;
   onSearchKeyDown: (key: string) => void;
-
   searchItemStyle: CSSProperties;
   ddItemStyle: CSSProperties;
   sortItemStyle: CSSProperties;
-
   programDd: ReturnType<typeof useDropdown>;
   statusDd: ReturnType<typeof useDropdown>;
   sortDd: ReturnType<typeof useDropdown>;
-
   programLabel: string;
   statusLabel: string;
   sortLabel: string;
-
   program: ProgramFilter;
   status: StatusOrAll;
   sort: SortKey;
-
   list: ReturnType<typeof useBookingsList>;
   onProgram: (v: ProgramFilter) => void;
   onStatus: (v: StatusOrAll) => void;
@@ -62,7 +57,6 @@ function SearchFilter(props: {
 }) {
   return (
     <div className="news-admin__filter" style={props.style}>
-      <label className="lbl news-admin__filter-label">Search</label>
       <SearchInput
         value={props.value}
         onChange={props.onChange}
@@ -75,7 +69,6 @@ function SearchFilter(props: {
 function ProgramFilterBox(props: Props) {
   return (
     <div className="news-admin__filter" style={props.ddItemStyle}>
-      <label className="lbl news-admin__filter-label">Course</label>
       <SelectBox
         dd={props.programDd}
         label={props.programLabel}
@@ -96,7 +89,7 @@ function ProgramOptions(props: Props) {
         onClick={() => props.onProgram("all")}
         text="All courses"
       />
-      <SelectGroup label="Weekly Courses">
+      <SelectGroup label="Weekly courses">
         <SelectOption
           active={props.program === "weekly_foerdertraining"}
           onClick={() => props.onProgram("weekly_foerdertraining")}
@@ -118,7 +111,7 @@ function ProgramOptions(props: Props) {
           text="Development Training • Athletik"
         />
       </SelectGroup>
-      <SelectGroup label="Individual Courses">
+      <SelectGroup label="Individual courses">
         <SelectOption
           active={props.program === "ind_1to1"}
           onClick={() => props.onProgram("ind_1to1")}
@@ -135,7 +128,7 @@ function ProgramOptions(props: Props) {
           text="1:1 Training Torwart"
         />
       </SelectGroup>
-      <SelectGroup label="Club Programs">
+      <SelectGroup label="Club programs">
         <SelectOption
           active={props.program === "club_rentacoach"}
           onClick={() => props.onProgram("club_rentacoach")}
@@ -159,7 +152,6 @@ function ProgramOptions(props: Props) {
 function StatusFilterBox(props: Props) {
   return (
     <div className="news-admin__filter" style={props.ddItemStyle}>
-      <label className="lbl news-admin__filter-label">Status</label>
       <SelectBox
         dd={props.statusDd}
         label={props.statusLabel}
@@ -174,6 +166,7 @@ function StatusFilterBox(props: Props) {
 
 function StatusOptions(props: Props) {
   const totalAll = props.list.totalAll ?? props.list.total;
+
   return (
     <>
       <SelectOption
@@ -213,7 +206,6 @@ function StatusOptions(props: Props) {
 function SortFilterBox(props: Props) {
   return (
     <div className="news-admin__filter" style={props.sortItemStyle}>
-      <label className="lbl news-admin__filter-label">Sort</label>
       <SelectBox
         dd={props.sortDd}
         label={props.sortLabel}
@@ -232,12 +224,12 @@ function SortOptions(props: Props) {
       <SelectOption
         active={props.sort === "newest"}
         onClick={() => props.onSort("newest")}
-        text="Neueste zuerst"
+        text="Newest first"
       />
       <SelectOption
         active={props.sort === "oldest"}
         onClick={() => props.onSort("oldest")}
-        text="Älteste zuerst"
+        text="Oldest first"
       />
       <SelectOption
         active={props.sort === "nameAsc"}

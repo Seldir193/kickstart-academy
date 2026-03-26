@@ -1,4 +1,3 @@
-//src\app\admin\(app)\bookings\page.tsx
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -69,11 +68,9 @@ export default function AdminBookingsPage() {
   const [sort, setSort] = useState<SortKey>("newest");
   const [q, setQ] = useState("");
   const qDebounced = useDebouncedValue(q, 300);
-
   const [page, setPage] = useState(1);
   const [selectMode, setSelectMode] = useState(false);
   const toggleBtnRef = useRef<HTMLButtonElement | null>(null);
-
   const [sel, setSel] = useState<DialogBooking | null>(null);
   const { notice, showOk, showError } = useNotice(5000);
 
@@ -180,7 +177,7 @@ export default function AdminBookingsPage() {
         detail: data?.detail || null,
       });
     } catch (e: any) {
-      showError(e?.message || "Details konnten nicht geladen werden");
+      showError(e?.message || "Details could not be loaded.");
       setSel(b);
     }
   }
@@ -222,9 +219,9 @@ export default function AdminBookingsPage() {
     setPage((p) => Math.min(list.pages, p + 1));
   }
 
-  const searchItemStyle = { flex: "1 1 640px", minWidth: 520 } as const;
-  const ddItemStyle = { flex: "0 0 220px", minWidth: 200 } as const;
-  const sortItemStyle = { flex: "0 0 200px", minWidth: 180 } as const;
+  const searchItemStyle = { flex: "1 1 420px", minWidth: 320 } as const;
+  const ddItemStyle = { flex: "0 0 200px", minWidth: 180 } as const;
+  const sortItemStyle = { flex: "0 0 180px", minWidth: 160 } as const;
 
   const busyRowId = busy?.kind === "row" ? busy.id : null;
   const busyBulkDelete = busy?.kind === "bulk_delete";
@@ -235,31 +232,29 @@ export default function AdminBookingsPage() {
       {notice ? <NoticeToast notice={notice} /> : null}
 
       <main className="container">
-        <div className="dialog-subhead news-admin__subhead">
-          <h1 className="text-2xl font-bold m-0 news-admin__title">Bookings</h1>
+        <div className="ks-bookings-toolbar">
+          <FiltersBar
+            q={q}
+            onSearchChange={onSearchChange}
+            onSearchKeyDown={onSearchKeyDown}
+            searchItemStyle={searchItemStyle}
+            ddItemStyle={ddItemStyle}
+            sortItemStyle={sortItemStyle}
+            programDd={programDd}
+            statusDd={statusDd}
+            sortDd={sortDd}
+            programLabel={programLabel(program)}
+            statusLabel={computedStatusLabel}
+            sortLabel={sortLabel(sort)}
+            program={program}
+            status={status}
+            sort={sort}
+            list={list}
+            onProgram={applyProgram}
+            onStatus={applyStatus}
+            onSort={applySort}
+          />
         </div>
-
-        <FiltersBar
-          q={q}
-          onSearchChange={onSearchChange}
-          onSearchKeyDown={onSearchKeyDown}
-          searchItemStyle={searchItemStyle}
-          ddItemStyle={ddItemStyle}
-          sortItemStyle={sortItemStyle}
-          programDd={programDd}
-          statusDd={statusDd}
-          sortDd={sortDd}
-          programLabel={programLabel(program)}
-          statusLabel={computedStatusLabel}
-          sortLabel={sortLabel(sort)}
-          program={program}
-          status={status}
-          sort={sort}
-          list={list}
-          onProgram={applyProgram}
-          onStatus={applyStatus}
-          onSort={applySort}
-        />
 
         {list.error ? (
           <div className="card" role="alert">

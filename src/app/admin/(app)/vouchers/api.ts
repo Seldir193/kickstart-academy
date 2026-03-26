@@ -52,22 +52,6 @@ export async function createVoucher(input: {
   return "Voucher created.";
 }
 
-// export async function createVoucher(input: {
-//   code: string;
-//   amount: number;
-//   active: boolean;
-// }) {
-//   const r = await fetch("/api/admin/vouchers", {
-//     method: "POST",
-//     credentials: "include",
-//     headers: { "Content-Type": "application/json" },
-//     body: JSON.stringify(input),
-//   });
-//   const d = await readJson<any>(r);
-//   if (!r.ok || d?.ok === false) throw new Error(d?.error || r.statusText);
-//   return "Voucher created.";
-// }
-
 export async function updateVoucherMany(
   ids: string[],
   input: Partial<{ code: string; amount: number; active: boolean }>,

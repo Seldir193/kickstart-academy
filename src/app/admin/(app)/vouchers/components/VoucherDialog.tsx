@@ -51,11 +51,6 @@ export default function VoucherDialog({
 
   if (!open) return null;
 
-  //   async function submit() {
-  //     if (voucher?._id) await onUpdate(voucher._id, form);
-  //     else await onCreate(form);
-  //   }
-
   async function submit() {
     const payload = {
       code: String(form.code || "")

@@ -1,3 +1,4 @@
+//src\app\admin\(app)\bookings\components\Pager.tsx
 "use client";
 
 type Props = {
