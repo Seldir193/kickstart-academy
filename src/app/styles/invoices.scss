@@ -1,4 +1,3 @@
-// src/app/styles/invoices.scss
 .ks.invoices {
   .ks-datepicker__trigger:hover {
     border-color: var(--text);
@@ -6,6 +5,7 @@
 
   .ks-datepicker__panel {
     z-index: 10000;
+    min-width: 300px;
   }
 
   .ks-datepicker__title {
@@ -76,7 +76,10 @@
   }
 
   .ks-invoices__card {
-    padding-top: 16px;
+    padding-top: 14px;
+    border-radius: 20px;
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    box-shadow: 0 10px 28px rgba(15, 23, 42, 0.04);
   }
 
   .ks-invoices__formNoTop {
@@ -88,8 +91,8 @@
     flex-wrap: nowrap;
     align-items: center;
     width: 100%;
-    gap: 12px;
-    margin-bottom: 12px;
+    gap: 10px;
+    margin-bottom: 14px;
   }
 
   .ks-invoices__searchItem {
@@ -98,49 +101,68 @@
   }
 
   .ks-invoices__dateItem {
-    flex: 0 0 140px;
-    min-width: 140px;
+    flex: 0 0 170px;
+    min-width: 170px;
   }
 
   .ks-invoices__toolbarSelect {
-    flex: 0 0 160px;
-    min-width: 160px;
+    flex: 0 0 168px;
+    min-width: 168px;
   }
 
   .ks-invoices__toolbarSelect--sort {
-    flex-basis: 130px;
-    min-width: 130px;
+    flex: 0 0 148px;
+    min-width: 148px;
   }
 
   .ks-invoices__typesRow {
-    margin-bottom: 12px;
+    margin-bottom: 14px;
+    padding-top: 2px;
+    padding-bottom: 2px;
   }
 
   .ks-filter-chips {
     display: flex !important;
     flex-wrap: wrap !important;
-    gap: 12px !important;
+    gap: 10px !important;
     justify-items: unset !important;
   }
 
   .ks-filter-chips > .ks-filter-chip {
     display: inline-flex !important;
+    align-items: center !important;
     width: auto !important;
-    padding: 10px 18px !important;
-    border: 1px solid var(--admin-sep) !important;
+    min-height: 40px !important;
+    padding: 0 18px !important;
+    border: 1px solid rgba(15, 23, 42, 0.1) !important;
     border-radius: 999px !important;
-    background: transparent !important;
+    background: #fff !important;
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04) !important;
     cursor: pointer !important;
     line-height: 1 !important;
+    transition:
+      border-color 140ms ease,
+      background-color 140ms ease,
+      box-shadow 140ms ease,
+      transform 140ms ease !important;
+  }
+
+  .ks-filter-chips > .ks-filter-chip:hover {
+    border-color: rgba(15, 23, 42, 0.18) !important;
+    background: #f8fafc !important;
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.06) !important;
+    transform: translateY(-1px) !important;
   }
 
   .ks-filter-chips > .ks-filter-chip.ks-filter-chip--active,
   .ks-filter-chip--active {
-    background: rgba(0, 0, 0, 0.06) !important;
+    border-color: rgba(15, 23, 42, 0.14) !important;
+    background: rgba(15, 23, 42, 0.06) !important;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5) !important;
   }
 
   .ks-invoices__docsRow {
-    margin-bottom: 12px;
+    margin-bottom: 14px;
   }
 
   .ks-invoices__docsSelect {
@@ -149,6 +171,11 @@
 
   .ks-invoices__item {
     border-bottom: 1px solid var(--admin-sep) !important;
+    transition: background-color 140ms ease;
+  }
+
+  .ks-invoices__item:hover {
+    background: rgba(248, 250, 252, 0.85);
   }
 
   .list.list--bleed > .ks-invoices__item:last-child {
@@ -157,9 +184,31 @@
 
   .ks-invoices__selectTrigger,
   .ks-invoices__perPageTrigger,
+  .input-with-icon__input,
+  .ks-datepicker__trigger {
+    height: 44px;
+    min-height: 44px;
+    border-radius: 12px;
+  }
+
+  .ks-invoices__selectTrigger,
+  .ks-invoices__perPageTrigger,
+  .ks-datepicker__trigger,
   .input-with-icon__input {
-    height: 40px;
-    min-height: 40px;
+    border-color: rgba(15, 23, 42, 0.12);
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.03);
+    transition:
+      border-color 140ms ease,
+      box-shadow 140ms ease,
+      background-color 140ms ease;
+  }
+
+  .ks-invoices__selectTrigger:hover,
+  .ks-invoices__perPageTrigger:hover,
+  .ks-datepicker__trigger:hover,
+  .input-with-icon__input:hover {
+    border-color: rgba(15, 23, 42, 0.22);
+    background: #fff;
   }
 
   .input-with-icon {
@@ -170,7 +219,7 @@
   .input-with-icon__icon {
     position: absolute;
     top: 50%;
-    left: 12px;
+    left: 14px;
     width: 20px;
     height: 20px;
     opacity: 0.7;
@@ -183,7 +232,7 @@
 
   .input-with-icon__input {
     width: 100%;
-    padding-left: 40px;
+    padding-left: 44px;
     cursor: text;
   }
 
@@ -226,8 +275,13 @@
     max-height: 88px;
   }
 
+  .ks-invoices__dateItem:last-of-type .ks-datepicker__panel {
+    transform: translateX(calc(-100% + 170px)) !important;
+  }
+
   .ks-invoices__listWrap {
     min-height: var(--invMinHeight, auto);
+    border-radius: 16px;
   }
 
   .ks-invoices__withSep {
@@ -239,11 +293,11 @@
     display: flex;
     align-items: flex-start;
     width: 100%;
-    gap: 10px;
+    gap: 12px;
   }
 
   .ks-invoices__rowIcon {
-    margin-top: 2px;
+    margin-top: 3px;
   }
 
   .ks-invoices__rowMain {
@@ -252,7 +306,7 @@
     align-items: flex-start;
     justify-content: space-between;
     min-width: 0;
-    gap: 12px;
+    gap: 14px;
   }
 
   .ks-invoices__rowLeft,
@@ -263,7 +317,7 @@
   .ks-invoices__docTextCol {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 6px;
   }
 
   .ks-invoices__loadingLine {
@@ -321,10 +375,8 @@
   background: rgba(0, 0, 0, 0.06);
 }
 
-.ks.invoices {
-  .ks-datepicker__panel {
-    min-width: 300px;
-  }
+.pager.pager--arrows {
+  margin-bottom: 8px;
 }
 
 @media (hover: none) {
