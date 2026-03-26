@@ -3,7 +3,8 @@
 
 import type { RefObject } from "react";
 import { useEffect, useMemo, useRef } from "react";
-import BulkActions from "@/app/admin/(app)/news/components/BulkActions";
+//import BulkActions from "@/app/admin/(app)/news/components/BulkActions";
+import BulkActionsBar from "./BulkActionsBar";
 import { useSelection } from "@/app/admin/(app)/news/hooks/useSelection";
 import type { Offer } from "../types";
 
@@ -206,20 +207,19 @@ export default function TrainingResults(props: Props) {
   return (
     <div className="news-table">
       <div className="news-admin__top-actions">
-        <BulkActions
+        <BulkActionsBar
           toggleRef={toggleBtnRef as RefObject<HTMLButtonElement | null>}
           cancelRef={cancelBtnRef as RefObject<HTMLButtonElement | null>}
           clearRef={clearBtnRef as RefObject<HTMLButtonElement | null>}
           selectMode={props.selectMode}
           onToggleSelectMode={onToggleSelectMode}
-          count={count}
-          isAllSelected={sel.isAllSelected}
+          selectedCount={count}
+          allSelected={sel.isAllSelected}
           busy={false}
           isEmpty={props.items.length === 0}
           onToggleAll={toggleAll}
           onClear={clearSelection}
-          showClear={showClear}
-          onDelete={deleteSelected}
+          onBulkDelete={deleteSelected}
         />
       </div>
 

@@ -1,3 +1,4 @@
+// src/app/components/TrainingCard.tsx
 "use client";
 
 import React, { useEffect, useMemo, useRef, useState } from "react";
@@ -45,23 +46,19 @@ export default function TrainingCard() {
   const [createOpen, setCreateOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
   const [editing, setEditing] = useState<Offer | null>(null);
-
   const [q, setQ] = useState("");
   const [courseValue, setCourseValue] = useState("");
   const [locationFilter, setLocationFilter] = useState("");
   const [locations, setLocations] = useState<string[]>([]);
   const [sort, setSort] = useState<TrainingSortKey>("newest");
-
   const [page, setPage] = useState(1);
   const [limit] = useState(10);
   const [items, setItems] = useState<Offer[]>([]);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(false);
   const [refreshTick, setRefreshTick] = useState(0);
-
   const [selectMode, setSelectMode] = useState(false);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
-
   const { pendingOpenIdRef } = useBootstrapFromURL({
     setQ,
     setLocationFilter,
@@ -257,50 +254,57 @@ export default function TrainingCard() {
   return (
     <div className="news-admin ks ks-training-admin">
       <main className="container">
-        <div className="dialog-subhead news-admin__subhead">
-          <h1 className="text-2xl font-bold m-0 news-admin__title">
-            Trainings
-          </h1>
-
-          <button
-            className="btn"
-            type="button"
-            onClick={() => setCreateOpen(true)}
-            disabled={loading}
-          >
-            <img
-              src="/icons/plus.svg"
-              alt=""
-              aria-hidden="true"
-              className="btn__icon"
-            />
-            Neues Training
-          </button>
-        </div>
-
-        <TrainingFilters
-          q={q}
-          setQ={setQ}
-          setPage={setPage}
-          locations={locations}
-          locationFilter={locationFilter}
-          setLocationFilter={setLocationFilter}
-          courseValue={courseValue}
-          setCourseValue={setCourseValue}
-          sort={sort}
-          setSort={setSort}
-          locationOpen={locationOpen}
-          setLocationOpen={setLocationOpen}
-          courseOpen={courseOpen}
-          setCourseOpen={setCourseOpen}
-          sortOpen={sortOpen}
-          setSortOpen={setSortOpen}
-          locationDropdownRef={locationDropdownRef}
-          courseDropdownRef={courseDropdownRef}
-          sortDropdownRef={sortDropdownRef}
-        />
+        {/* <section className="news-admin__section">
+          <div className="ks-training-admin__toolbar">
+            <TrainingFilters
+              q={q}
+              setQ={setQ}
+              setPage={setPage}
+              locations={locations}
+              locationFilter={locationFilter}
+              setLocationFilter={setLocationFilter}
+              courseValue={courseValue}
+              setCourseValue={setCourseValue}
+              sort={sort}
+              setSort={setSort}
+              locationOpen={locationOpen}
+              setLocationOpen={setLocationOpen}
+              courseOpen={courseOpen}
+              setCourseOpen={setCourseOpen}
+              sortOpen={sortOpen}
+              setSortOpen={setSortOpen}
+              locationDropdownRef={locationDropdownRef}
+              courseDropdownRef={courseDropdownRef}
+              sortDropdownRef={sortDropdownRef}
+            /> */}
 
         <section className="news-admin__section">
+          <div className="ks-training-admin__toolbar">
+            <TrainingFilters
+              q={q}
+              setQ={setQ}
+              setPage={setPage}
+              locations={locations}
+              locationFilter={locationFilter}
+              setLocationFilter={setLocationFilter}
+              courseValue={courseValue}
+              setCourseValue={setCourseValue}
+              sort={sort}
+              setSort={setSort}
+              locationOpen={locationOpen}
+              setLocationOpen={setLocationOpen}
+              courseOpen={courseOpen}
+              setCourseOpen={setCourseOpen}
+              sortOpen={sortOpen}
+              setSortOpen={setSortOpen}
+              locationDropdownRef={locationDropdownRef}
+              courseDropdownRef={courseDropdownRef}
+              sortDropdownRef={sortDropdownRef}
+              onCreate={() => setCreateOpen(true)}
+              createDisabled={loading}
+            />
+          </div>
+
           <div className="news-admin__section-head-number">
             <span className="news-admin__section-meta">
               {total ? `(${total})` : ""}
@@ -326,7 +330,7 @@ export default function TrainingCard() {
             />
           </div>
 
-          <div className="pager pager--arrows mt-3">
+          <div className="pager pager--arrows mt-3 ks-training-admin__pager">
             <TrainingPager
               page={page}
               pageCount={pageCount}
@@ -358,7 +362,7 @@ export default function TrainingCard() {
   );
 }
 
-// // src/app/components/TrainingCard.tsx
+// //src\app\components\TrainingCard.tsx
 // "use client";
 
 // import React, { useEffect, useMemo, useRef, useState } from "react";
@@ -479,6 +483,7 @@ export default function TrainingCard() {
 //     () => Math.max(1, Math.ceil(total / limit)),
 //     [total, limit],
 //   );
+
 //   const sortedItems = useMemo(
 //     () => sortTrainingItems(items, sort),
 //     [items, sort],
@@ -588,9 +593,6 @@ export default function TrainingCard() {
 //         placeId: editing.placeId ?? "",
 //         price: asDialog<OfferCreateDialogInitial["price"]>(
 //           typeof editing.price === "number" ? editing.price : "",
-//         ),
-//         days: asDialog<OfferCreateDialogInitial["days"]>(
-//           Array.isArray(editing.days) ? editing.days : [],
 //         ),
 //         timeFrom: editing.timeFrom ?? "",
 //         timeTo: editing.timeTo ?? "",
