@@ -621,10 +621,42 @@ export default function BookDialog({
     try {
       const selectedParentPayload = parentPayloadFromMember(selectedParent);
 
+      // const payload = await createBooking(
+      //   customerId,
+      //   selectedOfferId,
+      //   selectedDate,
+      //   childPayload,
+      //   selectedParentPayload,
+      //   {
+      //     holidayLabel: isCamp || isPowertraining ? holidayLabel : "",
+      //     holidayFrom:
+      //       isCamp || isPowertraining
+      //         ? safeText(holidayFromOf(selectedOffer))
+      //         : "",
+      //     holidayTo:
+      //       isCamp || isPowertraining
+      //         ? safeText(holidayToOf(selectedOffer))
+      //         : "",
+      //     childGender,
+      //     voucher,
+      //     source,
+      //     mainTShirtSize,
+      //     mainGoalkeeperSchool,
+      //     hasSibling,
+      //     siblingGender,
+      //     siblingBirthDate,
+      //     siblingFirstName,
+      //     siblingLastName,
+      //     siblingTShirtSize,
+      //     siblingGoalkeeperSchool,
+      //   },
+      // );
+
       const payload = await createBooking(
         customerId,
         selectedOfferId,
         selectedDate,
+        bookingTarget,
         childPayload,
         selectedParentPayload,
         {

@@ -201,6 +201,24 @@ function dedupeBookings(items: any[]) {
   return Array.from(map.values());
 }
 
+function isSelfScopedBooking(b: any) {
+  const childUid = safeText(b?.childUid);
+  const childFirst = safeText(b?.childFirstName).toLowerCase();
+  const childLast = safeText(b?.childLastName).toLowerCase();
+  const parentFirst = safeText(b?.parentFirstName).toLowerCase();
+  const parentLast = safeText(b?.parentLastName).toLowerCase();
+
+  if (!childUid) return true;
+  if (!childFirst && !childLast) return true;
+
+  return (
+    !!parentFirst &&
+    !!parentLast &&
+    childFirst === parentFirst &&
+    childLast === parentLast
+  );
+}
+
 export default function StornoDialog({
   customer,
   // childFirst,
@@ -357,22 +375,47 @@ export default function StornoDialog({
       if (bookingTarget === "child") {
         if (safeText(b?.childUid) !== safeText(activeChild?.uid)) return false;
 
-        if (activeParentEmail) {
-          return bookingParentEmail === activeParentEmail;
-        }
+        if (!activeParentEmail) return true;
+        if (!bookingParentEmail) return true;
 
-        return true;
-      }
-
-      if (safeText((b as any)?.childUid)) return false;
-
-      if (activeParentEmail) {
         return bookingParentEmail === activeParentEmail;
       }
 
-      return true;
+      if (!isSelfScopedBooking(b)) return false;
+
+      if (!activeParentEmail) return true;
+      if (!bookingParentEmail) return true;
+
+      return bookingParentEmail === activeParentEmail;
     });
   }, [customer.bookings, bookingTarget, activeChild, activeParentEmail]);
+  // const allBookings = useMemo(() => {
+  //   const base = customer.bookings || [];
+
+  //   return base.filter((b: any) => {
+  //     const bookingParentEmail = safeText(
+  //       (b as any)?.parentEmail,
+  //     ).toLowerCase();
+
+  //     if (bookingTarget === "child") {
+  //       if (safeText(b?.childUid) !== safeText(activeChild?.uid)) return false;
+
+  //       if (activeParentEmail) {
+  //         return bookingParentEmail === activeParentEmail;
+  //       }
+
+  //       return true;
+  //     }
+
+  //     if (safeText((b as any)?.childUid)) return false;
+
+  //     if (activeParentEmail) {
+  //       return bookingParentEmail === activeParentEmail;
+  //     }
+
+  //     return true;
+  //   });
+  // }, [customer.bookings, bookingTarget, activeChild, activeParentEmail]);
 
   const filtered = useMemo(() => {
     // const byCourse = !courseValue
@@ -920,548 +963,3 @@ function syncSelected(
   );
   setSelectedId(String((firstActive || filtered[0])._id));
 }
-
-// //src\app\admin\(app)\customers\dialogs\StornoDialog.tsx
-// "use client";
-
-// import React, { useEffect, useMemo, useRef, useState } from "react";
-// import type { Customer } from "../types";
-// import {
-//   GROUPED_COURSE_OPTIONS,
-//   courseValueFromBooking,
-// } from "src/app/lib/courseOptions";
-// import {
-//   fetchOffers,
-//   fetchCustomer,
-//   postStornoMail,
-//   postStornoStatus,
-// } from "./stornoDialog/api";
-// import { cx, selectedCourseLabelFor } from "./stornoDialog/formatters";
-// import { useStornoMenus } from "./stornoDialog/hooks/useStornoMenus";
-
-// import InlineSelect from "./stornoDialog/components/InlineSelect";
-// import { BookingSelect } from "./stornoDialog/components/BookingSelect";
-// import {
-//   SORT_OPTIONS,
-//   STATUS_OPTIONS,
-//   type SortOrder,
-//   type StatusFilter,
-// } from "./stornoDialog/constants";
-// import { bookingDisplay } from "./stornoDialog/bookingDisplay";
-
-// type Props = {
-//   customer: Customer;
-//   onClose: () => void;
-//   onChanged: (freshCustomer: Customer) => void;
-// };
-
-// export default function StornoDialog({ customer, onClose, onChanged }: Props) {
-//   const [offers, setOffers] = useState<any[]>([]);
-//   const [loading, setLoading] = useState(false);
-//   const [err, setErr] = useState<string | null>(null);
-
-//   const offersById = useMemo(() => {
-//     const m = new Map<string, any>();
-//     for (const o of offers) if (o?._id) m.set(String(o._id), o);
-//     return m;
-//   }, [offers]);
-
-//   const [courseValue, setCourseValue] = useState<string>("");
-//   const [statusFilter, setStatusFilter] = useState<StatusFilter>("active");
-//   const [sortOrder, setSortOrder] = useState<SortOrder>("newest");
-
-//   const allBookings = useMemo(
-//     () => customer.bookings || [],
-//     [customer.bookings],
-//   );
-
-//   const filtered = useMemo(() => {
-//     const byCourse = !courseValue
-//       ? allBookings
-//       : allBookings.filter(
-//           (b) => courseValueFromBooking(b, offersById) === courseValue,
-//         );
-
-//     return applyStatusAndSort(byCourse, statusFilter, sortOrder);
-//   }, [allBookings, offersById, courseValue, statusFilter, sortOrder]);
-
-//   const [selectedId, setSelectedId] = useState<string>("");
-//   const selected = useMemo(
-//     () => filtered.find((b) => String(b._id) === selectedId) || null,
-//     [filtered, selectedId],
-//   );
-
-//   useEffect(() => {
-//     void loadOffers(setOffers, setLoading, setErr);
-//   }, []);
-
-//   useEffect(() => {
-//     setCourseValue("");
-//     setStatusFilter("active");
-//     setSortOrder("newest");
-//     setSelectedId("");
-//     setErr(null);
-//   }, [customer?._id]);
-
-//   useEffect(() => {
-//     syncSelected(filtered, selectedId, setSelectedId);
-//   }, [filtered, selectedId]);
-
-//   const isCancelled = String(selected?.status || "") === "cancelled";
-//   const [note, setNote] = useState<string>("");
-//   const [saving, setSaving] = useState(false);
-//   const disabled = saving || !selected || isCancelled;
-
-//   const courseDropdownRef = useRef<HTMLDivElement | null>(null);
-//   const triggerRef = useRef<HTMLButtonElement | null>(null);
-//   const menuRef = useRef<HTMLDivElement | null>(null);
-
-//   const {
-//     isCourseDropdownOpen,
-//     setIsCourseDropdownOpen,
-//     menuOpen,
-//     setMenuOpen,
-//     openMenu,
-//   } = useStornoMenus({
-//     courseDropdownRef,
-//     triggerRef,
-//     menuRef,
-//     filteredCount: filtered.length,
-//   });
-
-//   const [isStatusOpen, setIsStatusOpen] = useState(false);
-//   const [isSortOpen, setIsSortOpen] = useState(false);
-//   const statusDropdownRef = useRef<HTMLDivElement | null>(null);
-//   const sortDropdownRef = useRef<HTMLDivElement | null>(null);
-
-//   useEffect(() => {
-//     function onDoc(e: MouseEvent) {
-//       const t = e.target as Node | null;
-//       if (
-//         t &&
-//         statusDropdownRef.current &&
-//         !statusDropdownRef.current.contains(t)
-//       ) {
-//         setIsStatusOpen(false);
-//       }
-//       if (
-//         t &&
-//         sortDropdownRef.current &&
-//         !sortDropdownRef.current.contains(t)
-//       ) {
-//         setIsSortOpen(false);
-//       }
-//     }
-//     document.addEventListener("mousedown", onDoc);
-//     return () => document.removeEventListener("mousedown", onDoc);
-//   }, []);
-
-//   const selectedCourseLabel = useMemo(
-//     () => selectedCourseLabelFor(courseValue, GROUPED_COURSE_OPTIONS),
-//     [courseValue],
-//   );
-
-//   const statusLabel = useMemo(
-//     () =>
-//       STATUS_OPTIONS.find((o) => o.value === statusFilter)?.label || "Active",
-//     [statusFilter],
-//   );
-
-//   const sortLabel = useMemo(
-//     () => SORT_OPTIONS.find((o) => o.value === sortOrder)?.label || "Newest",
-//     [sortOrder],
-//   );
-
-//   const bookingTrigger = useMemo(() => {
-//     if (selected) return bookingDisplay(selected, statusFilter);
-//     if (filtered.length)
-//       return bookingDisplay({ offerTitle: "Select…" }, statusFilter);
-//     return bookingDisplay({ offerTitle: "No bookings" }, statusFilter);
-//   }, [selected, filtered.length, statusFilter]);
-
-//   async function submit() {
-//     if (!customer._id || !selected?._id) return;
-
-//     setSaving(true);
-//     setErr(null);
-
-//     try {
-//       await postStornoStatus(customer._id, selected._id, note);
-//       await postStornoMail(customer._id, selected._id, note);
-//       const fresh = await fetchCustomer(customer._id);
-//       if (fresh) onChanged(fresh);
-//       onClose();
-//     } catch (e: any) {
-//       setErr(e?.message || "Storno failed");
-//     } finally {
-//       setSaving(false);
-//     }
-//   }
-
-//   return (
-//     <div className="ks-modal-root ks-modal-root--top ks-storno">
-//       <div className="ks-backdrop" onClick={onClose} />
-//       <div
-//         className="ks-panel card ks-panel--md"
-//         onClick={(e) => e.stopPropagation()}
-//       >
-//         <div className="dialog-subhead">
-//           <h3 className="text-lg font-bold">Storno</h3>
-//         </div>
-
-//         {err && <div className="mb-2 text-red-600">{err}</div>}
-//         {loading && <div className="mb-2 text-gray-600">Loading…</div>}
-
-//         <div className="ks-storno__filters mb-2">
-//           <div className="ks-storno__filter">
-//             <label className="lbl">Courses</label>
-
-//             <div
-//               ref={courseDropdownRef}
-//               className={cx(
-//                 "ks-selectbox",
-//                 isCourseDropdownOpen && "ks-selectbox--open",
-//               )}
-//             >
-//               <button
-//                 type="button"
-//                 className="ks-selectbox__trigger"
-//                 onClick={() => setIsCourseDropdownOpen((o) => !o)}
-//                 aria-haspopup="listbox"
-//                 aria-expanded={isCourseDropdownOpen}
-//               >
-//                 <span className="ks-selectbox__label">
-//                   {selectedCourseLabel}
-//                 </span>
-//                 <span className="ks-selectbox__chevron" aria-hidden="true" />
-//               </button>
-
-//               {isCourseDropdownOpen && (
-//                 <div className="ks-selectbox__panel" role="listbox">
-//                   <button
-//                     type="button"
-//                     className={cx(
-//                       "ks-selectbox__option",
-//                       !courseValue && "ks-selectbox__option--active",
-//                     )}
-//                     onClick={() => {
-//                       setCourseValue("");
-//                       setIsCourseDropdownOpen(false);
-//                     }}
-//                   >
-//                     All courses
-//                   </button>
-
-//                   {GROUPED_COURSE_OPTIONS.map((g) => (
-//                     <div key={g.label} className="ks-selectbox__group">
-//                       <div className="ks-selectbox__group-label">{g.label}</div>
-//                       {g.items.map((opt) => (
-//                         <button
-//                           key={opt.value}
-//                           type="button"
-//                           className={cx(
-//                             "ks-selectbox__option",
-//                             courseValue === opt.value &&
-//                               "ks-selectbox__option--active",
-//                           )}
-//                           onClick={() => {
-//                             setCourseValue(opt.value);
-//                             setIsCourseDropdownOpen(false);
-//                           }}
-//                         >
-//                           {opt.label}
-//                         </button>
-//                       ))}
-//                     </div>
-//                   ))}
-//                 </div>
-//               )}
-//             </div>
-//           </div>
-
-//           <div className="ks-storno__filter">
-//             <InlineSelect
-//               label="Status"
-//               value={statusFilter}
-//               displayLabel={statusLabel}
-//               options={STATUS_OPTIONS}
-//               rootRef={statusDropdownRef}
-//               open={isStatusOpen}
-//               setOpen={setIsStatusOpen}
-//               onChange={(v) => setStatusFilter(v as StatusFilter)}
-//             />
-//           </div>
-
-//           <div className="ks-storno__filter">
-//             <InlineSelect
-//               label="Sort"
-//               value={sortOrder}
-//               displayLabel={sortLabel}
-//               options={SORT_OPTIONS}
-//               rootRef={sortDropdownRef}
-//               open={isSortOpen}
-//               setOpen={setIsSortOpen}
-//               onChange={(v) => setSortOrder(v as SortOrder)}
-//             />
-//           </div>
-//         </div>
-
-//         {/* <div className="grid gap-2 mb-2">
-//           <div>
-//             <label className="lbl">Courses</label>
-
-//             <div
-//               ref={courseDropdownRef}
-//               className={cx(
-//                 "ks-selectbox",
-//                 isCourseDropdownOpen && "ks-selectbox--open",
-//               )}
-//             >
-//               <button
-//                 type="button"
-//                 className="ks-selectbox__trigger"
-//                 onClick={() => setIsCourseDropdownOpen((o) => !o)}
-//                 aria-haspopup="listbox"
-//                 aria-expanded={isCourseDropdownOpen}
-//               >
-//                 <span className="ks-selectbox__label">
-//                   {selectedCourseLabel}
-//                 </span>
-//                 <span className="ks-selectbox__chevron" aria-hidden="true" />
-//               </button>
-
-//               {isCourseDropdownOpen && (
-//                 <div className="ks-selectbox__panel" role="listbox">
-//                   <button
-//                     type="button"
-//                     className={cx(
-//                       "ks-selectbox__option",
-//                       !courseValue && "ks-selectbox__option--active",
-//                     )}
-//                     onClick={() => {
-//                       setCourseValue("");
-//                       setIsCourseDropdownOpen(false);
-//                     }}
-//                   >
-//                     All courses
-//                   </button>
-
-//                   {GROUPED_COURSE_OPTIONS.map((g) => (
-//                     <div key={g.label} className="ks-selectbox__group">
-//                       <div className="ks-selectbox__group-label">{g.label}</div>
-//                       {g.items.map((opt) => (
-//                         <button
-//                           key={opt.value}
-//                           type="button"
-//                           className={cx(
-//                             "ks-selectbox__option",
-//                             courseValue === opt.value &&
-//                               "ks-selectbox__option--active",
-//                           )}
-//                           onClick={() => {
-//                             setCourseValue(opt.value);
-//                             setIsCourseDropdownOpen(false);
-//                           }}
-//                         >
-//                           {opt.label}
-//                         </button>
-//                       ))}
-//                     </div>
-//                   ))}
-//                 </div>
-//               )}
-//             </div>
-//           </div>
-
-//           <div className="grid grid-cols-2 gap-2">
-//             <InlineSelect
-//               label="Status"
-//               value={statusFilter}
-//               displayLabel={statusLabel}
-//               options={STATUS_OPTIONS}
-//               rootRef={statusDropdownRef}
-//               open={isStatusOpen}
-//               setOpen={setIsStatusOpen}
-//               onChange={(v) => setStatusFilter(v as StatusFilter)}
-//             />
-
-//             <InlineSelect
-//               label="Sort"
-//               value={sortOrder}
-//               displayLabel={sortLabel}
-//               options={SORT_OPTIONS}
-//               rootRef={sortDropdownRef}
-//               open={isSortOpen}
-//               setOpen={setIsSortOpen}
-//               onChange={(v) => setSortOrder(v as SortOrder)}
-//             />
-//           </div>
-//         </div> */}
-
-//         {/* <div className="grid gap-2 mb-2">
-//           <BookingSelect
-//             label="Booking"
-//             open={menuOpen}
-//             setOpen={setMenuOpen}
-//             openMenu={openMenu}
-//             triggerRef={triggerRef}
-//             menuRef={menuRef}
-//             disabled={!filtered.length}
-//             trigger={bookingTrigger}
-//             items={filtered}
-//             selectedId={selectedId}
-//             onSelect={(id: string) => setSelectedId(id)}
-//             statusFilter={statusFilter}
-//             isCancelledSelected={isCancelled}
-//           />
-//         </div>
-
-//         <div className="grid gap-2">
-//           <div>
-//             <label className="lbl">Note (optional)</label>
-//             <textarea
-//               className="input"
-//               rows={3}
-//               value={note}
-//               onChange={(e) => setNote(e.target.value)}
-//               placeholder="e.g., partial refund, goodwill"
-//               disabled={!selected || isCancelled}
-//             />
-//           </div>
-//         </div> */}
-
-//         <div className="ks-storno__section mb-2">
-//           <BookingSelect
-//             label="Booking"
-//             open={menuOpen}
-//             setOpen={setMenuOpen}
-//             openMenu={openMenu}
-//             triggerRef={triggerRef}
-//             menuRef={menuRef}
-//             disabled={!filtered.length}
-//             trigger={bookingTrigger}
-//             items={filtered}
-//             selectedId={selectedId}
-//             onSelect={(id: string) => setSelectedId(id)}
-//             statusFilter={statusFilter}
-//             isCancelledSelected={isCancelled}
-//           />
-//         </div>
-
-//         <div className="ks-storno__section">
-//           <div>
-//             <label className="lbl">Note (optional)</label>
-//             <textarea
-//               className="input"
-//               rows={3}
-//               value={note}
-//               onChange={(e) => setNote(e.target.value)}
-//               placeholder="e.g., partial refund, goodwill"
-//               disabled={!selected || isCancelled}
-//             />
-//           </div>
-//         </div>
-
-//         <div className="flex justify-end gap-2 mt-3">
-//           <button
-//             type="button"
-//             className="modal__close"
-//             aria-label="Close"
-//             onClick={onClose}
-//           >
-//             <img
-//               src="/icons/close.svg"
-//               alt=""
-//               aria-hidden="true"
-//               className="icon-img"
-//             />
-//           </button>
-
-//           <button className="btn" disabled={disabled} onClick={submit}>
-//             {saving ? "Processing…" : "Confirm storno"}
-//           </button>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// }
-
-// function applyStatusAndSort(
-//   items: any[],
-//   status: StatusFilter,
-//   sort: SortOrder,
-// ) {
-//   const filtered =
-//     status === "all"
-//       ? items
-//       : items.filter((b) => {
-//           const s = String(b?.status || "")
-//             .trim()
-//             .toLowerCase();
-//           if (status === "active") return s !== "cancelled";
-//           if (status === "cancelled") return s === "cancelled";
-//           return true;
-//         });
-
-//   const dir = sort === "newest" ? -1 : 1;
-
-//   return [...filtered].sort((a, b) => {
-//     const at = sortTime(a);
-//     const bt = sortTime(b);
-//     if (at !== bt) return (at - bt) * dir;
-
-//     const ai = String(a?.invoiceNumber || a?.invoiceNo || "").trim();
-//     const bi = String(b?.invoiceNumber || b?.invoiceNo || "").trim();
-//     if (ai !== bi) return ai.localeCompare(bi) * dir;
-
-//     const an = String(a?.offerTitle || "").trim();
-//     const bn = String(b?.offerTitle || "").trim();
-//     return an.localeCompare(bn);
-//   });
-// }
-
-// function sortTime(b: any) {
-//   const d1 = toTime(b?.invoiceDate);
-//   if (d1 != null) return d1;
-//   const d2 = toTime(b?.createdAt);
-//   if (d2 != null) return d2;
-//   const d3 = toTime(b?.date);
-//   if (d3 != null) return d3;
-//   return 0;
-// }
-
-// function toTime(v: any) {
-//   if (!v) return null;
-//   const t = new Date(v).getTime();
-//   if (Number.isFinite(t)) return t;
-//   return null;
-// }
-
-// async function loadOffers(
-//   setOffers: (v: any[]) => void,
-//   setLoading: (v: boolean) => void,
-//   setErr: (v: string | null) => void,
-// ) {
-//   try {
-//     setLoading(true);
-//     setErr(null);
-//     setOffers(await fetchOffers(500));
-//   } catch (e: any) {
-//     setErr(e?.message || "Load failed");
-//   } finally {
-//     setLoading(false);
-//   }
-// }
-
-// function syncSelected(
-//   filtered: any[],
-//   selectedId: string,
-//   setSelectedId: (v: string) => void,
-// ) {
-//   if (!filtered.length) return void setSelectedId("");
-//   if (filtered.some((b) => String(b._id) === String(selectedId))) return;
-//   const firstActive = filtered.find(
-//     (b) => String(b.status || "") !== "cancelled",
-//   );
-//   setSelectedId(String((firstActive || filtered[0])._id));
-// }

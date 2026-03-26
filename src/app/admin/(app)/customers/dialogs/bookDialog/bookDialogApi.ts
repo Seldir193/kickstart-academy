@@ -1,6 +1,7 @@
-//src\app\admin\(app)\customers\dialogs\bookDialog\bookDialogApi.ts
 import type { Customer } from "../../types";
 import type { FamilyResponse } from "./types";
+
+type BookingTarget = "self" | "child";
 
 type CampExtras = {
   holidayLabel?: string;
@@ -53,6 +54,7 @@ export async function createBooking(
   customerId: string,
   offerId: string,
   date: string,
+  bookingTarget: BookingTarget,
   child: { uid: string; firstName: string; lastName: string },
   selectedParent: {
     salutation?: string;
@@ -64,6 +66,8 @@ export async function createBooking(
   } | null,
   extras: CampExtras = {},
 ) {
+  const isChildBooking = bookingTarget === "child";
+
   const res = await fetch(
     `/api/admin/customers/${encodeURIComponent(customerId)}/bookings`,
     {
@@ -74,9 +78,10 @@ export async function createBooking(
       body: JSON.stringify({
         offerId,
         date,
-        childUid: child.uid,
-        childFirstName: child.firstName,
-        childLastName: child.lastName,
+        bookingTarget,
+        childUid: isChildBooking ? child.uid : "",
+        childFirstName: isChildBooking ? child.firstName : "",
+        childLastName: isChildBooking ? child.lastName : "",
         invoiceTo: selectedParent
           ? {
               parent: {
@@ -140,6 +145,9 @@ export async function fetchCustomerById(
 //   holidayLabel?: string;
 //   holidayFrom?: string;
 //   holidayTo?: string;
+//   childGender?: string;
+//   voucher?: string;
+//   source?: string;
 //   mainTShirtSize?: string;
 //   mainGoalkeeperSchool?: boolean;
 //   hasSibling?: boolean;
@@ -185,6 +193,14 @@ export async function fetchCustomerById(
 //   offerId: string,
 //   date: string,
 //   child: { uid: string; firstName: string; lastName: string },
+//   selectedParent: {
+//     salutation?: string;
+//     firstName?: string;
+//     lastName?: string;
+//     email?: string;
+//     phone?: string;
+//     phone2?: string;
+//   } | null,
 //   extras: CampExtras = {},
 // ) {
 //   const res = await fetch(
@@ -200,6 +216,18 @@ export async function fetchCustomerById(
 //         childUid: child.uid,
 //         childFirstName: child.firstName,
 //         childLastName: child.lastName,
+//         invoiceTo: selectedParent
+//           ? {
+//               parent: {
+//                 salutation: selectedParent.salutation || "",
+//                 firstName: selectedParent.firstName || "",
+//                 lastName: selectedParent.lastName || "",
+//                 email: selectedParent.email || "",
+//                 phone: selectedParent.phone || "",
+//                 phone2: selectedParent.phone2 || "",
+//               },
+//             }
+//           : undefined,
 //         ...extras,
 //       }),
 //     },
