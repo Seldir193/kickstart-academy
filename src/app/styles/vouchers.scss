@@ -1,0 +1,94 @@
+.vouchers-admin {
+  .ks-vouchers-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+    margin-top: 8px;
+    margin-bottom: 12px;
+  }
+
+  .ks-vouchers-toolbar__action {
+    display: flex;
+    justify-content: flex-end;
+    flex: 0 0 auto;
+
+    .btn {
+      white-space: nowrap;
+    }
+  }
+
+  .news-admin__filter {
+    margin: 0;
+  }
+
+  .news-admin__box--scroll3 {
+    min-height: 0;
+    max-height: calc(100dvh - 260px);
+    overflow: auto;
+    scrollbar-gutter: auto;
+    overscroll-behavior: contain;
+  }
+
+  .pager {
+    margin-bottom: 8px;
+  }
+}
+
+@media (max-width: 980px) {
+  .vouchers-admin {
+    .ks-vouchers-toolbar {
+      align-items: stretch;
+    }
+
+    .ks-vouchers-toolbar__action {
+      justify-content: flex-start;
+    }
+  }
+}
+
+.vouchers-admin {
+  .news-list__head,
+  .news-list__row {
+    //  grid-template-columns: 1.2fr 0.65fr 0.85fr 0.85fr 56px;
+    grid-template-columns: 1.1fr 0.8fr 0.8fr 0.8fr 56px;
+  }
+
+  .news-list__head {
+    align-items: center;
+  }
+
+  .news-list__h {
+    display: flex;
+    align-items: center;
+  }
+
+  .news-list__h--right {
+    justify-content: flex-end;
+    text-align: right;
+  }
+
+  .news-list__row {
+    display: grid !important;
+    align-items: center;
+    gap: 0;
+  }
+
+  .news-list__cell {
+    display: flex;
+    align-items: center;
+    min-width: 0;
+  }
+
+  .news-list__cell--action {
+    justify-content: flex-end;
+  }
+
+  .news-list__actions--hidden {
+    width: 56px;
+  }
+
+  .bookings-mono {
+    align-items: center;
+  }
+}

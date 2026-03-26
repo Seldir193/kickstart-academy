@@ -65,6 +65,7 @@
 @use "./weekly-cancel.scss" as *;
 @use "./offer-create-dialog.scss" as *;
 @use "./weekly-revoke.scss" as *;
+@use "./vouchers.scss" as *;
 
 root {
   --brand-navy: #0f1e2e;
