@@ -32,7 +32,7 @@ export type InvoiceRow = {
   nextDunningStage?: DunningStage | null;
   dunningSentStages?: DunningStage[];
   dunningDocIdByStage?: Partial<Record<DunningStage, string>>;
-  //neu
+
   creditNoteNo?: string | null;
   creditNoteDate?: string | null;
   creditNoteAmount?: number | null;

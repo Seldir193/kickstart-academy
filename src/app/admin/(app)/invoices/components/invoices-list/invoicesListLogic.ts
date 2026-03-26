@@ -10,10 +10,6 @@ export function loadingVisVars(visible: boolean) {
   return { ["--invLoadingVisibility" as any]: visible ? "visible" : "hidden" };
 }
 
-// export function isDunningRow(row: InvoiceRow) {
-//   return String((row as any).type || "").toLowerCase() === "dunning";
-// }
-
 export function isDunningRow(row: InvoiceRow) {
   const t = String((row as any).type || "").toLowerCase();
   return t === "dunning" || t === "contract";
@@ -58,13 +54,6 @@ export function quickSendAllowed(row: InvoiceRow) {
   return t === "participation" || t === "storno" || t === "cancellation";
 }
 
-// export function quickSendAllowed(row: InvoiceRow) {
-//   const t = String((row as any).type || "").toLowerCase();
-//   if (!row.bookingId) return false;
-//   if (t === "dunning") return Boolean(row.lastDunningStage);
-//   return t === "participation" || t === "storno" || t === "cancellation";
-// }
-
 export function quickSendTitle(row: InvoiceRow) {
   const t = String((row as any).type || "").toLowerCase();
   if (!row.bookingId) return "No booking reference";
@@ -105,36 +94,6 @@ function creditNoteWasSent(row: InvoiceRow) {
   return Boolean((row as any)?.creditNoteEmailSentAt);
 }
 
-// export function canRefund(row: InvoiceRow, rowBusyId?: string) {
-//   if (!row.bookingId) return false;
-//   if (rowBusyId === row.id) return false;
-//   if (isDunningRow(row)) return false;
-
-//   const sent = creditNoteWasSent(row);
-
-//   if (isReturnedRow(row)) {
-//     return !sent;
-//   }
-
-//   if (row.paymentStatus !== "paid") return false;
-//   if (sent) return false;
-
-//   return Boolean(row.paymentIntentId);
-// }
-
-// export function canRefund(row: InvoiceRow, rowBusyId?: string) {
-//   if (!row.bookingId) return false;
-//   if (rowBusyId === row.id) return false;
-//   if (isDunningRow(row)) return false;
-//   if (isReturnedRow(row)) return false;
-//   if (row.paymentStatus !== "paid") return false;
-
-//   const mode = String((row as any)?.stripeMode || "").trim();
-//   if (mode === "subscription") return Boolean((row as any)?.subscriptionId);
-
-//   return Boolean((row as any)?.paymentIntentId);
-// }
-
 export function canRefund(row: InvoiceRow, rowBusyId?: string) {
   if (!row.bookingId) return false;
   if (rowBusyId === row.id) return false;
@@ -155,15 +114,6 @@ export function canRefund(row: InvoiceRow, rowBusyId?: string) {
 
   return Boolean((row as any)?.paymentIntentId);
 }
-
-// export function canRefund(row: InvoiceRow, rowBusyId?: string) {
-//   if (!row.bookingId) return false;
-//   if (rowBusyId === row.id) return false;
-//   if (isDunningRow(row)) return false;
-//   if (isReturnedRow(row)) return false;
-//   if (row.paymentStatus !== "paid") return false;
-//   return Boolean(row.paymentIntentId);
-// }
 
 export function within14Days(row: InvoiceRow) {
   const base =
@@ -186,13 +136,6 @@ export function canWithdraw(row: InvoiceRow, rowBusyId?: string) {
   return Boolean(row.subscriptionId) && Boolean(row.paymentIntentId);
 }
 
-// export function refundTitle(row: InvoiceRow) {
-//   if (!row.bookingId) return "No booking reference";
-//   if (isReturnedRow(row)) return "Already refunded";
-//   if (row.paymentStatus !== "paid") return "Not paid";
-//   if (!row.paymentIntentId) return "Missing payment intent";
-//   return "Refund (Stripe + credit note)";
-// }
 export function refundTitle(row: InvoiceRow) {
   if (!row.bookingId) return "No booking reference";
   if (Boolean((row as any)?.creditNoteEmailSentAt))

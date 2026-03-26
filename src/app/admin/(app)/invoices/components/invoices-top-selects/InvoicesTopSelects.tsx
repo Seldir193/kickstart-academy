@@ -1,4 +1,4 @@
-//src\app\admin\(app)\invoices\components\invoices-top-selects\InvoicesTopSelects.tsx
+// src/app/admin/(app)/invoices/components/invoices-top-selects/InvoicesTopSelects.tsx
 "use client";
 
 import React from "react";
@@ -31,68 +31,60 @@ type Props = {
 
 export default function InvoicesTopSelects(props: Props) {
   return (
-    <div className="ks-invoices__mt12">
-      <label className="lbl">Dokumente (aktuelle Seite)</label>
-
-      <div className="ks-invoices__selectRow">
-        <div
-          className={
-            "ks-selectbox" +
-            (props.docsSelect.open ? " ks-selectbox--open" : "")
+    <>
+      <div
+        className={
+          "ks-selectbox ks-invoices__topSelectBox" +
+          (props.docsSelect.open ? " ks-selectbox--open" : "")
+        }
+      >
+        <button
+          ref={props.docsSelect.triggerRef}
+          type="button"
+          className="ks-selectbox__trigger input ks-invoices__selectTrigger"
+          onClick={() =>
+            toggleOpen(
+              props.docsSelect.open,
+              props.docsSelect.setOpen,
+              props.docsSelect.openMenu,
+            )
           }
+          disabled={props.loading || !props.items.length}
+          aria-haspopup="listbox"
+          aria-expanded={props.docsSelect.open}
         >
-          <button
-            ref={props.docsSelect.triggerRef}
-            type="button"
-            className="ks-selectbox__trigger input ks-invoices__selectTrigger"
-            onClick={() =>
-              toggleOpen(
-                props.docsSelect.open,
-                props.docsSelect.setOpen,
-                props.docsSelect.openMenu,
-              )
-            }
-            disabled={props.loading || !props.items.length}
-            aria-haspopup="listbox"
-            aria-expanded={props.docsSelect.open}
-          >
-            <span className="ks-selectbox__label">
-              {docsLabel(props.loading, props.items.length)}
-            </span>
-            <span className="ks-selectbox__chevron" aria-hidden="true" />
-          </button>
-        </div>
-
-        <div
-          className={
-            "ks-selectbox" +
-            (props.sortSelect.open ? " ks-selectbox--open" : "")
-          }
-        >
-          <button
-            ref={props.sortSelect.triggerRef}
-            type="button"
-            className="ks-selectbox__trigger input ks-invoices__selectTrigger"
-            onClick={() =>
-              toggleOpen(
-                props.sortSelect.open,
-                props.sortSelect.setOpen,
-                props.sortSelect.openMenu,
-              )
-            }
-            aria-haspopup="listbox"
-            aria-expanded={props.sortSelect.open}
-          >
-            <span className="ks-selectbox__label">
-              {sortLabel(props.sortOrder)}
-            </span>
-            <span className="ks-selectbox__chevron" aria-hidden="true" />
-          </button>
-        </div>
+          <span className="ks-selectbox__label">
+            {docsLabel(props.loading, props.items.length)}
+          </span>
+          <span className="ks-selectbox__chevron" aria-hidden="true" />
+        </button>
       </div>
 
-      <div className="text-gray-600 mt-1">
-        Klick auf einen Eintrag öffnet das PDF in neuem Tab.
+      <div
+        className={
+          "ks-selectbox ks-invoices__topSelectBox ks-invoices__topSelectBox--sort" +
+          (props.sortSelect.open ? " ks-selectbox--open" : "")
+        }
+      >
+        <button
+          ref={props.sortSelect.triggerRef}
+          type="button"
+          className="ks-selectbox__trigger input ks-invoices__selectTrigger"
+          onClick={() =>
+            toggleOpen(
+              props.sortSelect.open,
+              props.sortSelect.setOpen,
+              props.sortSelect.openMenu,
+            )
+          }
+          aria-haspopup="listbox"
+          aria-expanded={props.sortSelect.open}
+        >
+          <span className="ks-selectbox__label">
+            {sortLabel(props.sortOrder)}
+          </span>
+          <span className="ks-selectbox__chevron" aria-hidden="true" />
+        </button>
       </div>
 
       <DocsOverlay
@@ -101,12 +93,13 @@ export default function InvoicesTopSelects(props: Props) {
         openPdf={props.openPdf}
         docsSelect={props.docsSelect}
       />
+
       <SortOverlay
         sortSelect={props.sortSelect}
         sortOrder={props.sortOrder}
         setSortOrder={props.setSortOrder}
         resetPage={props.resetPage}
       />
-    </div>
+    </>
   );
 }

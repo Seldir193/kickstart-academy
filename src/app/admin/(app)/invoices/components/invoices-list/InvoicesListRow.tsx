@@ -53,12 +53,6 @@ function onRowKeyDown(e: React.KeyboardEvent, open: () => void) {
 }
 
 export default function InvoicesListRow(props: Props) {
-  // const row = props.d as InvoiceRow;
-  // const busy = props.rowBusyId === row.id;
-  // const disabled = actionDisabled(row, props.rowBusyId);
-  // const quickAllowed = quickSendAllowed(row);
-  // const showCollection = canShowCollection(row, props.rowBusyId);
-
   const row = props.d as InvoiceRow;
   const isCreditNote = row.type === "creditnote";
   const busy = props.rowBusyId === row.id;
@@ -70,11 +64,6 @@ export default function InvoicesListRow(props: Props) {
 
   const refundAllowed = canRefund(row, props.rowBusyId);
   const withdrawAllowed = canWithdraw(row, props.rowBusyId);
-
-  // const sendDisabled = disabled || hasFinalDunning(row);
-  // const sendTitle = hasFinalDunning(row)
-  //   ? "Final already sent"
-  //   : actionTitle(row, "Send dunning step");
 
   const sendDisabled = paymentDisabled || hasFinalDunning(row);
 
@@ -147,13 +136,11 @@ export default function InvoicesListRow(props: Props) {
               ? "Für Gutschriften nicht verfügbar"
               : actionTitle(row, "Mark as paid")
           }
-          // title={actionTitle(row, "Mark as paid")}
           onClick={(e) => {
             e.stopPropagation();
             props.onMarkPaid?.(row);
           }}
           disabled={paymentDisabled}
-          // disabled={disabled}
         >
           <img src="/icons/check_circle.svg" alt="" width={18} height={18} />
         </button>
@@ -167,13 +154,11 @@ export default function InvoicesListRow(props: Props) {
               ? "Für Gutschriften nicht verfügbar"
               : actionTitle(row, "Mark returned + fee")
           }
-          //  title={actionTitle(row, "Mark returned + fee")}
           onClick={(e) => {
             e.stopPropagation();
             props.onOpenReturned?.(row);
           }}
           disabled={paymentDisabled}
-          //  disabled={disabled}
         >
           <img src="/icons/undo.svg" alt="" width={18} height={18} />
         </button>

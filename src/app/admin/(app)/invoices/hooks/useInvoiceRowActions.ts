@@ -1,5 +1,5 @@
-// // // // //src\app\admin\(app)\invoices\hooks\useInvoiceRowActions.ts
-// // // src/app/admin/(app)/invoices/hooks/useInvoiceRowActions.ts
+//src\app\admin\(app)\invoices\hooks\useInvoiceRowActions.ts
+
 "use client";
 
 import { useState } from "react";
