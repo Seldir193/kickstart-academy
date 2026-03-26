@@ -83,40 +83,33 @@
     margin-top: 0;
   }
 
-  .ks-invoices__sepTop {
-    margin-top: 12px;
-  }
-
-  .ks-invoices__topBar {
+  .ks-invoices__topToolbar {
     display: flex;
     flex-wrap: nowrap;
-    align-items: flex-end;
+    align-items: center;
     width: 100%;
     gap: 12px;
-    margin-top: 12px;
-    margin-bottom: 8px;
+    margin-bottom: 12px;
   }
 
-  .ks-invoices__topSelectBox {
+  .ks-invoices__searchItem {
     flex: 1 1 auto;
     min-width: 0;
   }
 
-  .ks-invoices__topSelectBox--sort {
-    flex: 0 0 220px;
-    min-width: 220px;
+  .ks-invoices__dateItem {
+    flex: 0 0 140px;
+    min-width: 140px;
   }
 
-  .ks-invoices__extraFilters {
-    display: flex;
-    flex: 0 0 auto;
-    align-items: flex-end;
-    gap: 12px;
+  .ks-invoices__toolbarSelect {
+    flex: 0 0 160px;
+    min-width: 160px;
   }
 
-  .ks-invoices__extraFilters > * {
-    flex: 0 0 190px;
-    min-width: 190px;
+  .ks-invoices__toolbarSelect--sort {
+    flex-basis: 130px;
+    min-width: 130px;
   }
 
   .ks-invoices__typesRow {
@@ -124,17 +117,16 @@
   }
 
   .ks-filter-chips {
-    display: grid !important;
-    grid-auto-flow: row !important;
-    grid-template-columns: 1fr !important;
-    gap: 8px !important;
-    justify-items: start !important;
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 12px !important;
+    justify-items: unset !important;
   }
 
   .ks-filter-chips > .ks-filter-chip {
-    display: block !important;
-    width: fit-content !important;
-    padding: 6px 10px !important;
+    display: inline-flex !important;
+    width: auto !important;
+    padding: 10px 18px !important;
     border: 1px solid var(--admin-sep) !important;
     border-radius: 999px !important;
     background: transparent !important;
@@ -145,6 +137,14 @@
   .ks-filter-chips > .ks-filter-chip.ks-filter-chip--active,
   .ks-filter-chip--active {
     background: rgba(0, 0, 0, 0.06) !important;
+  }
+
+  .ks-invoices__docsRow {
+    margin-bottom: 12px;
+  }
+
+  .ks-invoices__docsSelect {
+    width: 100%;
   }
 
   .ks-invoices__item {
@@ -321,8 +321,10 @@
   background: rgba(0, 0, 0, 0.06);
 }
 
-.pager.pager--arrows {
-  margin-bottom: 8px;
+.ks.invoices {
+  .ks-datepicker__panel {
+    min-width: 300px;
+  }
 }
 
 @media (hover: none) {

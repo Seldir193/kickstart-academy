@@ -50,8 +50,6 @@ export default function InvoiceFilterDropdown<T extends string>({
 
   return (
     <div className={`ks-invoices-filter ${className}`.trim()}>
-      <label className="lbl news-admin__filter-label">{label}</label>
-
       <div
         className={`ks-training-select${open ? " ks-training-select--open" : ""}`}
       >

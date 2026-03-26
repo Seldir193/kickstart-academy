@@ -3,9 +3,7 @@
 
 import React from "react";
 import type { DocItem, SortOrder } from "../../utils/invoiceUi";
-import { sortLabel } from "../../utils/invoiceUi";
 import DocsOverlay from "./DocsOverlay";
-import SortOverlay from "./SortOverlay";
 import { docsLabel, toggleOpen } from "./topSelectsUi";
 
 type FixedSelect = {
@@ -34,7 +32,7 @@ export default function InvoicesTopSelects(props: Props) {
     <>
       <div
         className={
-          "ks-selectbox ks-invoices__topSelectBox" +
+          "ks-selectbox ks-invoices__docsSelect" +
           (props.docsSelect.open ? " ks-selectbox--open" : "")
         }
       >
@@ -60,45 +58,11 @@ export default function InvoicesTopSelects(props: Props) {
         </button>
       </div>
 
-      <div
-        className={
-          "ks-selectbox ks-invoices__topSelectBox ks-invoices__topSelectBox--sort" +
-          (props.sortSelect.open ? " ks-selectbox--open" : "")
-        }
-      >
-        <button
-          ref={props.sortSelect.triggerRef}
-          type="button"
-          className="ks-selectbox__trigger input ks-invoices__selectTrigger"
-          onClick={() =>
-            toggleOpen(
-              props.sortSelect.open,
-              props.sortSelect.setOpen,
-              props.sortSelect.openMenu,
-            )
-          }
-          aria-haspopup="listbox"
-          aria-expanded={props.sortSelect.open}
-        >
-          <span className="ks-selectbox__label">
-            {sortLabel(props.sortOrder)}
-          </span>
-          <span className="ks-selectbox__chevron" aria-hidden="true" />
-        </button>
-      </div>
-
       <DocsOverlay
         items={props.items}
         fmtDate={props.fmtDate}
         openPdf={props.openPdf}
         docsSelect={props.docsSelect}
-      />
-
-      <SortOverlay
-        sortSelect={props.sortSelect}
-        sortOrder={props.sortOrder}
-        setSortOrder={props.setSortOrder}
-        resetPage={props.resetPage}
       />
     </>
   );

@@ -3,6 +3,7 @@
 
 import React, { useCallback, useMemo } from "react";
 import { fmtDate } from "./utils/invoiceList";
+import { sortLabel } from "./utils/invoiceUi";
 import { useFixedSelectbox } from "@/app/admin/(app)/customers/hooks/useFixedSelectbox";
 import InvoicesFilters from "./components/InvoicesFilters";
 import InvoicesTopSelects from "./components/InvoicesTopSelects";
@@ -11,6 +12,8 @@ import InvoicesBottomBar from "./components/InvoicesBottomBar";
 import InvoicesPager from "./components/InvoicesPager";
 import InvoiceDunningDialog from "./components/InvoiceDunningDialog";
 import InvoicePaymentDunningFilters from "./components/InvoicePaymentDunningFilters";
+import SortOverlay from "./components/invoices-top-selects/SortOverlay";
+import { toggleOpen } from "./components/invoices-top-selects/topSelectsUi";
 import { useSelectboxScrollClose } from "./hooks/useSelectboxScrollClose";
 import { useInvoiceRowActions } from "./hooks/useInvoiceRowActions";
 import { useInvoicesLoader } from "./hooks/useInvoicesLoader";
@@ -117,11 +120,51 @@ export default function AdminInvoicesPage() {
           to={s.to}
           setTo={s.setTo}
           onAnyChangeResetPage={resetPage}
+        >
+          <div
+            className={
+              "ks-selectbox ks-invoices__toolbarSelect ks-invoices__toolbarSelect--sort" +
+              (sortSelect.open ? " ks-selectbox--open" : "")
+            }
+          >
+            <button
+              ref={sortSelect.triggerRef}
+              type="button"
+              className="ks-selectbox__trigger input ks-invoices__selectTrigger"
+              onClick={() =>
+                toggleOpen(
+                  sortSelect.open,
+                  sortSelect.setOpen,
+                  sortSelect.openMenu,
+                )
+              }
+              aria-haspopup="listbox"
+              aria-expanded={sortSelect.open}
+            >
+              <span className="ks-selectbox__label">
+                {sortLabel(s.sortOrder)}
+              </span>
+              <span className="ks-selectbox__chevron" aria-hidden="true" />
+            </button>
+          </div>
+
+          <InvoicePaymentDunningFilters
+            payment={s.paymentFilter}
+            dunning={s.dunningFilter}
+            onPaymentChange={s.setPaymentFilter}
+            onDunningChange={s.setDunningFilter}
+            disabled={false}
+          />
+        </InvoicesFilters>
+
+        <SortOverlay
+          sortSelect={sortSelect}
+          sortOrder={s.sortOrder}
+          setSortOrder={s.setSortOrder}
+          resetPage={resetPage}
         />
 
-        <div className="ks-invoices__sepTop" />
-
-        <div className="ks-invoices__topBar">
+        <div className="ks-invoices__docsRow">
           <InvoicesTopSelects
             loading={loader.loading && !loader.hasLoadedOnce}
             items={derived.pagedItems}
@@ -133,16 +176,6 @@ export default function AdminInvoicesPage() {
             openPdf={derived.openPdf}
             fmtDate={fmtDate}
           />
-
-          <div className="ks-invoices__extraFilters">
-            <InvoicePaymentDunningFilters
-              payment={s.paymentFilter}
-              dunning={s.dunningFilter}
-              onPaymentChange={s.setPaymentFilter}
-              onDunningChange={s.setDunningFilter}
-              disabled={false}
-            />
-          </div>
         </div>
 
         <InvoicesList

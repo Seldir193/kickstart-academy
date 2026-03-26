@@ -25,6 +25,7 @@ type Props = {
   to: string;
   setTo: (v: string) => void;
   onAnyChangeResetPage: () => void;
+  children?: React.ReactNode;
 };
 
 export default function InvoicesFilters(props: Props) {
@@ -47,30 +48,9 @@ export default function InvoicesFilters(props: Props) {
 
   return (
     <div className="form ks-invoices__formNoTop">
-      <div className="grid ks-invoices__gridTwoCols">
-        <div className="card p-2">
-          <label className="lbl block mb-1">Types</label>
-          <TypeChips
-            participation={props.typeParticipation}
-            cancellation={props.typeCancellation}
-            storno={props.typeStorno}
-            dunning={props.typeDunning}
-            creditNote={props.typeCreditNote}
-            invoice={props.typeInvoice}
-            setInvoice={props.setTypeInvoice}
-            setParticipation={props.setTypeParticipation}
-            setCancellation={props.setTypeCancellation}
-            setStorno={props.setTypeStorno}
-            setDunning={props.setTypeDunning}
-            setCreditNote={props.setTypeCreditNote}
-            onAnyChange={props.onAnyChangeResetPage}
-          />
-        </div>
-
-        <div className="card p-2">
-          <label className="lbl block mb-1">Search & Date</label>
-
-          <div className="input-with-icon mb-2">
+      <div className="ks-invoices__topToolbar">
+        <div className="ks-invoices__searchItem">
+          <div className="input-with-icon">
             <img
               src="/icons/search.svg"
               alt=""
@@ -84,22 +64,45 @@ export default function InvoicesFilters(props: Props) {
               onChange={(e) => onSearchChange(e.target.value)}
             />
           </div>
-
-          <div className="grid ks-invoices__gridDates">
-            <KsDatePicker
-              value={props.from}
-              onChange={onFromChange}
-              fromYear={1970}
-              toYear={toYear}
-            />
-            <KsDatePicker
-              value={props.to}
-              onChange={onToChange}
-              fromYear={1970}
-              toYear={toYear}
-            />
-          </div>
         </div>
+
+        <div className="ks-invoices__dateItem">
+          <KsDatePicker
+            value={props.from}
+            onChange={onFromChange}
+            fromYear={1970}
+            toYear={toYear}
+          />
+        </div>
+
+        <div className="ks-invoices__dateItem">
+          <KsDatePicker
+            value={props.to}
+            onChange={onToChange}
+            fromYear={1970}
+            toYear={toYear}
+          />
+        </div>
+
+        {props.children}
+      </div>
+
+      <div className="ks-invoices__typesRow">
+        <TypeChips
+          participation={props.typeParticipation}
+          cancellation={props.typeCancellation}
+          storno={props.typeStorno}
+          dunning={props.typeDunning}
+          creditNote={props.typeCreditNote}
+          invoice={props.typeInvoice}
+          setInvoice={props.setTypeInvoice}
+          setParticipation={props.setTypeParticipation}
+          setCancellation={props.setTypeCancellation}
+          setStorno={props.setTypeStorno}
+          setDunning={props.setTypeDunning}
+          setCreditNote={props.setTypeCreditNote}
+          onAnyChange={props.onAnyChangeResetPage}
+        />
       </div>
     </div>
   );
