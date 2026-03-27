@@ -95,7 +95,7 @@
 }
 
 .news-admin__section-head {
-  justify-content: space-between;
+  //justify-content: space-between;
   gap: 12px;
   margin-bottom: 10px;
 }
@@ -110,7 +110,10 @@
 .news-admin__pending-meta,
 .news-admin__section-meta {
   font-size: 12px;
-  opacity: 0.75;
+  //opacity: 0.75;
+
+  font-weight: 700;
+  opacity: 0.8;
 }
 
 .news-admin__section {

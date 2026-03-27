@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import type { ReactNode } from "react";
 import type { SortKey } from "../types";
 
 type Props = {
@@ -8,6 +9,7 @@ type Props = {
   onChangeQ: (v: string) => void;
   sort: SortKey;
   onChangeSort: (v: SortKey) => void;
+  actionSlot?: ReactNode;
 };
 
 export default function NewsFilters({
@@ -15,6 +17,7 @@ export default function NewsFilters({
   onChangeQ,
   sort,
   onChangeSort,
+  actionSlot,
 }: Props) {
   const [open, setOpen] = useState(false);
   const triggerRef = useRef<HTMLButtonElement | null>(null);
@@ -42,18 +45,8 @@ export default function NewsFilters({
   }, [open]);
 
   return (
-    <div
-      className="coach-filters__row"
-      style={{
-        display: "flex",
-        gap: 12,
-        alignItems: "flex-end",
-        marginBottom: 16,
-      }}
-    >
-      <div className="coach-filters__search" style={{ flex: 1, minWidth: 320 }}>
-        <label className="lbl coach-filters__label">Suche</label>
-
+    <div className="coach-filters__row news-filters__row">
+      <div className="coach-filters__search news-filters__search">
         <div className="input-with-icon">
           <img
             src="/icons/search.svg"
@@ -73,9 +66,7 @@ export default function NewsFilters({
         </div>
       </div>
 
-      <div className="coach-filters__sort" style={{ width: 260 }}>
-        <label className="block text-sm text-gray-600">Sortieren nach</label>
-
+      <div className="coach-filters__sort news-filters__sort">
         <div
           className={
             "ks-training-select" + (open ? " ks-training-select--open" : "")
@@ -162,6 +153,10 @@ export default function NewsFilters({
           ) : null}
         </div>
       </div>
+
+      {actionSlot ? (
+        <div className="news-filters__action">{actionSlot}</div>
+      ) : null}
     </div>
   );
 }

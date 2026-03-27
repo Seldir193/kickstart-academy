@@ -1,11 +1,11 @@
-// //src\app\components\Header.tsx
-//src\app\components\Header.tsx
 "use client";
 
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import dynamic from "next/dynamic";
+import { PAGE_LIMIT } from "@/app/admin/(app)/news/constants";
+import { fetchNewsPage } from "@/app/admin/(app)/news/api";
 
 const ProfileButton = dynamic(() => import("./ProfileButton"), { ssr: false });
 
@@ -84,12 +84,41 @@ function is_active_route(currentPath: string, href: string) {
   return candidates.some((c) => is_match(current, c));
 }
 
+// function NewsNavLabel({ label, count }: { label: string; count: number }) {
+//   if (count <= 0) return <>{label}</>;
+
+//   return (
+//     <span className="nav-link__label">
+//       <span>{label}</span>
+//       <span className="news-admin__alarm" aria-hidden="true">
+//         <span className="news-admin__alarm-dot" />
+//         <span className="news-admin__alarm-badge">{count}</span>
+//       </span>
+//     </span>
+//   );
+// }
+
+function NewsNavLabel({ label, count }: { label: string; count: number }) {
+  return (
+    <span className="nav-link__label">
+      <span>{label}</span>
+      {count > 0 ? (
+        <span
+          className="nav-link__signal nav-link__signal--pulse"
+          aria-hidden="true"
+        />
+      ) : null}
+    </span>
+  );
+}
+
 export default function Header({ isAdminInitial = false }: Props) {
   const pathname = usePathname();
   const isAdmin = isAdminInitial;
 
   const [isLoggingOut] = useState(false);
   const [meUser, setMeUser] = useState<MeUser | null>(null);
+  const [newsAlarmCount, setNewsAlarmCount] = useState(0);
 
   const hidePublicNav = useMemo(() => isAuthRoute(pathname), [pathname]);
 
@@ -123,6 +152,37 @@ export default function Header({ isAdminInitial = false }: Props) {
       cancelled = true;
     };
   }, [isAdmin]);
+
+  useEffect(() => {
+    if (!isAdmin || !isSuperAdmin) {
+      setNewsAlarmCount(0);
+      return;
+    }
+
+    let cancelled = false;
+
+    (async () => {
+      try {
+        const data = await fetchNewsPage({
+          page: 1,
+          limit: PAGE_LIMIT,
+          view: "provider_pending",
+          search: "",
+        });
+
+        if (cancelled) return;
+
+        const count = Array.isArray(data?.items) ? data.items.length : 0;
+        setNewsAlarmCount(count);
+      } catch {
+        if (!cancelled) setNewsAlarmCount(0);
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [isAdmin, isSuperAdmin]);
 
   const [isMoreOpen, setIsMoreOpen] = useState(false);
   const moreRef = useRef<HTMLDivElement | null>(null);
@@ -164,11 +224,8 @@ export default function Header({ isAdminInitial = false }: Props) {
       "/admin/customers",
       "/admin/news",
       "/admin/bookings",
-
       "/admin/franchise-locations",
     ]);
-
-    //const filtered = adminNav.filter(() => true);
 
     const filtered = adminNav.filter((i) => {
       if (i.href === "/admin/members") return isSuperAdmin;
@@ -199,6 +256,7 @@ export default function Header({ isAdminInitial = false }: Props) {
                 {mainLinks.map((item) => {
                   const isRouteActive = is_active_route(pathname, item.href);
                   const addActive = !isLoggingOut && isRouteActive;
+                  const isNews = item.href === "/admin/news";
 
                   return (
                     <Link
@@ -206,7 +264,14 @@ export default function Header({ isAdminInitial = false }: Props) {
                       href={item.href}
                       className={`nav-link ${addActive ? "active" : ""}`}
                     >
-                      {item.label}
+                      {isNews ? (
+                        <NewsNavLabel
+                          label={item.label}
+                          count={newsAlarmCount}
+                        />
+                      ) : (
+                        item.label
+                      )}
                     </Link>
                   );
                 })}
@@ -232,6 +297,7 @@ export default function Header({ isAdminInitial = false }: Props) {
                           item.href,
                         );
                         const addActive = !isLoggingOut && isRouteActive;
+                        const isNews = item.href === "/admin/news";
 
                         return (
                           <Link
@@ -242,7 +308,14 @@ export default function Header({ isAdminInitial = false }: Props) {
                             }`}
                             onClick={() => setIsMoreOpen(false)}
                           >
-                            {item.label}
+                            {isNews ? (
+                              <NewsNavLabel
+                                label={item.label}
+                                count={newsAlarmCount}
+                              />
+                            ) : (
+                              item.label
+                            )}
                           </Link>
                         );
                       })}
@@ -277,7 +350,8 @@ export default function Header({ isAdminInitial = false }: Props) {
     </header>
   );
 }
-
+// // //src\app\components\Header.tsx
+// //src\app\components\Header.tsx
 // "use client";
 
 // import React, { useEffect, useMemo, useRef, useState } from "react";
@@ -318,6 +392,7 @@ export default function Header({ isAdminInitial = false }: Props) {
 //   { href: "/admin/revenue", label: "Umsatz" },
 //   { href: "/admin/bookings", label: "Bookings" },
 //   { href: "/admin/online-bookings", label: "Online" },
+//   { href: "/admin/vouchers", label: "Vouchers" },
 //   { href: "/admin/franchise-locations", label: "Standorte" },
 //   { href: "/admin/members", label: "Mitglieder" },
 // ];
@@ -441,6 +516,7 @@ export default function Header({ isAdminInitial = false }: Props) {
 //       "/admin/customers",
 //       "/admin/news",
 //       "/admin/bookings",
+
 //       "/admin/franchise-locations",
 //     ]);
 
@@ -455,7 +531,7 @@ export default function Header({ isAdminInitial = false }: Props) {
 //     const more = filtered.filter((i) => !mainHrefs.has(i.href));
 
 //     return { mainLinks: main, moreLinks: more };
-//   }, []);
+//   }, [isSuperAdmin]);
 
 //   const isMoreActive = useMemo(() => {
 //     return moreLinks.some((item) => is_active_route(pathname, item.href));

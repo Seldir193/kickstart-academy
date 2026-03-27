@@ -1,7 +1,6 @@
-// // src/app/admin/(app)/news/NewsAdminPage.tsx
-// src/app/admin/(app)/news/NewsAdminPage.tsx
 "use client";
 
+import type { ReactNode } from "react";
 import type { News } from "./types";
 import Pagination from "./components/Pagination";
 import NewsDialog from "./components/NewsDialog";
@@ -13,49 +12,39 @@ import NewsInfoDialog from "./moderation/NewsInfoDialog";
 import { getId } from "./newsAdmin/helpers";
 import { useNewsAdminViewModel } from "./newsAdmin/useNewsAdminViewModel";
 
+function CreateButton({ busy, onOpen }: { busy: boolean; onOpen: () => void }) {
+  return (
+    <button
+      className="btn"
+      type="button"
+      onClick={() => {
+        if (busy) return;
+        onOpen();
+      }}
+    >
+      <img
+        src="/icons/plus.svg"
+        alt=""
+        aria-hidden="true"
+        className="btn__icon"
+      />
+      Neuer Beitrag
+    </button>
+  );
+}
+
 export default function NewsAdminPage() {
   const p = useNewsAdminViewModel();
 
   return (
     <div className="news-admin ks">
       <main className="container">
-        <div className="dialog-subhead news-admin__subhead">
-          <h1 className="text-2xl font-bold m-0 news-admin__title">
-            News verwalten
-            {p.showAlarm ? (
-              <span
-                className="news-admin__alarm"
-                title="Neue Beiträge zur Prüfung"
-              >
-                <span className="news-admin__alarm-dot" />
-                <span className="news-admin__alarm-badge">{p.alarmCount}</span>
-              </span>
-            ) : null}
-          </h1>
-
-          <button
-            className="btn"
-            type="button"
-            onClick={() => {
-              if (p.busy) return;
-              p.onOpenCreate();
-            }}
-          >
-            <img
-              src="/icons/plus.svg"
-              alt=""
-              aria-hidden="true"
-              className="btn__icon"
-            />
-            Neuer Beitrag
-          </button>
-        </div>
-
         <NewsFilters
           q={p.q}
           onChangeQ={p.setQ}
           sort={p.sort}
           onChangeSort={p.setSort}
+          actionSlot={<CreateButton busy={p.busy} onOpen={p.onOpenCreate} />}
         />
 
         {p.isSuper ? (
