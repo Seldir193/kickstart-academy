@@ -33,6 +33,47 @@
       }
     }
 
+    &__row--top {
+      // display: grid;
+      // grid-template-columns: minmax(0, 1fr) 260px auto;
+      // align-items: center;
+      // gap: 12px;
+      // margin-bottom: 16px;
+
+      grid-template-columns: minmax(0, 1fr) 220px auto;
+      // gap: 12px;
+      // align-items: center;
+      // margin-bottom: 16px;
+
+      display: grid;
+      //  grid-template-columns: auto minmax(260px, 1fr) auto auto;
+      // align-items: center;
+      grid-gap: 12px;
+      gap: 12px;
+      margin-top: 8px;
+      margin-bottom: 12px;
+    }
+
+    &__search {
+      min-width: 0;
+    }
+
+    &__sort {
+      width: 100%;
+      min-width: 220px;
+    }
+
+    &__action {
+      display: flex;
+      //align-items: center;
+      justify-content: flex-end;
+      height: 40px;
+
+      .btn {
+        white-space: nowrap;
+      }
+    }
+
     .label {
       display: block;
       font-size: 12px;
@@ -105,7 +146,7 @@
   .coach-admin__section-head {
     display: flex;
     align-items: baseline;
-    justify-content: space-between;
+    //justify-content: space-between;
     gap: 12px;
     margin-bottom: 10px;
   }
@@ -117,8 +158,9 @@
   }
 
   .coach-admin__section-meta {
-    opacity: 0.75;
+    opacity: 0.8;
     font-size: 12px;
+    font-weight: 700;
   }
 
   .coach-admin__top-actions {
@@ -311,6 +353,19 @@
     }
   }
 
+  @media (max-width: 760px) {
+    .coach-filters__row--top {
+      grid-template-columns: 1fr;
+      align-items: stretch;
+    }
+
+    .coach-filters__action {
+      .btn {
+        width: 100%;
+      }
+    }
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .coach-admin__alarm-dot,
     .coach-pager .btn {
@@ -336,3 +391,359 @@
     padding: 10px;
   }
 }
+
+.news-filters__row {
+  // display: grid;
+  grid-template-columns: minmax(0, 1fr) 220px auto;
+  // gap: 12px;
+  // align-items: center;
+  // margin-bottom: 16px;
+
+  display: grid;
+  //  grid-template-columns: auto minmax(260px, 1fr) auto auto;
+  // align-items: center;
+  grid-gap: 12px;
+  gap: 12px;
+  margin-top: 8px;
+  margin-bottom: 12px;
+}
+
+// //src\app\styles\coaches\layout.scss
+// .coaches {
+//   .btn--select-toggle.is-active {
+//     background: #111;
+//     color: #fff;
+//     border-color: #111;
+//   }
+
+//   .btn--select-toggle:focus-visible {
+//     outline: 2px solid rgba(17, 17, 17, 0.35);
+//     outline-offset: 2px;
+//   }
+
+//   .coach-table__avatar {
+//     width: 50px;
+//     height: 50px;
+//     object-fit: cover;
+//   }
+
+//   .coach-filters {
+//     display: flex;
+//     flex-wrap: wrap;
+//     gap: 12px;
+//     align-items: flex-end;
+//     margin-bottom: 12px;
+
+//     &__field {
+//       min-width: 220px;
+//       display: grid;
+//       gap: 6px;
+
+//       &--grow {
+//         flex: 1 1 320px;
+//       }
+//     }
+
+//     .label {
+//       display: block;
+//       font-size: 12px;
+//       color: #475569;
+//       margin-bottom: 4px;
+//     }
+//   }
+
+//   .mt-3 {
+//     display: flex;
+//     align-items: center;
+//     gap: 10px;
+//     margin-top: 12px;
+//   }
+
+//   .coach-admin__subhead {
+//     display: flex;
+//     align-items: center;
+//     justify-content: space-between;
+//     gap: 12px;
+//     margin-bottom: 12px;
+//   }
+
+//   .coach-admin__title {
+//     display: inline-flex;
+//     align-items: center;
+//     gap: 10px;
+//     margin: 0;
+//   }
+
+//   .coach-admin__alarm {
+//     display: inline-flex;
+//     align-items: center;
+//     gap: 8px;
+//     padding: 4px 10px;
+//     border-radius: 999px;
+//     background: rgba(0, 0, 0, 0.06);
+//   }
+
+//   .coach-admin__alarm-badge {
+//     font-weight: 800;
+//     font-size: 12px;
+//   }
+
+//   .coach-admin__alarm-dot {
+//     width: 10px;
+//     height: 10px;
+//     border-radius: 9999px;
+//     background: #ff3b30;
+//     box-shadow: 0 0 0 0 rgba(255, 59, 48, 0.75);
+//     animation: coachPulse 1.2s infinite;
+//   }
+
+//   @keyframes coachPulse {
+//     0% {
+//       box-shadow: 0 0 0 0 rgba(255, 59, 48, 0.75);
+//     }
+//     70% {
+//       box-shadow: 0 0 0 10px rgba(255, 59, 48, 0);
+//     }
+//     100% {
+//       box-shadow: 0 0 0 0 rgba(255, 59, 48, 0);
+//     }
+//   }
+
+//   .coach-admin__section {
+//     margin-top: 18px;
+//   }
+
+//   .coach-admin__section-head {
+//     display: flex;
+//     align-items: baseline;
+//     justify-content: space-between;
+//     gap: 12px;
+//     margin-bottom: 10px;
+//   }
+
+//   .coach-admin__section-title {
+//     margin: 0;
+//     font-weight: 800;
+//     font-size: 16px;
+//   }
+
+//   .coach-admin__section-meta {
+//     opacity: 0.75;
+//     font-size: 12px;
+//   }
+
+//   .coach-admin__top-actions {
+//     margin-top: 0;
+//     margin-bottom: 8px;
+//   }
+
+//   .coach-admin__actions {
+//     justify-content: flex-start;
+//   }
+
+//   .coach-admin__box--scroll3 {
+//     max-height: 320px;
+//     overflow: auto;
+
+//     scrollbar-width: thin;
+//     scrollbar-color: rgba(0, 0, 0, 0.28) transparent;
+
+//     &::-webkit-scrollbar {
+//       width: 8px;
+//       height: 8px;
+//     }
+
+//     &::-webkit-scrollbar-track {
+//       background: transparent;
+//     }
+
+//     &::-webkit-scrollbar-thumb {
+//       background: rgba(0, 0, 0, 0.28);
+//       border-radius: 999px;
+//       border: 2px solid transparent;
+//       background-clip: content-box;
+//     }
+
+//     &::-webkit-scrollbar-thumb:hover {
+//       background: rgba(0, 0, 0, 0.38);
+//       background-clip: content-box;
+//     }
+//   }
+
+//   .pending-coaches {
+//     display: grid;
+//     gap: 12px;
+//   }
+
+//   .pending-coaches__row {
+//     display: grid;
+//     grid-template-columns: 1fr auto;
+//     gap: 12px;
+//     align-items: center;
+//     padding: 10px 12px;
+//     border-radius: 12px;
+//     background: rgba(0, 0, 0, 0.03);
+//   }
+
+//   .pending-coaches__meta {
+//     min-width: 0;
+//   }
+
+//   .pending-coaches__title {
+//     font-weight: 700;
+//     margin-bottom: 2px;
+//   }
+
+//   .pending-coaches__sub {
+//     display: flex;
+//     align-items: center;
+//     gap: 6px;
+//     font-size: 12px;
+//     opacity: 0.75;
+//     flex-wrap: wrap;
+//   }
+
+//   .pending-coaches__sep {
+//     margin: 0 6px;
+//   }
+
+//   .pending-coaches__actions {
+//     display: flex;
+//     gap: 8px;
+//     align-items: center;
+//   }
+
+//   .bulkbar {
+//     display: flex;
+//     align-items: center;
+//     justify-content: space-between;
+//     gap: 12px;
+//     padding: 10px 12px;
+//     border-radius: 12px;
+//     background: rgba(0, 0, 0, 0.04);
+//     margin-top: 0;
+//   }
+
+//   .bulkbar__left {
+//     font-size: 14px;
+//     color: var(--brand-white);
+//   }
+
+//   .bulkbar__right {
+//     display: flex;
+//     gap: 10px;
+//     align-items: center;
+//     flex-wrap: wrap;
+//     justify-content: flex-end;
+//   }
+
+//   .bulkbar .btn:not(.btn--danger):focus,
+//   .bulkbar .btn:not(.btn--danger):focus-visible {
+//     background: #111;
+//     color: #fff;
+//     border-color: #111;
+//     outline: none;
+//   }
+
+//   .bulkbar .btn:not(.btn--danger):focus-visible {
+//     outline: 2px solid rgba(17, 17, 17, 0.35);
+//     outline-offset: 2px;
+//   }
+
+//   .bulkbar .btn--focus-black {
+//     background: #111;
+//     color: #fff;
+//     border-color: #111;
+//   }
+
+//   .bulkbar .btn--focus-black:focus,
+//   .bulkbar .btn--focus-black:focus-visible {
+//     outline: none;
+//     box-shadow: none;
+//   }
+
+//   .bulkbar .btn {
+//     transition: none;
+//   }
+
+//   .coach-pager {
+//     display: flex;
+//     align-items: center;
+//     gap: 8px;
+//     margin-top: 12px;
+//     justify-content: space-between;
+
+//     &__count {
+//       min-width: 72px;
+//       text-align: center;
+//       font-variant-numeric: tabular-nums;
+//       font-weight: 600;
+//       user-select: none;
+//     }
+
+//     .btn {
+//       appearance: none;
+//       border: 0;
+//       background: transparent;
+//       width: 2.5rem;
+//       height: 2.5rem;
+//       padding: 0;
+//       border-radius: 9999px;
+//       display: inline-flex;
+//       align-items: center;
+//       justify-content: center;
+//       transition:
+//         background-color 140ms ease,
+//         transform 120ms ease;
+//       box-shadow: none;
+//     }
+
+//     .btn:hover:not(:disabled),
+//     .btn:focus-visible {
+//       background: rgba(0, 0, 0, 0.08);
+//       outline: none;
+//     }
+
+//     .btn:disabled {
+//       opacity: 0.45;
+//       pointer-events: none;
+//       background: transparent;
+//       transform: none;
+//     }
+
+//     .icon-img {
+//       display: block;
+//       width: 1.25rem;
+//       height: 1.25rem;
+//     }
+
+//     .icon-img--left {
+//       transform: scaleX(-1);
+//     }
+//   }
+
+//   @media (prefers-reduced-motion: reduce) {
+//     .coach-admin__alarm-dot,
+//     .coach-pager .btn {
+//       transition: none;
+//       animation: none;
+//       box-shadow: none;
+//     }
+//   }
+// }
+
+// /* Dialog Subhead padding wie bei dir */
+// .dialog-subhead.coach-admin__subhead {
+//   padding: 24px 0;
+// }
+
+// /* Top actions sticky */
+// .coach-admin__box--scroll3 {
+//   .coach-admin__top-actions {
+//     position: sticky;
+//     top: 0;
+//     z-index: 5;
+//     background: var(--brand-muted);
+//     padding: 10px;
+//   }
+// }

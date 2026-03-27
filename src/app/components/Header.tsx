@@ -7,6 +7,8 @@ import dynamic from "next/dynamic";
 import { PAGE_LIMIT } from "@/app/admin/(app)/news/constants";
 import { fetchNewsPage } from "@/app/admin/(app)/news/api";
 import { fetchAdmin as fetchFranchiseAdmin } from "@/app/admin/(app)/franchise-locations/franchise_locations.api";
+import { fetchCoachesList } from "@/app/admin/(app)/coaches/api";
+import { FETCH_LIMIT } from "@/app/admin/(app)/coaches/constants";
 
 const ProfileButton = dynamic(() => import("./ProfileButton"), { ssr: false });
 
@@ -105,6 +107,13 @@ function NavLabel({
   );
 }
 
+function hasCoachPending(resp: any) {
+  const items = Array.isArray(resp?.providerPending?.items)
+    ? resp.providerPending.items
+    : [];
+  return items.length > 0;
+}
+
 export default function Header({ isAdminInitial = false }: Props) {
   const pathname = usePathname();
   const isAdmin = isAdminInitial;
@@ -113,6 +122,7 @@ export default function Header({ isAdminInitial = false }: Props) {
   const [meUser, setMeUser] = useState<MeUser | null>(null);
   const [showNewsSignal, setShowNewsSignal] = useState(false);
   const [showStandorteSignal, setShowStandorteSignal] = useState(false);
+  const [showCoachesSignal, setShowCoachesSignal] = useState(false);
 
   const hidePublicNav = useMemo(() => isAuthRoute(pathname), [pathname]);
 
@@ -201,6 +211,33 @@ export default function Header({ isAdminInitial = false }: Props) {
     };
   }, [isAdmin, isSuperAdmin]);
 
+  useEffect(() => {
+    if (!isAdmin || !isSuperAdmin) {
+      setShowCoachesSignal(false);
+      return;
+    }
+
+    let cancelled = false;
+
+    (async () => {
+      try {
+        const data = await fetchCoachesList({
+          page: 1,
+          limit: FETCH_LIMIT,
+        });
+
+        if (cancelled) return;
+        setShowCoachesSignal(hasCoachPending(data));
+      } catch {
+        if (!cancelled) setShowCoachesSignal(false);
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [isAdmin, isSuperAdmin]);
+
   const [isMoreOpen, setIsMoreOpen] = useState(false);
   const moreRef = useRef<HTMLDivElement | null>(null);
 
@@ -261,6 +298,7 @@ export default function Header({ isAdminInitial = false }: Props) {
 
   function signalFor(href: string) {
     if (href === "/admin/news") return showNewsSignal;
+    if (href === "/admin/coaches") return showCoachesSignal;
     if (href === "/admin/franchise-locations") return showStandorteSignal;
     return false;
   }
