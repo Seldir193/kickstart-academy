@@ -1,4 +1,3 @@
-
 /* ===========================
    Revenue (Umsatz-Modul)
    =========================== */
@@ -6,16 +5,15 @@
 /* große, breite Fläche */
 .pageWrap {
   width: 100%;
-//  max-width: 1280px;      /* gerne auf 1400/1600 erhöhen, wenn du noch breiter willst */
+  //  max-width: 1280px;      /* gerne auf 1400/1600 erhöhen, wenn du noch breiter willst */
   margin: 0 auto;
   //padding: 24px 24px 32px;
+  padding-bottom: 48px;
 }
-
-
 
 /* großes Diagramm – volle Spaltenbreite */
 .chartWideLarge {
-  width: 100%;            /* WICHTIG: nicht 100vw */
+  width: 100%; /* WICHTIG: nicht 100vw */
   height: 420px;
   max-width: 100%;
   background: #fff;
@@ -41,7 +39,6 @@
   gap: 8px;
 }
 
-
 .yearDropdown,
 .monthDropdown {
   /* nur noch Layout, keine eigene Box mehr */
@@ -52,7 +49,6 @@
   padding: 0;
   background: transparent;
 }
-
 
 .loading {
   margin-top: 8px;
@@ -78,20 +74,3 @@
     height: 460px;
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

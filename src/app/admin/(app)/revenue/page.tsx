@@ -1,10 +1,9 @@
 // src/app/admin/revenue/page.tsx
-'use client';
+"use client";
 
+import React, { useEffect, useMemo, useRef, useState } from "react";
 
-import React, { useEffect, useMemo, useRef, useState } from 'react';
-
-import styles from '@/app/styles/revenue.module.scss';
+import styles from "@/app/styles/revenue.module.scss";
 
 import {
   BarChart,
@@ -15,11 +14,11 @@ import {
   ResponsiveContainer,
   CartesianGrid,
   Cell,
-} from 'recharts';
+} from "recharts";
 
 type Counts = {
   positive?: number[]; // Anzahl positiver Buchungen (Monat addiert)
-  storno?: number[];   // Anzahl Stornos im Monat
+  storno?: number[]; // Anzahl Stornos im Monat
 };
 
 type RevenueResponse = {
@@ -30,26 +29,26 @@ type RevenueResponse = {
   counts?: Counts;
 };
 
-type SourceMode = 'invoices' | 'derived';
+type SourceMode = "invoices" | "derived";
 
 const MONTHS = [
-  'JAN',
-  'FEB',
-  'MAR',
-  'APR',
-  'MAI',
-  'JUN',
-  'JUL',
-  'AUG',
-  'SEP',
-  'OKT',
-  'NOV',
-  'DEZ',
+  "JAN",
+  "FEB",
+  "MAR",
+  "APR",
+  "MAI",
+  "JUN",
+  "JUL",
+  "AUG",
+  "SEP",
+  "OKT",
+  "NOV",
+  "DEZ",
 ];
 
 /** kleines clsx-Helper wie in anderen Files */
 function clsx(...xs: Array<string | false | null | undefined>) {
-  return xs.filter(Boolean).join(' ');
+  return xs.filter(Boolean).join(" ");
 }
 
 /** Nächstes 2000er-Intervall nach oben runden */
@@ -60,11 +59,11 @@ function ceilToStep(n: number, step = 2000) {
 
 /** Provider-ID aus LocalStorage lesen (Fallback auf ks_user_id) */
 function getProviderId(): string {
-  if (typeof window === 'undefined') return '';
+  if (typeof window === "undefined") return "";
   return (
-    localStorage.getItem('providerId') ||
-    localStorage.getItem('ks_user_id') ||
-    ''
+    localStorage.getItem("providerId") ||
+    localStorage.getItem("ks_user_id") ||
+    ""
   );
 }
 
@@ -90,11 +89,11 @@ function MonthlyTooltip({
   return (
     <div
       style={{
-        background: '#fff',
-        border: '1px solid #e5e7eb',
+        background: "#fff",
+        border: "1px solid #e5e7eb",
         borderRadius: 8,
-        padding: '8px 10px',
-        boxShadow: '0 6px 20px rgba(0,0,0,0.06)',
+        padding: "8px 10px",
+        boxShadow: "0 6px 20px rgba(0,0,0,0.06)",
         fontSize: 12,
       }}
     >
@@ -104,7 +103,7 @@ function MonthlyTooltip({
       </div>
       <div>
         Buchungen: <strong>{pos}</strong>
-        {sto ? ` (Stornos: ${sto})` : ''}
+        {sto ? ` (Stornos: ${sto})` : ""}
       </div>
     </div>
   );
@@ -128,11 +127,11 @@ function YearlyTooltip({
   return (
     <div
       style={{
-        background: '#fff',
-        border: '1px solid #e5e7eb',
+        background: "#fff",
+        border: "1px solid #e5e7eb",
         borderRadius: 8,
-        padding: '8px 10px',
-        boxShadow: '0 6px 20px rgba(0,0,0,0.06)',
+        padding: "8px 10px",
+        boxShadow: "0 6px 20px rgba(0,0,0,0.06)",
         fontSize: 12,
       }}
     >
@@ -140,11 +139,10 @@ function YearlyTooltip({
       <div>
         Umsatz: <strong>{(row.total || 0).toFixed(2)} €</strong>
       </div>
-      {'count' in row && (
+      {"count" in row && (
         <div>
-          Buchungen:{' '}
-          <strong>{row.count || 0}</strong>
-          {row.stornoCount ? ` (Stornos: ${row.stornoCount})` : ''}
+          Buchungen: <strong>{row.count || 0}</strong>
+          {row.stornoCount ? ` (Stornos: ${row.stornoCount})` : ""}
         </div>
       )}
     </div>
@@ -152,18 +150,17 @@ function YearlyTooltip({
 }
 
 export default function RevenuePage() {
-  const [source, setSource] = useState<SourceMode>('invoices'); // Umschalter
+  const [source, setSource] = useState<SourceMode>("invoices"); // Umschalter
   const [year, setYear] = useState<number>(new Date().getFullYear());
   const [month, setMonth] = useState<number>(-1); // -1 = alle
   const [data, setData] = useState<RevenueResponse | null>(null);
   const [loading, setLoading] = useState(false);
 
-
   // Jahres-Übersicht (Totals + Counts) für die letzten 5 Jahre
   const [yearlyTotals, setYearlyTotals] = useState<
     Array<{ name: string; total: number; count?: number; stornoCount?: number }>
   >([]);
-  const [yearView, setYearView] = useState<'all' | number>('all');
+  const [yearView, setYearView] = useState<"all" | number>("all");
 
   // NEU: Open-State für die Dropdowns (nur UI)
   const [sourceOpen, setSourceOpen] = useState(false);
@@ -172,57 +169,54 @@ export default function RevenuePage() {
   const [yearViewOpen, setYearViewOpen] = useState(false);
 
   const sourceRef = useRef<HTMLDivElement | null>(null);
-const yearRef = useRef<HTMLDivElement | null>(null);
-const monthRef = useRef<HTMLDivElement | null>(null);
-const yearViewRef = useRef<HTMLDivElement | null>(null);
+  const yearRef = useRef<HTMLDivElement | null>(null);
+  const monthRef = useRef<HTMLDivElement | null>(null);
+  const yearViewRef = useRef<HTMLDivElement | null>(null);
 
   const endpointBase =
-    source === 'derived'
-      ? '/api/admin/revenue-derived'
-      : '/api/admin/revenue';
+    source === "derived" ? "/api/admin/revenue-derived" : "/api/admin/revenue";
 
   // Daten für aktuelles Jahr laden
   useEffect(() => {
     setLoading(true);
     const pid = getProviderId();
     const url = `${endpointBase}?year=${year}${
-      pid ? `&providerId=${encodeURIComponent(pid)}` : ''
+      pid ? `&providerId=${encodeURIComponent(pid)}` : ""
     }`;
 
     fetch(url, {
-      credentials: 'include',
-      headers: pid ? { 'x-provider-id': pid } : undefined,
+      credentials: "include",
+      headers: pid ? { "x-provider-id": pid } : undefined,
     })
       .then((r) => r.json())
       .then((json: RevenueResponse) => setData(json))
-      .catch((err) => console.error('Revenue fetch failed', err))
+      .catch((err) => console.error("Revenue fetch failed", err))
       .finally(() => setLoading(false));
   }, [year, source, endpointBase]);
 
   useEffect(() => {
-  function handlePointerDown(e: PointerEvent) {
-    const target = e.target as Node | null;
-    if (!target) return;
+    function handlePointerDown(e: PointerEvent) {
+      const target = e.target as Node | null;
+      if (!target) return;
 
-    // Wenn der Klick IN einem der Dropdown-Container war → nichts schließen
-    if (sourceRef.current?.contains(target)) return;
-    if (yearRef.current?.contains(target)) return;
-    if (monthRef.current?.contains(target)) return;
-    if (yearViewRef.current?.contains(target)) return;
+      // Wenn der Klick IN einem der Dropdown-Container war → nichts schließen
+      if (sourceRef.current?.contains(target)) return;
+      if (yearRef.current?.contains(target)) return;
+      if (monthRef.current?.contains(target)) return;
+      if (yearViewRef.current?.contains(target)) return;
 
-    // Sonst alle Dropdowns schließen
-    if (sourceOpen) setSourceOpen(false);
-    if (yearOpen) setYearOpen(false);
-    if (monthOpen) setMonthOpen(false);
-    if (yearViewOpen) setYearViewOpen(false);
-  }
+      // Sonst alle Dropdowns schließen
+      if (sourceOpen) setSourceOpen(false);
+      if (yearOpen) setYearOpen(false);
+      if (monthOpen) setMonthOpen(false);
+      if (yearViewOpen) setYearViewOpen(false);
+    }
 
-  document.addEventListener('pointerdown', handlePointerDown);
-  return () => {
-    document.removeEventListener('pointerdown', handlePointerDown);
-  };
-}, [sourceOpen, yearOpen, monthOpen, yearViewOpen]);
-
+    document.addEventListener("pointerdown", handlePointerDown);
+    return () => {
+      document.removeEventListener("pointerdown", handlePointerDown);
+    };
+  }, [sourceOpen, yearOpen, monthOpen, yearViewOpen]);
 
   // Jahres-Totals (letzte 5 Jahre) neu laden, wenn Quelle wechselt
   useEffect(() => {
@@ -233,11 +227,11 @@ const yearViewRef = useRef<HTMLDivElement | null>(null);
     Promise.all(
       years.map((y) => {
         const url = `${endpointBase}?year=${y}${
-          pid ? `&providerId=${encodeURIComponent(pid)}` : ''
+          pid ? `&providerId=${encodeURIComponent(pid)}` : ""
         }`;
         return fetch(url, {
-          credentials: 'include',
-          headers: pid ? { 'x-provider-id': pid } : undefined,
+          credentials: "include",
+          headers: pid ? { "x-provider-id": pid } : undefined,
         })
           .then((r) => r.json())
           .catch(() => ({ total: 0, counts: { positive: [], storno: [] } }));
@@ -248,10 +242,7 @@ const yearViewRef = useRef<HTMLDivElement | null>(null);
         const pos = (resArr[idx]?.counts?.positive || []) as number[];
         const sto = (resArr[idx]?.counts?.storno || []) as number[];
         const count = pos.reduce((a, b) => a + (Number(b) || 0), 0);
-        const stornoCount = sto.reduce(
-          (a, b) => a + (Number(b) || 0),
-          0,
-        );
+        const stornoCount = sto.reduce((a, b) => a + (Number(b) || 0), 0);
         return { name: String(y), total: totals, count, stornoCount };
       });
       setYearlyTotals(out);
@@ -292,23 +283,20 @@ const yearViewRef = useRef<HTMLDivElement | null>(null);
   // Jahresdiagramm (Totals): alle Jahre oder fokussiertes Jahr
   const yearlyRows = useMemo(() => {
     if (!yearlyTotals.length) return [];
-    if (yearView === 'all') return yearlyTotals;
+    if (yearView === "all") return yearlyTotals;
     const hit = yearlyTotals.find((r) => r.name === String(yearView));
     return hit ? [hit] : [];
   }, [yearlyTotals, yearView]);
 
   // Für Balken-Farben im Jahresdiagramm:
   const highlightedYearLabel = useMemo(
-    () => (yearView === 'all' ? String(year) : String(yearView)),
+    () => (yearView === "all" ? String(year) : String(yearView)),
     [yearView, year],
   );
 
   const yearMaxValue = useMemo(() => {
     if (!yearlyRows.length) return 0;
-    return Math.max(
-      0,
-      ...yearlyRows.map((r) => Number(r.total) || 0),
-    );
+    return Math.max(0, ...yearlyRows.map((r) => Number(r.total) || 0));
   }, [yearlyRows]);
 
   const MAX_Y = 12000;
@@ -326,7 +314,7 @@ const yearViewRef = useRef<HTMLDivElement | null>(null);
   );
 
   // Helper: Label für Monat
-  const monthLabel = month >= 0 ? MONTHS[month] : 'Alle Monate';
+  const monthLabel = month >= 0 ? MONTHS[month] : "Alle Monate";
 
   return (
     <div className={styles.pageWrap}>
@@ -339,13 +327,11 @@ const yearViewRef = useRef<HTMLDivElement | null>(null);
           <div className={styles.filter}>
             <label htmlFor="rev-source">Quelle:</label>
             <div
-             
-
-                ref={sourceRef}
-    className={clsx(
-      styles.yearDropdown,
-      'ks-selectbox',
-      sourceOpen && 'ks-selectbox--open',
+              ref={sourceRef}
+              className={clsx(
+                styles.yearDropdown,
+                "ks-selectbox",
+                sourceOpen && "ks-selectbox--open",
               )}
             >
               <button
@@ -357,14 +343,11 @@ const yearViewRef = useRef<HTMLDivElement | null>(null);
                 aria-expanded={sourceOpen}
               >
                 <span className="ks-selectbox__label">
-                  {source === 'invoices'
-                    ? 'Rechnungen (Ist)'
-                    : 'Abo (abgeleitet)'}
+                  {source === "invoices"
+                    ? "Rechnungen (Ist)"
+                    : "Abo (abgeleitet)"}
                 </span>
-                <span
-                  className="ks-selectbox__chevron"
-                  aria-hidden="true"
-                />
+                <span className="ks-selectbox__chevron" aria-hidden="true" />
               </button>
 
               {sourceOpen && (
@@ -372,12 +355,11 @@ const yearViewRef = useRef<HTMLDivElement | null>(null);
                   <button
                     type="button"
                     className={clsx(
-                      'ks-selectbox__option',
-                      source === 'invoices' &&
-                        'ks-selectbox__option--active',
+                      "ks-selectbox__option",
+                      source === "invoices" && "ks-selectbox__option--active",
                     )}
                     onClick={() => {
-                      setSource('invoices');
+                      setSource("invoices");
                       setSourceOpen(false);
                     }}
                   >
@@ -386,12 +368,11 @@ const yearViewRef = useRef<HTMLDivElement | null>(null);
                   <button
                     type="button"
                     className={clsx(
-                      'ks-selectbox__option',
-                      source === 'derived' &&
-                        'ks-selectbox__option--active',
+                      "ks-selectbox__option",
+                      source === "derived" && "ks-selectbox__option--active",
                     )}
                     onClick={() => {
-                      setSource('derived');
+                      setSource("derived");
                       setSourceOpen(false);
                     }}
                   >
@@ -406,12 +387,12 @@ const yearViewRef = useRef<HTMLDivElement | null>(null);
           <div className={styles.filter}>
             <label htmlFor="rev-year">Jahr:</label>
             <div
-            ref={yearRef}
-    className={clsx(
-      styles.yearDropdown,
-      'ks-selectbox',
-      yearOpen && 'ks-selectbox--open',
-    )}
+              ref={yearRef}
+              className={clsx(
+                styles.yearDropdown,
+                "ks-selectbox",
+                yearOpen && "ks-selectbox--open",
+              )}
             >
               <button
                 id="rev-year"
@@ -421,13 +402,8 @@ const yearViewRef = useRef<HTMLDivElement | null>(null);
                 aria-haspopup="listbox"
                 aria-expanded={yearOpen}
               >
-                <span className="ks-selectbox__label">
-                  {String(year)}
-                </span>
-                <span
-                  className="ks-selectbox__chevron"
-                  aria-hidden="true"
-                />
+                <span className="ks-selectbox__label">{String(year)}</span>
+                <span className="ks-selectbox__chevron" aria-hidden="true" />
               </button>
 
               {yearOpen && (
@@ -439,9 +415,8 @@ const yearViewRef = useRef<HTMLDivElement | null>(null);
                         key={y}
                         type="button"
                         className={clsx(
-                          'ks-selectbox__option',
-                          year === y &&
-                            'ks-selectbox__option--active',
+                          "ks-selectbox__option",
+                          year === y && "ks-selectbox__option--active",
                         )}
                         onClick={() => {
                           setYear(y);
@@ -461,12 +436,12 @@ const yearViewRef = useRef<HTMLDivElement | null>(null);
           <div className={styles.filter}>
             <label htmlFor="rev-month">Monat:</label>
             <div
-               ref={monthRef}
-    className={clsx(
-      styles.monthDropdown,
-      'ks-selectbox',
-      monthOpen && 'ks-selectbox--open',
-    )}
+              ref={monthRef}
+              className={clsx(
+                styles.monthDropdown,
+                "ks-selectbox",
+                monthOpen && "ks-selectbox--open",
+              )}
             >
               <button
                 id="rev-month"
@@ -476,13 +451,8 @@ const yearViewRef = useRef<HTMLDivElement | null>(null);
                 aria-haspopup="listbox"
                 aria-expanded={monthOpen}
               >
-                <span className="ks-selectbox__label">
-                  {monthLabel}
-                </span>
-                <span
-                  className="ks-selectbox__chevron"
-                  aria-hidden="true"
-                />
+                <span className="ks-selectbox__label">{monthLabel}</span>
+                <span className="ks-selectbox__chevron" aria-hidden="true" />
               </button>
 
               {monthOpen && (
@@ -490,9 +460,8 @@ const yearViewRef = useRef<HTMLDivElement | null>(null);
                   <button
                     type="button"
                     className={clsx(
-                      'ks-selectbox__option',
-                      month === -1 &&
-                        'ks-selectbox__option--active',
+                      "ks-selectbox__option",
+                      month === -1 && "ks-selectbox__option--active",
                     )}
                     onClick={() => {
                       setMonth(-1);
@@ -506,9 +475,8 @@ const yearViewRef = useRef<HTMLDivElement | null>(null);
                       key={m}
                       type="button"
                       className={clsx(
-                        'ks-selectbox__option',
-                        month === i &&
-                          'ks-selectbox__option--active',
+                        "ks-selectbox__option",
+                        month === i && "ks-selectbox__option--active",
                       )}
                       onClick={() => {
                         setMonth(i);
@@ -524,36 +492,30 @@ const yearViewRef = useRef<HTMLDivElement | null>(null);
           </div>
         </div>
 
-        {loading && (
-          <p className={styles.loading}>Lade Umsätze …</p>
-        )}
+        {loading && <p className={styles.loading}>Lade Umsätze …</p>}
 
         {!loading && data && (
           <>
             <p className={styles.total}>
-              {month >= 0 ? 'Monatsumsatz' : 'Gesamtumsatz'}:{' '}
+              {month >= 0 ? "Monatsumsatz" : "Gesamtumsatz"}:{" "}
               {totalDisplayed.toFixed(2)} €
             </p>
 
             {/* Monatsdiagramm */}
             <div className={styles.chartWideLarge}>
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={monthRows}>
-                  <CartesianGrid
-                    stroke="#e9eef5"
-                    strokeDasharray="2 3"
-                  />
+                <BarChart
+                  data={monthRows}
+                  margin={{ top: 20, right: 16, bottom: 8, left: 36 }}
+                >
+                  <CartesianGrid stroke="#e9eef5" strokeDasharray="2 3" />
                   <XAxis dataKey="name" />
                   <YAxis
                     domain={[0, yMaxMonthly]}
                     allowDecimals={false}
                     tickCount={monthTickCount}
                   />
-                  <Tooltip
-                    content={
-                      <MonthlyTooltip counts={data.counts} />
-                    }
-                  />
+                  <Tooltip content={<MonthlyTooltip counts={data.counts} />} />
                   <Bar dataKey="Umsatz" fill="#93c5fd" />
                 </BarChart>
               </ResponsiveContainer>
@@ -562,20 +524,18 @@ const yearViewRef = useRef<HTMLDivElement | null>(null);
         )}
 
         {/* Jahresdiagramm (Totals) */}
-        <h2 className={styles.sectionTitle}>
-          Jahresumsätze (Totals)
-        </h2>
+        <h2 className={styles.sectionTitle}>Jahresumsätze (Totals)</h2>
 
         <div className={styles.filtersRow}>
           <div className={styles.filter}>
             <label htmlFor="rev-year-view">Ansicht:</label>
             <div
-             ref={yearViewRef}
-    className={clsx(
-      styles.yearDropdown,
-      'ks-selectbox',
-      yearViewOpen && 'ks-selectbox--open',
-    )}
+              ref={yearViewRef}
+              className={clsx(
+                styles.yearDropdown,
+                "ks-selectbox",
+                yearViewOpen && "ks-selectbox--open",
+              )}
             >
               <button
                 id="rev-year-view"
@@ -586,14 +546,9 @@ const yearViewRef = useRef<HTMLDivElement | null>(null);
                 aria-expanded={yearViewOpen}
               >
                 <span className="ks-selectbox__label">
-                  {yearView === 'all'
-                    ? 'Alle Jahre'
-                    : String(yearView)}
+                  {yearView === "all" ? "Alle Jahre" : String(yearView)}
                 </span>
-                <span
-                  className="ks-selectbox__chevron"
-                  aria-hidden="true"
-                />
+                <span className="ks-selectbox__chevron" aria-hidden="true" />
               </button>
 
               {yearViewOpen && (
@@ -601,12 +556,11 @@ const yearViewRef = useRef<HTMLDivElement | null>(null);
                   <button
                     type="button"
                     className={clsx(
-                      'ks-selectbox__option',
-                      yearView === 'all' &&
-                        'ks-selectbox__option--active',
+                      "ks-selectbox__option",
+                      yearView === "all" && "ks-selectbox__option--active",
                     )}
                     onClick={() => {
-                      setYearView('all');
+                      setYearView("all");
                       setYearViewOpen(false);
                     }}
                   >
@@ -617,10 +571,10 @@ const yearViewRef = useRef<HTMLDivElement | null>(null);
                       key={r.name}
                       type="button"
                       className={clsx(
-                        'ks-selectbox__option',
-                        yearView !== 'all' &&
+                        "ks-selectbox__option",
+                        yearView !== "all" &&
                           String(yearView) === r.name &&
-                          'ks-selectbox__option--active',
+                          "ks-selectbox__option--active",
                       )}
                       onClick={() => {
                         setYearView(Number(r.name));
@@ -638,11 +592,11 @@ const yearViewRef = useRef<HTMLDivElement | null>(null);
 
         <div className={styles.chartWideLarge}>
           <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={yearlyRows}>
-              <CartesianGrid
-                stroke="#e9eef5"
-                strokeDasharray="2 3"
-              />
+            <BarChart
+              data={yearlyRows}
+              margin={{ top: 20, right: 16, bottom: 8, left: 36 }}
+            >
+              <CartesianGrid stroke="#e9eef5" strokeDasharray="2 3" />
               <XAxis dataKey="name" />
               <YAxis
                 domain={[0, yMaxYearly]}
@@ -655,9 +609,7 @@ const yearViewRef = useRef<HTMLDivElement | null>(null);
                   <Cell
                     key={`cell-${idx}`}
                     fill={
-                      r.name === highlightedYearLabel
-                        ? '#2563eb'
-                        : '#cfe1ff'
+                      r.name === highlightedYearLabel ? "#2563eb" : "#cfe1ff"
                     }
                   />
                 ))}
@@ -669,11 +621,3 @@ const yearViewRef = useRef<HTMLDivElement | null>(null);
     </div>
   );
 }
-
-
-
-
-
-
-
-
