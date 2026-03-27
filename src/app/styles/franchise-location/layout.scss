@@ -21,6 +21,28 @@
   flex-wrap: wrap;
 }
 
+.fl-filters__row--top {
+  // display: grid;
+  // grid-template-columns: minmax(0, 1fr) 260px auto;
+  // align-items: center;
+  // gap: 12px;
+  // margin-top: 0;
+
+  // display: grid;
+  grid-template-columns: minmax(0, 1fr) 220px auto;
+  // gap: 12px;
+  // align-items: center;
+  // margin-bottom: 16px;
+
+  display: grid;
+  //  grid-template-columns: auto minmax(260px, 1fr) auto auto;
+  // align-items: center;
+  grid-gap: 12px;
+  gap: 12px;
+  margin-top: 8px;
+  margin-bottom: 12px;
+}
+
 .fl-filters__search {
   min-width: 240px;
   flex: 1 1 520px;
@@ -32,12 +54,34 @@
   min-width: 220px;
 }
 
+.fl-filters__action {
+  display: flex;
+  // align-items: center;
+  justify-content: flex-end;
+  height: 40px;
+
+  .btn {
+    white-space: nowrap;
+  }
+}
+
 @media (max-width: 760px) {
   .fl-filters__search,
   .fl-filters__status,
   .fl-filters__sort {
     flex: 1 1 100%;
     min-width: 0;
+  }
+
+  .fl-filters__row--top {
+    grid-template-columns: 1fr;
+    align-items: stretch;
+  }
+
+  .fl-filters__action {
+    .btn {
+      width: 100%;
+    }
   }
 }
 
@@ -209,3 +253,224 @@
   box-shadow: none !important;
   border-color: transparent !important;
 }
+
+.news-admin__top-actions {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  background: var(--brand-muted);
+  padding: 10px;
+  margin: 0;
+}
+// //src\app\styles\franchise-location\layout.scss
+// .fl-admin__subhead {
+//   display: flex;
+//   align-items: center;
+//   justify-content: space-between;
+//   gap: 12px;
+// }
+
+// .fl-admin__title {
+//   display: inline-flex;
+//   align-items: center;
+//   gap: 10px;
+// }
+
+// .fl-filters__row {
+//   display: flex;
+//   align-items: flex-end;
+//   justify-content: space-between;
+//   gap: 12px;
+//   margin-top: 12px;
+//   margin-bottom: 14px;
+//   flex-wrap: wrap;
+// }
+
+// .fl-filters__search {
+//   min-width: 240px;
+//   flex: 1 1 520px;
+// }
+
+// .fl-filters__status,
+// .fl-filters__sort {
+//   flex: 0 0 260px;
+//   min-width: 220px;
+// }
+
+// @media (max-width: 760px) {
+//   .fl-filters__search,
+//   .fl-filters__status,
+//   .fl-filters__sort {
+//     flex: 1 1 100%;
+//     min-width: 0;
+//   }
+// }
+
+// .fl-admin__box--scroll3 {
+//   max-height: 320px;
+//   overflow: auto;
+//   scrollbar-gutter: stable;
+
+//   scrollbar-width: thin;
+//   scrollbar-color: rgba(0, 0, 0, 0.28) transparent;
+
+//   &::-webkit-scrollbar {
+//     width: 8px;
+//     height: 8px;
+//   }
+
+//   &::-webkit-scrollbar-track {
+//     background: transparent;
+//   }
+
+//   &::-webkit-scrollbar-thumb {
+//     background: rgba(0, 0, 0, 0.28);
+//     border-radius: 999px;
+//     border: 2px solid transparent;
+//     background-clip: content-box;
+//   }
+
+//   &::-webkit-scrollbar-thumb:hover {
+//     background: rgba(0, 0, 0, 0.38);
+//     background-clip: content-box;
+//   }
+// }
+
+// .fl-sticky-actions {
+//   position: sticky;
+//   top: 0;
+//   z-index: 20;
+//   background: var(--brand-muted);
+//   padding: 10px;
+// }
+
+// .franchise-locations {
+//   .toast {
+//     position: fixed;
+//     right: 12px;
+//     bottom: 12px;
+//     z-index: 6000;
+//     padding: 10px 12px;
+//     border-radius: 12px;
+//     font-weight: 700;
+//     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
+
+//     &.ok {
+//       background: #e8fff0;
+//       color: #0d6b2e;
+//       border: 1px solid rgba(13, 107, 46, 0.2);
+//     }
+
+//     &.error {
+//       background: #fff0f0;
+//       color: #9b1c1c;
+//       border: 1px solid rgba(155, 28, 28, 0.2);
+//     }
+//   }
+
+//   .btn:focus-visible {
+//     outline: 2px solid rgba(17, 17, 17, 0.35);
+//     outline-offset: 2px;
+//   }
+
+//   .btn.btn--select-toggle.is-active {
+//     background: #111;
+//     color: #fff;
+//     border-color: transparent;
+
+//     &:focus-visible {
+//       outline-color: rgba(17, 17, 17, 0.45);
+//     }
+//   }
+
+//   .bulkbar__right .btn:not(.btn--danger):focus-visible {
+//     outline-color: rgba(17, 17, 17, 0.45);
+//   }
+
+//   .btn.btn--focus-black:focus,
+//   .btn.btn--focus-black:focus-visible {
+//     background: #111;
+//     color: #fff;
+//     border-color: transparent;
+//   }
+
+//   .bulkbar .btn--focus-black {
+//     background: #111;
+//     color: #fff;
+//     border-color: #111;
+//   }
+
+//   .bulkbar .btn--focus-black:focus,
+//   .bulkbar .btn--focus-black:focus-visible {
+//     outline: none;
+//     box-shadow: none;
+//   }
+
+//   .bulkbar .btn {
+//     transition: none;
+//   }
+
+//   .fl-mine-status {
+//     min-width: 220px;
+//     align-self: flex-end;
+//   }
+
+//   .ks-training-select {
+//     width: 100%;
+//     min-width: 220px;
+
+//     &__trigger {
+//       width: 100%;
+//       min-height: 40px;
+//       padding: 10px 12px;
+//       display: flex;
+//       align-items: center;
+//       justify-content: space-between;
+//       gap: 10px;
+//     }
+
+//     &__label {
+//       display: block;
+//       min-width: 0;
+//       white-space: nowrap;
+//       overflow: hidden;
+//       text-overflow: ellipsis;
+//       line-height: 1.2;
+//     }
+
+//     &__chevron {
+//       flex: 0 0 auto;
+//     }
+
+//     &__option {
+//       width: 100%;
+//       text-align: left;
+//       white-space: nowrap;
+//       padding: 10px 12px;
+//       line-height: 1.2;
+//     }
+//   }
+// }
+
+// .fl-dialog__footer-right {
+//   display: flex;
+//   gap: 10px;
+//   padding: 10px;
+// }
+
+// .fl-dialog__footer {
+//   display: flex;
+//   justify-content: flex-end;
+//   margin-top: 14px;
+//   flex-wrap: wrap;
+//   align-items: center;
+// }
+
+// .list.list--bleed .list__item.chip.is-fullhover:focus,
+// .list.list--bleed .list__item.chip.is-fullhover:focus-visible,
+// .list.list--bleed .list__item.chip.is-fullhover:focus-within {
+//   outline: none !important;
+//   outline-offset: 0 !important;
+//   box-shadow: none !important;
+//   border-color: transparent !important;
+// }

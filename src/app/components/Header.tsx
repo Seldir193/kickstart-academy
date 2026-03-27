@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import dynamic from "next/dynamic";
 import { PAGE_LIMIT } from "@/app/admin/(app)/news/constants";
 import { fetchNewsPage } from "@/app/admin/(app)/news/api";
+import { fetchAdmin as fetchFranchiseAdmin } from "@/app/admin/(app)/franchise-locations/franchise_locations.api";
 
 const ProfileButton = dynamic(() => import("./ProfileButton"), { ssr: false });
 
@@ -84,25 +85,17 @@ function is_active_route(currentPath: string, href: string) {
   return candidates.some((c) => is_match(current, c));
 }
 
-// function NewsNavLabel({ label, count }: { label: string; count: number }) {
-//   if (count <= 0) return <>{label}</>;
-
-//   return (
-//     <span className="nav-link__label">
-//       <span>{label}</span>
-//       <span className="news-admin__alarm" aria-hidden="true">
-//         <span className="news-admin__alarm-dot" />
-//         <span className="news-admin__alarm-badge">{count}</span>
-//       </span>
-//     </span>
-//   );
-// }
-
-function NewsNavLabel({ label, count }: { label: string; count: number }) {
+function NavLabel({
+  label,
+  showSignal,
+}: {
+  label: string;
+  showSignal: boolean;
+}) {
   return (
     <span className="nav-link__label">
       <span>{label}</span>
-      {count > 0 ? (
+      {showSignal ? (
         <span
           className="nav-link__signal nav-link__signal--pulse"
           aria-hidden="true"
@@ -118,7 +111,8 @@ export default function Header({ isAdminInitial = false }: Props) {
 
   const [isLoggingOut] = useState(false);
   const [meUser, setMeUser] = useState<MeUser | null>(null);
-  const [newsAlarmCount, setNewsAlarmCount] = useState(0);
+  const [showNewsSignal, setShowNewsSignal] = useState(false);
+  const [showStandorteSignal, setShowStandorteSignal] = useState(false);
 
   const hidePublicNav = useMemo(() => isAuthRoute(pathname), [pathname]);
 
@@ -155,7 +149,7 @@ export default function Header({ isAdminInitial = false }: Props) {
 
   useEffect(() => {
     if (!isAdmin || !isSuperAdmin) {
-      setNewsAlarmCount(0);
+      setShowNewsSignal(false);
       return;
     }
 
@@ -171,11 +165,34 @@ export default function Header({ isAdminInitial = false }: Props) {
         });
 
         if (cancelled) return;
-
-        const count = Array.isArray(data?.items) ? data.items.length : 0;
-        setNewsAlarmCount(count);
+        setShowNewsSignal(Array.isArray(data?.items) && data.items.length > 0);
       } catch {
-        if (!cancelled) setNewsAlarmCount(0);
+        if (!cancelled) setShowNewsSignal(false);
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [isAdmin, isSuperAdmin]);
+
+  useEffect(() => {
+    if (!isAdmin || !isSuperAdmin) {
+      setShowStandorteSignal(false);
+      return;
+    }
+
+    let cancelled = false;
+
+    (async () => {
+      try {
+        const data = await fetchFranchiseAdmin("view=provider_pending");
+        const items = Array.isArray(data?.items) ? data.items : [];
+
+        if (cancelled) return;
+        setShowStandorteSignal(items.length > 0);
+      } catch {
+        if (!cancelled) setShowStandorteSignal(false);
       }
     })();
 
@@ -242,6 +259,12 @@ export default function Header({ isAdminInitial = false }: Props) {
     return moreLinks.some((item) => is_active_route(pathname, item.href));
   }, [moreLinks, pathname]);
 
+  function signalFor(href: string) {
+    if (href === "/admin/news") return showNewsSignal;
+    if (href === "/admin/franchise-locations") return showStandorteSignal;
+    return false;
+  }
+
   return (
     <header className="site-header">
       <div className="container header-inner">
@@ -256,7 +279,6 @@ export default function Header({ isAdminInitial = false }: Props) {
                 {mainLinks.map((item) => {
                   const isRouteActive = is_active_route(pathname, item.href);
                   const addActive = !isLoggingOut && isRouteActive;
-                  const isNews = item.href === "/admin/news";
 
                   return (
                     <Link
@@ -264,14 +286,10 @@ export default function Header({ isAdminInitial = false }: Props) {
                       href={item.href}
                       className={`nav-link ${addActive ? "active" : ""}`}
                     >
-                      {isNews ? (
-                        <NewsNavLabel
-                          label={item.label}
-                          count={newsAlarmCount}
-                        />
-                      ) : (
-                        item.label
-                      )}
+                      <NavLabel
+                        label={item.label}
+                        showSignal={signalFor(item.href)}
+                      />
                     </Link>
                   );
                 })}
@@ -297,7 +315,6 @@ export default function Header({ isAdminInitial = false }: Props) {
                           item.href,
                         );
                         const addActive = !isLoggingOut && isRouteActive;
-                        const isNews = item.href === "/admin/news";
 
                         return (
                           <Link
@@ -308,14 +325,10 @@ export default function Header({ isAdminInitial = false }: Props) {
                             }`}
                             onClick={() => setIsMoreOpen(false)}
                           >
-                            {isNews ? (
-                              <NewsNavLabel
-                                label={item.label}
-                                count={newsAlarmCount}
-                              />
-                            ) : (
-                              item.label
-                            )}
+                            <NavLabel
+                              label={item.label}
+                              showSignal={signalFor(item.href)}
+                            />
                           </Link>
                         );
                       })}
@@ -350,6 +363,7 @@ export default function Header({ isAdminInitial = false }: Props) {
     </header>
   );
 }
+
 // // //src\app\components\Header.tsx
 // //src\app\components\Header.tsx
 // "use client";

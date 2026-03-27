@@ -1,7 +1,3 @@
-// "use client";
-
-// export { useFranchiseLocationsPage } from "./franchiseLocationsPage/useFranchiseLocationsPage";
-
 // src/app/admin/(app)/franchise-locations/hooks/useFranchiseLocationsPage.ts
 "use client";
 
