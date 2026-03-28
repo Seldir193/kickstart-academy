@@ -1,3 +1,4 @@
+//src\app\components\ProfileButton.tsx
 "use client";
 
 import * as React from "react";
@@ -376,12 +377,31 @@ export default function ProfileButton({ user }: Props) {
     }
   }
 
+  // async function handleLogout() {
+  //   try {
+  //     if (typeof window !== "undefined") {
+  //       localStorage.removeItem("ks_avatar_url");
+  //       localStorage.removeItem("ks_full_name");
+  //     }
+  //     await fetch("/api/admin/auth/logout", {
+  //       method: "POST",
+  //       credentials: "include",
+  //       cache: "no-store",
+  //     });
+  //   } finally {
+  //     window.location.replace("/admin/login?next=/admin/bookings");
+  //   }
+  // }
+
   async function handleLogout() {
     try {
       if (typeof window !== "undefined") {
         localStorage.removeItem("ks_avatar_url");
         localStorage.removeItem("ks_full_name");
+        localStorage.removeItem("ks_user_id");
+        localStorage.removeItem("providerId");
       }
+
       await fetch("/api/admin/auth/logout", {
         method: "POST",
         credentials: "include",

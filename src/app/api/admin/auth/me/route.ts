@@ -84,6 +84,7 @@ export async function GET(req: NextRequest) {
 
     const payload = decodeJwtPayload<JwtPayload>(jwt);
     const id = clean(payload?.sub || payload?.id || payload?.providerId);
+
     const email = clean(payload?.email);
     if (!id) return json({ ok: false, error: "Unauthorized" }, 401);
 

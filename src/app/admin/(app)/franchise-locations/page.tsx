@@ -1,3 +1,4 @@
+//src\app\admin\(app)\franchise-locations\page.tsx
 "use client";
 
 import React from "react";

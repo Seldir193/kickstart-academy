@@ -24,7 +24,7 @@ export async function GET(_req: NextRequest) {
   if (!pid || !token) {
     return NextResponse.json(
       { ok: false, error: "Unauthorized" },
-      { status: 401 }
+      { status: 401 },
     );
   }
 
@@ -55,7 +55,7 @@ export async function POST(req: NextRequest) {
   if (!pid || !token) {
     return NextResponse.json(
       { ok: false, error: "Unauthorized" },
-      { status: 401 }
+      { status: 401 },
     );
   }
 
