@@ -1,3 +1,4 @@
+//src\app\admin\(app)\online-bookings\components\BookingsTableList.tsx
 "use client";
 
 import type { RefObject } from "react";
@@ -220,7 +221,11 @@ export default function BookingsTableList({
                     </div>
 
                     <div className="news-list__cell news-list__cell--age bookings-mono">
-                      {Number.isFinite(Number(b.age)) ? String(b.age) : "—"}
+                      {b.age == null
+                        ? "—"
+                        : Number.isFinite(Number(b.age))
+                          ? String(b.age)
+                          : "—"}
                     </div>
 
                     <div className="news-list__cell news-list__cell--date bookings-mono">
