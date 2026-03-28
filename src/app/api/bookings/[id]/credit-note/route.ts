@@ -1,3 +1,4 @@
+//src\app\api\bookings\[id]\credit-note\route.ts
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 

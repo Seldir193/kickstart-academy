@@ -32,13 +32,48 @@ function offerText(b: any): string {
   return [b?.offerType, b?.offerTitle].filter(Boolean).join(" ").toLowerCase();
 }
 
+// function isExcludedNonHolidayBooking(b: any): boolean {
+//   const text = offerText(b);
+//   return (
+//     text.includes("clubprogram") ||
+//     text.includes("rentacoach") ||
+//     text.includes("coacheducation") ||
+//     text.includes("coach education")
+//   );
+// }
+
+// function isExcludedNonHolidayBooking(b: any): boolean {
+//   const text = offerText(b);
+//   return (
+//     text.includes("clubprogram") ||
+//     text.includes("rentacoach") ||
+//     text.includes("coacheducation") ||
+//     text.includes("coach education") ||
+//     text.includes("kindergarten") ||
+//     text.includes("foerdertraining") ||
+//     text.includes("fördertraining") ||
+//     text.includes("foerdertraining_athletik") ||
+//     text.includes("fördertraining_athletik") ||
+//     text.includes("torwarttraining")
+//   );
+// }
+
 function isExcludedNonHolidayBooking(b: any): boolean {
   const text = offerText(b);
   return (
     text.includes("clubprogram") ||
     text.includes("rentacoach") ||
     text.includes("coacheducation") ||
-    text.includes("coach education")
+    text.includes("coach education") ||
+    text.includes("personaltraining") ||
+    text.includes("einzeltraining_torwart") ||
+    text.includes("einzeltraining_athletik") ||
+    text.includes("kindergarten") ||
+    text.includes("foerdertraining") ||
+    text.includes("fördertraining") ||
+    text.includes("foerdertraining_athletik") ||
+    text.includes("fördertraining_athletik") ||
+    text.includes("torwarttraining")
   );
 }
 

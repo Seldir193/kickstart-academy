@@ -52,8 +52,26 @@ export default function AdminInvoicesPage() {
     sort: s.sort,
   });
 
+  // const derived = useInvoicesPageDerived({
+  //   items: loader.items,
+  //   paymentFilter: s.paymentFilter,
+  //   dunningFilter: s.dunningFilter,
+  //   types: {
+  //     typeParticipation: s.typeParticipation,
+  //     typeInvoice: s.typeInvoice,
+  //     typeCancellation: s.typeCancellation,
+  //     typeStorno: s.typeStorno,
+  //     typeDunning: s.typeDunning,
+  //     typeCreditNote: s.typeCreditNote,
+  //   },
+  //   page: s.page,
+  //   limit: s.limit,
+  //   setPage: s.setPage,
+  // });
+
   const derived = useInvoicesPageDerived({
     items: loader.items,
+    total: loader.total,
     paymentFilter: s.paymentFilter,
     dunningFilter: s.dunningFilter,
     types: {
