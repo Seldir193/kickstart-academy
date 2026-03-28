@@ -110,7 +110,9 @@ export default function FranchiseLocationsPage() {
                       items={p.pagProvPending.items}
                       loading={false}
                       showChangeInfo={true}
-                      onOpen={p.openInfo}
+                      // onOpen={p.openInfo}
+
+                      onOpen={p.openEdit}
                       onApprove={p.approveOne}
                       onReject={p.openReject}
                     />

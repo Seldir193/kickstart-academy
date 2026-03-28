@@ -1,4 +1,3 @@
-//src\app\admin\(app)\news\moderation\RejectDialog.tsx
 "use client";
 
 import React, { useEffect, useMemo, useState } from "react";
@@ -14,10 +13,6 @@ type Props = {
 
 function clean(v: unknown) {
   return String(v ?? "").trim();
-}
-
-function isBackdrop(e: React.MouseEvent<HTMLDivElement>) {
-  return e.target === e.currentTarget;
 }
 
 export default function RejectDialog({
@@ -63,50 +58,44 @@ export default function RejectDialog({
 
   return (
     <div
-      className="modal"
+      className="dialog-backdrop news-reject"
       role="dialog"
       aria-modal="true"
-      onMouseDown={(e) => {
-        if (!busy && isBackdrop(e)) onClose();
-      }}
     >
-      <div className="modal__overlay" />
-
-      <div className="modal__panel modal__panel--md">
-        <div className="card">
-          <div className="dialog-head">
-            <div className="dialog-head__left">
-              <h2 className="text-xl font-bold m-0">{heading}</h2>
-              <span className="badge">Reject</span>
-            </div>
-
-            <div className="dialog-head__actions">
-              <button
-                type="button"
-                className="modal__close"
-                aria-label="Close"
-                onClick={() => {
-                  if (!busy) onClose();
-                }}
-                aria-disabled={busy}
-              >
-                <img
-                  src="/icons/close.svg"
-                  alt=""
-                  aria-hidden="true"
-                  className="icon-img"
-                />
-              </button>
-            </div>
+      <div className="dialog news-reject__dialog">
+        <div className="dialog-head news-reject__head">
+          <div className="dialog-head__left">
+            <h2 className="text-xl font-bold m-0">{heading}</h2>
+            <span className="badge">Reject</span>
           </div>
 
+          <div className="dialog-head__actions">
+            <button
+              type="button"
+              className="modal__close"
+              aria-label="Close"
+              onClick={() => {
+                if (!busy) onClose();
+              }}
+              aria-disabled={busy}
+            >
+              <img
+                src="/icons/close.svg"
+                alt=""
+                aria-hidden="true"
+                className="icon-img"
+              />
+            </button>
+          </div>
+        </div>
+
+        <div className="dialog-body news-reject__body">
           {error ? <div className="error mb-3">{error}</div> : null}
 
           <div className="field">
             <label className="lbl">Reason *</label>
             <textarea
-              className="input"
-              style={{ minHeight: 120 }}
+              className="input news-reject__textarea"
               value={reason}
               readOnly={!!readOnly}
               onChange={(e) => setReason(e.target.value)}
@@ -141,10 +130,20 @@ export default function RejectDialog({
           </div>
         </div>
       </div>
+
+      <button
+        type="button"
+        className="news-reject__backdrop-hit"
+        aria-label="Close"
+        onClick={() => {
+          if (!busy) onClose();
+        }}
+      />
     </div>
   );
 }
 
+// //src\app\admin\(app)\news\moderation\RejectDialog.tsx
 // "use client";
 
 // import React, { useEffect, useMemo, useState } from "react";
@@ -154,6 +153,8 @@ export default function RejectDialog({
 //   title?: string;
 //   onClose: () => void;
 //   onSubmit: (reason: string) => Promise<void>;
+//   readOnly?: boolean;
+//   initialReason?: string;
 // };
 
 // function clean(v: unknown) {
@@ -169,6 +170,8 @@ export default function RejectDialog({
 //   title,
 //   onClose,
 //   onSubmit,
+//   readOnly,
+//   initialReason,
 // }: Props) {
 //   const [reason, setReason] = useState("");
 //   const [busy, setBusy] = useState(false);
@@ -181,10 +184,10 @@ export default function RejectDialog({
 
 //   useEffect(() => {
 //     if (!open) return;
-//     setReason("");
+//     setReason(clean(initialReason));
 //     setError(null);
 //     setBusy(false);
-//   }, [open]);
+//   }, [open, initialReason]);
 
 //   async function submit() {
 //     const r = clean(reason);
@@ -250,6 +253,7 @@ export default function RejectDialog({
 //               className="input"
 //               style={{ minHeight: 120 }}
 //               value={reason}
+//               readOnly={!!readOnly}
 //               onChange={(e) => setReason(e.target.value)}
 //               placeholder="e.g. missing data / not plausible / duplicate..."
 //             />
@@ -264,19 +268,21 @@ export default function RejectDialog({
 //               }}
 //               aria-disabled={busy}
 //             >
-//               Cancel
+//               {readOnly ? "Close" : "Cancel"}
 //             </button>
 
-//             <button
-//               type="button"
-//               className="btn btn--danger"
-//               onClick={() => {
-//                 if (!busy) submit();
-//               }}
-//               aria-disabled={busy}
-//             >
-//               {busy ? "Rejecting..." : "Reject"}
-//             </button>
+//             {!readOnly ? (
+//               <button
+//                 type="button"
+//                 className="btn btn--danger"
+//                 onClick={() => {
+//                   if (!busy) submit();
+//                 }}
+//                 aria-disabled={busy}
+//               >
+//                 {busy ? "Rejecting..." : "Reject"}
+//               </button>
+//             ) : null}
 //           </div>
 //         </div>
 //       </div>

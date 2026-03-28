@@ -1,4 +1,3 @@
-// src/app/admin/(app)/coaches/moderation/CoachInfoDialog.tsx
 "use client";
 
 import type { Coach } from "../types";
@@ -25,51 +24,54 @@ export default function CoachInfoDialog({ open, coach, onClose }: Props) {
   const reason = valOrDash((coach as any).rejectionReason);
 
   return (
-    <div className="modal fl-info" role="dialog" aria-modal="true">
-      <div className="modal__overlay" onClick={onClose} />
+    <div className="dialog-backdrop coach-info" role="dialog" aria-modal="true">
+      <button
+        type="button"
+        className="coach-info__backdrop-hit"
+        aria-label="Close"
+        onClick={onClose}
+      />
 
-      <div className="modal__panel modal__panel--md">
-        <div className="card fl-info__card">
-          <div className="fl-info__head">
-            <div className="fl-info__head-left">
-              <div className="fl-info__title">Abgelehnt: {fullName(coach)}</div>
-              <div className="fl-info__subtitle">Nur Ansicht</div>
-            </div>
-
-            <div className="fl-info__head-right">
-              <span className="fl-info__badge is-rejected">Abgelehnt</span>
-
-              <div className="dialog-head__actions">
-                <button
-                  type="button"
-                  className="modal__close"
-                  aria-label="Close"
-                  onClick={onClose}
-                >
-                  <img
-                    src="/icons/close.svg"
-                    alt=""
-                    aria-hidden="true"
-                    className="icon-img"
-                  />
-                </button>
-              </div>
-            </div>
+      <div className="dialog coach-info__dialog">
+        <div className="dialog-head coach-info__head">
+          <div className="coach-info__head-left">
+            <div className="coach-info__title">Coach: {fullName(coach)}</div>
+            <div className="coach-info__subtitle">Nur Ansicht</div>
           </div>
 
-          <div className="fl-info__body">
-            <div className="fl-info__grid">
-              <section className="fl-info__section fl-info__section--danger">
-                <div className="fl-info__section-title">Ablehnungsgrund</div>
+          <div className="coach-info__head-right">
+            <span className="coach-info__badge is-rejected">Abgelehnt</span>
 
-                <div className="fl-info__list">
-                  <div className="fl-info__row is-multiline">
-                    <div className="fl-info__label">Begründung</div>
-                    <div className="fl-info__value">{reason}</div>
-                  </div>
-                </div>
-              </section>
+            <div className="dialog-head__actions">
+              <button
+                type="button"
+                className="modal__close"
+                aria-label="Close"
+                onClick={onClose}
+              >
+                <img
+                  src="/icons/close.svg"
+                  alt=""
+                  aria-hidden="true"
+                  className="icon-img"
+                />
+              </button>
             </div>
+          </div>
+        </div>
+
+        <div className="dialog-body coach-info__body">
+          <div className="coach-info__grid">
+            <section className="coach-info__section coach-info__section--danger">
+              <div className="coach-info__section-title">Ablehnungsgrund</div>
+
+              <div className="coach-info__list">
+                <div className="coach-info__row is-multiline">
+                  <div className="coach-info__label">Begründung</div>
+                  <div className="coach-info__value">{reason}</div>
+                </div>
+              </div>
+            </section>
           </div>
         </div>
       </div>
@@ -77,10 +79,9 @@ export default function CoachInfoDialog({ open, coach, onClose }: Props) {
   );
 }
 
-// // src/app/admin/coaches/moderation/CoachInfoDialog.tsx
+// // src/app/admin/(app)/coaches/moderation/CoachInfoDialog.tsx
 // "use client";
 
-// import React from "react";
 // import type { Coach } from "../types";
 // import { fullName } from "../utils";
 
@@ -88,26 +89,21 @@ export default function CoachInfoDialog({ open, coach, onClose }: Props) {
 //   open: boolean;
 //   coach: Coach | null;
 //   onClose: () => void;
-
-//   // optional: nur Superadmin nutzt das, Lizenznehmer kann Dialog read-only öffnen
-//   onApprove?: (c: Coach) => Promise<void> | void;
-//   onReject?: (c: Coach, reason: string) => Promise<void> | void;
-//   onResubmit?: (c: Coach) => Promise<void> | void;
 // };
 
-// function clean(v: any) {
+// function cleanStr(v: unknown) {
 //   return String(v ?? "").trim();
 // }
 
-// function val(v: any) {
-//   const s = clean(v);
+// function valOrDash(v: unknown) {
+//   const s = cleanStr(v);
 //   return s ? s : "—";
 // }
 
 // export default function CoachInfoDialog({ open, coach, onClose }: Props) {
 //   if (!open || !coach) return null;
 
-//   const reason = (coach as any).rejectionReason;
+//   const reason = valOrDash((coach as any).rejectionReason);
 
 //   return (
 //     <div className="modal fl-info" role="dialog" aria-modal="true">
@@ -122,7 +118,7 @@ export default function CoachInfoDialog({ open, coach, onClose }: Props) {
 //             </div>
 
 //             <div className="fl-info__head-right">
-//               <span className="fl-info__badge is-rejected">Rejected</span>
+//               <span className="fl-info__badge is-rejected">Abgelehnt</span>
 
 //               <div className="dialog-head__actions">
 //                 <button
@@ -145,11 +141,12 @@ export default function CoachInfoDialog({ open, coach, onClose }: Props) {
 //           <div className="fl-info__body">
 //             <div className="fl-info__grid">
 //               <section className="fl-info__section fl-info__section--danger">
-//                 <div className="fl-info__section-title">Reject Grund</div>
+//                 <div className="fl-info__section-title">Ablehnungsgrund</div>
+
 //                 <div className="fl-info__list">
 //                   <div className="fl-info__row is-multiline">
 //                     <div className="fl-info__label">Begründung</div>
-//                     <div className="fl-info__value">{val(reason)}</div>
+//                     <div className="fl-info__value">{reason}</div>
 //                   </div>
 //                 </div>
 //               </section>

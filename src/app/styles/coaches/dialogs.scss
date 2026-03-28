@@ -1,4 +1,4 @@
-//src\app\styles\coaches\dialogs.scss
+// src/app/styles/coaches/dialogs.scss
 .coaches {
   .dialog-backdrop {
     position: fixed;
@@ -20,6 +20,7 @@
     grid-template-rows: auto 1fr auto;
     max-height: 70vh;
     position: relative;
+    z-index: 1;
   }
 
   .dialog-head {
@@ -35,7 +36,6 @@
   .dialog-body {
     padding: 14px 16px;
     overflow: auto;
-
     scrollbar-width: thin;
     scrollbar-color: rgba(0, 0, 0, 0.28) transparent;
 
@@ -79,10 +79,156 @@
     }
   }
 
-  @media (max-width: 680px) {
-    .coach-form {
-      grid-template-columns: 1fr;
+  .coach-info__dialog {
+    width: min(760px, calc(100% - 24px));
+    grid-template-rows: auto 1fr;
+  }
+
+  .coach-reject__dialog {
+    width: min(640px, calc(100% - 24px));
+    grid-template-rows: auto 1fr;
+  }
+
+  .coach-info__backdrop-hit,
+  .coach-reject__backdrop-hit {
+    position: fixed;
+    inset: 0;
+    background: transparent;
+    border: 0;
+    padding: 0;
+    margin: 0;
+    z-index: 0;
+  }
+
+  .coach-info__head,
+  .coach-reject__head {
+    padding: 12px 16px;
+    border-bottom: 1px solid #eef2f7;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 12px;
+  }
+
+  .coach-info__head-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .coach-info__title {
+    font-weight: 800;
+    font-size: 18px;
+  }
+
+  .coach-info__subtitle {
+    margin-top: 4px;
+    color: #6b7280;
+  }
+
+  .coach-info__body,
+  .coach-reject__body {
+    padding: 14px 16px;
+    overflow: auto;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0, 0, 0, 0.28) transparent;
+
+    &::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
     }
+
+    &::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: rgba(0, 0, 0, 0.28);
+      border-radius: 999px;
+      border: 2px solid transparent;
+      background-clip: content-box;
+    }
+
+    &::-webkit-scrollbar-thumb:hover {
+      background: rgba(0, 0, 0, 0.38);
+      background-clip: content-box;
+    }
+  }
+
+  .coach-info__grid {
+    display: grid;
+    gap: 16px;
+    grid-template-columns: 1fr;
+  }
+
+  .coach-info__section {
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 16px;
+    background: #fff;
+  }
+
+  .coach-info__section--danger {
+    border-color: rgba(153, 27, 27, 0.16);
+    background: #fff7f7;
+  }
+
+  .coach-info__section-title {
+    font-weight: 800;
+    font-size: 13px;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    color: #6b7280;
+    margin-bottom: 12px;
+  }
+
+  .coach-info__list {
+    display: grid;
+    gap: 12px;
+  }
+
+  .coach-info__row {
+    display: grid;
+    grid-template-columns: 140px minmax(0, 1fr);
+    gap: 12px;
+  }
+
+  .coach-info__row.is-multiline {
+    align-items: start;
+  }
+
+  .coach-info__label {
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    color: #6b7280;
+  }
+
+  .coach-info__value {
+    min-width: 0;
+    color: #111827;
+    word-break: break-word;
+  }
+
+  .coach-info__badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 28px;
+    padding: 0 10px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 800;
+  }
+
+  .coach-info__badge.is-rejected {
+    background: #fee2e2;
+    color: #991b1b;
+  }
+
+  .coach-reject__textarea {
+    min-height: 110px;
   }
 
   .btn-danger {
@@ -95,6 +241,25 @@
     }
   }
 
+  @media (max-width: 680px) {
+    .coach-form {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 720px) {
+    .coach-info__dialog,
+    .coach-reject__dialog {
+      width: 100%;
+      max-height: calc(100dvh - 24px);
+    }
+
+    .coach-info__row {
+      grid-template-columns: 1fr;
+      gap: 6px;
+    }
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .edit-trigger {
       transition: none;
@@ -103,3 +268,293 @@
     }
   }
 }
+
+.coaches {
+  .coach-info__badge.is-approved {
+    background: #dcfce7;
+    color: #166534;
+  }
+}
+
+// .coaches {
+//   .coach-info.dialog-backdrop,
+//   .coach-reject.dialog-backdrop {
+//     position: fixed;
+//     inset: 0;
+//     background: rgba(15, 23, 42, 0.44);
+//     display: grid;
+//     place-items: center;
+//     z-index: 50;
+//   }
+
+//   .coach-info__dialog {
+//     width: min(760px, calc(100% - 24px));
+//     background: #fff;
+//     border: 1px solid #e5e7eb;
+//     border-radius: 12px;
+//     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.18);
+//     overflow: hidden;
+//     display: grid;
+//     grid-template-rows: auto 1fr;
+//     max-height: 70vh;
+//     position: relative;
+//     z-index: 1;
+//   }
+
+//   .coach-reject__dialog {
+//     width: min(640px, calc(100% - 24px));
+//     background: #fff;
+//     border: 1px solid #e5e7eb;
+//     border-radius: 12px;
+//     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.18);
+//     overflow: hidden;
+//     display: grid;
+//     grid-template-rows: auto 1fr;
+//     max-height: 70vh;
+//     position: relative;
+//     z-index: 1;
+//   }
+
+//   .coach-info__backdrop-hit,
+//   .coach-reject__backdrop-hit {
+//     position: fixed;
+//     inset: 0;
+//     background: transparent;
+//     border: 0;
+//     padding: 0;
+//     margin: 0;
+//   }
+
+//   .coach-info__head,
+//   .coach-reject__head {
+//     padding: 12px 16px;
+//     border-bottom: 1px solid #eef2f7;
+//     display: flex;
+//     align-items: flex-start;
+//     justify-content: space-between;
+//     gap: 12px;
+//   }
+
+//   .coach-info__head-right {
+//     display: flex;
+//     align-items: center;
+//     gap: 10px;
+//   }
+
+//   .coach-info__title {
+//     font-weight: 800;
+//     font-size: 18px;
+//   }
+
+//   .coach-info__subtitle {
+//     margin-top: 4px;
+//     color: #6b7280;
+//   }
+
+//   .coach-info__body,
+//   .coach-reject__body {
+//     padding: 14px 16px;
+//     overflow: auto;
+//   }
+
+//   .coach-info__grid {
+//     display: grid;
+//     gap: 16px;
+//     grid-template-columns: 1fr;
+//   }
+
+//   .coach-info__section {
+//     border: 1px solid #e5e7eb;
+//     border-radius: 12px;
+//     padding: 16px;
+//     background: #fff;
+//   }
+
+//   .coach-info__section--danger {
+//     border-color: rgba(153, 27, 27, 0.16);
+//     background: #fff7f7;
+//   }
+
+//   .coach-info__section-title {
+//     font-weight: 800;
+//     font-size: 13px;
+//     letter-spacing: 0.02em;
+//     text-transform: uppercase;
+//     color: #6b7280;
+//     margin-bottom: 12px;
+//   }
+
+//   .coach-info__list {
+//     display: grid;
+//     gap: 12px;
+//   }
+
+//   .coach-info__row {
+//     display: grid;
+//     grid-template-columns: 140px minmax(0, 1fr);
+//     gap: 12px;
+//   }
+
+//   .coach-info__row.is-multiline {
+//     align-items: start;
+//   }
+
+//   .coach-info__label {
+//     font-size: 12px;
+//     font-weight: 800;
+//     letter-spacing: 0.02em;
+//     text-transform: uppercase;
+//     color: #6b7280;
+//   }
+
+//   .coach-info__value {
+//     min-width: 0;
+//     color: #111827;
+//     word-break: break-word;
+//   }
+
+//   .coach-info__badge {
+//     display: inline-flex;
+//     align-items: center;
+//     justify-content: center;
+//     min-height: 28px;
+//     padding: 0 10px;
+//     border-radius: 999px;
+//     font-size: 12px;
+//     font-weight: 800;
+//   }
+
+//   .coach-info__badge.is-rejected {
+//     background: #fee2e2;
+//     color: #991b1b;
+//   }
+
+//   .coach-reject__textarea {
+//     min-height: 110px;
+//   }
+
+//   @media (max-width: 720px) {
+//     .coach-info.dialog-backdrop,
+//     .coach-reject.dialog-backdrop {
+//       padding: 12px;
+//       place-items: start center;
+//     }
+
+//     .coach-info__dialog,
+//     .coach-reject__dialog {
+//       width: 100%;
+//       max-height: calc(100dvh - 24px);
+//     }
+
+//     .coach-info__row {
+//       grid-template-columns: 1fr;
+//       gap: 6px;
+//     }
+//   }
+// }
+
+// //src\app\styles\coaches\dialogs.scss
+// .coaches {
+//   .dialog-backdrop {
+//     position: fixed;
+//     inset: 0;
+//     background: rgba(15, 23, 42, 0.44);
+//     display: grid;
+//     place-items: center;
+//     z-index: 50;
+//   }
+
+//   .dialog {
+//     width: min(780px, calc(100% - 24px));
+//     background: #fff;
+//     border: 1px solid #e5e7eb;
+//     border-radius: 12px;
+//     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.18);
+//     overflow: hidden;
+//     display: grid;
+//     grid-template-rows: auto 1fr auto;
+//     max-height: 70vh;
+//     position: relative;
+//   }
+
+//   .dialog-head {
+//     padding: 12px 16px;
+//     border-bottom: 1px solid #eef2f7;
+//   }
+
+//   .dialog-title {
+//     font-weight: 800;
+//     font-size: 18px;
+//   }
+
+//   .dialog-body {
+//     padding: 14px 16px;
+//     overflow: auto;
+
+//     scrollbar-width: thin;
+//     scrollbar-color: rgba(0, 0, 0, 0.28) transparent;
+
+//     &::-webkit-scrollbar {
+//       width: 8px;
+//       height: 8px;
+//     }
+
+//     &::-webkit-scrollbar-track {
+//       background: transparent;
+//     }
+
+//     &::-webkit-scrollbar-thumb {
+//       background: rgba(0, 0, 0, 0.28);
+//       border-radius: 999px;
+//       border: 2px solid transparent;
+//       background-clip: content-box;
+//     }
+
+//     &::-webkit-scrollbar-thumb:hover {
+//       background: rgba(0, 0, 0, 0.38);
+//       background-clip: content-box;
+//     }
+//   }
+
+//   .dialog-foot {
+//     padding: 12px 16px;
+//     border-top: 1px solid #eef2f7;
+//     display: flex;
+//     gap: 10px;
+//     justify-content: flex-end;
+//   }
+
+//   .coach-form {
+//     display: grid;
+//     grid-template-columns: 1fr 1fr;
+//     gap: 12px;
+
+//     &__full {
+//       grid-column: 1 / -1;
+//     }
+//   }
+
+//   @media (max-width: 680px) {
+//     .coach-form {
+//       grid-template-columns: 1fr;
+//     }
+//   }
+
+//   .btn-danger {
+//     background: #ef4444;
+//     color: #fff;
+//     border-color: transparent;
+
+//     &:hover {
+//       background: #dc2626;
+//     }
+//   }
+
+//   @media (prefers-reduced-motion: reduce) {
+//     .edit-trigger {
+//       transition: none;
+//       animation: none;
+//       box-shadow: none;
+//     }
+//   }
+// }
