@@ -426,13 +426,13 @@
     opacity: 0.9;
   }
 
-  .news-admin__box--scroll3 {
-    min-height: 0;
-    max-height: calc(100vh - 420px);
-    overflow: auto;
-    scrollbar-gutter: auto;
-    overscroll-behavior: contain;
-  }
+  // .news-admin__box--scroll3 {
+  //   min-height: 0;
+  //   max-height: calc(100vh - 420px);
+  //   overflow: auto;
+  //   scrollbar-gutter: auto;
+  //   overscroll-behavior: contain;
+  // }
 
   .list.list--bleed > .list__item + .list__item {
     border-top: 1px solid var(--booking-sep) !important;

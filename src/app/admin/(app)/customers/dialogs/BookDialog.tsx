@@ -129,17 +129,35 @@ function isPowertrainingOffer(offer: Offer | null) {
   const category = safeText((offer as any)?.category).toLowerCase();
   const type = safeText((offer as any)?.type).toLowerCase();
   const subType = safeText((offer as any)?.sub_type).toLowerCase();
+  const legacyType = safeText((offer as any)?.legacy_type).toLowerCase();
   const title = safeText((offer as any)?.title).toLowerCase();
 
   if (category === "clubprograms") return false;
+  if (category === "rentacoach") return false;
 
   return (
-    category === "individual" &&
-    (type.includes("powertraining") ||
-      subType.includes("powertraining") ||
-      title.includes("powertraining"))
+    type.includes("powertraining") ||
+    subType.includes("powertraining") ||
+    legacyType.includes("powertraining") ||
+    title.includes("powertraining")
   );
 }
+
+// function isPowertrainingOffer(offer: Offer | null) {
+//   const category = safeText((offer as any)?.category).toLowerCase();
+//   const type = safeText((offer as any)?.type).toLowerCase();
+//   const subType = safeText((offer as any)?.sub_type).toLowerCase();
+//   const title = safeText((offer as any)?.title).toLowerCase();
+
+//   if (category === "clubprograms") return false;
+
+//   return (
+//     category === "individual" &&
+//     (type.includes("powertraining") ||
+//       subType.includes("powertraining") ||
+//       title.includes("powertraining"))
+//   );
+// }
 
 function getBookDialogOfferKind(offer: Offer | null): OfferKind {
   const category = safeText((offer as any)?.category);
