@@ -187,11 +187,28 @@ export async function fetchNewsPage(args: {
   return p;
 }
 
+// export async function uploadNewsFile(file: File) {
+//   const fd = new FormData();
+//   fd.append("file", file);
+
+//   const res = await fetch(UPLOAD_API, { method: "POST", body: fd });
+//   const js = await readJson<any>(res);
+//   if (!res.ok || !js?.ok) throw errorFor(res, js);
+
+//   return js as { url: string; mimetype: string };
+// }
+
 export async function uploadNewsFile(file: File) {
   const fd = new FormData();
   fd.append("file", file);
+  fd.append("filename", file.name);
 
-  const res = await fetch(UPLOAD_API, { method: "POST", body: fd });
+  const res = await fetch(UPLOAD_API, {
+    method: "POST",
+    body: fd,
+    credentials: "include",
+  });
+
   const js = await readJson<any>(res);
   if (!res.ok || !js?.ok) throw errorFor(res, js);
 
