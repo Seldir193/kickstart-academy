@@ -1,4 +1,3 @@
-// src/app/admin/(app)/franchise-locations/page.helpers.ts
 "use client";
 
 import { clean } from "./franchise_locations.utils";
@@ -17,18 +16,18 @@ export function isSuperAdminUser(
 }
 
 export function viewLabelMine(v: MineView) {
-  if (v === "mine_pending") return "Meine Standorte – Zu prüfen";
-  if (v === "mine_approved") return "Meine Standorte – Freigegeben";
-  return "Meine Standorte – Abgelehnt";
+  if (v === "mine_pending") return "My locations – Pending review";
+  if (v === "mine_approved") return "My locations – Approved";
+  return "My locations – Rejected";
 }
 
 export function viewLabelProvider(v: ProviderView) {
-  if (v === "provider_pending") return "Lizenznehmer – Zu prüfen";
-  if (v === "provider_approved") return "Lizenznehmer – Freigegeben";
-  return "Lizenznehmer – Abgelehnt";
+  if (v === "provider_pending") return "Providers – Pending review";
+  if (v === "provider_approved") return "Providers – Approved";
+  return "Providers – Rejected";
 }
 
 export function countLabel(n: number, view: string) {
-  if (view === "provider_pending") return `(${n} neu)`;
-  return `${n} Treffer`;
+  if (view === "provider_pending") return `(${n} new)`;
+  return `${n} results`;
 }
