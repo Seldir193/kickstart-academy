@@ -1,4 +1,3 @@
-// src/app/admin/franchise-locations/FranchiseLocationDialog.tsx
 "use client";
 
 import React, { useEffect, useMemo, useState } from "react";
@@ -40,7 +39,7 @@ export default function FranchiseLocationDialog({
 }: Props) {
   const isEdit = Boolean(initial?.id);
   const title = useMemo(
-    () => (isEdit ? "Standort bearbeiten" : "Standort hinzufügen"),
+    () => (isEdit ? "Edit location" : "Add location"),
     [isEdit],
   );
 
@@ -83,11 +82,12 @@ export default function FranchiseLocationDialog({
     };
 
     if (!payload.licenseeFirstName || !payload.licenseeLastName) {
-      setErr("Vorname und Nachname sind Pflichtfelder.");
+      setErr("First name and last name are required.");
       return;
     }
+
     if (!payload.country || !payload.city) {
-      setErr("Country und City sind Pflichtfelder.");
+      setErr("Country and city are required.");
       return;
     }
 
@@ -96,7 +96,7 @@ export default function FranchiseLocationDialog({
       await onSave(payload);
       onClose();
     } catch (e: any) {
-      setErr(e?.message || "Speichern fehlgeschlagen.");
+      setErr(e?.message || "Saving failed.");
     } finally {
       setBusy(false);
     }
@@ -104,187 +104,192 @@ export default function FranchiseLocationDialog({
 
   async function handleDelete() {
     if (!onDelete) return;
-    const ok = confirm("Standort wirklich löschen?");
-    if (!ok) return;
 
     try {
       setBusy(true);
       await onDelete();
       onClose();
     } catch (e: any) {
-      setErr(e?.message || "Löschen fehlgeschlagen.");
+      setErr(e?.message || "Deleting failed.");
     } finally {
       setBusy(false);
     }
   }
 
   return (
-    <div className="ks-modal-root">
-      <div className="ks-backdrop" onClick={onClose} />
-      <div
-        className="ks-panel card ks-panel--md"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <div className="dialog-head">
-          <div className="dialog-head__left">
-            <h2 className="text-xl font-bold">{title}</h2>
-            <span className="badge">{isEdit ? "Edit" : "New"}</span>
+    <div className="dialog-backdrop fl-dialog" role="dialog" aria-modal="true">
+      <button
+        type="button"
+        className="dialog-backdrop-hit fl-dialog__backdrop-hit"
+        aria-label="Close"
+        onClick={onClose}
+      />
+
+      <div className="dialog fl-dialog__dialog">
+        <div className="dialog-head fl-dialog__head">
+          <div className="fl-dialog__head-left">
+            <div className="dialog-title fl-dialog__title">{title}</div>
+
+            <div className="dialog-subtitle fl-dialog__subtitle">
+              New or updated locations become visible only after superadmin
+              approval.
+            </div>
+
+            <div className="fl-dialog__title-actions">
+              <span className="dialog-status dialog-status--neutral">
+                {isEdit ? "Edit" : "New"}
+              </span>
+            </div>
           </div>
 
-          <div className="dialog-head__actions">
-            <button
-              type="button"
-              className="modal__close"
-              aria-label="Close"
-              onClick={onClose}
-              disabled={busy}
-            >
-              <img
-                src="/icons/close.svg"
-                alt=""
-                aria-hidden="true"
-                className="icon-img"
+          <div className="fl-dialog__head-right">
+            <div className="dialog-head__actions">
+              <button
+                type="button"
+                className="dialog-close modal__close"
+                aria-label="Close"
+                onClick={onClose}
+                disabled={busy}
+              >
+                <img
+                  src="/icons/close.svg"
+                  alt=""
+                  aria-hidden="true"
+                  className="icon-img"
+                />
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div className="dialog-body fl-dialog__body">
+          {err ? <div className="error fl-dialog__error">{err}</div> : null}
+
+          <div className="fl-dialog__grid">
+            <div className="field">
+              <label className="dialog-label">First name *</label>
+              <input
+                className="input"
+                value={form.licenseeFirstName}
+                onChange={(e) =>
+                  setForm({ ...form, licenseeFirstName: e.target.value })
+                }
               />
-            </button>
+            </div>
+
+            <div className="field">
+              <label className="dialog-label">Last name *</label>
+              <input
+                className="input"
+                value={form.licenseeLastName}
+                onChange={(e) =>
+                  setForm({ ...form, licenseeLastName: e.target.value })
+                }
+              />
+            </div>
+
+            <div className="field">
+              <label className="dialog-label">Country *</label>
+              <input
+                className="input"
+                value={form.country}
+                onChange={(e) => setForm({ ...form, country: e.target.value })}
+              />
+            </div>
+
+            <div className="field">
+              <label className="dialog-label">City *</label>
+              <input
+                className="input"
+                value={form.city}
+                onChange={(e) => setForm({ ...form, city: e.target.value })}
+              />
+            </div>
+
+            <div className="field">
+              <label className="dialog-label">State/Region</label>
+              <input
+                className="input"
+                value={form.state}
+                onChange={(e) => setForm({ ...form, state: e.target.value })}
+              />
+            </div>
+
+            <div className="field">
+              <label className="dialog-label">ZIP</label>
+              <input
+                className="input"
+                value={form.zip}
+                onChange={(e) => setForm({ ...form, zip: e.target.value })}
+              />
+            </div>
+
+            <div className="field field--full">
+              <label className="dialog-label">Address</label>
+              <input
+                className="input"
+                value={form.address}
+                onChange={(e) => setForm({ ...form, address: e.target.value })}
+              />
+            </div>
+
+            <div className="field">
+              <label className="dialog-label">Website</label>
+              <input
+                className="input"
+                value={form.website}
+                onChange={(e) => setForm({ ...form, website: e.target.value })}
+              />
+            </div>
+
+            <div className="field">
+              <label className="dialog-label">Public email</label>
+              <input
+                className="input"
+                value={form.emailPublic}
+                onChange={(e) =>
+                  setForm({ ...form, emailPublic: e.target.value })
+                }
+              />
+            </div>
+
+            <div className="field">
+              <label className="dialog-label">Public phone</label>
+              <input
+                className="input"
+                value={form.phonePublic}
+                onChange={(e) =>
+                  setForm({ ...form, phonePublic: e.target.value })
+                }
+              />
+            </div>
           </div>
         </div>
 
-        <div className="fl-dialog__hint">
-          Neue/Geänderte Standorte sind erst sichtbar, wenn Superadmin freigibt.
-        </div>
-
-        {err ? <div className="mb-2 text-red-600">{err}</div> : null}
-
-        <div className="fl-dialog__grid">
-          <div className="field">
-            <label className="lbl">Vorname *</label>
-            <input
-              className="input"
-              value={form.licenseeFirstName}
-              onChange={(e) =>
-                setForm({ ...form, licenseeFirstName: e.target.value })
-              }
-            />
+        <div className="dialog-footer fl-dialog__footer">
+          <div className="fl-dialog__footer-left">
+            {onDelete && isEdit ? (
+              <button
+                className="btn btn--danger"
+                onClick={handleDelete}
+                disabled={busy}
+                type="button"
+              >
+                Delete
+              </button>
+            ) : (
+              <span />
+            )}
           </div>
-
-          <div className="field">
-            <label className="lbl">Nachname *</label>
-            <input
-              className="input"
-              value={form.licenseeLastName}
-              onChange={(e) =>
-                setForm({ ...form, licenseeLastName: e.target.value })
-              }
-            />
-          </div>
-
-          <div className="field">
-            <label className="lbl">Country *</label>
-            <input
-              className="input"
-              value={form.country}
-              onChange={(e) => setForm({ ...form, country: e.target.value })}
-            />
-          </div>
-
-          <div className="field">
-            <label className="lbl">City *</label>
-            <input
-              className="input"
-              value={form.city}
-              onChange={(e) => setForm({ ...form, city: e.target.value })}
-            />
-          </div>
-
-          <div className="field">
-            <label className="lbl">State/Region</label>
-            <input
-              className="input"
-              value={form.state}
-              onChange={(e) => setForm({ ...form, state: e.target.value })}
-            />
-          </div>
-
-          <div className="field">
-            <label className="lbl">ZIP</label>
-            <input
-              className="input"
-              value={form.zip}
-              onChange={(e) => setForm({ ...form, zip: e.target.value })}
-            />
-          </div>
-
-          <div className="field field--full">
-            <label className="lbl">Address</label>
-            <input
-              className="input"
-              value={form.address}
-              onChange={(e) => setForm({ ...form, address: e.target.value })}
-            />
-          </div>
-
-          <div className="field">
-            <label className="lbl">Website</label>
-            <input
-              className="input"
-              value={form.website}
-              onChange={(e) => setForm({ ...form, website: e.target.value })}
-            />
-          </div>
-
-          <div className="field">
-            <label className="lbl">Public Email</label>
-            <input
-              className="input"
-              value={form.emailPublic}
-              onChange={(e) =>
-                setForm({ ...form, emailPublic: e.target.value })
-              }
-            />
-          </div>
-
-          <div className="field">
-            <label className="lbl">Public Phone</label>
-            <input
-              className="input"
-              value={form.phonePublic}
-              onChange={(e) =>
-                setForm({ ...form, phonePublic: e.target.value })
-              }
-            />
-          </div>
-        </div>
-
-        <div className="fl-dialog__footer">
-          {onDelete && isEdit ? (
-            <button
-              className="btn btn--danger"
-              onClick={handleDelete}
-              disabled={busy}
-              type="button"
-            >
-              Löschen
-            </button>
-          ) : (
-            <span />
-          )}
 
           <div className="fl-dialog__footer-right">
-            <button
-              className="btn"
-              onClick={onClose}
-              disabled={busy}
-              type="button"
-            >
-              Abbrechen
-            </button>
             <button
               className="btn"
               onClick={submit}
               disabled={busy}
               type="button"
             >
-              {busy ? "Speichern…" : "Speichern"}
+              {busy ? "Saving..." : "Save"}
             </button>
           </div>
         </div>
