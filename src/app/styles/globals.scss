@@ -66,6 +66,8 @@
 @use "./offer-create-dialog.scss" as *;
 @use "./weekly-revoke.scss" as *;
 @use "./vouchers.scss" as *;
+@use "./dialog-style/dialog-system.scss" as *;
+@use "./components/news-dialog-mobile.scss" as *;
 
 root {
   --brand-navy: #0f1e2e;

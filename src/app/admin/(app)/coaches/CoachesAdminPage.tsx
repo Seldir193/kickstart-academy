@@ -7,7 +7,7 @@ import CoachesFilters from "./components/CoachesFilters";
 import Pagination from "./components/Pagination";
 import PendingCoachesList from "./components/PendingCoachesList";
 import CoachTableList from "./components/CoachTableList";
-import ConfirmDialog from "./moderation/ConfirmDialog";
+import DeleteCoachDialog from "./moderation/DeleteCoachDialog";
 import RejectDialog from "./moderation/RejectDialog";
 import CoachInfoDialog from "./moderation/CoachInfoDialog";
 import CoachPublishedInfoDialog from "./components/CoachPublishedInfoDialog";
@@ -39,7 +39,7 @@ function CreateCoachButton({
         aria-hidden="true"
         className="btn__icon"
       />
-      Neuer Coach
+      New coach
     </button>
   );
 }
@@ -49,7 +49,7 @@ export default function CoachesAdminPage() {
 
   const isSuper = Boolean((me as any)?.isSuperAdmin);
   const meId = cleanStr((me as any)?.id);
-  const meLabel = cleanStr((me as any)?.fullName) || "Ich";
+  const meLabel = cleanStr((me as any)?.fullName) || "Me";
 
   const [createOpen, setCreateOpen] = useState(false);
   const [editItem, setEditItem] = useState<Coach | null>(null);
@@ -57,9 +57,8 @@ export default function CoachesAdminPage() {
   const [pendingBusySlug, setPendingBusySlug] = useState<string | null>(null);
   const [publishedBusyId, setPublishedBusyId] = useState<string | null>(null);
 
-  const [confirmOpen, setConfirmOpen] = useState(false);
-  const [confirmTitle, setConfirmTitle] = useState("");
-  const [confirmText, setConfirmText] = useState("");
+  const [deleteOpen, setDeleteOpen] = useState(false);
+  const [deleteTarget, setDeleteTarget] = useState<Coach | null>(null);
 
   const [rejectOpen, setRejectOpen] = useState(false);
   const [rejectTarget, setRejectTarget] = useState<Coach | null>(null);
@@ -111,19 +110,13 @@ export default function CoachesAdminPage() {
     state.setMineFromItems(Array.isArray(items) ? items : []);
   }, [isSuper, items]);
 
-  function openConfirm(opts: {
-    title: string;
-    text: string;
-    action: () => Promise<void>;
-  }) {
-    setConfirmTitle(opts.title);
-    setConfirmText(opts.text);
-    muts.confirmActionRef.current = opts.action;
-    setConfirmOpen(true);
-  }
-
   function coachRowId(c: Coach) {
     return cleanStr((c as any)?.slug) || cleanStr((c as any)?.id);
+  }
+
+  function openDelete(c: Coach) {
+    setDeleteTarget(c);
+    setDeleteOpen(true);
   }
 
   async function togglePublished(c: Coach, next: boolean) {
@@ -177,10 +170,10 @@ export default function CoachesAdminPage() {
           <section className="coach-admin__section">
             <div className="coach-admin__section-head">
               <h2 className="coach-admin__section-title">
-                Lizenznehmer – Zu prüfen
+                Providers – Pending review
               </h2>
               <span className="coach-admin__section-meta">
-                {pendingCount ? `(${pendingCount} neu)` : ""}
+                {pendingCount ? `(${pendingCount} new)` : ""}
               </span>
             </div>
 
@@ -235,7 +228,7 @@ export default function CoachesAdminPage() {
           <section className="coach-admin__section">
             <div className="coach-admin__section-head">
               <h2 className="coach-admin__section-title">
-                Lizenznehmer – Freigegeben
+                Providers – Approved
               </h2>
               <span className="coach-admin__section-meta">
                 {state.providersApprovedAll.length
@@ -259,14 +252,7 @@ export default function CoachesAdminPage() {
                   setPublishedInfoTarget(c);
                   setPublishedInfoOpen(true);
                 }}
-                onUnapprove={(c) => {
-                  openConfirm({
-                    title: "Coach löschen",
-                    text: `Coach "${fullName(c)}" wirklich löschen?`,
-                    action: async () =>
-                      muts.handleDelete(cleanStr((c as any).slug)),
-                  });
-                }}
+                onUnapprove={openDelete}
                 onReject={(c) => {
                   setRejectTarget(c);
                   setRejectOpen(true);
@@ -296,7 +282,7 @@ export default function CoachesAdminPage() {
           <section className="coach-admin__section">
             <div className="coach-admin__section-head">
               <h2 className="coach-admin__section-title">
-                Lizenznehmer – Abgelehnt
+                Providers – Rejected
               </h2>
               <span className="coach-admin__section-meta">
                 {state.providersRejectedAll.length
@@ -320,14 +306,7 @@ export default function CoachesAdminPage() {
                   setRejectInfoTarget(c);
                   setRejectInfoOpen(true);
                 }}
-                onUnapprove={(c) => {
-                  openConfirm({
-                    title: "Coach löschen",
-                    text: `Coach "${fullName(c)}" wirklich löschen?`,
-                    action: async () =>
-                      muts.handleDelete(cleanStr((c as any).slug)),
-                  });
-                }}
+                onUnapprove={openDelete}
                 meLabel={meLabel}
               />
             </div>
@@ -351,7 +330,7 @@ export default function CoachesAdminPage() {
           <section className="coach-admin__section">
             <div className="coach-admin__section-head">
               <h2 className="coach-admin__section-title">
-                Coaches – Zu prüfen
+                Coaches – Pending review
               </h2>
               <span className="coach-admin__section-meta">
                 {state.myLists.pending.length
@@ -373,15 +352,7 @@ export default function CoachesAdminPage() {
                 toggleBtnRef={myPendingToggleRef}
                 authorDash={true}
                 meLabel={meLabel}
-                onDelete={(c) => {
-                  openConfirm({
-                    title: "Coach löschen",
-                    text: `Coach "${fullName(c)}" wirklich löschen?`,
-                    action: async () => {
-                      await muts.handleDelete(cleanStr((c as any).slug));
-                    },
-                  });
-                }}
+                onDelete={openDelete}
               />
             </div>
 
@@ -403,9 +374,7 @@ export default function CoachesAdminPage() {
         {!isSuper ? (
           <section className="coach-admin__section">
             <div className="coach-admin__section-head">
-              <h2 className="coach-admin__section-title">
-                Coaches – Freigegeben
-              </h2>
+              <h2 className="coach-admin__section-title">Coaches – Approved</h2>
               <span className="coach-admin__section-meta">
                 {state.myLists.approved.length
                   ? `(${state.myLists.approved.length})`
@@ -434,15 +403,7 @@ export default function CoachesAdminPage() {
                 canResubmit={(c) => canSubmitUpdate(c)}
                 onTogglePublished={togglePublished}
                 publishedBusyId={publishedBusyId}
-                onDelete={(c) => {
-                  openConfirm({
-                    title: "Coach löschen",
-                    text: `Coach "${fullName(c)}" wirklich löschen?`,
-                    action: async () => {
-                      await muts.handleDelete(cleanStr((c as any).slug));
-                    },
-                  });
-                }}
+                onDelete={openDelete}
               />
             </div>
 
@@ -464,9 +425,7 @@ export default function CoachesAdminPage() {
         {!isSuper ? (
           <section className="coach-admin__section">
             <div className="coach-admin__section-head">
-              <h2 className="coach-admin__section-title">
-                Coaches – Abgelehnt
-              </h2>
+              <h2 className="coach-admin__section-title">Coaches – Rejected</h2>
               <span className="coach-admin__section-meta">
                 {state.myLists.rejected.length
                   ? `(${state.myLists.rejected.length})`
@@ -487,15 +446,7 @@ export default function CoachesAdminPage() {
                 toggleBtnRef={myRejectedToggleRef}
                 authorDash={true}
                 meLabel={meLabel}
-                onDelete={(c) => {
-                  openConfirm({
-                    title: "Coach löschen",
-                    text: `Coach "${fullName(c)}" wirklich löschen?`,
-                    action: async () => {
-                      await muts.handleDelete(cleanStr((c as any).slug));
-                    },
-                  });
-                }}
+                onDelete={openDelete}
                 onInfo={(c) => {
                   setRejectInfoTarget(c);
                   setRejectInfoOpen(true);
@@ -524,7 +475,7 @@ export default function CoachesAdminPage() {
           <section className="coach-admin__section">
             <div className="coach-admin__section-head">
               <h2 className="coach-admin__section-title">
-                Meine Coaches – Freigegeben
+                My coaches – Approved
               </h2>
               <span className="coach-admin__section-meta">
                 {state.myLists.approved.length
@@ -546,14 +497,7 @@ export default function CoachesAdminPage() {
                 toggleBtnRef={myApprovedToggleRef}
                 authorDash={false}
                 meLabel={meLabel}
-                onUnapprove={(c) => {
-                  openConfirm({
-                    title: "Coach löschen",
-                    text: `Coach "${fullName(c)}" wirklich löschen?`,
-                    action: async () =>
-                      muts.handleDelete(cleanStr((c as any).slug)),
-                  });
-                }}
+                onUnapprove={openDelete}
                 onInfo={(c) => {
                   setPublishedInfoTarget(c);
                   setPublishedInfoOpen(true);
@@ -604,21 +548,18 @@ export default function CoachesAdminPage() {
         }}
       />
 
-      <ConfirmDialog
-        open={confirmOpen}
-        title={confirmTitle}
-        text={confirmText}
-        danger={false}
+      <DeleteCoachDialog
+        open={deleteOpen}
+        coachName={deleteTarget ? fullName(deleteTarget) : ""}
         onClose={() => {
-          setConfirmOpen(false);
-          muts.confirmActionRef.current = null;
+          setDeleteOpen(false);
+          setDeleteTarget(null);
         }}
         onConfirm={async () => {
-          const fn = muts.confirmActionRef.current;
-          if (!fn) return;
-          await fn();
-          setConfirmOpen(false);
-          muts.confirmActionRef.current = null;
+          if (!deleteTarget) return;
+          await muts.handleDelete(cleanStr((deleteTarget as any).slug));
+          setDeleteOpen(false);
+          setDeleteTarget(null);
         }}
       />
 
@@ -665,7 +606,6 @@ export default function CoachesAdminPage() {
   );
 }
 
-// //src\app\admin\(app)\coaches\CoachesAdminPage.tsx
 // "use client";
 
 // import { useEffect, useRef, useState } from "react";
@@ -684,6 +624,33 @@ export default function CoachesAdminPage() {
 // import { cleanStr } from "./pageHelpers";
 // import { useCoachesPageState } from "./hooks/useCoachesPageState";
 // import { useCoachesPageMutations } from "./hooks/useCoachesPageMutations";
+
+// function CreateCoachButton({
+//   busy,
+//   onOpen,
+// }: {
+//   busy: boolean;
+//   onOpen: () => void;
+// }) {
+//   return (
+//     <button
+//       className="btn"
+//       type="button"
+//       onClick={() => {
+//         if (busy) return;
+//         onOpen();
+//       }}
+//     >
+//       <img
+//         src="/icons/plus.svg"
+//         alt=""
+//         aria-hidden="true"
+//         className="btn__icon"
+//       />
+//       Neuer Coach
+//     </button>
+//   );
+// }
 
 // export default function CoachesAdminPage() {
 //   const { me, items, resp, loading, error } = useCoachesData();
@@ -783,38 +750,6 @@ export default function CoachesAdminPage() {
 //   return (
 //     <div className="coaches coaches-admin ks">
 //       <main className="container">
-//         <div className="dialog-subhead coach-admin__subhead">
-//           <h1 className="text-2xl font-bold m-0 coach-admin__title">
-//             Coaches verwalten
-//             {isSuper && pendingCount > 0 ? (
-//               <span
-//                 className="coach-admin__alarm"
-//                 title="Neue Coaches zur Prüfung"
-//               >
-//                 <span className="coach-admin__alarm-dot" />
-//                 <span className="coach-admin__alarm-badge">{pendingCount}</span>
-//               </span>
-//             ) : null}
-//           </h1>
-
-//           <button
-//             className="btn"
-//             type="button"
-//             onClick={() => {
-//               if (muts.mutating) return;
-//               setCreateOpen(true);
-//             }}
-//           >
-//             <img
-//               src="/icons/plus.svg"
-//               alt=""
-//               aria-hidden="true"
-//               className="btn__icon"
-//             />
-//             Neuer Coach
-//           </button>
-//         </div>
-
 //         <CoachesFilters
 //           q={state.q}
 //           sort={state.sort}
@@ -826,6 +761,12 @@ export default function CoachesAdminPage() {
 //             state.setSort(v);
 //             state.resetPages();
 //           }}
+//           actionSlot={
+//             <CreateCoachButton
+//               busy={muts.mutating}
+//               onOpen={() => setCreateOpen(true)}
+//             />
+//           }
 //         />
 
 //         {error ? (
@@ -928,8 +869,10 @@ export default function CoachesAdminPage() {
 //                 }}
 //                 onUnapprove={(c) => {
 //                   openConfirm({
-//                     title: "Coach löschen",
-//                     text: `Coach "${fullName(c)}" wirklich löschen?`,
+//                     // title: "Coach löschen",
+//                     // text: `Coach "${fullName(c)}" wirklich löschen?`,
+//                     title: "Delete coach",
+//                     text: `Do you really want to delete coach "${fullName(c)}"?`,
 //                     action: async () =>
 //                       muts.handleDelete(cleanStr((c as any).slug)),
 //                   });
