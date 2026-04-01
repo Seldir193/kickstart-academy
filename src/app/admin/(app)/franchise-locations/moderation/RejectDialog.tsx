@@ -1,4 +1,3 @@
-// src/app/admin/franchise-locations/moderation/RejectDialog.tsx
 "use client";
 
 import React, { useEffect, useState } from "react";
@@ -26,7 +25,7 @@ export default function RejectDialog({ open, onClose, onSubmit }: Props) {
   async function submit() {
     const r = reason.trim();
     if (!r) {
-      setErr("Bitte eine Begründung eingeben.");
+      setErr("Please enter a reason.");
       return;
     }
     setErr(null);
@@ -35,7 +34,7 @@ export default function RejectDialog({ open, onClose, onSubmit }: Props) {
       await onSubmit(r);
       onClose();
     } catch (e: any) {
-      setErr(e?.message || "Reject fehlgeschlagen.");
+      setErr(e?.message || "Reject failed.");
     } finally {
       setBusy(false);
     }
@@ -43,58 +42,64 @@ export default function RejectDialog({ open, onClose, onSubmit }: Props) {
 
   return (
     <div
+      className="dialog-backdrop fl-reject"
       role="dialog"
       aria-modal="true"
-      style={{
-        position: "fixed",
-        inset: 0,
-        zIndex: 6000,
-        background: "rgba(0,0,0,.45)",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        padding: 16,
-      }}
       onMouseDown={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
     >
-      <div className="card" style={{ width: "100%", maxWidth: 640 }}>
-        <div className="flex justify-between items-start gap-3 mb-3">
-          <div className="text-xl font-bold">Reject Standort</div>
-          <button
-            type="button"
-            className="modal__close"
-            aria-label="Close"
-            onClick={onClose}
-            disabled={busy}
-          >
-            <img
-              src="/icons/close.svg"
-              alt=""
-              aria-hidden="true"
-              className="icon-img"
-            />
-          </button>
+      <div className="dialog fl-reject__dialog">
+        <div className="dialog-head fl-reject__head">
+          <div className="fl-reject__head-left">
+            <div className="dialog-title fl-reject__title">Reject location</div>
+            <div className="dialog-subtitle fl-reject__subtitle">
+              Please provide a clear reason for the rejection.
+            </div>
+          </div>
+
+          <div className="fl-reject__head-right">
+            <div className="dialog-head__actions">
+              <button
+                type="button"
+                className="dialog-close modal__close"
+                aria-label="Close"
+                onClick={onClose}
+                disabled={busy}
+              >
+                <img
+                  src="/icons/close.svg"
+                  alt=""
+                  aria-hidden="true"
+                  className="icon-img"
+                />
+              </button>
+            </div>
+          </div>
         </div>
 
-        {err && <div className="error mb-3">{err}</div>}
+        <div className="dialog-body fl-reject__body">
+          {err ? <div className="error fl-reject__error">{err}</div> : null}
+          <div className="fl-reject__field">
+            <label className="dialog-label fl-reject__label">Reason *</label>
 
-        <label className="block text-sm text-gray-600 mb-1">Begründung *</label>
-        <textarea
-          className="input"
-          style={{ minHeight: 110 }}
-          value={reason}
-          onChange={(e) => setReason(e.target.value)}
-          placeholder="z.B. Adresse unvollständig / nicht plausibel / doppelt…"
-        />
+            <textarea
+              className="input fl-reject__textarea"
+              value={reason}
+              onChange={(e) => setReason(e.target.value)}
+              placeholder="e.g. address incomplete / not plausible / duplicate"
+            />
+          </div>
+        </div>
 
-        <div className="flex gap-2 justify-end mt-4">
-          <button className="btn" onClick={onClose} disabled={busy}>
-            Abbrechen
-          </button>
-          <button className="btn btn--danger" onClick={submit} disabled={busy}>
-            {busy ? "Reject…" : "Reject"}
+        <div className="dialog-footer fl-reject__footer">
+          <button
+            type="button"
+            className="btn btn--danger"
+            onClick={submit}
+            disabled={busy}
+          >
+            {busy ? "Rejecting..." : "Reject"}
           </button>
         </div>
       </div>
