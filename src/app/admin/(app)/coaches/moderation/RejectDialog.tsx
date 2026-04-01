@@ -25,7 +25,7 @@ export default function RejectDialog({ open, onClose, onSubmit }: Props) {
   async function submit() {
     const r = reason.trim();
     if (!r) {
-      setErr("Bitte eine Begründung eingeben.");
+      setErr("Please enter a reason.");
       return;
     }
 
@@ -35,7 +35,7 @@ export default function RejectDialog({ open, onClose, onSubmit }: Props) {
       await onSubmit(r);
       onClose();
     } catch (e: any) {
-      setErr(e?.message || "Ablehnen fehlgeschlagen.");
+      setErr(e?.message || "Rejecting failed.");
     } finally {
       setBusy(false);
     }
@@ -49,63 +49,88 @@ export default function RejectDialog({ open, onClose, onSubmit }: Props) {
     >
       <div className="dialog coach-reject__dialog">
         <div className="dialog-head coach-reject__head">
-          <div className="text-xl font-bold">Coach ablehnen</div>
+          <div className="coach-reject__head-left">
+            <div className="dialog-title coach-reject__title">Reject coach</div>
 
-          <button
-            type="button"
-            className="modal__close"
-            aria-label="Close"
-            onClick={onClose}
-            disabled={busy}
-          >
-            <img
-              src="/icons/close.svg"
-              alt=""
-              aria-hidden="true"
-              className="icon-img"
-            />
-          </button>
+            <div className="dialog-subtitle coach-reject__subtitle">
+              Add a clear reason for rejecting this item.
+            </div>
+          </div>
+
+          <div className="coach-reject__head-right">
+            <div className="dialog-head__actions">
+              <button
+                type="button"
+                className="dialog-close modal__close"
+                aria-label="Close"
+                onClick={onClose}
+                disabled={busy}
+              >
+                <img
+                  src="/icons/close.svg"
+                  alt=""
+                  aria-hidden="true"
+                  className="icon-img"
+                />
+              </button>
+            </div>
+          </div>
         </div>
+        {/* <div className="dialog-head coach-reject__head">
+          <div className="coach-reject__head-left">
+            <div className="dialog-title coach-reject__title">Reject coach</div>
+          </div>
+
+          <div className="coach-reject__head-right">
+            <div className="dialog-head__actions">
+              <button
+                type="button"
+                className="dialog-close modal__close"
+                aria-label="Close"
+                onClick={onClose}
+                disabled={busy}
+              >
+                <img
+                  src="/icons/close.svg"
+                  alt=""
+                  aria-hidden="true"
+                  className="icon-img"
+                />
+              </button>
+            </div>
+          </div>
+        </div> */}
 
         <div className="dialog-body coach-reject__body">
-          {err ? <div className="error mb-3">{err}</div> : null}
+          {err ? <div className="error coach-reject__error">{err}</div> : null}
 
-          <label className="block text-sm text-gray-600 mb-1">
-            Begründung *
-          </label>
+          <div className="coach-reject__field">
+            <label className="dialog-label coach-reject__label">Reason *</label>
 
-          <textarea
-            className="input coach-reject__textarea"
-            value={reason}
-            onChange={(e) => setReason(e.target.value)}
-            placeholder="z.B. Daten unvollständig / nicht plausibel / doppelt…"
-          />
-
-          <div className="flex gap-2 justify-end mt-4">
-            <button
-              type="button"
-              className="btn"
-              onClick={onClose}
-              disabled={busy}
-            >
-              Abbrechen
-            </button>
-
-            <button
-              type="button"
-              className="btn btn--danger"
-              onClick={submit}
-              disabled={busy}
-            >
-              {busy ? "…" : "Ablehnen"}
-            </button>
+            <textarea
+              className="input coach-reject__textarea"
+              value={reason}
+              onChange={(e) => setReason(e.target.value)}
+              placeholder="e.g. incomplete data / implausible data / duplicate…"
+            />
           </div>
+        </div>
+
+        <div className="dialog-footer coach-reject__footer">
+          <button
+            type="button"
+            className="btn btn--danger"
+            onClick={submit}
+            disabled={busy}
+          >
+            {busy ? "…" : "Reject"}
+          </button>
         </div>
       </div>
 
       <button
         type="button"
-        className="coach-reject__backdrop-hit"
+        className="dialog-backdrop-hit coach-reject__backdrop-hit"
         aria-label="Close"
         onClick={onClose}
         disabled={busy}
@@ -113,121 +138,3 @@ export default function RejectDialog({ open, onClose, onSubmit }: Props) {
     </div>
   );
 }
-
-// // src/app/admin/(app)/coaches/moderation/RejectDialog.tsx
-// "use client";
-
-// import { useEffect, useState } from "react";
-
-// type Props = {
-//   open: boolean;
-//   onClose: () => void;
-//   onSubmit: (reason: string) => Promise<void> | void;
-// };
-
-// export default function RejectDialog({ open, onClose, onSubmit }: Props) {
-//   const [reason, setReason] = useState("");
-//   const [busy, setBusy] = useState(false);
-//   const [err, setErr] = useState<string | null>(null);
-
-//   useEffect(() => {
-//     if (!open) return;
-//     setReason("");
-//     setErr(null);
-//     setBusy(false);
-//   }, [open]);
-
-//   if (!open) return null;
-
-//   async function submit() {
-//     const r = reason.trim();
-//     if (!r) {
-//       setErr("Bitte eine Begründung eingeben.");
-//       return;
-//     }
-
-//     setErr(null);
-//     try {
-//       setBusy(true);
-//       await onSubmit(r);
-//       onClose();
-//     } catch (e: any) {
-//       setErr(e?.message || "Ablehnen fehlgeschlagen.");
-//     } finally {
-//       setBusy(false);
-//     }
-//   }
-
-//   return (
-//     <div
-//       role="dialog"
-//       aria-modal="true"
-//       style={{
-//         position: "fixed",
-//         inset: 0,
-//         zIndex: 6000,
-//         background: "rgba(0,0,0,.45)",
-//         display: "flex",
-//         alignItems: "center",
-//         justifyContent: "center",
-//         padding: 16,
-//       }}
-//       onMouseDown={(e) => {
-//         if (e.target === e.currentTarget) onClose();
-//       }}
-//     >
-//       <div className="card" style={{ width: "100%", maxWidth: 640 }}>
-//         <div className="flex justify-between items-start gap-3 mb-3">
-//           <div className="text-xl font-bold">Coach ablehnen</div>
-
-//           <button
-//             type="button"
-//             className="modal__close"
-//             aria-label="Close"
-//             onClick={onClose}
-//             disabled={busy}
-//           >
-//             <img
-//               src="/icons/close.svg"
-//               alt=""
-//               aria-hidden="true"
-//               className="icon-img"
-//             />
-//           </button>
-//         </div>
-
-//         {err ? <div className="error mb-3">{err}</div> : null}
-
-//         <label className="block text-sm text-gray-600 mb-1">Begründung *</label>
-
-//         <textarea
-//           className="input"
-//           style={{ minHeight: 110 }}
-//           value={reason}
-//           onChange={(e) => setReason(e.target.value)}
-//           placeholder="z.B. Daten unvollständig / nicht plausibel / doppelt…"
-//         />
-
-//         <div className="flex gap-2 justify-end mt-4">
-//           <button
-//             type="button"
-//             className="btn"
-//             onClick={onClose}
-//             disabled={busy}
-//           >
-//             Abbrechen
-//           </button>
-
-//           <button
-//             type="button"
-//             className="btn btn--danger"
-//             onClick={submit}
-//             disabled={busy}
-//           >
-//             {busy ? "…" : "Ablehnen"}
-//           </button>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// }
