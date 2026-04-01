@@ -1,11 +1,11 @@
-//src\app\admin\(app)\franchise-locations\page.tsx
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import FranchiseLocationDialog from "./FranchiseLocationDialog";
 import LocationsTableList from "./components/LocationsTableList";
 import PendingLocationsList from "./components/PendingLocationsList";
 import Pagination from "./components/Pagination";
+import DeleteLocationDialog from "./moderation/DeleteLocationDialog";
 import RejectDialog from "./moderation/RejectDialog";
 import LicenseeInfoDialog from "./moderation/LicenseeInfoDialog";
 import SortSelect from "./components/SortSelect";
@@ -32,15 +32,52 @@ function sectionHead(title: string, meta: string, pending?: boolean) {
   );
 }
 
+function locationName(item: FranchiseLocation | null) {
+  const city = String(item?.city || "").trim();
+  const country = String(item?.country || "").trim();
+  const first = String(item?.licenseeFirstName || "").trim();
+  const last = String(item?.licenseeLastName || "").trim();
+  const fullName = `${first} ${last}`.trim();
+  if (city && country) return `${city}, ${country}`;
+  if (city) return city;
+  if (fullName) return fullName;
+  return "this location";
+}
+
 export default function FranchiseLocationsPage() {
   const p = useFranchiseLocationsPage();
+  const [deleteOpen, setDeleteOpen] = useState(false);
+  const [deleteTarget, setDeleteTarget] = useState<FranchiseLocation | null>(
+    null,
+  );
+  const [deleteMode, setDeleteMode] = useState<"mine" | "admin">("mine");
 
-  function deleteMine(it: FranchiseLocation) {
-    return void p.removeMineOne(it.id);
+  function openDeleteMine(item: FranchiseLocation) {
+    setDeleteTarget(item);
+    setDeleteMode("mine");
+    setDeleteOpen(true);
   }
 
-  function deleteAdmin(it: FranchiseLocation) {
-    return void p.deleteOneAdmin(it);
+  function openDeleteAdmin(item: FranchiseLocation) {
+    setDeleteTarget(item);
+    setDeleteMode("admin");
+    setDeleteOpen(true);
+  }
+
+  function closeDelete() {
+    setDeleteOpen(false);
+    setDeleteTarget(null);
+    setDeleteMode("mine");
+  }
+
+  async function confirmDelete() {
+    if (!deleteTarget?.id) return;
+    if (deleteMode === "admin") {
+      await p.deleteOneAdmin(deleteTarget);
+    } else {
+      await p.removeMineOne(deleteTarget.id);
+    }
+    closeDelete();
   }
 
   return (
@@ -61,7 +98,7 @@ export default function FranchiseLocationsPage() {
               />
               <input
                 className="input input-with-icon__input"
-                placeholder="Name, City, Email, Phone…"
+                placeholder="Name, city, email, phone…"
                 value={p.q}
                 onChange={(e) => p.setQ(e.target.value)}
                 onKeyDown={(e) => {
@@ -87,7 +124,7 @@ export default function FranchiseLocationsPage() {
                 aria-hidden="true"
                 className="btn__icon"
               />
-              Neuer Standort
+              New location
             </button>
           </div>
         </div>
@@ -110,8 +147,6 @@ export default function FranchiseLocationsPage() {
                       items={p.pagProvPending.items}
                       loading={false}
                       showChangeInfo={true}
-                      // onOpen={p.openInfo}
-
                       onOpen={p.openEdit}
                       onApprove={p.approveOne}
                       onReject={p.openReject}
@@ -143,7 +178,7 @@ export default function FranchiseLocationsPage() {
                       onOpen={p.openEdit}
                       onInfo={p.openInfo}
                       onAskReject={p.openReject}
-                      onDeleteOne={deleteAdmin}
+                      onDeleteOne={openDeleteAdmin}
                       onDeleteMany={p.deleteManyAdmin}
                       toggleBtnRef={p.provApprovedToggleRef}
                     />
@@ -171,7 +206,7 @@ export default function FranchiseLocationsPage() {
                       busy={false}
                       onOpen={p.openEdit}
                       onInfo={p.openInfo}
-                      onDeleteOne={deleteAdmin}
+                      onDeleteOne={openDeleteAdmin}
                       onDeleteMany={p.deleteManyAdmin}
                       toggleBtnRef={p.provRejectedToggleRef}
                     />
@@ -201,7 +236,7 @@ export default function FranchiseLocationsPage() {
                       onTogglePublished={p.togglePublished}
                       onOpen={p.openEdit}
                       onInfo={p.openInfo}
-                      onDeleteOne={deleteMine}
+                      onDeleteOne={openDeleteMine}
                       onDeleteMany={p.deleteManyMine}
                       toggleBtnRef={p.mineApprovedToggleRef}
                     />
@@ -230,7 +265,7 @@ export default function FranchiseLocationsPage() {
                       onToggleSelectMode={p.toggleMinePendingSelectMode}
                       busy={false}
                       onOpen={p.openEdit}
-                      onDeleteOne={deleteMine}
+                      onDeleteOne={openDeleteMine}
                       onDeleteMany={p.deleteManyMine}
                       toggleBtnRef={p.minePendingToggleRef}
                     />
@@ -261,7 +296,7 @@ export default function FranchiseLocationsPage() {
                       onOpen={p.openEdit}
                       onInfo={p.openInfo}
                       onSubmitForReview={p.submitMine}
-                      onDeleteOne={deleteMine}
+                      onDeleteOne={openDeleteMine}
                       onDeleteMany={p.deleteManyMine}
                       toggleBtnRef={p.mineApprovedToggleRef}
                     />
@@ -290,7 +325,7 @@ export default function FranchiseLocationsPage() {
                       onOpen={p.openEdit}
                       onInfo={p.openInfo}
                       onResubmit={p.submitMine}
-                      onDeleteOne={deleteMine}
+                      onDeleteOne={openDeleteMine}
                       onDeleteMany={p.deleteManyMine}
                       toggleBtnRef={p.mineRejectedToggleRef}
                     />
@@ -314,9 +349,14 @@ export default function FranchiseLocationsPage() {
         initial={p.edit}
         onClose={p.closeDialog}
         onSave={p.saveLocation}
-        onDelete={
-          p.edit?.id ? () => void p.removeMineOne(p.edit!.id) : undefined
-        }
+        onDelete={p.edit?.id ? () => openDeleteMine(p.edit!) : undefined}
+      />
+
+      <DeleteLocationDialog
+        open={deleteOpen}
+        locationName={locationName(deleteTarget)}
+        onClose={closeDelete}
+        onConfirm={confirmDelete}
       />
 
       <RejectDialog
@@ -382,33 +422,12 @@ export default function FranchiseLocationsPage() {
 //   return (
 //     <div className="franchise-locations fl-admin ks">
 //       <main className="container">
-//         <div className="dialog-subhead fl-admin__subhead">
-//           <h1 className="text-2xl font-bold m-0 fl-admin__title">
-//             {p.superAdmin ? "Standorte verwalten" : "Meine Franchise-Standorte"}
-//           </h1>
-
-//           <button
-//             className="btn btn--primary"
-//             type="button"
-//             onClick={p.openCreate}
-//           >
-//             <img
-//               src="/icons/plus.svg"
-//               alt=""
-//               aria-hidden="true"
-//               className="btn__icon"
-//             />
-//             Neuer Standort
-//           </button>
-//         </div>
-
 //         {p.notice ? (
 //           <div className={`toast ${p.notice.type}`}>{p.notice.text}</div>
 //         ) : null}
 
-//         <div className="fl-filters__row">
+//         <div className="fl-filters__row fl-filters__row--top">
 //           <div className="fl-filters__search">
-//             <label className="lbl fl-filters__label">Suche</label>
 //             <div className="input-with-icon">
 //               <img
 //                 src="/icons/search.svg"
@@ -429,8 +448,23 @@ export default function FranchiseLocationsPage() {
 //           </div>
 
 //           <div className="fl-filters__sort">
-//             <label className="block text-sm text-gray-600">Sortierung</label>
 //             <SortSelect value={p.sort} onChange={p.setSort} />
+//           </div>
+
+//           <div className="fl-filters__action">
+//             <button
+//               className="btn btn--primary"
+//               type="button"
+//               onClick={p.openCreate}
+//             >
+//               <img
+//                 src="/icons/plus.svg"
+//                 alt=""
+//                 aria-hidden="true"
+//                 className="btn__icon"
+//               />
+//               Neuer Standort
+//             </button>
 //           </div>
 //         </div>
 
@@ -452,7 +486,9 @@ export default function FranchiseLocationsPage() {
 //                       items={p.pagProvPending.items}
 //                       loading={false}
 //                       showChangeInfo={true}
-//                       onOpen={p.openInfo}
+//                       // onOpen={p.openInfo}
+
+//                       onOpen={p.openEdit}
 //                       onApprove={p.approveOne}
 //                       onReject={p.openReject}
 //                     />
