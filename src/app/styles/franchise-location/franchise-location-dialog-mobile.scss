@@ -1,0 +1,326 @@
+// src/app/styles/franchise-location/franchise-location-dialog-mobile.scss
+
+@media (max-width: 900px) {
+  .franchise-locations {
+    .fl-dialog__dialog,
+    .fl-info__dialog {
+      width: min(700px, calc(100% - 24px));
+    }
+
+    .fl-info__row,
+    .fl-info__status-row {
+      grid-template-columns: 104px minmax(0, 1fr);
+      gap: 10px 14px;
+    }
+  }
+}
+
+@media (max-width: 720px) {
+  .franchise-locations {
+    .fl-dialog.dialog-backdrop,
+    .fl-info.dialog-backdrop,
+    .fl-reject.dialog-backdrop {
+      padding: 12px;
+      place-items: start center;
+    }
+
+    .fl-dialog__dialog,
+    .fl-info__dialog,
+    .fl-confirm__dialog,
+    .fl-reject__dialog {
+      width: 100%;
+      max-width: 100%;
+      max-height: calc(100dvh - 24px);
+      border-radius: 16px;
+    }
+
+    .fl-dialog__head,
+    .fl-info__head,
+    .fl-confirm__head,
+    .fl-reject__head {
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .fl-dialog__head-right,
+    .fl-info__head-right,
+    .fl-confirm__head-right,
+    .fl-reject__head-right {
+      gap: 8px;
+    }
+
+    .fl-dialog__title,
+    .fl-info__title,
+    .fl-confirm__title,
+    .fl-reject__title {
+      font-size: clamp(22px, 6vw, 28px);
+      line-height: 1.14;
+    }
+
+    .fl-dialog__subtitle,
+    .fl-info__subtitle,
+    .fl-reject__subtitle {
+      margin-top: 6px;
+      font-size: 13px;
+    }
+
+    .fl-dialog__title-actions {
+      gap: 6px;
+      margin-top: 10px;
+    }
+
+    .fl-dialog__body {
+      max-height: calc(100dvh - var(--header-height, 64px) - 190px);
+    }
+
+    .fl-dialog__grid,
+    .fl-info__grid {
+      grid-template-columns: 1fr;
+      gap: 12px;
+      align-items: start;
+    }
+
+    .fl-info__section {
+      height: auto;
+    }
+
+    .fl-info__section--status,
+    .fl-info__section--danger {
+      grid-column: auto;
+      max-width: 100%;
+    }
+
+    .fl-info__row,
+    .fl-info__status-row {
+      grid-template-columns: 1fr;
+      gap: 6px;
+    }
+
+    .fl-dialog__footer {
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .fl-dialog__footer-left,
+    .fl-dialog__footer-right {
+      width: 100%;
+    }
+
+    .fl-dialog__footer-right {
+      justify-content: flex-end;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .franchise-locations {
+    .fl-dialog.dialog-backdrop,
+    .fl-info.dialog-backdrop,
+    .fl-reject.dialog-backdrop {
+      padding: 8px;
+    }
+
+    .fl-dialog__dialog,
+    .fl-info__dialog,
+    .fl-confirm__dialog,
+    .fl-reject__dialog {
+      max-height: calc(100dvh - 16px);
+      border-radius: 14px;
+    }
+
+    .fl-dialog__head,
+    .fl-info__head,
+    .fl-confirm__head,
+    .fl-reject__head {
+      gap: 10px;
+    }
+
+    .fl-dialog__head-right,
+    .fl-info__head-right,
+    .fl-confirm__head-right,
+    .fl-reject__head-right {
+      align-items: flex-start;
+      gap: 6px;
+    }
+
+    .fl-dialog__title,
+    .fl-info__title,
+    .fl-confirm__title,
+    .fl-reject__title {
+      font-size: clamp(20px, 7vw, 24px);
+    }
+
+    .fl-dialog__subtitle,
+    .fl-info__subtitle,
+    .fl-reject__subtitle {
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    .icon-img {
+      width: 16px;
+      height: 16px;
+    }
+  }
+}
+
+// //src\app\styles\franchise-location\franchise-location-dialog-mobile.scss
+// @media (max-width: 900px) {
+//   .franchise-locations {
+//     .fl-dialog__dialog,
+//     .fl-info__dialog {
+//       width: min(700px, calc(100% - 24px));
+//     }
+
+//     .fl-info__row,
+//     .fl-info__status-row {
+//       grid-template-columns: 104px minmax(0, 1fr);
+//       gap: 10px 14px;
+//     }
+//   }
+// }
+
+// @media (max-width: 720px) {
+//   .franchise-locations {
+//     .fl-dialog.dialog-backdrop,
+//     .fl-info.dialog-backdrop {
+//       padding: 12px;
+//       place-items: start center;
+//     }
+
+//     .fl-dialog__dialog,
+//     .fl-info__dialog,
+//     .fl-confirm__dialog,
+//     .fl-reject__dialog {
+//       width: 100%;
+//       max-width: 100%;
+//       max-height: calc(100dvh - 24px);
+//       border-radius: 16px;
+//     }
+
+//     .fl-dialog__head,
+//     .fl-info__head,
+//     .fl-confirm__head,
+//     .fl-reject__head {
+//       align-items: flex-start;
+//       gap: 12px;
+//     }
+
+//     .fl-dialog__head-right,
+//     .fl-info__head-right,
+//     .fl-confirm__head-right,
+//     .fl-reject__head-right {
+//       gap: 8px;
+//     }
+
+//     .fl-dialog__title,
+//     .fl-info__title,
+//     .fl-confirm__title,
+//     .fl-reject__title {
+//       font-size: clamp(22px, 6vw, 28px);
+//       line-height: 1.14;
+//     }
+
+//     .fl-dialog__subtitle,
+//     .fl-info__subtitle {
+//       margin-top: 6px;
+//       font-size: 13px;
+//     }
+
+//     .fl-dialog__title-actions {
+//       gap: 6px;
+//       margin-top: 10px;
+//     }
+
+//     .fl-dialog__body {
+//       max-height: calc(100dvh - var(--header-height, 64px) - 190px);
+//     }
+
+//     .fl-dialog__grid,
+//     .fl-info__grid {
+//       grid-template-columns: 1fr;
+//       gap: 12px;
+//       align-items: start;
+//     }
+
+//     .fl-info__section {
+//       height: auto;
+//     }
+
+//     .fl-info__section--status,
+//     .fl-info__section--danger {
+//       grid-column: auto;
+//       max-width: 100%;
+//     }
+
+//     .fl-info__row,
+//     .fl-info__status-row {
+//       grid-template-columns: 1fr;
+//       gap: 6px;
+//     }
+
+//     .fl-dialog__footer {
+//       flex-wrap: wrap;
+//       gap: 10px;
+//     }
+
+//     .fl-dialog__footer-left,
+//     .fl-dialog__footer-right {
+//       width: 100%;
+//     }
+
+//     .fl-dialog__footer-right {
+//       justify-content: flex-end;
+//     }
+//   }
+// }
+
+// @media (max-width: 480px) {
+//   .franchise-locations {
+//     .fl-dialog.dialog-backdrop,
+//     .fl-info.dialog-backdrop {
+//       padding: 8px;
+//     }
+
+//     .fl-dialog__dialog,
+//     .fl-info__dialog,
+//     .fl-confirm__dialog,
+//     .fl-reject__dialog {
+//       max-height: calc(100dvh - 16px);
+//       border-radius: 14px;
+//     }
+
+//     .fl-dialog__head,
+//     .fl-info__head,
+//     .fl-confirm__head,
+//     .fl-reject__head {
+//       gap: 10px;
+//     }
+
+//     .fl-dialog__head-right,
+//     .fl-info__head-right,
+//     .fl-confirm__head-right,
+//     .fl-reject__head-right {
+//       align-items: flex-start;
+//       gap: 6px;
+//     }
+
+//     .fl-dialog__title,
+//     .fl-info__title,
+//     .fl-confirm__title,
+//     .fl-reject__title {
+//       font-size: clamp(20px, 7vw, 24px);
+//     }
+
+//     .fl-dialog__subtitle,
+//     .fl-info__subtitle {
+//       font-size: 12px;
+//       line-height: 1.45;
+//     }
+
+//     .icon-img {
+//       width: 16px;
+//       height: 16px;
+//     }
+//   }
+// }
