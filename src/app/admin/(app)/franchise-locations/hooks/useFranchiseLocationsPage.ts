@@ -1,4 +1,3 @@
-// src/app/admin/(app)/franchise-locations/hooks/useFranchiseLocationsPage.ts
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -322,11 +321,11 @@ export function useFranchiseLocationsPage() {
       try {
         if (edit?.id) await updateMine(edit.id, payload);
         else await createMine(payload);
-        toastOk(edit?.id ? "Standort gespeichert." : "Standort erstellt.");
+        toastOk(edit?.id ? "Location saved." : "Location created.");
         setOpenDialog(false);
         await loadAll(true);
       } catch (e: any) {
-        toastErr(e?.message || "Speichern fehlgeschlagen");
+        toastErr(e?.message || "Saving failed");
         throw e;
       }
     },
@@ -335,9 +334,8 @@ export function useFranchiseLocationsPage() {
 
   const removeMineOne = useCallback(
     async (id: string) => {
-      if (!confirm("Standort wirklich löschen?")) return;
       await deleteMine(id);
-      toastOk("Standort gelöscht.");
+      toastOk("Location deleted.");
       await loadAll(true);
     },
     [loadAll, toastOk],
@@ -345,9 +343,8 @@ export function useFranchiseLocationsPage() {
 
   const deleteManyMine = useCallback(
     async (ids: string[]) => {
-      if (!confirm(`(${ids.length}) Standorte wirklich löschen?`)) return;
       await Promise.all(ids.map((id) => deleteMine(id)));
-      toastOk(`(${ids.length}) gelöscht.`);
+      toastOk(`(${ids.length}) deleted.`);
       await loadAll(true);
     },
     [loadAll, toastOk],
@@ -355,9 +352,8 @@ export function useFranchiseLocationsPage() {
 
   const deleteManyAdmin = useCallback(
     async (ids: string[]) => {
-      if (!confirm(`(${ids.length}) Einträge wirklich löschen?`)) return;
       await Promise.all(ids.map((id) => deleteAdmin(id)));
-      toastOk(`(${ids.length}) gelöscht.`);
+      toastOk(`(${ids.length}) deleted.`);
       await loadAll(true);
     },
     [loadAll, toastOk],
@@ -365,9 +361,8 @@ export function useFranchiseLocationsPage() {
 
   const deleteOneAdmin = useCallback(
     async (it: FranchiseLocation) => {
-      if (!confirm("Eintrag wirklich löschen?")) return;
       await deleteAdmin(it.id);
-      toastOk("Gelöscht.");
+      toastOk("Deleted.");
       await loadAll(true);
     },
     [loadAll, toastOk],
@@ -377,7 +372,7 @@ export function useFranchiseLocationsPage() {
     async (it: FranchiseLocation) => {
       try {
         await approve(it.id);
-        toastOk("Standort freigegeben.");
+        toastOk("Location approved.");
         await loadAll(true);
       } catch (e: any) {
         toastErr(e?.message || "Approve failed");
@@ -391,7 +386,7 @@ export function useFranchiseLocationsPage() {
       if (!rejectTarget) return;
       try {
         await reject(rejectTarget.id, reason);
-        toastOk("Standort abgelehnt.");
+        toastOk("Location rejected.");
         await loadAll(true);
       } catch (e: any) {
         toastErr(e?.message || "Reject failed");
@@ -404,7 +399,7 @@ export function useFranchiseLocationsPage() {
     async (it: FranchiseLocation) => {
       try {
         await submitForReview(it.id);
-        toastOk("Änderung eingereicht.");
+        toastOk("Changes submitted.");
         await loadAll(true);
       } catch (e: any) {
         toastErr(e?.message || "Submit failed");
