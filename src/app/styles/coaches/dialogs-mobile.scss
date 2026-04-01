@@ -1,0 +1,119 @@
+@media (max-width: 900px) {
+  .coach-info__dialog {
+    width: min(700px, calc(100% - 24px));
+  }
+
+  .coach-info__row {
+    grid-template-columns: 112px minmax(0, 1fr);
+    gap: 10px 14px;
+  }
+}
+
+@media (max-width: 720px) {
+  .coach-dialog.dialog-backdrop,
+  .coach-info.dialog-backdrop,
+  .coach-reject.dialog-backdrop,
+  .coach-confirm.dialog-backdrop {
+    padding: 12px;
+    place-items: start center;
+  }
+
+  .coach-dialog__dialog,
+  .coach-info__dialog,
+  .coach-reject__dialog,
+  .coach-confirm__dialog {
+    width: 100%;
+    max-width: 100%;
+    max-height: calc(100dvh - 24px);
+    border-radius: 16px;
+  }
+
+  .coach-dialog__head,
+  .coach-info__head,
+  .coach-reject__head,
+  .coach-confirm__head {
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .coach-dialog__head-right,
+  .coach-info__head-right,
+  .coach-reject__head-right,
+  .coach-confirm__head-right {
+    gap: 8px;
+  }
+
+  .coach-dialog__title,
+  .coach-info__title,
+  .coach-reject__title,
+  .coach-confirm__title {
+    font-size: clamp(22px, 6vw, 28px);
+    line-height: 1.14;
+  }
+
+  .coach-info__subtitle,
+  .coach-reject__subtitle {
+    margin-top: 6px;
+    font-size: 13px;
+    line-height: 1.45;
+  }
+
+  .coach-info__grid,
+  .coach-info__grid--two {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    align-items: start;
+  }
+
+  .coach-info__section {
+    height: auto;
+  }
+
+  .coach-info__row {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+
+  .coaches {
+    .coach-form {
+      grid-template-columns: 1fr;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .coach-dialog.dialog-backdrop,
+  .coach-info.dialog-backdrop,
+  .coach-reject.dialog-backdrop,
+  .coach-confirm.dialog-backdrop {
+    padding: 8px;
+  }
+
+  .coach-dialog__dialog,
+  .coach-info__dialog,
+  .coach-reject__dialog,
+  .coach-confirm__dialog {
+    max-height: calc(100dvh - 16px);
+    border-radius: 14px;
+  }
+
+  .coach-dialog__head,
+  .coach-info__head,
+  .coach-reject__head,
+  .coach-confirm__head {
+    gap: 10px;
+  }
+
+  .coach-dialog__head-right,
+  .coach-info__head-right,
+  .coach-reject__head-right,
+  .coach-confirm__head-right {
+    align-items: flex-start;
+    gap: 6px;
+  }
+
+  .icon-img {
+    width: 16px;
+    height: 16px;
+  }
+}
