@@ -1,4 +1,3 @@
-// src/app/admin/(app)/customers/dialogs/DocumentsDialog.tsx
 "use client";
 
 import React, { useEffect, useMemo, useRef, useState } from "react";
@@ -61,7 +60,7 @@ function formatDateOnlyDe(value?: string | null) {
 function childLabel(child: FamilyChild) {
   const full = `${child.firstName} ${child.lastName}`.trim();
   const birth = formatDateOnlyDe(child.birthDate);
-  return [full || "Kind", birth].filter(Boolean).join(" - ");
+  return [full || "Child", birth].filter(Boolean).join(" - ");
 }
 
 function buildChildOptions(family: FamilyMember[] | null) {
@@ -137,7 +136,7 @@ function buildParentOptions(family: FamilyMember[] | null) {
       id: parentOptionId(member._id, idx),
       label:
         `${safeText(parent?.firstName)} ${safeText(parent?.lastName)}`.trim() ||
-        "Elternteil",
+        "Parent",
     }));
   });
 }
@@ -187,6 +186,27 @@ function getDownloadIconSrc(isActive: boolean) {
   return isActive ? "/icons/download-light.svg" : "/icons/download-dark.svg";
 }
 
+function rememberButtonFocusState(e: React.MouseEvent<HTMLButtonElement>) {
+  e.currentTarget.dataset.wasFocused = String(
+    document.activeElement === e.currentTarget,
+  );
+}
+
+function toggleButtonFocus(
+  e: React.MouseEvent<HTMLButtonElement>,
+  action: () => void,
+) {
+  const btn = e.currentTarget;
+  const wasFocused = btn.dataset.wasFocused === "true";
+  action();
+
+  requestAnimationFrame(() => {
+    if (wasFocused) btn.blur();
+    else btn.focus({ preventScroll: true });
+    delete btn.dataset.wasFocused;
+  });
+}
+
 function DocumentRow({ d }: { d: DocItem }) {
   const title = trimTitle(d);
   const badge = badgeTextFrom(d);
@@ -215,7 +235,7 @@ function DownloadButton({ href, label }: DownloadButtonProps) {
   return (
     <a
       href={href}
-      className="btn ks-invoices__downloadBtn"
+      className="btn documents-dialog__downloadBtn"
       onMouseEnter={() => setIsActive(true)}
       onMouseLeave={() => setIsActive(false)}
       onFocus={() => setIsActive(true)}
@@ -225,7 +245,7 @@ function DownloadButton({ href, label }: DownloadButtonProps) {
         src={getDownloadIconSrc(isActive)}
         alt=""
         aria-hidden="true"
-        className="ks-invoices__downloadIcon"
+        className="documents-dialog__downloadIcon"
       />
       <span>{label}</span>
     </a>
@@ -335,10 +355,10 @@ export default function DocumentsDialog({ customerId, onClose }: Props) {
   }, [family, selfMemberId]);
 
   const selectedParentLabel = useMemo(() => {
-    if (!selectedParent) return "Elternteil wählen …";
+    if (!selectedParent) return "Select parent …";
     return (
       `${selectedParent.parent.firstName} ${selectedParent.parent.lastName}`.trim() ||
-      "Elternteil"
+      "Parent"
     );
   }, [selectedParent]);
 
@@ -541,122 +561,399 @@ export default function DocumentsDialog({ customerId, onClose }: Props) {
   }, [page, totalPages]);
 
   return (
-    <div className="ks-modal-root ks-modal-root--top ks documents-dialog">
-      <div className="ks-backdrop" onClick={onClose} />
+    <div
+      className="dialog-backdrop documents-dialog"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="documents-dialog-title"
+    >
+      <button
+        type="button"
+        className="dialog-backdrop-hit"
+        aria-label="Close"
+        onClick={onClose}
+      />
+
       <div
-        className="ks-panel card ks-panel--md"
+        className="dialog documents-dialog__dialog"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="dialog-subhead">
-          <h3 className="text-lg font-bold">Documents</h3>
+        <div className="dialog-head documents-dialog__head">
+          <div className="documents-dialog__head-main">
+            <h3 id="documents-dialog-title" className="dialog-title">
+              Documents
+            </h3>
+
+            <p className="dialog-subtitle">
+              Browse, filter, and download customer documents.
+            </p>
+          </div>
+
+          <div className="dialog-head__actions">
+            <button
+              type="button"
+              className="dialog-close"
+              aria-label="Close"
+              onClick={onClose}
+            >
+              <img
+                src="/icons/close.svg"
+                alt=""
+                aria-hidden="true"
+                className="icon-img"
+              />
+            </button>
+          </div>
         </div>
 
-        <div className="mb-3 p-3 rounded border bg-gray-50 text-sm">
-          <div className="font-semibold mb-1">Documents for</div>
-
-          {familyLoading && (
-            <div className="text-gray-600">Loading family…</div>
-          )}
-
-          {familyError && (
-            <div className="text-red-600">
-              Family could not be loaded – documents are still visible.
+        <div className="dialog-body documents-dialog__body">
+          <section className="dialog-section documents-dialog__scopeSection">
+            <div className="dialog-section__head">
+              <h4 className="dialog-section__title">Document scope</h4>
             </div>
-          )}
 
-          {family && family.length > 0 ? (
-            <>
-              <div className="mb-2">
-                <label className="lbl">Elternteil</label>
-                <div
-                  className={
-                    "ks-selectbox" +
-                    (isParentDropdownOpen ? " ks-selectbox--open" : "")
-                  }
-                  ref={parentDropdownRef}
-                >
-                  <button
-                    type="button"
-                    className="ks-selectbox__trigger"
-                    onClick={() => setIsParentDropdownOpen((o) => !o)}
-                  >
-                    <span className="ks-selectbox__label">
-                      {selectedParentLabel || "Elternteil wählen …"}
-                    </span>
-                    <span
-                      className="ks-selectbox__chevron"
-                      aria-hidden="true"
-                    />
-                  </button>
+            <div className="dialog-section__body documents-dialog__scopeBody">
+              {familyLoading && (
+                <div className="documents-dialog__note">Loading family…</div>
+              )}
 
-                  {isParentDropdownOpen && (
-                    <div className="ks-selectbox__panel" role="listbox">
-                      {parentOptions.map((item) => (
+              {familyError && (
+                <div className="documents-dialog__error">
+                  Family could not be loaded – documents are still visible.
+                </div>
+              )}
+
+              {family && family.length > 0 ? (
+                <>
+                  <div className="documents-dialog__field">
+                    <label className="dialog-label">Parent</label>
+
+                    <div
+                      className={
+                        "ks-selectbox" +
+                        (isParentDropdownOpen ? " ks-selectbox--open" : "")
+                      }
+                      ref={parentDropdownRef}
+                    >
+                      <button
+                        type="button"
+                        className="ks-selectbox__trigger"
+                        onClick={() => setIsParentDropdownOpen((o) => !o)}
+                      >
+                        <span className="ks-selectbox__label">
+                          {selectedParentLabel || "Select parent …"}
+                        </span>
+                        <span
+                          className="ks-selectbox__chevron"
+                          aria-hidden="true"
+                        />
+                      </button>
+
+                      {isParentDropdownOpen && (
+                        <div className="ks-selectbox__panel" role="listbox">
+                          {parentOptions.map((item) => (
+                            <button
+                              type="button"
+                              key={item.id}
+                              className={
+                                "ks-selectbox__option" +
+                                (item.id === selfMemberId
+                                  ? " ks-selectbox__option--active"
+                                  : "")
+                              }
+                              onClick={() => {
+                                setSelectedParentId(item.id);
+                                setIsParentDropdownOpen(false);
+                              }}
+                            >
+                              {item.label}
+                            </button>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="documents-dialog__scopeButtons">
+                    <button
+                      type="button"
+                      className={
+                        "btn btn-sm documents-dialog__scopeBtn" +
+                        (bookingTarget === "self"
+                          ? " documents-dialog__scopeBtn--active"
+                          : "")
+                      }
+                      onMouseDown={rememberButtonFocusState}
+                      onClick={(e) =>
+                        toggleButtonFocus(e, () => setBookingTarget("self"))
+                      }
+                    >
+                      Customer self
+                    </button>
+
+                    <button
+                      type="button"
+                      className={
+                        "btn btn-sm documents-dialog__scopeBtn" +
+                        (bookingTarget === "child"
+                          ? " documents-dialog__scopeBtn--active"
+                          : "")
+                      }
+                      onMouseDown={rememberButtonFocusState}
+                      onClick={(e) =>
+                        toggleButtonFocus(e, () => setBookingTarget("child"))
+                      }
+                    >
+                      Child
+                    </button>
+                  </div>
+
+                  {bookingTarget === "child" && (
+                    <div className="documents-dialog__field">
+                      <label className="dialog-label">Child</label>
+
+                      <div
+                        className={
+                          "ks-selectbox" +
+                          (isChildDropdownOpen ? " ks-selectbox--open" : "")
+                        }
+                        ref={childDropdownRef}
+                      >
                         <button
                           type="button"
-                          key={item.id}
-                          className={
-                            "ks-selectbox__option" +
-                            (item.id === selfMemberId
-                              ? " ks-selectbox__option--active"
-                              : "")
-                          }
-                          onClick={() => {
-                            setSelectedParentId(item.id);
-                            setIsParentDropdownOpen(false);
-                          }}
+                          className="ks-selectbox__trigger"
+                          onClick={() => setIsChildDropdownOpen((o) => !o)}
                         >
-                          {item.label}
+                          <span className="ks-selectbox__label">
+                            {activeChild
+                              ? `${activeChild.firstName} ${activeChild.lastName}`.trim()
+                              : "Select child …"}
+                          </span>
+                          <span
+                            className="ks-selectbox__chevron"
+                            aria-hidden="true"
+                          />
                         </button>
-                      ))}
+
+                        {isChildDropdownOpen && (
+                          <div className="ks-selectbox__panel" role="listbox">
+                            {childOptions.map((item) => (
+                              <button
+                                type="button"
+                                key={item.uid}
+                                className={
+                                  "ks-selectbox__option" +
+                                  (item.uid === selectedChildUid
+                                    ? " ks-selectbox__option--active"
+                                    : "")
+                                }
+                                onClick={() => {
+                                  setSelectedChildUid(item.uid);
+                                  setIsChildDropdownOpen(false);
+                                }}
+                              >
+                                {item.label}
+                              </button>
+                            ))}
+                          </div>
+                        )}
+                      </div>
                     </div>
                   )}
+
+                  <div className="documents-dialog__summary">
+                    <div className="documents-dialog__summaryItem">
+                      <span className="dialog-label">Parent</span>
+                      <span className="dialog-value">
+                        {selectedParent
+                          ? `${selectedParent.parent.firstName} ${selectedParent.parent.lastName}`.trim()
+                          : "—"}
+                      </span>
+                    </div>
+
+                    <div className="documents-dialog__summaryItem">
+                      <span className="dialog-label">Child</span>
+                      <span className="dialog-value">
+                        {bookingTarget === "child" && activeChild
+                          ? `${activeChild.firstName} ${activeChild.lastName}`.trim()
+                          : "—"}
+                      </span>
+                    </div>
+                  </div>
+                </>
+              ) : (
+                !familyLoading && (
+                  <div className="dialog-value">
+                    Documents are shown for the current customer.
+                  </div>
+                )
+              )}
+            </div>
+          </section>
+
+          <section className="dialog-section documents-dialog__filtersSection">
+            <div className="dialog-section__head">
+              <h4 className="dialog-section__title">Filters</h4>
+            </div>
+
+            <div className="dialog-section__body">
+              <div className="ks-documents-premium">
+                <div className="ks-documents-premium__topRow">
+                  <div className="ks-documents-premium__searchItem">
+                    <div className="input-with-icon">
+                      <img
+                        src="/icons/search.svg"
+                        alt=""
+                        aria-hidden="true"
+                        className="input-with-icon__icon"
+                      />
+                      <input
+                        className="input input-with-icon__input"
+                        placeholder="Search..."
+                        value={q}
+                        onChange={(e) => {
+                          setQ(e.target.value);
+                          setPage(1);
+                        }}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="ks-documents-premium__dateItem">
+                    <KsDatePicker
+                      value={from}
+                      onChange={(nextIso) => {
+                        setFrom(nextIso);
+                        setPage(1);
+                      }}
+                      placeholder="dd.mm.yyyy"
+                      disabled={false}
+                    />
+                  </div>
+
+                  <div className="ks-documents-premium__dateItem">
+                    <KsDatePicker
+                      value={to}
+                      onChange={(nextIso) => {
+                        setTo(nextIso);
+                        setPage(1);
+                      }}
+                      placeholder="dd.mm.yyyy"
+                      disabled={false}
+                    />
+                  </div>
+
+                  <div className="ks-documents-premium__sortItem">
+                    <div
+                      className={
+                        "ks-selectbox documents-dialog__anchor" +
+                        (sortSelect.open ? " ks-selectbox--open" : "")
+                      }
+                    >
+                      <button
+                        ref={sortSelect.triggerRef}
+                        type="button"
+                        className="ks-selectbox__trigger"
+                        onClick={() =>
+                          sortSelect.open
+                            ? sortSelect.setOpen(false)
+                            : sortSelect.openMenu()
+                        }
+                        aria-haspopup="listbox"
+                        aria-expanded={sortSelect.open}
+                      >
+                        <span className="ks-selectbox__label">
+                          {sortLabel(sortOrder)}
+                        </span>
+                        <span
+                          className="ks-selectbox__chevron"
+                          aria-hidden="true"
+                        />
+                      </button>
+
+                      {sortSelect.open && (
+                        <div
+                          ref={sortSelect.menuRef}
+                          role="listbox"
+                          className="ks-selectbox__panel documents-dialog__panel documents-dialog__panel--sort"
+                          onWheel={(e) => e.stopPropagation()}
+                          onScroll={(e) => e.stopPropagation()}
+                        >
+                          {(["newest", "oldest"] as SortOrder[]).map((v) => (
+                            <button
+                              key={v}
+                              type="button"
+                              role="option"
+                              aria-selected={sortOrder === v}
+                              className={
+                                "ks-selectbox__option ks-documents-option" +
+                                (sortOrder === v
+                                  ? " ks-selectbox__option--active"
+                                  : "")
+                              }
+                              onClick={() => {
+                                setSortOrder(v);
+                                setPage(1);
+                                sortSelect.setOpen(false);
+                              }}
+                            >
+                              {sortLabel(v)}
+                            </button>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="ks-documents-premium__typesRow">
+                  <TypeChips
+                    participation={typeParticipation}
+                    cancellation={typeCancellation}
+                    storno={typeStorno}
+                    dunning={typeDunning}
+                    contract={typeContract}
+                    creditNote={typeCreditNote}
+                    invoice={typeInvoice}
+                    setInvoice={setTypeInvoice}
+                    setParticipation={setTypeParticipation}
+                    setCancellation={setTypeCancellation}
+                    setStorno={setTypeStorno}
+                    setDunning={setTypeDunning}
+                    setContract={setTypeContract}
+                    setCreditNote={setTypeCreditNote}
+                    onAnyChange={() => setPage(1)}
+                  />
                 </div>
               </div>
 
-              <div className="flex gap-2 mb-2">
-                <button
-                  type="button"
-                  className={`btn btn-sm ${
-                    bookingTarget === "self" ? "btn--tab-active" : "btn-outline"
-                  }`}
-                  onClick={() => setBookingTarget("self")}
-                >
-                  Kunde selbst
-                </button>
+              <div className="documents-dialog__controls">
+                <div className="documents-dialog__field">
+                  <label className="dialog-label">Documents</label>
 
-                <button
-                  type="button"
-                  className={`btn btn-sm ${
-                    bookingTarget === "child"
-                      ? "btn--tab-active"
-                      : "btn-outline"
-                  }`}
-                  onClick={() => setBookingTarget("child")}
-                >
-                  Kind
-                </button>
-              </div>
-
-              {bookingTarget === "child" && (
-                <div className="mb-2">
-                  <label className="lbl">Kind</label>
                   <div
                     className={
-                      "ks-selectbox" +
-                      (isChildDropdownOpen ? " ks-selectbox--open" : "")
+                      "ks-selectbox documents-dialog__anchor" +
+                      (docsSelect.open ? " ks-selectbox--open" : "")
                     }
-                    ref={childDropdownRef}
                   >
                     <button
+                      ref={docsSelect.triggerRef}
                       type="button"
                       className="ks-selectbox__trigger"
-                      onClick={() => setIsChildDropdownOpen((o) => !o)}
+                      onClick={() =>
+                        docsSelect.open
+                          ? docsSelect.setOpen(false)
+                          : docsSelect.openMenu()
+                      }
+                      disabled={!pagedItems.length}
+                      aria-haspopup="listbox"
+                      aria-expanded={docsSelect.open}
                     >
                       <span className="ks-selectbox__label">
-                        {activeChild
-                          ? `${activeChild.firstName} ${activeChild.lastName}`.trim()
-                          : "Kind wählen …"}
+                        {!hasLoadedOnce && loading
+                          ? "Loading…"
+                          : `${pagedItems.length} item(s) on this page`}
                       </span>
                       <span
                         className="ks-selectbox__chevron"
@@ -664,359 +961,160 @@ export default function DocumentsDialog({ customerId, onClose }: Props) {
                       />
                     </button>
 
-                    {isChildDropdownOpen && (
-                      <div className="ks-selectbox__panel" role="listbox">
-                        {childOptions.map((item) => (
+                    {docsSelect.open && !!pagedItems.length && (
+                      <div
+                        ref={docsSelect.menuRef}
+                        role="listbox"
+                        className="ks-selectbox__panel documents-dialog__panel documents-dialog__panel--docs"
+                        onWheel={(e) => e.stopPropagation()}
+                        onScroll={(e) => e.stopPropagation()}
+                      >
+                        {pagedItems.map((d) => (
                           <button
+                            key={d.id}
                             type="button"
-                            key={item.uid}
-                            className={
-                              "ks-selectbox__option" +
-                              (item.uid === selectedChildUid
-                                ? " ks-selectbox__option--active"
-                                : "")
-                            }
+                            role="option"
+                            className="ks-selectbox__option ks-documents-option ks-doc-select__option ks-storno__option"
                             onClick={() => {
-                              setSelectedChildUid(item.uid);
-                              setIsChildDropdownOpen(false);
+                              docsSelect.setOpen(false);
+                              openPdf(d);
                             }}
                           >
-                            {item.label}
+                            <DocumentRow d={d} />
                           </button>
                         ))}
                       </div>
                     )}
                   </div>
                 </div>
-              )}
 
-              <div className="text-gray-700 mt-2">
-                <div>
-                  <span className="font-medium">Parent:</span>{" "}
-                  {selectedParent
-                    ? `${selectedParent.parent.firstName} ${selectedParent.parent.lastName}`.trim()
-                    : "—"}
+                <div className="documents-dialog__pagerRow">
+                  <div className="pager pager--arrows">
+                    <button
+                      type="button"
+                      className="btn"
+                      aria-label="Previous page"
+                      onClick={() => setPage((p) => prevPage(p))}
+                      disabled={page <= 1}
+                    >
+                      <img
+                        src="/icons/arrow_right_alt.svg"
+                        alt=""
+                        aria-hidden="true"
+                        className="icon-img icon-img--left"
+                      />
+                    </button>
+
+                    <div
+                      className="pager__count"
+                      aria-live="polite"
+                      aria-atomic="true"
+                    >
+                      Page {page} / {totalPages}
+                    </div>
+
+                    <button
+                      type="button"
+                      className="btn"
+                      aria-label="Next page"
+                      onClick={() => setPage((p) => nextPage(p, totalPages))}
+                      disabled={page >= totalPages}
+                    >
+                      <img
+                        src="/icons/arrow_right_alt.svg"
+                        alt=""
+                        aria-hidden="true"
+                        className="icon-img"
+                      />
+                    </button>
+                  </div>
+
+                  <div className="documents-dialog__perPage">
+                    <span className="documents-dialog__perPageLabel">
+                      Per page
+                    </span>
+
+                    <div
+                      className={
+                        "ks-selectbox documents-dialog__anchor" +
+                        (perPageSelect.open ? " ks-selectbox--open" : "")
+                      }
+                    >
+                      <button
+                        ref={perPageSelect.triggerRef}
+                        type="button"
+                        className="ks-selectbox__trigger"
+                        onClick={() =>
+                          perPageSelect.open
+                            ? perPageSelect.setOpen(false)
+                            : perPageSelect.openMenu()
+                        }
+                        aria-haspopup="listbox"
+                        aria-expanded={perPageSelect.open}
+                      >
+                        <span className="ks-selectbox__label">
+                          {String(limit)}
+                        </span>
+                        <span
+                          className="ks-selectbox__chevron"
+                          aria-hidden="true"
+                        />
+                      </button>
+
+                      {perPageSelect.open && (
+                        <div
+                          ref={perPageSelect.menuRef}
+                          role="listbox"
+                          className="ks-selectbox__panel documents-dialog__panel documents-dialog__panel--perpage"
+                          onWheel={(e) => e.stopPropagation()}
+                          onScroll={(e) => e.stopPropagation()}
+                        >
+                          {[10, 20, 50, 100].map((n) => (
+                            <button
+                              key={n}
+                              type="button"
+                              role="option"
+                              aria-selected={limit === n}
+                              className={
+                                "ks-selectbox__option ks-documents-option" +
+                                (limit === n
+                                  ? " ks-selectbox__option--active"
+                                  : "")
+                              }
+                              onClick={() => {
+                                setLimit(n);
+                                setPage(1);
+                                perPageSelect.setOpen(false);
+                              }}
+                            >
+                              {n}
+                            </button>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </div>
                 </div>
 
-                <div>
-                  <span className="font-medium">Child:</span>{" "}
-                  {bookingTarget === "child" && activeChild
-                    ? `${activeChild.firstName} ${activeChild.lastName}`.trim()
-                    : "—"}
-                </div>
-              </div>
-            </>
-          ) : (
-            !familyLoading && (
-              <div className="text-gray-700">
-                Documents are shown for the current customer.
-              </div>
-            )
-          )}
-        </div>
-
-        <div className="ks-documents-premium">
-          <div className="ks-documents-premium__topRow">
-            <div className="ks-documents-premium__searchItem">
-              <div className="input-with-icon">
-                <img
-                  src="/icons/search.svg"
-                  alt=""
-                  aria-hidden="true"
-                  className="input-with-icon__icon"
-                />
-                <input
-                  className="input input-with-icon__input"
-                  placeholder="Search..."
-                  value={q}
-                  onChange={(e) => {
-                    setQ(e.target.value);
-                    setPage(1);
-                  }}
-                />
+                {err && (
+                  <div className="documents-dialog__error mt-2">{err}</div>
+                )}
               </div>
             </div>
-
-            <div className="ks-documents-premium__dateItem">
-              <KsDatePicker
-                value={from}
-                onChange={(nextIso) => {
-                  setFrom(nextIso);
-                  setPage(1);
-                }}
-                placeholder="tt.mm.jjjj"
-                disabled={false}
-              />
-            </div>
-
-            <div className="ks-documents-premium__dateItem">
-              <KsDatePicker
-                value={to}
-                onChange={(nextIso) => {
-                  setTo(nextIso);
-                  setPage(1);
-                }}
-                placeholder="tt.mm.jjjj"
-                disabled={false}
-              />
-            </div>
-
-            <div className="ks-documents-premium__sortItem">
-              <div
-                className={
-                  "ks-selectbox" +
-                  (sortSelect.open ? " ks-selectbox--open" : "")
-                }
-              >
-                <button
-                  ref={sortSelect.triggerRef}
-                  type="button"
-                  className="ks-selectbox__trigger"
-                  onClick={() =>
-                    sortSelect.open
-                      ? sortSelect.setOpen(false)
-                      : sortSelect.openMenu()
-                  }
-                  aria-haspopup="listbox"
-                  aria-expanded={sortSelect.open}
-                >
-                  <span className="ks-selectbox__label">
-                    {sortLabel(sortOrder)}
-                  </span>
-                  <span className="ks-selectbox__chevron" aria-hidden="true" />
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <div className="ks-documents-premium__typesRow">
-            <TypeChips
-              participation={typeParticipation}
-              cancellation={typeCancellation}
-              storno={typeStorno}
-              dunning={typeDunning}
-              contract={typeContract}
-              creditNote={typeCreditNote}
-              invoice={typeInvoice}
-              setInvoice={setTypeInvoice}
-              setParticipation={setTypeParticipation}
-              setCancellation={setTypeCancellation}
-              setStorno={setTypeStorno}
-              setDunning={setTypeDunning}
-              setContract={setTypeContract}
-              setCreditNote={setTypeCreditNote}
-              onAnyChange={() => setPage(1)}
-            />
-          </div>
+          </section>
         </div>
 
-        {sortSelect.open && (
-          <div
-            ref={sortSelect.menuRef}
-            role="listbox"
-            className="ks-selectbox__panel ks-documents-overlay ks-documents-overlay--sort"
-            onWheel={(e) => e.stopPropagation()}
-            onScroll={(e) => e.stopPropagation()}
-          >
-            {(["newest", "oldest"] as SortOrder[]).map((v) => (
-              <button
-                key={v}
-                type="button"
-                role="option"
-                aria-selected={sortOrder === v}
-                className={
-                  "ks-selectbox__option ks-documents-option" +
-                  (sortOrder === v ? " ks-selectbox__option--active" : "")
-                }
-                onClick={() => {
-                  setSortOrder(v);
-                  setPage(1);
-                  sortSelect.setOpen(false);
-                }}
-              >
-                {sortLabel(v)}
-              </button>
-            ))}
-          </div>
-        )}
-
-        <div className="ks-storno__section mb-2">
-          <div>
-            <label className="lbl">Documents</label>
-
-            <div
-              className={
-                "ks-selectbox" + (docsSelect.open ? " ks-selectbox--open" : "")
-              }
-            >
-              <button
-                ref={docsSelect.triggerRef}
-                type="button"
-                className="ks-selectbox__trigger"
-                onClick={() =>
-                  docsSelect.open
-                    ? docsSelect.setOpen(false)
-                    : docsSelect.openMenu()
-                }
-                disabled={!pagedItems.length}
-                aria-haspopup="listbox"
-                aria-expanded={docsSelect.open}
-              >
-                <span className="ks-selectbox__label">
-                  {!hasLoadedOnce && loading
-                    ? "Loading…"
-                    : `${pagedItems.length} item(s) on this page`}
-                </span>
-                <span className="ks-selectbox__chevron" aria-hidden="true" />
-              </button>
-            </div>
+        <div className="dialog-footer documents-dialog__footer">
+          <div className="documents-dialog__footerActions">
+            <DownloadButton href={csvHref} label="Download CSV" />
+            <DownloadButton href={zipHref} label="Download ZIP" />
           </div>
         </div>
-
-        {docsSelect.open && !!pagedItems.length && (
-          <div
-            ref={docsSelect.menuRef}
-            role="listbox"
-            className="ks-selectbox__panel ks-documents-overlay ks-documents-overlay--docs"
-            onWheel={(e) => e.stopPropagation()}
-            onScroll={(e) => e.stopPropagation()}
-          >
-            {pagedItems.map((d) => (
-              <button
-                key={d.id}
-                type="button"
-                role="option"
-                className="ks-selectbox__option ks-documents-option ks-doc-select__option ks-storno__option"
-                onClick={() => {
-                  docsSelect.setOpen(false);
-                  openPdf(d);
-                }}
-              >
-                <DocumentRow d={d} />
-              </button>
-            ))}
-          </div>
-        )}
-
-        <div className="flex items-center justify-between mt-3">
-          <div className="pager pager--arrows">
-            <button
-              type="button"
-              className="btn"
-              aria-label="Previous page"
-              onClick={() => setPage((p) => prevPage(p))}
-              disabled={page <= 1}
-            >
-              <img
-                src="/icons/arrow_right_alt.svg"
-                alt=""
-                aria-hidden="true"
-                className="icon-img icon-img--left"
-              />
-            </button>
-
-            <div className="pager__count" aria-live="polite" aria-atomic="true">
-              Page {page} / {totalPages}
-            </div>
-
-            <button
-              type="button"
-              className="btn"
-              aria-label="Next page"
-              onClick={() => setPage((p) => nextPage(p, totalPages))}
-              disabled={page >= totalPages}
-            >
-              <img
-                src="/icons/arrow_right_alt.svg"
-                alt=""
-                aria-hidden="true"
-                className="icon-img"
-              />
-            </button>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <span className="text-gray-600">Per page</span>
-
-            <div
-              className={
-                "ks-selectbox" +
-                (perPageSelect.open ? " ks-selectbox--open" : "")
-              }
-            >
-              <button
-                ref={perPageSelect.triggerRef}
-                type="button"
-                className="ks-selectbox__trigger"
-                onClick={() =>
-                  perPageSelect.open
-                    ? perPageSelect.setOpen(false)
-                    : perPageSelect.openMenu()
-                }
-                aria-haspopup="listbox"
-                aria-expanded={perPageSelect.open}
-              >
-                <span className="ks-selectbox__label">{String(limit)}</span>
-                <span className="ks-selectbox__chevron" aria-hidden="true" />
-              </button>
-            </div>
-
-            {perPageSelect.open && (
-              <div
-                ref={perPageSelect.menuRef}
-                role="listbox"
-                className="ks-selectbox__panel ks-documents-overlay ks-documents-overlay--perpage"
-                onWheel={(e) => e.stopPropagation()}
-                onScroll={(e) => e.stopPropagation()}
-              >
-                {[10, 20, 50, 100].map((n) => (
-                  <button
-                    key={n}
-                    type="button"
-                    role="option"
-                    aria-selected={limit === n}
-                    className={
-                      "ks-selectbox__option ks-documents-option" +
-                      (limit === n ? " ks-selectbox__option--active" : "")
-                    }
-                    onClick={() => {
-                      setLimit(n);
-                      setPage(1);
-                      perPageSelect.setOpen(false);
-                    }}
-                  >
-                    {n}
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
-        </div>
-
-        <div className="ks-documents-premium__downloadRow">
-          <DownloadButton href={csvHref} label="Download CSV" />
-          <DownloadButton href={zipHref} label="Download ZIP" />
-
-          <button
-            type="button"
-            className="modal__close"
-            aria-label="Close"
-            onClick={onClose}
-          >
-            <img
-              src="/icons/close.svg"
-              alt=""
-              aria-hidden="true"
-              className="icon-img"
-            />
-          </button>
-        </div>
-
-        {err && <div className="mt-2 text-red-600">{err}</div>}
       </div>
     </div>
   );
 }
+
 // // src/app/admin/(app)/customers/dialogs/DocumentsDialog.tsx
 // "use client";
 
@@ -1032,7 +1130,6 @@ export default function DocumentsDialog({ customerId, onClose }: Props) {
 // } from "./documentsDialog/helpers";
 // import { useOverlayVars } from "./documentsDialog/hooks/useOverlayVars";
 // import { TypeChips } from "./documentsDialog/components/TypeChips";
-
 // import { useBookDialogFamily } from "./bookDialog/hooks/useBookDialogFamily";
 // import { useDropdownOutsideClose } from "./bookDialog/hooks/useDropdownOutsideClose";
 // import type { FamilyChild, FamilyMember } from "./bookDialog/types";
@@ -1252,11 +1349,7 @@ export default function DocumentsDialog({ customerId, onClose }: Props) {
 //   );
 // }
 
-// export default function DocumentsDialog({
-//   customerId,
-
-//   onClose,
-// }: Props) {
+// export default function DocumentsDialog({ customerId, onClose }: Props) {
 //   const [typeParticipation, setTypeParticipation] = useState(true);
 //   const [typeInvoice, setTypeInvoice] = useState(true);
 //   const [typeCancellation, setTypeCancellation] = useState(true);
@@ -1381,7 +1474,6 @@ export default function DocumentsDialog({ customerId, onClose }: Props) {
 //   useOverlayVars(sortSelect);
 
 //   const selectedTypes = useMemo(() => {
-//     // const t: string[] = [];
 //     const t: string[] = ["invoice"];
 //     if (typeParticipation) t.push("participation");
 //     if (typeInvoice) t.push("invoice");
@@ -1458,7 +1550,6 @@ export default function DocumentsDialog({ customerId, onClose }: Props) {
 //   const filteredItems = useMemo(() => {
 //     return items.filter((item) => {
 //       const type = String(item.type || "").toLowerCase();
-//       // if (type === "invoice") return true;
 //       if (type === "invoice") return typeInvoice;
 //       if (type === "participation") return typeParticipation;
 //       if (type === "cancellation") return typeCancellation;
@@ -1476,6 +1567,7 @@ export default function DocumentsDialog({ customerId, onClose }: Props) {
 //     typeDunning,
 //     typeCreditNote,
 //     typeContract,
+//     typeInvoice,
 //   ]);
 
 //   const totalPages = useMemo(() => {
@@ -1542,7 +1634,6 @@ export default function DocumentsDialog({ customerId, onClose }: Props) {
 //         if (cancelled) return;
 
 //         setItems(Array.isArray(data.items) ? data.items : []);
-
 //         setHasLoadedOnce(true);
 //       } catch (e: any) {
 //         if (cancelled) return;
@@ -1741,124 +1832,130 @@ export default function DocumentsDialog({ customerId, onClose }: Props) {
 //           )}
 //         </div>
 
-//         <div className="ks-storno__filters ks-storno__filters--docs mb-2">
-//           <div className="ks-storno__filter">
-//             <label className="lbl">Types</label>
-//             <div className="card p-2">
-//               <TypeChips
-//                 participation={typeParticipation}
-//                 cancellation={typeCancellation}
-//                 storno={typeStorno}
-//                 dunning={typeDunning}
-//                 contract={typeContract}
-//                 creditNote={typeCreditNote}
-//                 invoice={typeInvoice}
-//                 setInvoice={setTypeInvoice}
-//                 setParticipation={setTypeParticipation}
-//                 setCancellation={setTypeCancellation}
-//                 setStorno={setTypeStorno}
-//                 setDunning={setTypeDunning}
-//                 setContract={setTypeContract}
-//                 setCreditNote={setTypeCreditNote}
-//                 onAnyChange={() => setPage(1)}
-//               />
+//         <div className="ks-documents-premium">
+//           <div className="ks-documents-premium__topRow">
+//             <div className="ks-documents-premium__searchItem">
+//               <div className="input-with-icon">
+//                 <img
+//                   src="/icons/search.svg"
+//                   alt=""
+//                   aria-hidden="true"
+//                   className="input-with-icon__icon"
+//                 />
+//                 <input
+//                   className="input input-with-icon__input"
+//                   placeholder="Search..."
+//                   value={q}
+//                   onChange={(e) => {
+//                     setQ(e.target.value);
+//                     setPage(1);
+//                   }}
+//                 />
+//               </div>
 //             </div>
-//           </div>
 
-//           <div className="ks-storno__filter">
-//             <label className="lbl">Search & Date</label>
-//             <div className="card p-2">
-//               <input
-//                 className="input mb-2"
-//                 placeholder="Search…"
-//                 value={q}
-//                 onChange={(e) => {
-//                   setQ(e.target.value);
+//             <div className="ks-documents-premium__dateItem">
+//               <KsDatePicker
+//                 value={from}
+//                 onChange={(nextIso) => {
+//                   setFrom(nextIso);
 //                   setPage(1);
 //                 }}
+//                 placeholder="tt.mm.jjjj"
+//                 disabled={false}
 //               />
+//             </div>
 
-//               <div className="ks-documents__dates">
-//                 <KsDatePicker
-//                   value={from}
-//                   onChange={(nextIso) => {
-//                     setFrom(nextIso);
-//                     setPage(1);
-//                   }}
-//                   placeholder="tt.mm.jjjj"
-//                   disabled={false}
-//                 />
-//                 <KsDatePicker
-//                   value={to}
-//                   onChange={(nextIso) => {
-//                     setTo(nextIso);
-//                     setPage(1);
-//                   }}
-//                   placeholder="tt.mm.jjjj"
-//                   disabled={false}
-//                 />
+//             <div className="ks-documents-premium__dateItem">
+//               <KsDatePicker
+//                 value={to}
+//                 onChange={(nextIso) => {
+//                   setTo(nextIso);
+//                   setPage(1);
+//                 }}
+//                 placeholder="tt.mm.jjjj"
+//                 disabled={false}
+//               />
+//             </div>
+
+//             <div className="ks-documents-premium__sortItem">
+//               <div
+//                 className={
+//                   "ks-selectbox" +
+//                   (sortSelect.open ? " ks-selectbox--open" : "")
+//                 }
+//               >
+//                 <button
+//                   ref={sortSelect.triggerRef}
+//                   type="button"
+//                   className="ks-selectbox__trigger"
+//                   onClick={() =>
+//                     sortSelect.open
+//                       ? sortSelect.setOpen(false)
+//                       : sortSelect.openMenu()
+//                   }
+//                   aria-haspopup="listbox"
+//                   aria-expanded={sortSelect.open}
+//                 >
+//                   <span className="ks-selectbox__label">
+//                     {sortLabel(sortOrder)}
+//                   </span>
+//                   <span className="ks-selectbox__chevron" aria-hidden="true" />
+//                 </button>
 //               </div>
 //             </div>
 //           </div>
 
-//           <div className="ks-storno__filter">
-//             <label className="lbl">Sort</label>
-
-//             <div
-//               className={
-//                 "ks-selectbox" + (sortSelect.open ? " ks-selectbox--open" : "")
-//               }
-//             >
-//               <button
-//                 ref={sortSelect.triggerRef}
-//                 type="button"
-//                 className="ks-selectbox__trigger"
-//                 onClick={() =>
-//                   sortSelect.open
-//                     ? sortSelect.setOpen(false)
-//                     : sortSelect.openMenu()
-//                 }
-//                 aria-haspopup="listbox"
-//                 aria-expanded={sortSelect.open}
-//               >
-//                 <span className="ks-selectbox__label">
-//                   {sortLabel(sortOrder)}
-//                 </span>
-//                 <span className="ks-selectbox__chevron" aria-hidden="true" />
-//               </button>
-//             </div>
-
-//             {sortSelect.open && (
-//               <div
-//                 ref={sortSelect.menuRef}
-//                 role="listbox"
-//                 className="ks-selectbox__panel ks-documents-overlay ks-documents-overlay--sort"
-//                 onWheel={(e) => e.stopPropagation()}
-//                 onScroll={(e) => e.stopPropagation()}
-//               >
-//                 {(["newest", "oldest"] as SortOrder[]).map((v) => (
-//                   <button
-//                     key={v}
-//                     type="button"
-//                     role="option"
-//                     aria-selected={sortOrder === v}
-//                     className={
-//                       "ks-selectbox__option ks-documents-option" +
-//                       (sortOrder === v ? " ks-selectbox__option--active" : "")
-//                     }
-//                     onClick={() => {
-//                       setSortOrder(v);
-//                       setPage(1);
-//                       sortSelect.setOpen(false);
-//                     }}
-//                   >
-//                     {sortLabel(v)}
-//                   </button>
-//                 ))}
-//               </div>
-//             )}
+//           <div className="ks-documents-premium__typesRow">
+//             <TypeChips
+//               participation={typeParticipation}
+//               cancellation={typeCancellation}
+//               storno={typeStorno}
+//               dunning={typeDunning}
+//               contract={typeContract}
+//               creditNote={typeCreditNote}
+//               invoice={typeInvoice}
+//               setInvoice={setTypeInvoice}
+//               setParticipation={setTypeParticipation}
+//               setCancellation={setTypeCancellation}
+//               setStorno={setTypeStorno}
+//               setDunning={setTypeDunning}
+//               setContract={setTypeContract}
+//               setCreditNote={setTypeCreditNote}
+//               onAnyChange={() => setPage(1)}
+//             />
 //           </div>
 //         </div>
+
+//         {sortSelect.open && (
+//           <div
+//             ref={sortSelect.menuRef}
+//             role="listbox"
+//             className="ks-selectbox__panel ks-documents-overlay ks-documents-overlay--sort"
+//             onWheel={(e) => e.stopPropagation()}
+//             onScroll={(e) => e.stopPropagation()}
+//           >
+//             {(["newest", "oldest"] as SortOrder[]).map((v) => (
+//               <button
+//                 key={v}
+//                 type="button"
+//                 role="option"
+//                 aria-selected={sortOrder === v}
+//                 className={
+//                   "ks-selectbox__option ks-documents-option" +
+//                   (sortOrder === v ? " ks-selectbox__option--active" : "")
+//                 }
+//                 onClick={() => {
+//                   setSortOrder(v);
+//                   setPage(1);
+//                   sortSelect.setOpen(false);
+//                 }}
+//               >
+//                 {sortLabel(v)}
+//               </button>
+//             ))}
+//           </div>
+//         )}
 
 //         <div className="ks-storno__section mb-2">
 //           <div>
@@ -2013,7 +2110,7 @@ export default function DocumentsDialog({ customerId, onClose }: Props) {
 //           </div>
 //         </div>
 
-//         <div className="flex justify-end gap-2 mt-4">
+//         <div className="ks-documents-premium__downloadRow">
 //           <DownloadButton href={csvHref} label="Download CSV" />
 //           <DownloadButton href={zipHref} label="Download ZIP" />
 
