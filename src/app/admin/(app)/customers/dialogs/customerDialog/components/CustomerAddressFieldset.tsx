@@ -1,3 +1,4 @@
+//src\app\admin\(app)\customers\dialogs\customerDialog\components\CustomerAddressFieldset.tsx
 "use client";
 
 import React from "react";
@@ -32,7 +33,7 @@ export default function CustomerAddressFieldset(p: Props) {
         </div>
       </div>
 
-      <div className="grid grid-cols-3 gap-2">
+      <div className="grid grid-cols-2 gap-2">
         <div>
           <label className="lbl">ZIP</label>
           <input

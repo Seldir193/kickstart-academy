@@ -1,4 +1,3 @@
-//src\app\admin\(app)\customers\dialogs\CustomerDialog.tsx
 "use client";
 
 import React, { useMemo } from "react";
@@ -52,10 +51,20 @@ export default function CustomerDialog(p: Props) {
   void offers;
 
   return (
-    <div className="ks-modal-root ks-customer-dialog">
-      <div className="ks-backdrop" onClick={p.onClose} />
+    <div
+      className="dialog-backdrop ks-customer-dialog"
+      role="dialog"
+      aria-modal="true"
+    >
+      <button
+        type="button"
+        className="dialog-backdrop-hit ks-customer-dialog__backdrop-hit"
+        aria-label="Close"
+        onClick={p.onClose}
+      />
+
       <div
-        className="ks-panel card ks-panel--lg"
+        className="dialog ks-customer-dialog__dialog"
         onClick={(e) => e.stopPropagation()}
       >
         <CustomerDialogHeader
@@ -67,77 +76,61 @@ export default function CustomerDialog(p: Props) {
           setBookOpen={f.setBookOpen}
           setCancelOpen={f.setCancelOpen}
           setStornoOpen={f.setStornoOpen}
+          onClose={p.onClose}
         />
 
-        {f.err && <div className="mb-2 text-red-600">{f.err}</div>}
+        <div className="dialog-body ks-customer-dialog__body">
+          {f.err ? <div className="mb-2 text-red-600">{f.err}</div> : null}
 
-        {/* <CustomerFamilySection
-          mode={p.mode}
-          childFamilyMembers={fam.childFamilyMembers}
-          selfFamilyMembers={fam.selfFamilyMembers}
-          familyLoading={fam.familyLoading}
-          familyError={fam.familyError}
-          familyDropdownOpen={fam.familyDropdownOpen}
-          selfDropdownOpen={fam.selfDropdownOpen}
-          setFamilyDropdownOpen={fam.setFamilyDropdownOpen}
-          setSelfDropdownOpen={fam.setSelfDropdownOpen}
-          familyDropdownRef={fam.familyDropdownRef}
-          selfDropdownRef={fam.selfDropdownRef}
-          activeFamilyId={fam.activeFamilyId}
-          selectedChildLabel={fam.selectedChildLabel}
-          selectedSelfLabel={fam.selectedSelfLabel}
-          handleSelectFamilyMember={fam.handleSelectFamilyMember}
-          handleAddSibling={fam.handleAddSibling}
-        /> */}
-
-        <CustomerFamilySection
-          mode={p.mode}
-          childFamilyMembers={fam.childFamilyMembers}
-          selfFamilyMembers={fam.selfFamilyMembers}
-          familyLoading={fam.familyLoading}
-          familyError={fam.familyError}
-          familyDropdownOpen={fam.familyDropdownOpen}
-          selfDropdownOpen={fam.selfDropdownOpen}
-          setFamilyDropdownOpen={fam.setFamilyDropdownOpen}
-          setSelfDropdownOpen={fam.setSelfDropdownOpen}
-          familyDropdownRef={fam.familyDropdownRef}
-          selfDropdownRef={fam.selfDropdownRef}
-          activeFamilyId={fam.activeFamilyId}
-          selectedChildLabel={fam.selectedChildLabel}
-          selectedSelfLabel={fam.selectedSelfLabel}
-          handleSelectFamilyMember={fam.handleSelectFamilyMember}
-          handleAddSibling={fam.handleAddSibling}
-          handleAddParent={fam.handleAddParent}
-        />
-
-        <div className="form-columns mb-3">
-          <CustomerChildFieldset
-            form={f.form}
-            up={f.up}
-            genderOpen={f.genderOpen}
-            setGenderOpen={f.setGenderOpen}
-            genderDropdownRef={f.genderDropdownRef}
-          />
-
-          <CustomerParentFieldset
-            form={f.form}
-            up={f.up}
+          <CustomerFamilySection
             mode={p.mode}
-            saving={f.saving || f.newsletterBusy}
-            newsletterBusy={f.newsletterBusy}
-            setNewsletterBusy={f.setNewsletterBusy}
-            setForm={f.setForm}
-            setErr={f.setErr}
-            salutationOpen={f.salutationOpen}
-            setSalutationOpen={f.setSalutationOpen}
-            salutationDropdownRef={f.salutationDropdownRef}
-            mk={mk}
-            statusLabel={statusLabel}
-            fmtDE={f.fmtDE}
+            childFamilyMembers={fam.childFamilyMembers}
+            selfFamilyMembers={fam.selfFamilyMembers}
+            familyLoading={fam.familyLoading}
+            familyError={fam.familyError}
+            familyDropdownOpen={fam.familyDropdownOpen}
+            selfDropdownOpen={fam.selfDropdownOpen}
+            setFamilyDropdownOpen={fam.setFamilyDropdownOpen}
+            setSelfDropdownOpen={fam.setSelfDropdownOpen}
+            familyDropdownRef={fam.familyDropdownRef}
+            selfDropdownRef={fam.selfDropdownRef}
+            activeFamilyId={fam.activeFamilyId}
+            selectedChildLabel={fam.selectedChildLabel}
+            selectedSelfLabel={fam.selectedSelfLabel}
+            handleSelectFamilyMember={fam.handleSelectFamilyMember}
+            handleAddSibling={fam.handleAddSibling}
+            handleAddParent={fam.handleAddParent}
           />
 
-          <CustomerAddressFieldset form={f.form} up={f.up} />
-          <CustomerNotesFieldset form={f.form} up={f.up} />
+          <div className="form-columns mb-3">
+            <CustomerChildFieldset
+              form={f.form}
+              up={f.up}
+              genderOpen={f.genderOpen}
+              setGenderOpen={f.setGenderOpen}
+              genderDropdownRef={f.genderDropdownRef}
+            />
+
+            <CustomerParentFieldset
+              form={f.form}
+              up={f.up}
+              mode={p.mode}
+              saving={f.saving || f.newsletterBusy}
+              newsletterBusy={f.newsletterBusy}
+              setNewsletterBusy={f.setNewsletterBusy}
+              setForm={f.setForm}
+              setErr={f.setErr}
+              salutationOpen={f.salutationOpen}
+              setSalutationOpen={f.setSalutationOpen}
+              salutationDropdownRef={f.salutationDropdownRef}
+              mk={mk}
+              statusLabel={statusLabel}
+              fmtDE={f.fmtDE}
+            />
+
+            <CustomerAddressFieldset form={f.form} up={f.up} />
+            <CustomerNotesFieldset form={f.form} up={f.up} />
+          </div>
         </div>
 
         <CustomerDialogFooter
@@ -173,7 +166,7 @@ export default function CustomerDialog(p: Props) {
   );
 }
 
-// // // app/admin/customers/dialogs/CustomerDialog.tsx
+// //src\app\admin\(app)\customers\dialogs\CustomerDialog.tsx
 // "use client";
 
 // import React, { useMemo } from "react";
@@ -224,6 +217,7 @@ export default function CustomerDialog(p: Props) {
 //   }, [f.form]);
 
 //   const isActive = !f.form?.canceledAt;
+//   void offers;
 
 //   return (
 //     <div className="ks-modal-root ks-customer-dialog">
@@ -245,18 +239,43 @@ export default function CustomerDialog(p: Props) {
 
 //         {f.err && <div className="mb-2 text-red-600">{f.err}</div>}
 
-//         <CustomerFamilySection
+//         {/* <CustomerFamilySection
 //           mode={p.mode}
-//           familyMembers={fam.familyMembers}
+//           childFamilyMembers={fam.childFamilyMembers}
+//           selfFamilyMembers={fam.selfFamilyMembers}
 //           familyLoading={fam.familyLoading}
 //           familyError={fam.familyError}
 //           familyDropdownOpen={fam.familyDropdownOpen}
+//           selfDropdownOpen={fam.selfDropdownOpen}
 //           setFamilyDropdownOpen={fam.setFamilyDropdownOpen}
+//           setSelfDropdownOpen={fam.setSelfDropdownOpen}
 //           familyDropdownRef={fam.familyDropdownRef}
+//           selfDropdownRef={fam.selfDropdownRef}
 //           activeFamilyId={fam.activeFamilyId}
 //           selectedChildLabel={fam.selectedChildLabel}
+//           selectedSelfLabel={fam.selectedSelfLabel}
 //           handleSelectFamilyMember={fam.handleSelectFamilyMember}
 //           handleAddSibling={fam.handleAddSibling}
+//         /> */}
+
+//         <CustomerFamilySection
+//           mode={p.mode}
+//           childFamilyMembers={fam.childFamilyMembers}
+//           selfFamilyMembers={fam.selfFamilyMembers}
+//           familyLoading={fam.familyLoading}
+//           familyError={fam.familyError}
+//           familyDropdownOpen={fam.familyDropdownOpen}
+//           selfDropdownOpen={fam.selfDropdownOpen}
+//           setFamilyDropdownOpen={fam.setFamilyDropdownOpen}
+//           setSelfDropdownOpen={fam.setSelfDropdownOpen}
+//           familyDropdownRef={fam.familyDropdownRef}
+//           selfDropdownRef={fam.selfDropdownRef}
+//           activeFamilyId={fam.activeFamilyId}
+//           selectedChildLabel={fam.selectedChildLabel}
+//           selectedSelfLabel={fam.selectedSelfLabel}
+//           handleSelectFamilyMember={fam.handleSelectFamilyMember}
+//           handleAddSibling={fam.handleAddSibling}
+//           handleAddParent={fam.handleAddParent}
 //         />
 
 //         <div className="form-columns mb-3">
@@ -272,7 +291,6 @@ export default function CustomerDialog(p: Props) {
 //             form={f.form}
 //             up={f.up}
 //             mode={p.mode}
-//             // saving={f.saving}
 //             saving={f.saving || f.newsletterBusy}
 //             newsletterBusy={f.newsletterBusy}
 //             setNewsletterBusy={f.setNewsletterBusy}
@@ -287,7 +305,6 @@ export default function CustomerDialog(p: Props) {
 //           />
 
 //           <CustomerAddressFieldset form={f.form} up={f.up} />
-
 //           <CustomerNotesFieldset form={f.form} up={f.up} />
 //         </div>
 

@@ -1,69 +1,74 @@
-//src\app\styles\admin\customer-dialog.scss
 .ks-booking-select__triggerLabel {
   display: block;
 }
 
 .ks-booking-select__row {
   display: block;
+  width: 100%;
 }
 
 .ks-booking-select__top {
-  display: grid;
-  grid-template-columns: 1fr 104px;
+  display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
 }
 
 .ks-booking-select__title {
-  font-weight: 700;
+  flex: 1;
   min-width: 0;
+  font-weight: 700;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
 .ks-booking-select__invoiceCol {
-  display: flex;
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
   justify-content: flex-end;
-  flex-shrink: 0;
+  margin-left: auto;
 }
 
 .ks-booking-select__invoice {
+  min-width: 92px;
+  padding: 2px 8px;
+  border: 1px solid rgba(0, 0, 0, 0.18);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.9);
+  color: rgba(0, 0, 0, 0.92);
   font-size: 12px;
   font-weight: 600;
-  padding: 2px 8px;
-  border-radius: 999px;
-  border: 1px solid rgba(0, 0, 0, 0.18);
-  background: rgba(255, 255, 255, 0.9);
-  min-width: 92px;
   text-align: center;
-  color: rgba(0, 0, 0, 0.92);
+  white-space: nowrap;
 }
 
 .ks-booking-select__bottom {
+  min-width: 0;
+  margin-top: 2px;
   font-size: 12px;
   opacity: 0.8;
-  min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  margin-top: 2px;
 }
 
 .ks-booking-select__bottom--cancelled {
   opacity: 0.6;
 }
 
-//neu
 .ks-storno__filters {
   display: grid;
-  //grid-template-columns: 2fr 1fr 1fr;
   grid-template-columns: minmax(260px, 2fr) minmax(140px, 1fr) minmax(
       140px,
       1fr
     );
   gap: 8px;
   align-items: end;
+}
+
+.ks-storno__filters > .ks-storno__filter {
+  min-width: 0;
 }
 
 .ks-storno__filter {
@@ -85,43 +90,7 @@
   border-bottom: 0;
 }
 
-.ks-booking-select__row {
-  width: 100%;
-}
-
-.ks-booking-select__top {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.ks-booking-select__title {
-  flex: 1;
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.ks-booking-select__invoiceCol {
-  flex: 0 0 auto;
-  margin-left: auto;
-  display: inline-flex;
-  align-items: center;
-}
-
-.ks-booking-select__invoice {
-  white-space: nowrap;
-}
-
-.ks-storno__filters > .ks-storno__filter {
-  min-width: 0;
-}
-
-.ks-storno__filters .ks-selectbox {
-  width: 100%;
-}
-
+.ks-storno__filters .ks-selectbox,
 .ks-storno__filters .ks-selectbox__trigger {
   width: 100%;
 }
@@ -131,11 +100,928 @@
   gap: 8px;
 }
 
-.ks-storno__filters .ks-selectbox,
-.ks-storno__filters .ks-selectbox__trigger {
-  width: 100%;
-}
-
 .ks-storno .grid {
   grid-template-columns: unset !important;
 }
+
+.ks-customer-dialog.dialog-backdrop {
+  inset: var(--header-height, 64px) 0 0 0;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 24px 20px 20px;
+  overflow-y: auto;
+  box-sizing: border-box;
+}
+
+.ks-customer-dialog__dialog {
+  width: min(1120px, calc(100% - 40px));
+  max-width: 1120px;
+  max-height: calc(100dvh - var(--header-height, 64px) - 48px);
+  grid-template-rows: auto minmax(0, 1fr) auto;
+}
+
+.ks-customer-dialog__head {
+  justify-content: flex-start;
+}
+
+.ks-customer-dialog__head-left {
+  min-width: 0;
+  flex: 1 1 auto;
+  padding-right: 20px;
+}
+
+.ks-customer-dialog__head-right {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-end;
+  margin-left: auto;
+  min-width: 0;
+  flex: 0 0 auto;
+  gap: 30px;
+}
+
+.ks-customer-dialog__title {
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+
+.ks-customer-dialog__head-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+
+.ks-customer-dialog__actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  flex-wrap: wrap;
+  min-width: 0;
+}
+
+.ks-customer-dialog__close-wrap {
+  display: flex;
+  align-items: flex-start;
+  flex: 0 0 auto;
+  margin-left: 20px;
+}
+
+.ks-customer-dialog__close {
+  margin-left: 0;
+}
+
+.ks-customer-dialog__body {
+  overflow: auto;
+  min-height: 0;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.28) transparent;
+}
+
+.ks-customer-dialog__body::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.ks-customer-dialog__body::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.ks-customer-dialog__body::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.28);
+  border: 2px solid transparent;
+  border-radius: 999px;
+  background-clip: content-box;
+}
+
+.ks-customer-dialog__body::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.38);
+  background-clip: content-box;
+}
+
+.ks-customer-dialog__footer {
+  justify-content: flex-end;
+}
+
+.ks-customer-family__add-btn {
+  background-image: none;
+  background-size: auto;
+  transition:
+    background-color 160ms ease,
+    border-color 160ms ease,
+    color 160ms ease,
+    box-shadow 160ms ease;
+
+  &:hover,
+  &:focus,
+  &:focus-visible,
+  &:active {
+    background-color: var(--brand-black);
+    border-color: var(--brand-black);
+    color: var(--brand-white);
+    outline: none;
+    box-shadow: none;
+  }
+
+  .ks-customer-family__add-icon {
+    transition:
+      filter 160ms ease,
+      opacity 160ms ease;
+  }
+
+  &:hover .ks-customer-family__add-icon,
+  &:focus .ks-customer-family__add-icon,
+  &:focus-visible .ks-customer-family__add-icon,
+  &:active .ks-customer-family__add-icon {
+    filter: brightness(0) invert(1);
+  }
+}
+
+// .ks-customer-family__add-btn {
+//   background-image: none;
+//   background-size: auto;
+//   transition:
+//     background-color 160ms ease,
+//     border-color 160ms ease,
+//     color 160ms ease,
+//     box-shadow 160ms ease;
+
+//   &:focus,
+//   &:focus-visible {
+//     background-color: #000;
+//     border-color: #000;
+//     color: #fff;
+//     outline: none;
+//     box-shadow: none;
+//   }
+
+//   .ks-customer-family__add-icon {
+//     transition:
+//       filter 160ms ease,
+//       opacity 160ms ease;
+//   }
+
+//   &:focus .ks-customer-family__add-icon,
+//   &:focus-visible .ks-customer-family__add-icon {
+//     filter: brightness(0) invert(1);
+//   }
+// }
+
+@media (max-width: 980px) {
+  .ks-customer-dialog__dialog {
+    width: min(920px, calc(100% - 24px));
+  }
+}
+
+@media (max-width: 720px) {
+  .ks-customer-dialog.dialog-backdrop {
+    padding: 12px;
+    place-items: start center;
+  }
+
+  .ks-customer-dialog__dialog {
+    width: 100%;
+    max-width: 100%;
+    max-height: calc(100dvh - 24px);
+    border-radius: 16px;
+  }
+
+  .ks-customer-dialog__head {
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .ks-customer-dialog__head-left {
+    padding-right: 12px;
+  }
+
+  .ks-customer-dialog__head-right {
+    gap: 0;
+  }
+
+  .ks-customer-dialog__title {
+    font-size: clamp(22px, 6vw, 28px);
+    line-height: 1.14;
+  }
+
+  .ks-customer-dialog__actions {
+    gap: 8px;
+  }
+
+  .ks-customer-dialog__close-wrap {
+    margin-left: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .ks-customer-dialog.dialog-backdrop {
+    padding: 8px;
+  }
+
+  .ks-customer-dialog__dialog {
+    max-height: calc(100dvh - 16px);
+    border-radius: 14px;
+  }
+
+  .ks-customer-dialog__head {
+    gap: 10px;
+  }
+
+  .ks-customer-dialog__head-left {
+    padding-right: 10px;
+  }
+
+  .ks-customer-dialog__head-right {
+    gap: 0;
+  }
+
+  .ks-customer-dialog__actions {
+    gap: 6px;
+  }
+
+  .ks-customer-dialog__close-wrap {
+    margin-left: 10px;
+  }
+}
+
+// //src\app\styles\admin\customer-dialog.scss
+// .ks-booking-select__triggerLabel {
+//   display: block;
+// }
+
+// .ks-booking-select__row {
+//   display: block;
+//   width: 100%;
+// }
+
+// .ks-booking-select__top {
+//   display: flex;
+//   align-items: center;
+//   gap: 12px;
+// }
+
+// .ks-booking-select__title {
+//   flex: 1;
+//   min-width: 0;
+//   font-weight: 700;
+//   overflow: hidden;
+//   text-overflow: ellipsis;
+//   white-space: nowrap;
+// }
+
+// .ks-booking-select__invoiceCol {
+//   flex: 0 0 auto;
+//   display: inline-flex;
+//   align-items: center;
+//   justify-content: flex-end;
+//   margin-left: auto;
+// }
+
+// .ks-booking-select__invoice {
+//   min-width: 92px;
+//   padding: 2px 8px;
+//   border: 1px solid rgba(0, 0, 0, 0.18);
+//   border-radius: 999px;
+//   background: rgba(255, 255, 255, 0.9);
+//   color: rgba(0, 0, 0, 0.92);
+//   font-size: 12px;
+//   font-weight: 600;
+//   text-align: center;
+//   white-space: nowrap;
+// }
+
+// .ks-booking-select__bottom {
+//   min-width: 0;
+//   margin-top: 2px;
+//   font-size: 12px;
+//   opacity: 0.8;
+//   overflow: hidden;
+//   text-overflow: ellipsis;
+//   white-space: nowrap;
+// }
+
+// .ks-booking-select__bottom--cancelled {
+//   opacity: 0.6;
+// }
+
+// .ks-storno__filters {
+//   display: grid;
+//   grid-template-columns: minmax(260px, 2fr) minmax(140px, 1fr) minmax(
+//       140px,
+//       1fr
+//     );
+//   gap: 8px;
+//   align-items: end;
+// }
+
+// .ks-storno__filters > .ks-storno__filter {
+//   min-width: 0;
+// }
+
+// .ks-storno__filter {
+//   display: flex;
+//   flex-direction: column;
+//   gap: 6px;
+// }
+
+// .ks-storno__menu {
+//   padding: 0;
+// }
+
+// .ks-storno__menu .ks-storno__option {
+//   border-bottom: 1px solid var(--admin-sep);
+//   border-radius: 0;
+// }
+
+// .ks-storno__menu .ks-storno__option:last-child {
+//   border-bottom: 0;
+// }
+
+// .ks-storno__filters .ks-selectbox,
+// .ks-storno__filters .ks-selectbox__trigger {
+//   width: 100%;
+// }
+
+// .ks-storno__section {
+//   display: grid;
+//   gap: 8px;
+// }
+
+// .ks-storno .grid {
+//   grid-template-columns: unset !important;
+// }
+
+// .ks-customer-dialog.dialog-backdrop {
+//   inset: var(--header-height, 64px) 0 0 0;
+//   align-items: flex-start;
+//   justify-content: center;
+//   padding: 24px 20px 20px;
+//   overflow-y: auto;
+//   box-sizing: border-box;
+// }
+
+// .ks-customer-dialog__dialog {
+//   width: min(1120px, calc(100% - 40px));
+//   max-width: 1120px;
+//   max-height: calc(100dvh - var(--header-height, 64px) - 48px);
+//   grid-template-rows: auto minmax(0, 1fr) auto;
+// }
+
+// .ks-customer-dialog__head {
+//   justify-content: flex-start;
+// }
+
+// .ks-customer-dialog__head-left {
+//   min-width: 0;
+//   flex: 1 1 auto;
+//   padding-right: 20px;
+// }
+
+// .ks-customer-dialog__head-right {
+//   display: flex;
+//   align-items: flex-start;
+//   justify-content: flex-end;
+//   margin-left: auto;
+//   min-width: 0;
+//   flex: 0 0 auto;
+//   gap: 30px;
+// }
+
+// .ks-customer-dialog__title {
+//   word-break: break-word;
+//   overflow-wrap: anywhere;
+// }
+
+// .ks-customer-dialog__head-meta {
+//   display: flex;
+//   align-items: center;
+//   gap: 8px;
+//   flex-wrap: wrap;
+//   margin-top: 10px;
+// }
+
+// .ks-customer-dialog__actions {
+//   display: flex;
+//   align-items: center;
+//   justify-content: flex-end;
+//   gap: 10px;
+//   flex-wrap: wrap;
+//   min-width: 0;
+// }
+
+// .ks-customer-dialog__close-wrap {
+//   display: flex;
+//   align-items: flex-start;
+//   flex: 0 0 auto;
+//   margin-left: 20px;
+// }
+
+// .ks-customer-dialog__close {
+//   margin-left: 0;
+// }
+
+// .ks-customer-dialog__body {
+//   overflow: auto;
+//   min-height: 0;
+//   scrollbar-width: thin;
+//   scrollbar-color: rgba(0, 0, 0, 0.28) transparent;
+// }
+
+// .ks-customer-dialog__body::-webkit-scrollbar {
+//   width: 8px;
+//   height: 8px;
+// }
+
+// .ks-customer-dialog__body::-webkit-scrollbar-track {
+//   background: transparent;
+// }
+
+// .ks-customer-dialog__body::-webkit-scrollbar-thumb {
+//   background: rgba(0, 0, 0, 0.28);
+//   border: 2px solid transparent;
+//   border-radius: 999px;
+//   background-clip: content-box;
+// }
+
+// .ks-customer-dialog__body::-webkit-scrollbar-thumb:hover {
+//   background: rgba(0, 0, 0, 0.38);
+//   background-clip: content-box;
+// }
+
+// .ks-customer-dialog__footer {
+//   justify-content: flex-end;
+// }
+
+// // .ks-customer-family__add-btn .ks-customer-family__add-icon {
+// //   transition:
+// //     filter 160ms ease,
+// //     opacity 160ms ease;
+// // }
+
+// // .ks-customer-family__add-btn:hover .ks-customer-family__add-icon,
+// // .ks-customer-family__add-btn:focus-visible .ks-customer-family__add-icon,
+// // .ks-customer-family__add-btn:active .ks-customer-family__add-icon {
+// //   filter: brightness(0) invert(1);
+// // }
+
+// .ks-customer-family__add-btn {
+//   transition:
+//     background-color 160ms ease,
+//     border-color 160ms ease,
+//     color 160ms ease,
+//     box-shadow 160ms ease;
+
+//   &:focus,
+//   &:focus-visible {
+//     background: #000;
+//     border-color: #000;
+//     color: #fff;
+//     outline: none;
+//   }
+
+//   .ks-customer-family__add-icon {
+//     transition:
+//       filter 160ms ease,
+//       opacity 160ms ease;
+//   }
+
+//   &:hover .ks-customer-family__add-icon,
+//   &:focus .ks-customer-family__add-icon,
+//   &:focus-visible .ks-customer-family__add-icon,
+//   &:active .ks-customer-family__add-icon {
+//     filter: brightness(0) invert(1);
+//   }
+// }
+
+// @media (max-width: 980px) {
+//   .ks-customer-dialog__dialog {
+//     width: min(920px, calc(100% - 24px));
+//   }
+// }
+
+// @media (max-width: 720px) {
+//   .ks-customer-dialog.dialog-backdrop {
+//     padding: 12px;
+//     place-items: start center;
+//   }
+
+//   .ks-customer-dialog__dialog {
+//     width: 100%;
+//     max-width: 100%;
+//     max-height: calc(100dvh - 24px);
+//     border-radius: 16px;
+//   }
+
+//   .ks-customer-dialog__head {
+//     align-items: flex-start;
+//     gap: 12px;
+//   }
+
+//   .ks-customer-dialog__head-left {
+//     padding-right: 12px;
+//   }
+
+//   .ks-customer-dialog__head-right {
+//     gap: 0;
+//   }
+
+//   .ks-customer-dialog__title {
+//     font-size: clamp(22px, 6vw, 28px);
+//     line-height: 1.14;
+//   }
+
+//   .ks-customer-dialog__actions {
+//     gap: 8px;
+//   }
+
+//   .ks-customer-dialog__close-wrap {
+//     margin-left: 12px;
+//   }
+// }
+
+// @media (max-width: 480px) {
+//   .ks-customer-dialog.dialog-backdrop {
+//     padding: 8px;
+//   }
+
+//   .ks-customer-dialog__dialog {
+//     max-height: calc(100dvh - 16px);
+//     border-radius: 14px;
+//   }
+
+//   .ks-customer-dialog__head {
+//     gap: 10px;
+//   }
+
+//   .ks-customer-dialog__head-left {
+//     padding-right: 10px;
+//   }
+
+//   .ks-customer-dialog__head-right {
+//     gap: 0;
+//   }
+
+//   .ks-customer-dialog__actions {
+//     gap: 6px;
+//   }
+
+//   .ks-customer-dialog__close-wrap {
+//     margin-left: 10px;
+//   }
+// }
+
+// //src\app\styles\admin\customer-dialog.scss
+// .ks-booking-select__triggerLabel {
+//   display: block;
+// }
+
+// .ks-booking-select__row {
+//   display: block;
+// }
+
+// .ks-booking-select__top {
+//   display: grid;
+//   grid-template-columns: 1fr 104px;
+//   align-items: center;
+//   gap: 10px;
+// }
+
+// .ks-booking-select__title {
+//   font-weight: 700;
+//   min-width: 0;
+//   overflow: hidden;
+//   text-overflow: ellipsis;
+//   white-space: nowrap;
+// }
+
+// .ks-booking-select__invoiceCol {
+//   display: flex;
+//   justify-content: flex-end;
+//   flex-shrink: 0;
+// }
+
+// .ks-booking-select__invoice {
+//   font-size: 12px;
+//   font-weight: 600;
+//   padding: 2px 8px;
+//   border-radius: 999px;
+//   border: 1px solid rgba(0, 0, 0, 0.18);
+//   background: rgba(255, 255, 255, 0.9);
+//   min-width: 92px;
+//   text-align: center;
+//   color: rgba(0, 0, 0, 0.92);
+// }
+
+// .ks-booking-select__bottom {
+//   font-size: 12px;
+//   opacity: 0.8;
+//   min-width: 0;
+//   overflow: hidden;
+//   text-overflow: ellipsis;
+//   white-space: nowrap;
+//   margin-top: 2px;
+// }
+
+// .ks-booking-select__bottom--cancelled {
+//   opacity: 0.6;
+// }
+
+// //neu
+// .ks-storno__filters {
+//   display: grid;
+//   //grid-template-columns: 2fr 1fr 1fr;
+//   grid-template-columns: minmax(260px, 2fr) minmax(140px, 1fr) minmax(
+//       140px,
+//       1fr
+//     );
+//   gap: 8px;
+//   align-items: end;
+// }
+
+// .ks-storno__filter {
+//   display: flex;
+//   flex-direction: column;
+//   gap: 6px;
+// }
+
+// .ks-storno__menu {
+//   padding: 0;
+// }
+
+// .ks-storno__menu .ks-storno__option {
+//   border-bottom: 1px solid var(--admin-sep);
+//   border-radius: 0;
+// }
+
+// .ks-storno__menu .ks-storno__option:last-child {
+//   border-bottom: 0;
+// }
+
+// .ks-booking-select__row {
+//   width: 100%;
+// }
+
+// .ks-booking-select__top {
+//   display: flex;
+//   align-items: center;
+//   gap: 12px;
+// }
+
+// .ks-booking-select__title {
+//   flex: 1;
+//   min-width: 0;
+//   overflow: hidden;
+//   text-overflow: ellipsis;
+//   white-space: nowrap;
+// }
+
+// .ks-booking-select__invoiceCol {
+//   flex: 0 0 auto;
+//   margin-left: auto;
+//   display: inline-flex;
+//   align-items: center;
+// }
+
+// .ks-booking-select__invoice {
+//   white-space: nowrap;
+// }
+
+// .ks-storno__filters > .ks-storno__filter {
+//   min-width: 0;
+// }
+
+// .ks-storno__filters .ks-selectbox {
+//   width: 100%;
+// }
+
+// .ks-storno__filters .ks-selectbox__trigger {
+//   width: 100%;
+// }
+
+// .ks-storno__section {
+//   display: grid;
+//   gap: 8px;
+// }
+
+// .ks-storno__filters .ks-selectbox,
+// .ks-storno__filters .ks-selectbox__trigger {
+//   width: 100%;
+// }
+
+// .ks-storno .grid {
+//   grid-template-columns: unset !important;
+// }
+
+// //neu
+
+// .ks-customer-dialog.dialog-backdrop {
+//   inset: var(--header-height, 64px) 0 0 0;
+//   align-items: flex-start;
+//   justify-content: center;
+//   padding: 24px 20px 20px;
+//   overflow-y: auto;
+//   box-sizing: border-box;
+// }
+
+// .ks-customer-dialog__dialog {
+//   width: min(1120px, calc(100% - 40px));
+
+//   max-width: 1120px;
+//   max-height: calc(100dvh - var(--header-height, 64px) - 48px);
+//   grid-template-rows: auto minmax(0, 1fr) auto;
+// }
+
+// .ks-customer-dialog__head {
+//   justify-content: flex-start;
+// }
+
+// .ks-customer-dialog__head-left {
+//   min-width: 0;
+//   flex: 1 1 auto;
+//   padding-right: 20px;
+// }
+
+// .ks-customer-dialog__head-right {
+//   display: flex;
+//   align-items: flex-start;
+//   justify-content: flex-end;
+//   gap: 10px;
+//   margin-left: auto;
+//   min-width: 0;
+//   flex: 0 0 auto;
+// }
+
+// .ks-customer-dialog__title {
+//   word-break: break-word;
+//   overflow-wrap: anywhere;
+// }
+
+// .ks-customer-dialog__head-meta {
+//   display: flex;
+//   align-items: center;
+//   gap: 8px;
+//   flex-wrap: wrap;
+//   margin-top: 10px;
+// }
+
+// // .ks-customer-dialog__actions {
+// //   display: flex;
+// //   align-items: center;
+// //   justify-content: flex-end;
+// //   gap: 8px;
+// //   flex-wrap: wrap;
+// // }
+
+// .ks-customer-dialog__close {
+//   margin-left: 10px;
+// }
+
+// .ks-customer-dialog__actions {
+//   display: flex;
+//   align-items: center;
+//   justify-content: flex-end;
+//   gap: 10px;
+//   flex-wrap: wrap;
+// }
+
+// .ks-customer-dialog__body {
+//   overflow: auto;
+//   min-height: 0;
+//   scrollbar-width: thin;
+//   scrollbar-color: rgba(0, 0, 0, 0.28) transparent;
+// }
+
+// .ks-customer-dialog__body::-webkit-scrollbar {
+//   width: 8px;
+//   height: 8px;
+// }
+
+// .ks-customer-dialog__body::-webkit-scrollbar-track {
+//   background: transparent;
+// }
+
+// .ks-customer-dialog__body::-webkit-scrollbar-thumb {
+//   background: rgba(0, 0, 0, 0.28);
+//   border-radius: 999px;
+//   border: 2px solid transparent;
+//   background-clip: content-box;
+// }
+
+// .ks-customer-dialog__body::-webkit-scrollbar-thumb:hover {
+//   background: rgba(0, 0, 0, 0.38);
+//   background-clip: content-box;
+// }
+
+// .ks-customer-dialog__footer {
+//   justify-content: flex-end;
+// }
+
+// .ks-customer-family__add-btn {
+//   .ks-customer-family__add-icon {
+//     transition:
+//       filter 160ms ease,
+//       opacity 160ms ease;
+//   }
+
+//   &:hover .ks-customer-family__add-icon,
+//   &:focus-visible .ks-customer-family__add-icon,
+//   &:active .ks-customer-family__add-icon {
+//     filter: brightness(0) invert(1);
+//   }
+// }
+
+// @media (max-width: 980px) {
+//   .ks-customer-dialog__dialog {
+//     width: min(920px, calc(100% - 24px));
+//   }
+// }
+
+// @media (max-width: 720px) {
+//   .ks-customer-dialog.dialog-backdrop {
+//     padding: 12px;
+//     place-items: start center;
+//   }
+
+//   .ks-customer-dialog__dialog {
+//     width: 100%;
+//     max-width: 100%;
+//     max-height: calc(100dvh - 24px);
+//     border-radius: 16px;
+//   }
+
+//   .ks-customer-dialog__head {
+//     align-items: flex-start;
+//     gap: 12px;
+//   }
+
+//   .ks-customer-dialog__head-left {
+//     padding-right: 12px;
+//   }
+
+//   .ks-customer-dialog__head-right {
+//     gap: 8px;
+//   }
+
+//   .ks-customer-dialog__title {
+//     font-size: clamp(22px, 6vw, 28px);
+//     line-height: 1.14;
+//   }
+
+//   .ks-customer-dialog__actions {
+//     gap: 8px;
+//   }
+// }
+
+// @media (max-width: 480px) {
+//   .ks-customer-dialog.dialog-backdrop {
+//     padding: 8px;
+//   }
+
+//   .ks-customer-dialog__dialog {
+//     max-height: calc(100dvh - 16px);
+//     border-radius: 14px;
+//   }
+
+//   .ks-customer-dialog__head {
+//     gap: 10px;
+//   }
+
+//   .ks-customer-dialog__head-left {
+//     padding-right: 10px;
+//   }
+
+//   .ks-customer-dialog__head-right {
+//     gap: 6px;
+//   }
+
+//   .ks-customer-dialog__actions {
+//     gap: 6px;
+//   }
+// }
+
+// .ks-customer-dialog__head-right {
+//   display: flex;
+//   align-items: flex-start;
+//   justify-content: flex-end;
+//   margin-left: auto;
+//   min-width: 0;
+//   flex: 0 0 auto;
+// }
+
+// .ks-customer-dialog__actions {
+//   display: flex;
+//   align-items: center;
+//   justify-content: flex-end;
+//   gap: 10px;
+//   flex-wrap: wrap;
+//   min-width: 0;
+// }
+
+// .ks-customer-dialog__close-wrap {
+//   display: flex;
+//   align-items: flex-start;
+//   flex: 0 0 auto;
+//   margin-left: 20px;
+// }
