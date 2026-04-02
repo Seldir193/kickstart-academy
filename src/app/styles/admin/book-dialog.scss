@@ -1,3 +1,142 @@
+.book-dialog.dialog-backdrop {
+  inset: 0;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  z-index: 1100;
+}
+
+.book-dialog {
+  .dialog-backdrop-hit {
+    z-index: 0;
+  }
+
+  // .book-dialog__dialog {
+  //   position: relative;
+  //   z-index: 1;
+  //   width: min(1040px, calc(100% - 40px));
+  //   max-width: 1040px;
+  //   max-height: min(88vh, 980px);
+  //   grid-template-rows: auto minmax(0, 1fr) auto;
+  // }
+
+  .book-dialog__dialog {
+    position: relative;
+    z-index: 1;
+    width: min(1040px, calc(100% - 40px));
+    max-width: 1040px;
+    max-height: calc(100dvh - var(--header-height, 64px) - 48px);
+    grid-template-rows: auto minmax(0, 1fr) auto;
+  }
+
+  .book-dialog__head-main {
+    min-width: 0;
+    flex: 1 1 auto;
+    padding-right: 12px;
+  }
+
+  .book-dialog__body {
+    display: grid;
+    gap: 16px;
+  }
+
+  .book-dialog__selectionBody {
+    display: grid;
+    gap: 14px;
+  }
+
+  .book-dialog__field {
+    display: grid;
+    gap: 6px;
+    min-width: 0;
+  }
+
+  .book-dialog__statusSection .dialog-section__body {
+    display: grid;
+    gap: 8px;
+  }
+
+  .book-dialog__note {
+    color: #5b6472;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  .book-dialog__error {
+    color: #b42318;
+    font-size: 14px;
+    line-height: 1.5;
+    font-weight: 600;
+  }
+
+  .book-dialog__muted {
+    color: #64748b;
+  }
+
+  .book-dialog__priceCard {
+    padding: 14px 16px;
+    border: 1px solid #e5ebf2;
+    border-radius: 16px;
+    background: #f8fafc;
+  }
+
+  .book-dialog__priceInline {
+    color: #111827;
+    font-size: 15px;
+    line-height: 1.5;
+    font-weight: 500;
+  }
+
+  .book-dialog__priceList {
+    margin: 0;
+    padding-left: 18px;
+    display: grid;
+    gap: 6px;
+  }
+
+  .book-dialog__footer {
+    justify-content: flex-end;
+  }
+
+  .book-dialog__footerActions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+    width: 100%;
+  }
+
+  .book-dialog__confirmBtn.btn {
+    min-height: 44px;
+    padding: 0 16px;
+    background-image: none;
+    background-size: auto;
+    background-color: var(--brand-gold);
+    border-color: var(--brand-gold);
+    color: var(--brand-black);
+    transition:
+      background-color 160ms ease,
+      border-color 160ms ease,
+      color 160ms ease,
+      box-shadow 160ms ease;
+  }
+
+  .book-dialog__confirmBtn.btn:hover:not(:disabled),
+  .book-dialog__confirmBtn.btn:focus-visible:not(:disabled) {
+    background-color: var(--brand-black);
+    border-color: var(--brand-black);
+    color: var(--brand-white);
+    outline: none;
+    box-shadow: none;
+  }
+
+  .book-dialog__confirmBtn.btn:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+    box-shadow: none;
+  }
+}
+
 .book-sticky {
   position: sticky;
   top: 0;
@@ -216,26 +355,12 @@ fieldset.card legend {
   color: #94a3b8;
 }
 
-@media (max-width: 560px) {
-  .book-sub {
-    grid-template-columns: 1fr;
-  }
-
-  .field-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .dob {
-    grid-template-columns: 1fr 1fr 1fr;
-  }
-}
-
 .camp-options {
-  margin-top: 12px;
+  margin-top: 0;
 }
 
 .camp-options--premium {
-  margin-top: 16px;
+  margin-top: 0;
 }
 
 .camp-card {
@@ -563,6 +688,7 @@ fieldset.card legend {
 .book-form input[type="date"] {
   cursor: pointer;
 }
+
 .book-form input[type="date"]::-webkit-calendar-picker-indicator {
   cursor: pointer;
 }
@@ -710,8 +836,85 @@ body.embed-mode .book-embed {
   }
 }
 
-// //src\app\styles\book.scss
+@media (max-width: 720px) {
+  .book-dialog.dialog-backdrop {
+    padding: 12px;
+    place-items: center;
+  }
 
+  .book-dialog {
+    .book-dialog__dialog {
+      width: 100%;
+      max-width: 100%;
+      max-height: calc(100dvh - 24px);
+    }
+
+    .book-dialog__footerActions {
+      justify-content: stretch;
+    }
+
+    .book-dialog__confirmBtn {
+      flex: 1 1 auto;
+      justify-content: center;
+    }
+  }
+}
+
+@media (max-width: 560px) {
+  .book-sub {
+    grid-template-columns: 1fr;
+  }
+
+  .field-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .dob {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .book-dialog.dialog-backdrop {
+    padding: 8px;
+  }
+
+  .book-dialog {
+    .book-dialog__dialog {
+      max-height: calc(100dvh - 16px);
+    }
+  }
+}
+
+//neu
+
+.book-dialog__scopeBtn.btn {
+  min-height: 44px;
+  padding: 0 16px;
+  background-image: none;
+  background-size: auto;
+  background-color: var(--brand-gold);
+  border-color: var(--brand-gold);
+  color: var(--brand-black);
+  transition:
+    background-color 160ms ease,
+    border-color 160ms ease,
+    color 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.book-dialog__scopeBtn.btn:hover,
+.book-dialog__scopeBtn.btn:focus,
+.book-dialog__scopeBtn.btn:focus-visible,
+.book-dialog__scopeBtn--active.btn {
+  background-color: var(--brand-black);
+  border-color: var(--brand-black);
+  color: var(--brand-white);
+  outline: none;
+  box-shadow: none;
+}
+
+// //src\app\styles\book.scss
 // .book-sticky {
 //   position: sticky;
 //   top: 0;
@@ -798,19 +1001,17 @@ body.embed-mode .book-embed {
 //   gap: 10px 14px;
 // }
 
-// /* Standard: field-row bleibt nebeneinander */
 // .field-row {
 //   display: flex;
 //   flex-wrap: wrap;
 //   gap: 10px 16px;
 //   align-items: center;
-//   flex-direction: row; /* wichtig */
+//   flex-direction: row;
 // }
 
-// /* NUR AGB-Row: untereinander (Checkbox + Error darunter) */
 // .field-row.agb-row {
 //   flex-direction: column;
-//   align-items: flex-start; /* damit links bündig bleibt */
+//   align-items: flex-start;
 //   gap: 6px;
 // }
 
@@ -845,12 +1046,10 @@ body.embed-mode .book-embed {
 //   color: #64748b;
 // }
 
-// /* extra Margin statt inline-style */
 // .coach-info-text {
 //   margin-top: 8px;
 // }
 
-// /* Button-Variante für diese Seite */
 // .btn.btn-primary {
 //   background: #0ea5e9;
 //   color: #fff;
@@ -876,7 +1075,6 @@ body.embed-mode .book-embed {
 //   font-size: 13px;
 // }
 
-// /* extra Margin oben für die Fehlermeldung am Ende */
 // .error--top {
 //   margin-top: 12px;
 // }
@@ -949,10 +1147,183 @@ body.embed-mode .book-embed {
 //   }
 // }
 
-// /* ===== Camp-spezifische Optionen ===== */
-
 // .camp-options {
 //   margin-top: 12px;
+// }
+
+// .camp-options--premium {
+//   margin-top: 16px;
+// }
+
+// .camp-card {
+//   border: 1px solid var(--admin-sep, rgba(0, 0, 0, 0.08));
+//   border-radius: 16px;
+//   background: linear-gradient(180deg, #ffffff 0%, #fbfdff 100%);
+//   box-shadow: 0 10px 28px rgba(15, 23, 42, 0.06);
+// }
+
+// .camp-card__head {
+//   padding: 18px 18px 14px;
+//   border-bottom: 1px solid var(--admin-sep, rgba(0, 0, 0, 0.08));
+//   background: linear-gradient(180deg, #f8fbff 0%, #ffffff 100%);
+//   border-top-left-radius: 16px;
+//   border-top-right-radius: 16px;
+// }
+
+// .camp-card__eyebrow {
+//   font-size: 11px;
+//   font-weight: 800;
+//   letter-spacing: 0.08em;
+//   text-transform: uppercase;
+//   color: #64748b;
+//   margin-bottom: 4px;
+// }
+
+// .camp-card__title {
+//   font-size: 18px;
+//   font-weight: 800;
+//   color: #111827;
+//   line-height: 1.2;
+// }
+
+// .camp-summary-grid {
+//   display: grid;
+//   grid-template-columns: repeat(2, minmax(0, 1fr));
+//   gap: 12px;
+//   padding: 16px 18px 6px;
+// }
+
+// .camp-summary-item {
+//   display: grid;
+//   gap: 4px;
+//   padding: 12px 14px;
+//   border: 1px solid #e6ebf2;
+//   border-radius: 12px;
+//   background: #f8fafc;
+// }
+
+// .camp-summary-item__label {
+//   font-size: 12px;
+//   font-weight: 700;
+//   color: #64748b;
+// }
+
+// .camp-summary-item__value {
+//   font-size: 14px;
+//   font-weight: 700;
+//   color: #111827;
+// }
+
+// .camp-block {
+//   padding: 18px;
+//   border-top: 1px solid var(--admin-sep, rgba(0, 0, 0, 0.08));
+// }
+
+// .camp-block__title {
+//   margin: 0 0 12px;
+//   font-size: 15px;
+//   font-weight: 800;
+//   color: #111827;
+// }
+
+// .camp-grid {
+//   display: grid;
+//   grid-template-columns: repeat(2, minmax(0, 1fr));
+//   gap: 14px 16px;
+// }
+
+// .camp-grid--top {
+//   margin-top: 2px;
+// }
+
+// .camp-block--sibling {
+//   background: linear-gradient(180deg, #fcfdff 0%, #f8fbff 100%);
+// }
+
+// .sibling-head {
+//   display: flex;
+//   align-items: flex-start;
+//   justify-content: space-between;
+//   gap: 14px;
+//   margin-bottom: 14px;
+// }
+
+// .sibling-head__subline {
+//   font-size: 13px;
+//   color: #64748b;
+//   line-height: 1.4;
+// }
+
+// .sibling-switch {
+//   display: inline-flex;
+//   align-items: center;
+//   gap: 10px;
+//   flex-shrink: 0;
+//   padding: 10px 12px;
+//   border: 1px solid #e2e8f0;
+//   border-radius: 12px;
+//   background: #fff;
+//   cursor: pointer;
+// }
+
+// .sibling-switch input {
+//   margin: 0;
+// }
+
+// .sibling-switch__text {
+//   font-size: 13px;
+//   font-weight: 700;
+//   color: #111827;
+// }
+
+// .sibling-fields {
+//   display: grid;
+//   gap: 14px;
+// }
+
+// .camp-toggle-row {
+//   display: inline-flex;
+//   gap: 8px;
+//   margin-top: 4px;
+// }
+
+// .camp-toggle-row--full {
+//   display: grid;
+//   grid-template-columns: repeat(2, minmax(0, 1fr));
+//   width: 100%;
+//   gap: 8px;
+// }
+
+// .camp-toggle-btn {
+//   height: 40px;
+//   border-radius: 8px;
+//   border: 1px solid #d9dee6;
+//   padding: 0 14px;
+//   background: #fff;
+//   font-size: 14px;
+//   font-weight: 700;
+//   color: #111827;
+//   cursor: pointer;
+//   transition:
+//     border-color 0.18s ease,
+//     box-shadow 0.18s ease,
+//     background-color 0.18s ease,
+//     color 0.18s ease;
+// }
+
+// .camp-toggle-btn:hover:not(:disabled) {
+//   border-color: var(--text, #111827);
+// }
+
+// .camp-toggle-btn.is-active {
+//   border-color: var(--brand-navy);
+//   background: color-mix(in oklab, var(--brand-navy) 10%, white);
+//   box-shadow: 0 0 0 3px color-mix(in oklab, var(--brand-navy) 16%, white);
+// }
+
+// .camp-toggle-btn:disabled {
+//   opacity: 0.55;
+//   cursor: not-allowed;
 // }
 
 // .camp-divider {
@@ -975,35 +1346,6 @@ body.embed-mode .book-embed {
 //   }
 // }
 
-// .sibling-fields {
-//   margin-top: 12px;
-// }
-
-// /* Torwartschule-Toggle-Buttons */
-
-// .camp-toggle-row {
-//   display: inline-flex;
-//   gap: 8px;
-//   margin-top: 4px;
-// }
-
-// .camp-toggle-btn {
-//   border-radius: 8px;
-//   border: 1px solid #e5e7eb;
-//   padding: 8px 14px;
-//   background: #fff;
-//   font-size: 14px;
-//   cursor: pointer;
-//   min-width: 70px;
-// }
-
-// .camp-toggle-btn.is-active {
-//   border-color: #0ea5e9;
-//   background: #e0f2fe;
-// }
-
-// /* Hinweis + AGB-Block über Button */
-
 // .camp-hint {
 //   margin-top: 16px;
 //   font-size: 14px;
@@ -1015,21 +1357,16 @@ body.embed-mode .book-embed {
 //   margin-bottom: 12px;
 // }
 
-// /* ===========================
-//    Generic Select Wrapper für Book-Dialog
-//    =========================== */
-
 // .book-select {
 //   position: relative;
 //   display: inline-block;
 //   width: 100%;
 // }
 
-// /* das native <select> */
 // .book-select__native {
 //   width: 100%;
 //   height: 44px;
-//   padding: 0 38px 0 12px; /* Platz rechts fürs Icon */
+//   padding: 0 38px 0 12px;
 //   border-radius: 10px;
 //   border: 1px solid #e3e6e8;
 //   background: #fff;
@@ -1040,7 +1377,6 @@ body.embed-mode .book-embed {
 //   -moz-appearance: none;
 // }
 
-// /* Icon-Container */
 // .book-select__icon {
 //   position: absolute;
 //   inset-block: 0;
@@ -1050,19 +1386,16 @@ body.embed-mode .book-embed {
 //   pointer-events: none;
 // }
 
-// /* SVG selbst */
 // .book-select__icon img {
 //   width: 18px;
 //   height: 18px;
 //   display: block;
 // }
 
-// /* Hover: Rand wird dunkler */
 // .book-select:hover .book-select__native {
 //   border-color: var(--text, #111827);
 // }
 
-// /* Focus / aktiv: Brand-Navy + Glow */
 // .book-select:has(.book-select__native:focus-visible),
 // .book-select.book-select--active {
 //   outline: 0;
@@ -1075,10 +1408,6 @@ body.embed-mode .book-embed {
 //   border-color: var(--brand-navy);
 // }
 
-// /* ===========================
-//    Rotation für CARET-Variante
-//    =========================== */
-
 // .book-select--caret .book-select__icon img {
 //   transition: transform 0.18s ease;
 // }
@@ -1086,10 +1415,6 @@ body.embed-mode .book-embed {
 // .book-select--caret.is-open .book-select__icon img {
 //   transform: rotate(180deg);
 // }
-
-// /* ===========================
-//    Chevron-Variante (ohne Rotation)
-//    =========================== */
 
 // .book-select--chevron .book-select__icon img {
 //   opacity: 0.9;
@@ -1100,11 +1425,6 @@ body.embed-mode .book-embed {
 //     transition: none;
 //   }
 // }
-
-// /* =========================================================
-//    BOOK-Dialog – Inputs, Dropdowns & Button
-//    identisch zu globalen Admin-Forms (.input)
-//    ========================================================= */
 
 // .book-form .field input,
 // .book-form .field select,
@@ -1164,7 +1484,6 @@ body.embed-mode .book-embed {
 //   cursor: pointer;
 // }
 
-// /* 2) Book-Select Wrapper – Ring & Hover wie Dropdowns */
 // .book-select:hover .book-select__native {
 //   border-color: var(--text);
 // }
@@ -1181,7 +1500,6 @@ body.embed-mode .book-embed {
 //   border-color: var(--brand-navy);
 // }
 
-// /* 3) Primary-Button im Book-Dialog – wie globaler Button-Hover */
 // .book-form .btn.btn-primary {
 //   appearance: none;
 //   border: none;
@@ -1251,17 +1569,14 @@ body.embed-mode .book-embed {
 //   justify-content: flex-start;
 // }
 
-// /* ks-selectbox drop-up */
 // .ks-selectbox {
-//   position: relative; // falls noch nicht gesetzt
+//   position: relative;
 // }
 
 // .ks-selectbox--up .ks-selectbox__panel {
 //   top: auto;
 //   bottom: calc(100% + 8px);
 // }
-
-// /* ===== DOB (TT/MM/JJJJ) – kompakte Selects sauber zentrieren ===== */
 
 // @media (min-width: 561px) {
 //   .book-form .dob {
@@ -1280,14 +1595,12 @@ body.embed-mode .book-embed {
 //   inset-inline-end: 8px;
 // }
 
-// /* BOOK: ks-selectbox soll exakt wie Inputs aussehen (40px) */
 // .book-form .ks-selectbox__trigger {
-//   height: 40px; /* statt 50px */
-//   padding: 0 12px; /* wie .book-form inputs */
-//   font-weight: inherit; /* optional: falls es zu bold wirkt */
+//   height: 40px;
+//   padding: 0 12px;
+//   font-weight: inherit;
 // }
 
-// /* Label sauber vertikal */
 // .book-form .ks-selectbox__label {
 //   line-height: 1;
 //   display: block;
@@ -1295,4 +1608,21 @@ body.embed-mode .book-embed {
 
 // .book-form .ks-selectbox__chevron {
 //   margin-left: auto;
+// }
+
+// @media (max-width: 760px) {
+//   .camp-summary-grid,
+//   .camp-grid {
+//     grid-template-columns: 1fr;
+//   }
+
+//   .sibling-head {
+//     flex-direction: column;
+//     align-items: stretch;
+//   }
+
+//   .sibling-switch {
+//     width: 100%;
+//     justify-content: flex-start;
+//   }
 // }

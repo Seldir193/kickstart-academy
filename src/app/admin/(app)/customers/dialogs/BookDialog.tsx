@@ -143,22 +143,6 @@ function isPowertrainingOffer(offer: Offer | null) {
   );
 }
 
-// function isPowertrainingOffer(offer: Offer | null) {
-//   const category = safeText((offer as any)?.category).toLowerCase();
-//   const type = safeText((offer as any)?.type).toLowerCase();
-//   const subType = safeText((offer as any)?.sub_type).toLowerCase();
-//   const title = safeText((offer as any)?.title).toLowerCase();
-
-//   if (category === "clubprograms") return false;
-
-//   return (
-//     category === "individual" &&
-//     (type.includes("powertraining") ||
-//       subType.includes("powertraining") ||
-//       title.includes("powertraining"))
-//   );
-// }
-
 function getBookDialogOfferKind(offer: Offer | null): OfferKind {
   const category = safeText((offer as any)?.category);
   const subType = safeText((offer as any)?.sub_type).toLowerCase();
@@ -639,37 +623,6 @@ export default function BookDialog({
     try {
       const selectedParentPayload = parentPayloadFromMember(selectedParent);
 
-      // const payload = await createBooking(
-      //   customerId,
-      //   selectedOfferId,
-      //   selectedDate,
-      //   childPayload,
-      //   selectedParentPayload,
-      //   {
-      //     holidayLabel: isCamp || isPowertraining ? holidayLabel : "",
-      //     holidayFrom:
-      //       isCamp || isPowertraining
-      //         ? safeText(holidayFromOf(selectedOffer))
-      //         : "",
-      //     holidayTo:
-      //       isCamp || isPowertraining
-      //         ? safeText(holidayToOf(selectedOffer))
-      //         : "",
-      //     childGender,
-      //     voucher,
-      //     source,
-      //     mainTShirtSize,
-      //     mainGoalkeeperSchool,
-      //     hasSibling,
-      //     siblingGender,
-      //     siblingBirthDate,
-      //     siblingFirstName,
-      //     siblingLastName,
-      //     siblingTShirtSize,
-      //     siblingGoalkeeperSchool,
-      //   },
-      // );
-
       const payload = await createBooking(
         customerId,
         selectedOfferId,
@@ -720,504 +673,1116 @@ export default function BookDialog({
   }
 
   return (
-    <div className="ks-modal-root ks-modal-root--top">
-      <div className="ks-backdrop" onClick={onClose} />
+    <div
+      className="dialog-backdrop book-dialog"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="book-dialog-title"
+    >
+      <button
+        type="button"
+        className="dialog-backdrop-hit"
+        aria-label="Close"
+        onClick={onClose}
+      />
+
       <div
-        className="ks-panel card ks-panel--md"
+        className="dialog book-dialog__dialog"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="dialog-subhead">
-          <h3 className="text-lg font-bold">Book offer</h3>
-        </div>
+        <div className="dialog-head book-dialog__head">
+          <div className="book-dialog__head-main">
+            <h3 id="book-dialog-title" className="dialog-title">
+              Book offer
+            </h3>
+            <p className="dialog-subtitle">
+              Select scope, course, offer, and booking details.
+            </p>
+          </div>
 
-        {err && <div className="mb-2 text-red-600">{err}</div>}
-        {loadingOffers && (
-          <div className="mb-2 text-gray-600">Loading offers…</div>
-        )}
-
-        <BookDialogFamilyBox
-          family={family}
-          familyLoading={familyLoading}
-          familyError={familyError}
-          selectedParent={selectedParent}
-          selectedParentId={selfMemberId}
-          selectedParentLabel={selectedParentLabel}
-          parentOptions={parentOptions}
-          activeChild={activeChild}
-          bookingTarget={bookingTarget}
-          setBookingTarget={setBookingTarget}
-          parentOpen={isParentDropdownOpen}
-          setParentOpen={setIsParentDropdownOpen}
-          childOpen={isChildDropdownOpen}
-          setChildOpen={setIsChildDropdownOpen}
-          setSelectedParentId={setSelectedParentId}
-          selectedChildUid={selectedChildUid}
-          setSelectedChildUid={setSelectedChildUid}
-          childOptions={childOptions}
-          parentDropdownRef={parentDropdownRef}
-          childDropdownRef={childDropdownRef}
-        />
-
-        <div className="grid gap-2 mb-2">
-          <div>
-            <label className="lbl">Courses</label>
-            <BookDialogCourseSelect
-              courseValue={courseValue}
-              setCourseValue={setCourseValue}
-              selectedCourseLabel={selectedCourseLabel}
-              isOpen={isCourseDropdownOpen}
-              setIsOpen={setIsCourseDropdownOpen}
-              dropdownRef={courseDropdownRef}
-            />
+          <div className="dialog-head__actions">
+            <button
+              type="button"
+              className="dialog-close"
+              aria-label="Close"
+              onClick={onClose}
+            >
+              <img
+                src="/icons/close.svg"
+                alt=""
+                aria-hidden="true"
+                className="icon-img"
+              />
+            </button>
           </div>
         </div>
 
-        <div className="grid gap-2 mb-2">
-          <div>
-            <label className="lbl">Offer</label>
-            <BookDialogOfferSelect
-              filteredOffers={filteredOffers}
-              selectedOfferId={selectedOfferId}
-              setSelectedOfferId={setSelectedOfferId}
-              selectedOfferLabel={selectedOfferLabel}
-              isOpen={isOfferDropdownOpen}
-              setIsOpen={setIsOfferDropdownOpen}
-              dropdownRef={offerDropdownRef}
-            />
-            {!filteredOffers.length && (
-              <div className="text-gray-600 mt-1">
-                No offers in this selection.
+        <div className="dialog-body book-dialog__body book-form">
+          {(err || loadingOffers) && (
+            <section className="dialog-section book-dialog__statusSection">
+              <div className="dialog-section__body">
+                {err && <div className="book-dialog__error">{err}</div>}
+                {loadingOffers && (
+                  <div className="book-dialog__note">Loading offers…</div>
+                )}
               </div>
-            )}
-          </div>
-        </div>
+            </section>
+          )}
 
-        <div className="grid gap-2">
-          <div>
-            <label className="lbl">Start date</label>
-            <KsDatePicker
-              value={selectedDate}
-              onChange={(nextIso) => setSelectedDate(nextIso)}
-              placeholder="tt.mm.jjjj"
-              disabled={false}
-            />
-          </div>
-        </div>
+          <section className="dialog-section book-dialog__familySection">
+            <div className="dialog-section__head">
+              <h4 className="dialog-section__title">Booking scope</h4>
+            </div>
 
-        {isCamp && (
-          <section className="camp-options camp-options--premium">
-            <div className="camp-card">
-              <div className="camp-card__head">
-                <div>
-                  <div className="camp-card__eyebrow">Ferienprogramm</div>
-                  <div className="camp-card__title">Camp-Details</div>
-                </div>
-              </div>
+            <div className="dialog-section__body">
+              <BookDialogFamilyBox
+                family={family}
+                familyLoading={familyLoading}
+                familyError={familyError}
+                selectedParent={selectedParent}
+                selectedParentId={selfMemberId}
+                selectedParentLabel={selectedParentLabel}
+                parentOptions={parentOptions}
+                activeChild={activeChild}
+                bookingTarget={bookingTarget}
+                setBookingTarget={setBookingTarget}
+                parentOpen={isParentDropdownOpen}
+                setParentOpen={setIsParentDropdownOpen}
+                childOpen={isChildDropdownOpen}
+                setChildOpen={setIsChildDropdownOpen}
+                setSelectedParentId={setSelectedParentId}
+                selectedChildUid={selectedChildUid}
+                setSelectedChildUid={setSelectedChildUid}
+                childOptions={childOptions}
+                parentDropdownRef={parentDropdownRef}
+                childDropdownRef={childDropdownRef}
+              />
+            </div>
+          </section>
 
-              <div className="camp-summary-grid">
-                <div className="camp-summary-item">
-                  <span className="camp-summary-item__label">Ferien</span>
-                  <span className="camp-summary-item__value">
-                    {holidayLabel || "-"}
-                  </span>
-                </div>
+          <section className="dialog-section book-dialog__selectionSection">
+            <div className="dialog-section__head">
+              <h4 className="dialog-section__title">Offer selection</h4>
+            </div>
 
-                <div className="camp-summary-item">
-                  <span className="camp-summary-item__label">Zeitraum</span>
-                  <span className="camp-summary-item__value">
-                    {holidayRange || "-"}
-                  </span>
-                </div>
-              </div>
-
-              <div className="camp-block">
-                <div className="camp-block__title">Hauptkind</div>
-
-                <div className="camp-grid">
-                  <div className="field">
-                    <label className="lbl">T-Shirt-Größe (Kind)</label>
-                    <select
-                      className="input"
-                      value={mainTShirtSize}
-                      onChange={(e) => setMainTShirtSize(e.target.value)}
-                    >
-                      <option value="">Bitte wählen</option>
-                      {T_SHIRT_OPTIONS.map((item) => (
-                        <option key={item} value={item}>
-                          {item}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-
-                  <div className="field">
-                    <label className="lbl">Torwartschule (Kind)</label>
-                    <div className="camp-toggle-row camp-toggle-row--full">
-                      <button
-                        type="button"
-                        className={`camp-toggle-btn ${
-                          !mainGoalkeeperSchool ? "is-active" : ""
-                        }`}
-                        onClick={() => setMainGoalkeeperSchool(false)}
-                      >
-                        Nein
-                      </button>
-
-                      <button
-                        type="button"
-                        className={`camp-toggle-btn ${
-                          mainGoalkeeperSchool ? "is-active" : ""
-                        }`}
-                        onClick={() => setMainGoalkeeperSchool(true)}
-                      >
-                        Ja (+40€)
-                      </button>
-                    </div>
-                  </div>
-                </div>
+            <div className="dialog-section__body book-dialog__selectionBody">
+              <div className="book-dialog__field">
+                <label className="dialog-label">Courses</label>
+                <BookDialogCourseSelect
+                  courseValue={courseValue}
+                  setCourseValue={setCourseValue}
+                  selectedCourseLabel={selectedCourseLabel}
+                  isOpen={isCourseDropdownOpen}
+                  setIsOpen={setIsCourseDropdownOpen}
+                  dropdownRef={courseDropdownRef}
+                />
               </div>
 
-              <div className="camp-block camp-block--sibling">
-                <div className="sibling-head">
-                  <div>
-                    <div className="camp-block__title">
-                      Geschwister dazu buchen
-                    </div>
-                    <div className="sibling-head__subline">
-                      Optionaler Zusatz mit 14 Euro Rabatt
-                    </div>
-                  </div>
-
-                  <label className="sibling-switch">
-                    <input
-                      type="checkbox"
-                      checked={hasSibling}
-                      onChange={(e) => setHasSibling(e.target.checked)}
-                    />
-                    <span className="sibling-switch__text">
-                      Ja (14 Euro Rabatt erhalten)
-                    </span>
-                  </label>
-                </div>
-
-                {hasSibling && (
-                  <div className="sibling-fields is-open">
-                    <div className="camp-grid">
-                      <div className="field">
-                        <label className="lbl">Geschlecht</label>
-                        <div className="camp-toggle-row camp-toggle-row--full">
-                          <button
-                            type="button"
-                            className={`camp-toggle-btn ${
-                              siblingGender === "weiblich" ? "is-active" : ""
-                            }`}
-                            onClick={() => setSiblingGender("weiblich")}
-                          >
-                            weiblich
-                          </button>
-
-                          <button
-                            type="button"
-                            className={`camp-toggle-btn ${
-                              siblingGender === "männlich" ? "is-active" : ""
-                            }`}
-                            onClick={() => setSiblingGender("männlich")}
-                          >
-                            männlich
-                          </button>
-                        </div>
-                      </div>
-
-                      <div className="field">
-                        <label className="lbl">Geburtstag</label>
-                        <KsDatePicker
-                          value={siblingBirthDate}
-                          onChange={(nextIso) => setSiblingBirthDate(nextIso)}
-                          placeholder="tt.mm.jjjj"
-                          disabled={false}
-                        />
-                      </div>
-                    </div>
-
-                    <div className="camp-grid">
-                      <div className="field">
-                        <label className="lbl">Vorname (Kind)</label>
-                        <input
-                          className="input"
-                          value={siblingFirstName}
-                          onChange={(e) => setSiblingFirstName(e.target.value)}
-                        />
-                      </div>
-
-                      <div className="field">
-                        <label className="lbl">Nachname (Kind)</label>
-                        <input
-                          className="input"
-                          value={siblingLastName}
-                          onChange={(e) => setSiblingLastName(e.target.value)}
-                        />
-                      </div>
-                    </div>
-
-                    <div className="camp-grid">
-                      <div className="field">
-                        <label className="lbl">
-                          T-Shirt-Größe (Geschwister)
-                        </label>
-                        <select
-                          className="input"
-                          value={siblingTShirtSize}
-                          onChange={(e) => setSiblingTShirtSize(e.target.value)}
-                        >
-                          <option value="">Bitte wählen</option>
-                          {T_SHIRT_OPTIONS.map((item) => (
-                            <option key={item} value={item}>
-                              {item}
-                            </option>
-                          ))}
-                        </select>
-                      </div>
-
-                      <div className="field">
-                        <label className="lbl">
-                          Torwartschule (Geschwister)
-                        </label>
-                        <div className="camp-toggle-row camp-toggle-row--full">
-                          <button
-                            type="button"
-                            className={`camp-toggle-btn ${
-                              !siblingGoalkeeperSchool ? "is-active" : ""
-                            }`}
-                            onClick={() => setSiblingGoalkeeperSchool(false)}
-                          >
-                            Nein
-                          </button>
-
-                          <button
-                            type="button"
-                            className={`camp-toggle-btn ${
-                              siblingGoalkeeperSchool ? "is-active" : ""
-                            }`}
-                            onClick={() => setSiblingGoalkeeperSchool(true)}
-                          >
-                            Ja (+40€)
-                          </button>
-                        </div>
-                      </div>
-                    </div>
+              <div className="book-dialog__field">
+                <label className="dialog-label">Offer</label>
+                <BookDialogOfferSelect
+                  filteredOffers={filteredOffers}
+                  selectedOfferId={selectedOfferId}
+                  setSelectedOfferId={setSelectedOfferId}
+                  selectedOfferLabel={selectedOfferLabel}
+                  isOpen={isOfferDropdownOpen}
+                  setIsOpen={setIsOfferDropdownOpen}
+                  dropdownRef={offerDropdownRef}
+                />
+                {!filteredOffers.length && (
+                  <div className="book-dialog__note mt-1">
+                    No offers in this selection.
                   </div>
                 )}
               </div>
 
-              <div className="camp-block camp-block--footer">
-                <div className="camp-block__title">Buchungsangaben</div>
-
-                <div className="camp-grid camp-grid--top">
-                  <div className="field">
-                    <label className="lbl">Gutschein</label>
-                    <input
-                      className="input"
-                      value={voucher}
-                      onChange={(e) => setVoucher(e.target.value)}
-                    />
-                  </div>
-
-                  <div className="field">
-                    <label className="lbl">Quelle</label>
-                    <input
-                      className="input"
-                      value={source}
-                      onChange={(e) => setSource(e.target.value)}
-                    />
-                  </div>
-                </div>
+              <div className="book-dialog__field">
+                <label className="dialog-label">Start date</label>
+                <KsDatePicker
+                  value={selectedDate}
+                  onChange={(nextIso) => setSelectedDate(nextIso)}
+                  placeholder="dd.mm.yyyy"
+                  disabled={false}
+                />
               </div>
             </div>
           </section>
-        )}
 
-        {isPowertraining && (
-          <section className="camp-options camp-options--premium">
-            <div className="camp-card">
-              <div className="camp-card__head">
-                <div>
-                  <div className="camp-card__eyebrow">Ferienprogramm</div>
-                  <div className="camp-card__title">Powertraining-Details</div>
-                </div>
+          {isCamp && (
+            <section className="dialog-section book-dialog__detailsSection">
+              <div className="dialog-section__head">
+                <h4 className="dialog-section__title">Camp details</h4>
               </div>
 
-              <div className="camp-summary-grid">
-                <div className="camp-summary-item">
-                  <span className="camp-summary-item__label">Ferien</span>
-                  <span className="camp-summary-item__value">
-                    {holidayLabel || "—"}
-                  </span>
-                </div>
+              <div className="dialog-section__body">
+                <section className="camp-options camp-options--premium">
+                  <div className="camp-card">
+                    <div className="camp-card__head">
+                      <div>
+                        <div className="camp-card__eyebrow">
+                          Holiday program
+                        </div>
+                        <div className="camp-card__title">Camp details</div>
+                      </div>
+                    </div>
 
-                <div className="camp-summary-item">
-                  <span className="camp-summary-item__label">Zeitraum</span>
-                  <span className="camp-summary-item__value">
-                    {holidayRange || "—"}
-                  </span>
-                </div>
-              </div>
+                    <div className="camp-summary-grid">
+                      <div className="camp-summary-item">
+                        <span className="camp-summary-item__label">
+                          Holiday
+                        </span>
+                        <span className="camp-summary-item__value">
+                          {holidayLabel || "-"}
+                        </span>
+                      </div>
 
-              <div className="camp-block camp-block--footer">
-                <div className="camp-block__title">Buchungsangaben</div>
+                      <div className="camp-summary-item">
+                        <span className="camp-summary-item__label">Period</span>
+                        <span className="camp-summary-item__value">
+                          {holidayRange || "-"}
+                        </span>
+                      </div>
+                    </div>
 
-                <div className="camp-grid camp-grid--top">
-                  <div className="field">
-                    <label className="lbl">Gutschein</label>
-                    <input
-                      className="input"
-                      value={voucher}
-                      onChange={(e) => setVoucher(e.target.value)}
-                    />
+                    <div className="camp-block">
+                      <div className="camp-block__title">Main child</div>
+
+                      <div className="camp-grid">
+                        <div className="field">
+                          <label className="dialog-label">T-shirt size</label>
+                          <select
+                            className="input"
+                            value={mainTShirtSize}
+                            onChange={(e) => setMainTShirtSize(e.target.value)}
+                          >
+                            <option value="">Please select</option>
+                            {T_SHIRT_OPTIONS.map((item) => (
+                              <option key={item} value={item}>
+                                {item}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+
+                        <div className="field">
+                          <label className="dialog-label">
+                            Goalkeeper school
+                          </label>
+                          <div className="camp-toggle-row camp-toggle-row--full">
+                            <button
+                              type="button"
+                              className={`camp-toggle-btn ${
+                                !mainGoalkeeperSchool ? "is-active" : ""
+                              }`}
+                              onClick={() => setMainGoalkeeperSchool(false)}
+                            >
+                              No
+                            </button>
+
+                            <button
+                              type="button"
+                              className={`camp-toggle-btn ${
+                                mainGoalkeeperSchool ? "is-active" : ""
+                              }`}
+                              onClick={() => setMainGoalkeeperSchool(true)}
+                            >
+                              Yes (+40€)
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="camp-block camp-block--sibling">
+                      <div className="sibling-head">
+                        <div>
+                          <div className="camp-block__title">Add sibling</div>
+                          <div className="sibling-head__subline">
+                            Optional add-on with 14 euro discount
+                          </div>
+                        </div>
+
+                        <label className="sibling-switch">
+                          <input
+                            type="checkbox"
+                            checked={hasSibling}
+                            onChange={(e) => setHasSibling(e.target.checked)}
+                          />
+                          <span className="sibling-switch__text">
+                            Yes (get 14 euro discount)
+                          </span>
+                        </label>
+                      </div>
+
+                      {hasSibling && (
+                        <div className="sibling-fields is-open">
+                          <div className="camp-grid">
+                            <div className="field">
+                              <label className="dialog-label">Gender</label>
+                              <div className="camp-toggle-row camp-toggle-row--full">
+                                <button
+                                  type="button"
+                                  className={`camp-toggle-btn ${
+                                    siblingGender === "weiblich"
+                                      ? "is-active"
+                                      : ""
+                                  }`}
+                                  onClick={() => setSiblingGender("weiblich")}
+                                >
+                                  Female
+                                </button>
+
+                                <button
+                                  type="button"
+                                  className={`camp-toggle-btn ${
+                                    siblingGender === "männlich"
+                                      ? "is-active"
+                                      : ""
+                                  }`}
+                                  onClick={() => setSiblingGender("männlich")}
+                                >
+                                  Male
+                                </button>
+                              </div>
+                            </div>
+
+                            <div className="field">
+                              <label className="dialog-label">Birth date</label>
+                              <KsDatePicker
+                                value={siblingBirthDate}
+                                onChange={(nextIso) =>
+                                  setSiblingBirthDate(nextIso)
+                                }
+                                placeholder="dd.mm.yyyy"
+                                disabled={false}
+                              />
+                            </div>
+                          </div>
+
+                          <div className="camp-grid">
+                            <div className="field">
+                              <label className="dialog-label">First name</label>
+                              <input
+                                className="input"
+                                value={siblingFirstName}
+                                onChange={(e) =>
+                                  setSiblingFirstName(e.target.value)
+                                }
+                              />
+                            </div>
+
+                            <div className="field">
+                              <label className="dialog-label">Last name</label>
+                              <input
+                                className="input"
+                                value={siblingLastName}
+                                onChange={(e) =>
+                                  setSiblingLastName(e.target.value)
+                                }
+                              />
+                            </div>
+                          </div>
+
+                          <div className="camp-grid">
+                            <div className="field">
+                              <label className="dialog-label">
+                                T-shirt size
+                              </label>
+                              <select
+                                className="input"
+                                value={siblingTShirtSize}
+                                onChange={(e) =>
+                                  setSiblingTShirtSize(e.target.value)
+                                }
+                              >
+                                <option value="">Please select</option>
+                                {T_SHIRT_OPTIONS.map((item) => (
+                                  <option key={item} value={item}>
+                                    {item}
+                                  </option>
+                                ))}
+                              </select>
+                            </div>
+
+                            <div className="field">
+                              <label className="dialog-label">
+                                Goalkeeper school
+                              </label>
+                              <div className="camp-toggle-row camp-toggle-row--full">
+                                <button
+                                  type="button"
+                                  className={`camp-toggle-btn ${
+                                    !siblingGoalkeeperSchool ? "is-active" : ""
+                                  }`}
+                                  onClick={() =>
+                                    setSiblingGoalkeeperSchool(false)
+                                  }
+                                >
+                                  No
+                                </button>
+
+                                <button
+                                  type="button"
+                                  className={`camp-toggle-btn ${
+                                    siblingGoalkeeperSchool ? "is-active" : ""
+                                  }`}
+                                  onClick={() =>
+                                    setSiblingGoalkeeperSchool(true)
+                                  }
+                                >
+                                  Yes (+40€)
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="camp-block camp-block--footer">
+                      <div className="camp-block__title">Booking details</div>
+
+                      <div className="camp-grid camp-grid--top">
+                        <div className="field">
+                          <label className="dialog-label">Voucher</label>
+                          <input
+                            className="input"
+                            value={voucher}
+                            onChange={(e) => setVoucher(e.target.value)}
+                          />
+                        </div>
+
+                        <div className="field">
+                          <label className="dialog-label">Source</label>
+                          <input
+                            className="input"
+                            value={source}
+                            onChange={(e) => setSource(e.target.value)}
+                          />
+                        </div>
+                      </div>
+                    </div>
                   </div>
-
-                  <div className="field">
-                    <label className="lbl">Quelle</label>
-                    <input
-                      className="input"
-                      value={source}
-                      onChange={(e) => setSource(e.target.value)}
-                    />
-                  </div>
-                </div>
+                </section>
               </div>
-            </div>
-          </section>
-        )}
+            </section>
+          )}
 
-        {isOneTimeVoucherOffer && (
-          <section className="camp-options camp-options--premium">
-            <div className="camp-card">
-              <div className="camp-card__head">
-                <div>
-                  <div className="camp-card__eyebrow">Einmalbuchung</div>
-                  <div className="camp-card__title">Buchungsdetails</div>
-                </div>
+          {isPowertraining && (
+            <section className="dialog-section book-dialog__detailsSection">
+              <div className="dialog-section__head">
+                <h4 className="dialog-section__title">Powertraining details</h4>
               </div>
 
-              <div className="camp-block camp-block--footer">
-                <div className="camp-block__title">Buchungsangaben</div>
+              <div className="dialog-section__body">
+                <section className="camp-options camp-options--premium">
+                  <div className="camp-card">
+                    <div className="camp-card__head">
+                      <div>
+                        <div className="camp-card__eyebrow">
+                          Holiday program
+                        </div>
+                        <div className="camp-card__title">
+                          Powertraining details
+                        </div>
+                      </div>
+                    </div>
 
-                <div className="camp-grid camp-grid--top">
-                  <div className="field">
-                    <label className="lbl">Gutschein</label>
-                    <input
-                      className="input"
-                      value={voucher}
-                      onChange={(e) => setVoucher(e.target.value)}
-                    />
-                  </div>
+                    <div className="camp-summary-grid">
+                      <div className="camp-summary-item">
+                        <span className="camp-summary-item__label">
+                          Holiday
+                        </span>
+                        <span className="camp-summary-item__value">
+                          {holidayLabel || "—"}
+                        </span>
+                      </div>
 
-                  <div className="field">
-                    <label className="lbl">Quelle</label>
-                    <input
-                      className="input"
-                      value={source}
-                      onChange={(e) => setSource(e.target.value)}
-                    />
+                      <div className="camp-summary-item">
+                        <span className="camp-summary-item__label">Period</span>
+                        <span className="camp-summary-item__value">
+                          {holidayRange || "—"}
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="camp-block camp-block--footer">
+                      <div className="camp-block__title">Booking details</div>
+
+                      <div className="camp-grid camp-grid--top">
+                        <div className="field">
+                          <label className="dialog-label">Voucher</label>
+                          <input
+                            className="input"
+                            value={voucher}
+                            onChange={(e) => setVoucher(e.target.value)}
+                          />
+                        </div>
+
+                        <div className="field">
+                          <label className="dialog-label">Source</label>
+                          <input
+                            className="input"
+                            value={source}
+                            onChange={(e) => setSource(e.target.value)}
+                          />
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                </div>
+                </section>
               </div>
-            </div>
-          </section>
-        )}
+            </section>
+          )}
 
-        {isWeekly && (
-          <section className="camp-options camp-options--premium">
-            <div className="camp-card">
-              <div className="camp-card__head">
-                <div>
-                  <div className="camp-card__eyebrow">Abo-Buchung</div>
-                  <div className="camp-card__title">Buchungsangaben</div>
-                </div>
+          {isOneTimeVoucherOffer && (
+            <section className="dialog-section book-dialog__detailsSection">
+              <div className="dialog-section__head">
+                <h4 className="dialog-section__title">Booking details</h4>
               </div>
 
-              <div className="camp-block camp-block--footer">
-                <div className="camp-block__title">Buchungsangaben</div>
+              <div className="dialog-section__body">
+                <section className="camp-options camp-options--premium">
+                  <div className="camp-card">
+                    <div className="camp-card__head">
+                      <div>
+                        <div className="camp-card__eyebrow">
+                          One-time booking
+                        </div>
+                        <div className="camp-card__title">Booking details</div>
+                      </div>
+                    </div>
 
-                <div className="camp-grid camp-grid--top">
-                  <div className="field">
-                    <label className="lbl">Gutschein</label>
-                    <input
-                      className="input"
-                      value={voucher}
-                      onChange={(e) => setVoucher(e.target.value)}
-                    />
-                  </div>
+                    <div className="camp-block camp-block--footer">
+                      <div className="camp-block__title">Booking details</div>
 
-                  <div className="field">
-                    <label className="lbl">Quelle</label>
-                    <input
-                      className="input"
-                      value={source}
-                      onChange={(e) => setSource(e.target.value)}
-                    />
+                      <div className="camp-grid camp-grid--top">
+                        <div className="field">
+                          <label className="dialog-label">Voucher</label>
+                          <input
+                            className="input"
+                            value={voucher}
+                            onChange={(e) => setVoucher(e.target.value)}
+                          />
+                        </div>
+
+                        <div className="field">
+                          <label className="dialog-label">Source</label>
+                          <input
+                            className="input"
+                            value={source}
+                            onChange={(e) => setSource(e.target.value)}
+                          />
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                </div>
+                </section>
               </div>
-            </div>
-          </section>
-        )}
+            </section>
+          )}
 
-        {isNum(selectedOffer?.price) &&
-          (isWeekly ? (
-            <div className="mt-3 p-3 rounded bg-gray-50 border">
-              <div className="font-semibold mb-1">Price overview</div>
-              <ul className="list-disc ml-5">
-                <li>
-                  Monthly price: <b>{fmtEUR(selectedOffer.price!)}</b>
-                </li>
-                {pro ? (
-                  <li>
-                    First month (pro-rata from <b>{fmtDE(selectedDate)}</b>:{" "}
-                    <b>{fmtEUR(pro.firstMonthPrice)}</b>{" "}
-                    <span className="text-gray-600">
-                      ({pro.daysRemaining}/{pro.daysInMonth} days)
-                    </span>
-                  </li>
+          {isWeekly && (
+            <section className="dialog-section book-dialog__detailsSection">
+              <div className="dialog-section__head">
+                <h4 className="dialog-section__title">Subscription details</h4>
+              </div>
+
+              <div className="dialog-section__body">
+                <section className="camp-options camp-options--premium">
+                  <div className="camp-card">
+                    <div className="camp-card__head">
+                      <div>
+                        <div className="camp-card__eyebrow">
+                          Subscription booking
+                        </div>
+                        <div className="camp-card__title">Booking details</div>
+                      </div>
+                    </div>
+
+                    <div className="camp-block camp-block--footer">
+                      <div className="camp-block__title">Booking details</div>
+
+                      <div className="camp-grid camp-grid--top">
+                        <div className="field">
+                          <label className="dialog-label">Voucher</label>
+                          <input
+                            className="input"
+                            value={voucher}
+                            onChange={(e) => setVoucher(e.target.value)}
+                          />
+                        </div>
+
+                        <div className="field">
+                          <label className="dialog-label">Source</label>
+                          <input
+                            className="input"
+                            value={source}
+                            onChange={(e) => setSource(e.target.value)}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </section>
+              </div>
+            </section>
+          )}
+
+          {isNum(selectedOffer?.price) && (
+            <section className="dialog-section book-dialog__priceSection">
+              <div className="dialog-section__head">
+                <h4 className="dialog-section__title">Price overview</h4>
+              </div>
+
+              <div className="dialog-section__body">
+                {isWeekly ? (
+                  <div className="book-dialog__priceCard">
+                    <ul className="book-dialog__priceList">
+                      <li>
+                        Monthly price: <b>{fmtEUR(selectedOffer.price!)}</b>
+                      </li>
+                      {pro ? (
+                        <li>
+                          First month (pro-rata from{" "}
+                          <b>{fmtDE(selectedDate)}</b>:{" "}
+                          <b>{fmtEUR(pro.firstMonthPrice)}</b>{" "}
+                          <span className="book-dialog__muted">
+                            ({pro.daysRemaining}/{pro.daysInMonth} days)
+                          </span>
+                        </li>
+                      ) : (
+                        <li className="book-dialog__muted">
+                          Select a valid date to see pro-rata.
+                        </li>
+                      )}
+                    </ul>
+                  </div>
                 ) : (
-                  <li className="text-gray-600">
-                    Select a valid date to see pro-rata.
-                  </li>
+                  <div className="book-dialog__priceInline">
+                    Price: <b>{fmtEUR(selectedOffer.price!)}</b>
+                  </div>
                 )}
-              </ul>
-            </div>
-          ) : (
-            <div className="mt-3">
-              <div>
-                Price: <b>{fmtEUR(selectedOffer.price!)}</b>
               </div>
-            </div>
-          ))}
+            </section>
+          )}
+        </div>
 
-        <div className="flex justify-end gap-2 mt-3">
-          <button
-            type="button"
-            className="modal__close"
-            aria-label="Close"
-            onClick={onClose}
-          >
-            <img
-              src="/icons/close.svg"
-              alt=""
-              aria-hidden="true"
-              className="icon-img"
-            />
-          </button>
-
-          <button
-            className="btn"
-            disabled={saving || !selectedOfferId || !selectedDate}
-            onClick={submit}
-          >
-            {saving ? "Booking…" : "Confirm booking"}
-          </button>
+        <div className="dialog-footer book-dialog__footer">
+          <div className="book-dialog__footerActions">
+            <button
+              className="btn book-dialog__confirmBtn"
+              disabled={saving || !selectedOfferId || !selectedDate}
+              onClick={submit}
+            >
+              {saving ? "Booking…" : "Confirm booking"}
+            </button>
+          </div>
         </div>
       </div>
     </div>
   );
 }
+
+//   return (
+//     <div className="ks-modal-root ks-modal-root--top">
+//       <div className="ks-backdrop" onClick={onClose} />
+//       <div
+//         className="ks-panel card ks-panel--md"
+//         onClick={(e) => e.stopPropagation()}
+//       >
+//         <div className="dialog-subhead">
+//           <h3 className="text-lg font-bold">Book offer</h3>
+//         </div>
+
+//         {err && <div className="mb-2 text-red-600">{err}</div>}
+//         {loadingOffers && (
+//           <div className="mb-2 text-gray-600">Loading offers…</div>
+//         )}
+
+//         <BookDialogFamilyBox
+//           family={family}
+//           familyLoading={familyLoading}
+//           familyError={familyError}
+//           selectedParent={selectedParent}
+//           selectedParentId={selfMemberId}
+//           selectedParentLabel={selectedParentLabel}
+//           parentOptions={parentOptions}
+//           activeChild={activeChild}
+//           bookingTarget={bookingTarget}
+//           setBookingTarget={setBookingTarget}
+//           parentOpen={isParentDropdownOpen}
+//           setParentOpen={setIsParentDropdownOpen}
+//           childOpen={isChildDropdownOpen}
+//           setChildOpen={setIsChildDropdownOpen}
+//           setSelectedParentId={setSelectedParentId}
+//           selectedChildUid={selectedChildUid}
+//           setSelectedChildUid={setSelectedChildUid}
+//           childOptions={childOptions}
+//           parentDropdownRef={parentDropdownRef}
+//           childDropdownRef={childDropdownRef}
+//         />
+
+//         <div className="grid gap-2 mb-2">
+//           <div>
+//             <label className="lbl">Courses</label>
+//             <BookDialogCourseSelect
+//               courseValue={courseValue}
+//               setCourseValue={setCourseValue}
+//               selectedCourseLabel={selectedCourseLabel}
+//               isOpen={isCourseDropdownOpen}
+//               setIsOpen={setIsCourseDropdownOpen}
+//               dropdownRef={courseDropdownRef}
+//             />
+//           </div>
+//         </div>
+
+//         <div className="grid gap-2 mb-2">
+//           <div>
+//             <label className="lbl">Offer</label>
+//             <BookDialogOfferSelect
+//               filteredOffers={filteredOffers}
+//               selectedOfferId={selectedOfferId}
+//               setSelectedOfferId={setSelectedOfferId}
+//               selectedOfferLabel={selectedOfferLabel}
+//               isOpen={isOfferDropdownOpen}
+//               setIsOpen={setIsOfferDropdownOpen}
+//               dropdownRef={offerDropdownRef}
+//             />
+//             {!filteredOffers.length && (
+//               <div className="text-gray-600 mt-1">
+//                 No offers in this selection.
+//               </div>
+//             )}
+//           </div>
+//         </div>
+
+//         <div className="grid gap-2">
+//           <div>
+//             <label className="lbl">Start date</label>
+//             <KsDatePicker
+//               value={selectedDate}
+//               onChange={(nextIso) => setSelectedDate(nextIso)}
+//               placeholder="tt.mm.jjjj"
+//               disabled={false}
+//             />
+//           </div>
+//         </div>
+
+//         {isCamp && (
+//           <section className="camp-options camp-options--premium">
+//             <div className="camp-card">
+//               <div className="camp-card__head">
+//                 <div>
+//                   <div className="camp-card__eyebrow">Ferienprogramm</div>
+//                   <div className="camp-card__title">Camp-Details</div>
+//                 </div>
+//               </div>
+
+//               <div className="camp-summary-grid">
+//                 <div className="camp-summary-item">
+//                   <span className="camp-summary-item__label">Ferien</span>
+//                   <span className="camp-summary-item__value">
+//                     {holidayLabel || "-"}
+//                   </span>
+//                 </div>
+
+//                 <div className="camp-summary-item">
+//                   <span className="camp-summary-item__label">Zeitraum</span>
+//                   <span className="camp-summary-item__value">
+//                     {holidayRange || "-"}
+//                   </span>
+//                 </div>
+//               </div>
+
+//               <div className="camp-block">
+//                 <div className="camp-block__title">Hauptkind</div>
+
+//                 <div className="camp-grid">
+//                   <div className="field">
+//                     <label className="lbl">T-Shirt-Größe (Kind)</label>
+//                     <select
+//                       className="input"
+//                       value={mainTShirtSize}
+//                       onChange={(e) => setMainTShirtSize(e.target.value)}
+//                     >
+//                       <option value="">Bitte wählen</option>
+//                       {T_SHIRT_OPTIONS.map((item) => (
+//                         <option key={item} value={item}>
+//                           {item}
+//                         </option>
+//                       ))}
+//                     </select>
+//                   </div>
+
+//                   <div className="field">
+//                     <label className="lbl">Torwartschule (Kind)</label>
+//                     <div className="camp-toggle-row camp-toggle-row--full">
+//                       <button
+//                         type="button"
+//                         className={`camp-toggle-btn ${
+//                           !mainGoalkeeperSchool ? "is-active" : ""
+//                         }`}
+//                         onClick={() => setMainGoalkeeperSchool(false)}
+//                       >
+//                         Nein
+//                       </button>
+
+//                       <button
+//                         type="button"
+//                         className={`camp-toggle-btn ${
+//                           mainGoalkeeperSchool ? "is-active" : ""
+//                         }`}
+//                         onClick={() => setMainGoalkeeperSchool(true)}
+//                       >
+//                         Ja (+40€)
+//                       </button>
+//                     </div>
+//                   </div>
+//                 </div>
+//               </div>
+
+//               <div className="camp-block camp-block--sibling">
+//                 <div className="sibling-head">
+//                   <div>
+//                     <div className="camp-block__title">
+//                       Geschwister dazu buchen
+//                     </div>
+//                     <div className="sibling-head__subline">
+//                       Optionaler Zusatz mit 14 Euro Rabatt
+//                     </div>
+//                   </div>
+
+//                   <label className="sibling-switch">
+//                     <input
+//                       type="checkbox"
+//                       checked={hasSibling}
+//                       onChange={(e) => setHasSibling(e.target.checked)}
+//                     />
+//                     <span className="sibling-switch__text">
+//                       Ja (14 Euro Rabatt erhalten)
+//                     </span>
+//                   </label>
+//                 </div>
+
+//                 {hasSibling && (
+//                   <div className="sibling-fields is-open">
+//                     <div className="camp-grid">
+//                       <div className="field">
+//                         <label className="lbl">Geschlecht</label>
+//                         <div className="camp-toggle-row camp-toggle-row--full">
+//                           <button
+//                             type="button"
+//                             className={`camp-toggle-btn ${
+//                               siblingGender === "weiblich" ? "is-active" : ""
+//                             }`}
+//                             onClick={() => setSiblingGender("weiblich")}
+//                           >
+//                             weiblich
+//                           </button>
+
+//                           <button
+//                             type="button"
+//                             className={`camp-toggle-btn ${
+//                               siblingGender === "männlich" ? "is-active" : ""
+//                             }`}
+//                             onClick={() => setSiblingGender("männlich")}
+//                           >
+//                             männlich
+//                           </button>
+//                         </div>
+//                       </div>
+
+//                       <div className="field">
+//                         <label className="lbl">Geburtstag</label>
+//                         <KsDatePicker
+//                           value={siblingBirthDate}
+//                           onChange={(nextIso) => setSiblingBirthDate(nextIso)}
+//                           placeholder="tt.mm.jjjj"
+//                           disabled={false}
+//                         />
+//                       </div>
+//                     </div>
+
+//                     <div className="camp-grid">
+//                       <div className="field">
+//                         <label className="lbl">Vorname (Kind)</label>
+//                         <input
+//                           className="input"
+//                           value={siblingFirstName}
+//                           onChange={(e) => setSiblingFirstName(e.target.value)}
+//                         />
+//                       </div>
+
+//                       <div className="field">
+//                         <label className="lbl">Nachname (Kind)</label>
+//                         <input
+//                           className="input"
+//                           value={siblingLastName}
+//                           onChange={(e) => setSiblingLastName(e.target.value)}
+//                         />
+//                       </div>
+//                     </div>
+
+//                     <div className="camp-grid">
+//                       <div className="field">
+//                         <label className="lbl">
+//                           T-Shirt-Größe (Geschwister)
+//                         </label>
+//                         <select
+//                           className="input"
+//                           value={siblingTShirtSize}
+//                           onChange={(e) => setSiblingTShirtSize(e.target.value)}
+//                         >
+//                           <option value="">Bitte wählen</option>
+//                           {T_SHIRT_OPTIONS.map((item) => (
+//                             <option key={item} value={item}>
+//                               {item}
+//                             </option>
+//                           ))}
+//                         </select>
+//                       </div>
+
+//                       <div className="field">
+//                         <label className="lbl">
+//                           Torwartschule (Geschwister)
+//                         </label>
+//                         <div className="camp-toggle-row camp-toggle-row--full">
+//                           <button
+//                             type="button"
+//                             className={`camp-toggle-btn ${
+//                               !siblingGoalkeeperSchool ? "is-active" : ""
+//                             }`}
+//                             onClick={() => setSiblingGoalkeeperSchool(false)}
+//                           >
+//                             Nein
+//                           </button>
+
+//                           <button
+//                             type="button"
+//                             className={`camp-toggle-btn ${
+//                               siblingGoalkeeperSchool ? "is-active" : ""
+//                             }`}
+//                             onClick={() => setSiblingGoalkeeperSchool(true)}
+//                           >
+//                             Ja (+40€)
+//                           </button>
+//                         </div>
+//                       </div>
+//                     </div>
+//                   </div>
+//                 )}
+//               </div>
+
+//               <div className="camp-block camp-block--footer">
+//                 <div className="camp-block__title">Buchungsangaben</div>
+
+//                 <div className="camp-grid camp-grid--top">
+//                   <div className="field">
+//                     <label className="lbl">Gutschein</label>
+//                     <input
+//                       className="input"
+//                       value={voucher}
+//                       onChange={(e) => setVoucher(e.target.value)}
+//                     />
+//                   </div>
+
+//                   <div className="field">
+//                     <label className="lbl">Quelle</label>
+//                     <input
+//                       className="input"
+//                       value={source}
+//                       onChange={(e) => setSource(e.target.value)}
+//                     />
+//                   </div>
+//                 </div>
+//               </div>
+//             </div>
+//           </section>
+//         )}
+
+//         {isPowertraining && (
+//           <section className="camp-options camp-options--premium">
+//             <div className="camp-card">
+//               <div className="camp-card__head">
+//                 <div>
+//                   <div className="camp-card__eyebrow">Ferienprogramm</div>
+//                   <div className="camp-card__title">Powertraining-Details</div>
+//                 </div>
+//               </div>
+
+//               <div className="camp-summary-grid">
+//                 <div className="camp-summary-item">
+//                   <span className="camp-summary-item__label">Ferien</span>
+//                   <span className="camp-summary-item__value">
+//                     {holidayLabel || "—"}
+//                   </span>
+//                 </div>
+
+//                 <div className="camp-summary-item">
+//                   <span className="camp-summary-item__label">Zeitraum</span>
+//                   <span className="camp-summary-item__value">
+//                     {holidayRange || "—"}
+//                   </span>
+//                 </div>
+//               </div>
+
+//               <div className="camp-block camp-block--footer">
+//                 <div className="camp-block__title">Buchungsangaben</div>
+
+//                 <div className="camp-grid camp-grid--top">
+//                   <div className="field">
+//                     <label className="lbl">Gutschein</label>
+//                     <input
+//                       className="input"
+//                       value={voucher}
+//                       onChange={(e) => setVoucher(e.target.value)}
+//                     />
+//                   </div>
+
+//                   <div className="field">
+//                     <label className="lbl">Quelle</label>
+//                     <input
+//                       className="input"
+//                       value={source}
+//                       onChange={(e) => setSource(e.target.value)}
+//                     />
+//                   </div>
+//                 </div>
+//               </div>
+//             </div>
+//           </section>
+//         )}
+
+//         {isOneTimeVoucherOffer && (
+//           <section className="camp-options camp-options--premium">
+//             <div className="camp-card">
+//               <div className="camp-card__head">
+//                 <div>
+//                   <div className="camp-card__eyebrow">Einmalbuchung</div>
+//                   <div className="camp-card__title">Buchungsdetails</div>
+//                 </div>
+//               </div>
+
+//               <div className="camp-block camp-block--footer">
+//                 <div className="camp-block__title">Buchungsangaben</div>
+
+//                 <div className="camp-grid camp-grid--top">
+//                   <div className="field">
+//                     <label className="lbl">Gutschein</label>
+//                     <input
+//                       className="input"
+//                       value={voucher}
+//                       onChange={(e) => setVoucher(e.target.value)}
+//                     />
+//                   </div>
+
+//                   <div className="field">
+//                     <label className="lbl">Quelle</label>
+//                     <input
+//                       className="input"
+//                       value={source}
+//                       onChange={(e) => setSource(e.target.value)}
+//                     />
+//                   </div>
+//                 </div>
+//               </div>
+//             </div>
+//           </section>
+//         )}
+
+//         {isWeekly && (
+//           <section className="camp-options camp-options--premium">
+//             <div className="camp-card">
+//               <div className="camp-card__head">
+//                 <div>
+//                   <div className="camp-card__eyebrow">Abo-Buchung</div>
+//                   <div className="camp-card__title">Buchungsangaben</div>
+//                 </div>
+//               </div>
+
+//               <div className="camp-block camp-block--footer">
+//                 <div className="camp-block__title">Buchungsangaben</div>
+
+//                 <div className="camp-grid camp-grid--top">
+//                   <div className="field">
+//                     <label className="lbl">Gutschein</label>
+//                     <input
+//                       className="input"
+//                       value={voucher}
+//                       onChange={(e) => setVoucher(e.target.value)}
+//                     />
+//                   </div>
+
+//                   <div className="field">
+//                     <label className="lbl">Quelle</label>
+//                     <input
+//                       className="input"
+//                       value={source}
+//                       onChange={(e) => setSource(e.target.value)}
+//                     />
+//                   </div>
+//                 </div>
+//               </div>
+//             </div>
+//           </section>
+//         )}
+
+//         {isNum(selectedOffer?.price) &&
+//           (isWeekly ? (
+//             <div className="mt-3 p-3 rounded bg-gray-50 border">
+//               <div className="font-semibold mb-1">Price overview</div>
+//               <ul className="list-disc ml-5">
+//                 <li>
+//                   Monthly price: <b>{fmtEUR(selectedOffer.price!)}</b>
+//                 </li>
+//                 {pro ? (
+//                   <li>
+//                     First month (pro-rata from <b>{fmtDE(selectedDate)}</b>:{" "}
+//                     <b>{fmtEUR(pro.firstMonthPrice)}</b>{" "}
+//                     <span className="text-gray-600">
+//                       ({pro.daysRemaining}/{pro.daysInMonth} days)
+//                     </span>
+//                   </li>
+//                 ) : (
+//                   <li className="text-gray-600">
+//                     Select a valid date to see pro-rata.
+//                   </li>
+//                 )}
+//               </ul>
+//             </div>
+//           ) : (
+//             <div className="mt-3">
+//               <div>
+//                 Price: <b>{fmtEUR(selectedOffer.price!)}</b>
+//               </div>
+//             </div>
+//           ))}
+
+//         <div className="flex justify-end gap-2 mt-3">
+//           <button
+//             type="button"
+//             className="modal__close"
+//             aria-label="Close"
+//             onClick={onClose}
+//           >
+//             <img
+//               src="/icons/close.svg"
+//               alt=""
+//               aria-hidden="true"
+//               className="icon-img"
+//             />
+//           </button>
+
+//           <button
+//             className="btn"
+//             disabled={saving || !selectedOfferId || !selectedDate}
+//             onClick={submit}
+//           >
+//             {saving ? "Booking…" : "Confirm booking"}
+//           </button>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// }

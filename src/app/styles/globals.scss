@@ -5,7 +5,8 @@
 @use "./header" as *;
 @use "./offers" as *;
 @use "./booking" as *;
-@use "./book" as *;
+@use "./admin/book-dialog.scss" as *;
+@use "./admin/cancel-dialog.scss" as *;
 //@use "./bookDialog" as *;
 // @use "./customerDialog" as *;
 @use "./profile" as *;

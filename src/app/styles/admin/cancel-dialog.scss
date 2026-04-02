@@ -1,0 +1,205 @@
+.cancel-dialog.dialog-backdrop {
+  inset: 0;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  z-index: 1100;
+}
+
+.cancel-dialog {
+  .dialog-backdrop-hit {
+    z-index: 0;
+  }
+
+  //   .cancel-dialog__dialog {
+  //     position: relative;
+  //     z-index: 1;
+  //     width: min(1040px, calc(100% - 40px));
+  //     max-width: 1040px;
+  //     max-height: min(88vh, 960px);
+  //     grid-template-rows: auto minmax(0, 1fr) auto;
+  //   }
+  .cancel-dialog__dialog {
+    position: relative;
+    z-index: 1;
+    width: min(1040px, calc(100% - 40px));
+    max-width: 1040px;
+    max-height: calc(100dvh - var(--header-height, 64px) - 48px);
+    grid-template-rows: auto minmax(0, 1fr) auto;
+  }
+
+  .cancel-dialog__head-main {
+    min-width: 0;
+    flex: 1 1 auto;
+    padding-right: 12px;
+  }
+
+  .cancel-dialog__body {
+    display: grid;
+    gap: 16px;
+  }
+
+  .cancel-dialog__scopeBody {
+    display: grid;
+    gap: 14px;
+  }
+
+  .cancel-dialog__field {
+    display: grid;
+    gap: 6px;
+    min-width: 0;
+  }
+
+  .cancel-dialog__scopeButtons {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .cancel-dialog__scopeBtn.btn {
+    min-height: 44px;
+    padding: 0 16px;
+    background-image: none;
+    background-size: auto;
+    background-color: var(--brand-gold);
+    border-color: var(--brand-gold);
+    color: var(--brand-black);
+    transition:
+      background-color 160ms ease,
+      border-color 160ms ease,
+      color 160ms ease,
+      box-shadow 160ms ease;
+  }
+
+  .cancel-dialog__scopeBtn.btn:hover,
+  .cancel-dialog__scopeBtn.btn:focus,
+  .cancel-dialog__scopeBtn.btn:focus-visible,
+  .cancel-dialog__scopeBtn--active.btn {
+    background-color: var(--brand-black);
+    border-color: var(--brand-black);
+    color: var(--brand-white);
+    outline: none;
+    box-shadow: none;
+  }
+
+  .cancel-dialog__summary {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    padding: 14px 16px;
+    border: 1px solid #e5ebf2;
+    border-radius: 16px;
+    background: #f8fafc;
+  }
+
+  .cancel-dialog__summaryItem {
+    display: grid;
+    gap: 4px;
+    min-width: 0;
+  }
+
+  .cancel-dialog__note {
+    color: #5b6472;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  .cancel-dialog__error {
+    color: #b42318;
+    font-size: 14px;
+    line-height: 1.5;
+    font-weight: 600;
+  }
+
+  .cancel-dialog__footer {
+    justify-content: flex-end;
+  }
+
+  .cancel-dialog__footerActions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+    width: 100%;
+  }
+
+  .cancel-dialog__confirmBtn.btn {
+    min-height: 44px;
+    padding: 0 16px;
+    background-image: none;
+    background-size: auto;
+    background-color: var(--brand-gold);
+    border-color: var(--brand-gold);
+    color: var(--brand-black);
+    transition:
+      background-color 160ms ease,
+      border-color 160ms ease,
+      color 160ms ease,
+      box-shadow 160ms ease;
+  }
+
+  .cancel-dialog__confirmBtn.btn:hover:not(:disabled),
+  .cancel-dialog__confirmBtn.btn:focus-visible:not(:disabled) {
+    background-color: var(--brand-black);
+    border-color: var(--brand-black);
+    color: var(--brand-white);
+    outline: none;
+    box-shadow: none;
+  }
+
+  .cancel-dialog__confirmBtn.btn:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+    box-shadow: none;
+  }
+}
+
+@media (max-width: 720px) {
+  .cancel-dialog.dialog-backdrop {
+    padding: 12px;
+    place-items: center;
+  }
+
+  .cancel-dialog {
+    .cancel-dialog__dialog {
+      width: 100%;
+      max-width: 100%;
+      max-height: calc(100dvh - 24px);
+    }
+
+    .cancel-dialog__summary {
+      grid-template-columns: 1fr;
+    }
+
+    .cancel-dialog__footerActions {
+      justify-content: stretch;
+    }
+
+    .cancel-dialog__confirmBtn {
+      flex: 1 1 auto;
+      justify-content: center;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .cancel-dialog.dialog-backdrop {
+    padding: 8px;
+  }
+
+  .cancel-dialog {
+    .cancel-dialog__dialog {
+      max-height: calc(100dvh - 16px);
+    }
+
+    .cancel-dialog__scopeButtons {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .cancel-dialog__scopeBtn {
+      width: 100%;
+    }
+  }
+}
