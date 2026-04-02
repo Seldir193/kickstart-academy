@@ -49,28 +49,54 @@
     flex-wrap: wrap;
   }
 
+  //   .storno-dialog__scopeBtn.btn {
+  //     min-height: 44px;
+  //     padding: 0 16px;
+  //     background-image: none;
+  //     background-size: auto;
+  //     background-color: var(--brand-gold);
+  //     border-color: var(--brand-gold);
+  //     color: var(--brand-black);
+  //     transition:
+  //       background-color 160ms ease,
+  //       border-color 160ms ease,
+  //       color 160ms ease,
+  //       box-shadow 160ms ease;
+  //   }
+
+  //   .storno-dialog__scopeBtn.btn:hover,
+  //   .storno-dialog__scopeBtn.btn:focus,
+  //   .storno-dialog__scopeBtn.btn:focus-visible,
+  //   .storno-dialog__scopeBtn--active.btn {
+  //     background-color: var(--brand-black);
+  //     border-color: var(--brand-black);
+  //     color: var(--brand-white);
+  //     outline: none;
+  //     box-shadow: none;
+  //   }
+
   .storno-dialog__scopeBtn.btn {
     min-height: 44px;
     padding: 0 16px;
-    background-image: none;
-    background-size: auto;
-    background-color: var(--brand-gold);
-    border-color: var(--brand-gold);
-    color: var(--brand-black);
     transition:
-      background-color 160ms ease,
-      border-color 160ms ease,
-      color 160ms ease,
+      background-size 0.28s ease,
+      color 0.22s ease,
+      border-color 0.22s ease,
       box-shadow 160ms ease;
   }
 
   .storno-dialog__scopeBtn.btn:hover,
   .storno-dialog__scopeBtn.btn:focus,
-  .storno-dialog__scopeBtn.btn:focus-visible,
-  .storno-dialog__scopeBtn--active.btn {
-    background-color: var(--brand-black);
-    border-color: var(--brand-black);
+  .storno-dialog__scopeBtn.btn:focus-visible {
     color: var(--brand-white);
+    outline: none;
+    box-shadow: none;
+  }
+
+  .storno-dialog__scopeBtn--active.btn {
+    background-size: 100% 100%;
+    color: var(--brand-white);
+    border-color: transparent;
     outline: none;
     box-shadow: none;
   }
@@ -116,25 +142,42 @@
     width: 100%;
   }
 
+  //   .storno-dialog__confirmBtn.btn {
+  //     min-height: 44px;
+  //     padding: 0 16px;
+  //     background-image: none;
+  //     background-size: auto;
+  //     background-color: var(--brand-gold);
+  //     border-color: var(--brand-gold);
+  //     color: var(--brand-black);
+  //     transition:
+  //       background-color 160ms ease,
+  //       border-color 160ms ease,
+  //       color 160ms ease,
+  //       box-shadow 160ms ease;
+  //   }
+
+  //   .storno-dialog__confirmBtn.btn:hover:not(:disabled),
+  //   .storno-dialog__confirmBtn.btn:focus-visible:not(:disabled) {
+  //     background-color: var(--brand-black);
+  //     border-color: var(--brand-black);
+  //     color: var(--brand-white);
+  //     outline: none;
+  //     box-shadow: none;
+  //   }
+
   .storno-dialog__confirmBtn.btn {
     min-height: 44px;
     padding: 0 16px;
-    background-image: none;
-    background-size: auto;
-    background-color: var(--brand-gold);
-    border-color: var(--brand-gold);
-    color: var(--brand-black);
     transition:
-      background-color 160ms ease,
-      border-color 160ms ease,
-      color 160ms ease,
+      background-size 0.28s ease,
+      color 0.22s ease,
+      border-color 0.22s ease,
       box-shadow 160ms ease;
   }
 
   .storno-dialog__confirmBtn.btn:hover:not(:disabled),
   .storno-dialog__confirmBtn.btn:focus-visible:not(:disabled) {
-    background-color: var(--brand-black);
-    border-color: var(--brand-black);
     color: var(--brand-white);
     outline: none;
     box-shadow: none;

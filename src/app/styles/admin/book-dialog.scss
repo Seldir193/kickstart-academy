@@ -106,25 +106,48 @@
     width: 100%;
   }
 
+  // .book-dialog__confirmBtn.btn {
+  //   min-height: 44px;
+  //   padding: 0 16px;
+  //   background-image: none;
+  //   background-size: auto;
+  //   background-color: var(--brand-gold);
+  //   border-color: var(--brand-gold);
+  //   color: var(--brand-black);
+  //   transition:
+  //     background-color 160ms ease,
+  //     border-color 160ms ease,
+  //     color 160ms ease,
+  //     box-shadow 160ms ease;
+  // }
+
+  // .book-dialog__confirmBtn.btn:hover:not(:disabled),
+  // .book-dialog__confirmBtn.btn:focus-visible:not(:disabled) {
+  //   background-color: var(--brand-black);
+  //   border-color: var(--brand-black);
+  //   color: var(--brand-white);
+  //   outline: none;
+  //   box-shadow: none;
+  // }
+
+  // .book-dialog__confirmBtn.btn:disabled {
+  //   opacity: 0.55;
+  //   cursor: not-allowed;
+  //   box-shadow: none;
+  // }
+
   .book-dialog__confirmBtn.btn {
     min-height: 44px;
     padding: 0 16px;
-    background-image: none;
-    background-size: auto;
-    background-color: var(--brand-gold);
-    border-color: var(--brand-gold);
-    color: var(--brand-black);
     transition:
-      background-color 160ms ease,
-      border-color 160ms ease,
-      color 160ms ease,
+      background-size 0.28s ease,
+      color 0.22s ease,
+      border-color 0.22s ease,
       box-shadow 160ms ease;
   }
 
   .book-dialog__confirmBtn.btn:hover:not(:disabled),
   .book-dialog__confirmBtn.btn:focus-visible:not(:disabled) {
-    background-color: var(--brand-black);
-    border-color: var(--brand-black);
     color: var(--brand-white);
     outline: none;
     box-shadow: none;
@@ -888,31 +911,82 @@ body.embed-mode .book-embed {
 
 //neu
 
+// .book-dialog__scopeBtn.btn {
+//   min-height: 44px;
+//   padding: 0 16px;
+//   transition:
+//     background-size 0.28s ease,
+//     color 0.22s ease,
+//     border-color 0.22s ease,
+//     box-shadow 160ms ease;
+// }
+
+// .book-dialog__scopeBtn.btn:hover,
+// .book-dialog__scopeBtn.btn:focus,
+// .book-dialog__scopeBtn.btn:focus-visible {
+//   color: var(--brand-white);
+//   outline: none;
+//   box-shadow: none;
+// }
+
+// .book-dialog__scopeBtn--active.btn {
+//   background-size: 100% 100%;
+//   color: var(--brand-white);
+//   border-color: transparent;
+//   outline: none;
+//   box-shadow: none;
+// }
+
 .book-dialog__scopeBtn.btn {
   min-height: 44px;
   padding: 0 16px;
-  background-image: none;
-  background-size: auto;
-  background-color: var(--brand-gold);
-  border-color: var(--brand-gold);
-  color: var(--brand-black);
   transition:
-    background-color 160ms ease,
-    border-color 160ms ease,
-    color 160ms ease,
+    background-size 0.28s ease,
+    color 0.22s ease,
+    border-color 0.22s ease,
     box-shadow 160ms ease;
 }
 
 .book-dialog__scopeBtn.btn:hover,
 .book-dialog__scopeBtn.btn:focus,
-.book-dialog__scopeBtn.btn:focus-visible,
-.book-dialog__scopeBtn--active.btn {
-  background-color: var(--brand-black);
-  border-color: var(--brand-black);
+.book-dialog__scopeBtn.btn:focus-visible {
   color: var(--brand-white);
   outline: none;
   box-shadow: none;
 }
+
+.book-dialog__scopeBtn--active.btn {
+  background-size: 100% 100%;
+  color: var(--brand-white);
+  border-color: transparent;
+  outline: none;
+  box-shadow: none;
+}
+// .book-dialog__scopeBtn.btn {
+//   min-height: 44px;
+//   padding: 0 16px;
+//   background-image: none;
+//   background-size: auto;
+//   background-color: var(--brand-gold);
+//   border-color: var(--brand-gold);
+//   color: var(--brand-black);
+//   transition:
+//     background-color 160ms ease,
+//     border-color 160ms ease,
+//     color 160ms ease,
+//     box-shadow 160ms ease;
+// }
+
+// .book-dialog__scopeBtn.btn:hover,
+// .book-dialog__scopeBtn.btn:focus,
+// .book-dialog__scopeBtn.btn:focus-visible,
+// .book-dialog__scopeBtn--active.btn {
+//   background-color: var(--brand-black);
+//   border-color: var(--brand-black);
+//   color: var(--brand-white);
+//   outline: none;
+//   box-shadow: none;
+// }
 
 // //src\app\styles\book.scss
 // .book-sticky {

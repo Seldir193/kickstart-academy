@@ -205,21 +205,51 @@
   justify-content: flex-end;
 }
 
+// .ks-customer-family__add-btn {
+//   background-image: none;
+//   background-size: auto;
+//   transition:
+//     background-color 160ms ease,
+//     border-color 160ms ease,
+//     color 160ms ease,
+//     box-shadow 160ms ease;
+
+//   &:hover,
+//   &:focus,
+//   &:focus-visible,
+//   &:active {
+//     background-color: var(--brand-black);
+//     border-color: var(--brand-black);
+//     color: var(--brand-white);
+//     outline: none;
+//     box-shadow: none;
+//   }
+
+//   .ks-customer-family__add-icon {
+//     transition:
+//       filter 160ms ease,
+//       opacity 160ms ease;
+//   }
+
+//   &:hover .ks-customer-family__add-icon,
+//   &:focus .ks-customer-family__add-icon,
+//   &:focus-visible .ks-customer-family__add-icon,
+//   &:active .ks-customer-family__add-icon {
+//     filter: brightness(0) invert(1);
+//   }
+// }
+
 .ks-customer-family__add-btn {
-  background-image: none;
-  background-size: auto;
   transition:
-    background-color 160ms ease,
-    border-color 160ms ease,
-    color 160ms ease,
+    background-size 0.28s ease,
+    color 0.22s ease,
+    border-color 0.22s ease,
     box-shadow 160ms ease;
 
   &:hover,
   &:focus,
   &:focus-visible,
   &:active {
-    background-color: var(--brand-black);
-    border-color: var(--brand-black);
     color: var(--brand-white);
     outline: none;
     box-shadow: none;
