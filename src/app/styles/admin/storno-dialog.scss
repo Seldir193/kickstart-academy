@@ -1,0 +1,736 @@
+.storno-dialog.dialog-backdrop {
+  inset: 0;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  z-index: 1100;
+}
+
+.storno-dialog {
+  .dialog-backdrop-hit {
+    z-index: 0;
+  }
+
+  .storno-dialog__dialog {
+    position: relative;
+    z-index: 1;
+    width: min(1040px, calc(100% - 40px));
+    max-width: 1040px;
+    max-height: calc(100dvh - var(--header-height, 64px) - 48px);
+    grid-template-rows: auto minmax(0, 1fr) auto;
+  }
+
+  .storno-dialog__head-main {
+    min-width: 0;
+    flex: 1 1 auto;
+    padding-right: 12px;
+  }
+
+  .storno-dialog__body {
+    display: grid;
+    gap: 16px;
+  }
+
+  .storno-dialog__scopeBody {
+    display: grid;
+    gap: 14px;
+  }
+
+  .storno-dialog__field {
+    display: grid;
+    gap: 6px;
+    min-width: 0;
+  }
+
+  .storno-dialog__scopeButtons {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .storno-dialog__scopeBtn.btn {
+    min-height: 44px;
+    padding: 0 16px;
+    background-image: none;
+    background-size: auto;
+    background-color: var(--brand-gold);
+    border-color: var(--brand-gold);
+    color: var(--brand-black);
+    transition:
+      background-color 160ms ease,
+      border-color 160ms ease,
+      color 160ms ease,
+      box-shadow 160ms ease;
+  }
+
+  .storno-dialog__scopeBtn.btn:hover,
+  .storno-dialog__scopeBtn.btn:focus,
+  .storno-dialog__scopeBtn.btn:focus-visible,
+  .storno-dialog__scopeBtn--active.btn {
+    background-color: var(--brand-black);
+    border-color: var(--brand-black);
+    color: var(--brand-white);
+    outline: none;
+    box-shadow: none;
+  }
+
+  .storno-dialog__summary {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    padding: 14px 16px;
+    border: 1px solid #e5ebf2;
+    border-radius: 16px;
+    background: #f8fafc;
+  }
+
+  .storno-dialog__summaryItem {
+    display: grid;
+    gap: 4px;
+    min-width: 0;
+  }
+
+  .storno-dialog__note {
+    color: #5b6472;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  .storno-dialog__error {
+    color: #b42318;
+    font-size: 14px;
+    line-height: 1.5;
+    font-weight: 600;
+  }
+
+  .storno-dialog__footer {
+    justify-content: flex-end;
+  }
+
+  .storno-dialog__footerActions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+    width: 100%;
+  }
+
+  .storno-dialog__confirmBtn.btn {
+    min-height: 44px;
+    padding: 0 16px;
+    background-image: none;
+    background-size: auto;
+    background-color: var(--brand-gold);
+    border-color: var(--brand-gold);
+    color: var(--brand-black);
+    transition:
+      background-color 160ms ease,
+      border-color 160ms ease,
+      color 160ms ease,
+      box-shadow 160ms ease;
+  }
+
+  .storno-dialog__confirmBtn.btn:hover:not(:disabled),
+  .storno-dialog__confirmBtn.btn:focus-visible:not(:disabled) {
+    background-color: var(--brand-black);
+    border-color: var(--brand-black);
+    color: var(--brand-white);
+    outline: none;
+    box-shadow: none;
+  }
+
+  .storno-dialog__confirmBtn.btn:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+    box-shadow: none;
+  }
+
+  .ks-storno__filters {
+    display: grid;
+    grid-template-columns: minmax(260px, 2fr) minmax(180px, 1fr) minmax(
+        180px,
+        1fr
+      );
+    column-gap: 12px;
+    row-gap: 8px;
+    align-items: end;
+  }
+
+  .ks-storno__filter {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .ks-storno__filter > div,
+  .ks-storno__filter > .grid,
+  .ks-storno__filter .ks-selectbox,
+  .ks-storno__filter .ks-selectbox__trigger {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .ks-storno__section {
+    display: grid;
+    gap: 8px;
+    position: relative;
+    overflow: visible;
+  }
+
+  .ks-storno__menu {
+    padding: 0;
+  }
+
+  .ks-storno__menu .ks-selectbox__option,
+  .ks-storno__menu .ks-storno__option {
+    border-bottom: 1px solid var(--admin-sep);
+    border-radius: 0;
+  }
+
+  .ks-storno__menu .ks-selectbox__option:last-child,
+  .ks-storno__menu .ks-storno__option:last-child {
+    border-bottom: 0;
+  }
+
+  .storno-dialog__anchor {
+    position: relative;
+    width: 100%;
+  }
+
+  .storno-dialog__panel {
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    width: 100%;
+    z-index: 60;
+    overflow-y: auto;
+    border-radius: 12px;
+  }
+
+  .storno-dialog__panel--booking {
+    max-height: min(320px, calc(100dvh - 280px));
+  }
+
+  .ks-booking-select__triggerLabel {
+    display: block;
+  }
+
+  .ks-booking-select__row {
+    display: block;
+    width: 100%;
+  }
+
+  .ks-booking-select__top {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .ks-booking-select__title {
+    flex: 1;
+    min-width: 0;
+    font-weight: 700;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .ks-booking-select__invoiceCol {
+    flex: 0 0 auto;
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-end;
+    margin-left: auto;
+  }
+
+  .ks-booking-select__invoice {
+    min-width: 92px;
+    padding: 2px 8px;
+    border: 1px solid rgba(0, 0, 0, 0.18);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.9);
+    color: rgba(0, 0, 0, 0.92);
+    font-size: 12px;
+    font-weight: 600;
+    text-align: center;
+    white-space: nowrap;
+  }
+
+  .ks-booking-select__bottom {
+    min-width: 0;
+    margin-top: 2px;
+    font-size: 12px;
+    opacity: 0.8;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .ks-booking-select__bottom--cancelled {
+    opacity: 0.6;
+  }
+
+  .ks-storno__trigger--cancelled {
+    opacity: 0.8;
+  }
+}
+
+@media (max-width: 720px) {
+  .storno-dialog.dialog-backdrop {
+    padding: 12px;
+    place-items: center;
+  }
+
+  .storno-dialog {
+    .storno-dialog__dialog {
+      width: 100%;
+      max-width: 100%;
+      max-height: calc(100dvh - 24px);
+    }
+
+    .storno-dialog__summary {
+      grid-template-columns: 1fr;
+    }
+
+    .storno-dialog__footerActions {
+      justify-content: stretch;
+    }
+
+    .storno-dialog__confirmBtn {
+      flex: 1 1 auto;
+      justify-content: center;
+    }
+
+    .ks-storno__filters {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .storno-dialog .ks-booking-select__top {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .storno-dialog .ks-booking-select__invoiceCol {
+    width: 100%;
+    min-width: 0;
+    justify-content: flex-start;
+    margin-left: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .storno-dialog.dialog-backdrop {
+    padding: 8px;
+  }
+
+  .storno-dialog {
+    .storno-dialog__dialog {
+      max-height: calc(100dvh - 16px);
+    }
+
+    .storno-dialog__scopeButtons {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .storno-dialog__scopeBtn {
+      width: 100%;
+    }
+  }
+}
+
+// .storno-dialog.dialog-backdrop {
+//   inset: 0;
+//   align-items: center;
+//   justify-content: center;
+//   padding: 20px;
+//   z-index: 1100;
+// }
+
+// .storno-dialog {
+//   .dialog-backdrop-hit {
+//     z-index: 0;
+//   }
+
+//   .storno-dialog__dialog {
+//     position: relative;
+//     z-index: 1;
+//     width: min(1040px, calc(100% - 40px));
+//     max-width: 1040px;
+//     max-height: calc(100dvh - var(--header-height, 64px) - 48px);
+//     grid-template-rows: auto minmax(0, 1fr) auto;
+//   }
+
+//   .storno-dialog__head-main {
+//     min-width: 0;
+//     flex: 1 1 auto;
+//     padding-right: 12px;
+//   }
+
+//   .storno-dialog__body {
+//     display: grid;
+//     gap: 16px;
+//   }
+
+//   .storno-dialog__scopeBody {
+//     display: grid;
+//     gap: 14px;
+//   }
+
+//   .storno-dialog__field {
+//     display: grid;
+//     gap: 6px;
+//     min-width: 0;
+//   }
+
+//   .storno-dialog__scopeButtons {
+//     display: flex;
+//     align-items: center;
+//     gap: 8px;
+//     flex-wrap: wrap;
+//   }
+
+//   .storno-dialog__scopeBtn.btn {
+//     min-height: 44px;
+//     padding: 0 16px;
+//     background-image: none;
+//     background-size: auto;
+//     background-color: var(--brand-gold);
+//     border-color: var(--brand-gold);
+//     color: var(--brand-black);
+//     transition:
+//       background-color 160ms ease,
+//       border-color 160ms ease,
+//       color 160ms ease,
+//       box-shadow 160ms ease;
+//   }
+
+//   .storno-dialog__scopeBtn.btn:hover,
+//   .storno-dialog__scopeBtn.btn:focus,
+//   .storno-dialog__scopeBtn.btn:focus-visible,
+//   .storno-dialog__scopeBtn--active.btn {
+//     background-color: var(--brand-black);
+//     border-color: var(--brand-black);
+//     color: var(--brand-white);
+//     outline: none;
+//     box-shadow: none;
+//   }
+
+//   .storno-dialog__summary {
+//     display: grid;
+//     grid-template-columns: repeat(2, minmax(0, 1fr));
+//     gap: 12px;
+//     padding: 14px 16px;
+//     border: 1px solid #e5ebf2;
+//     border-radius: 16px;
+//     background: #f8fafc;
+//   }
+
+//   .storno-dialog__summaryItem {
+//     display: grid;
+//     gap: 4px;
+//     min-width: 0;
+//   }
+
+//   .storno-dialog__note {
+//     color: #5b6472;
+//     font-size: 14px;
+//     line-height: 1.5;
+//   }
+
+//   .storno-dialog__error {
+//     color: #b42318;
+//     font-size: 14px;
+//     line-height: 1.5;
+//     font-weight: 600;
+//   }
+
+//   .storno-dialog__footer {
+//     justify-content: flex-end;
+//   }
+
+//   .storno-dialog__footerActions {
+//     display: flex;
+//     align-items: center;
+//     justify-content: flex-end;
+//     gap: 8px;
+//     width: 100%;
+//   }
+
+//   .storno-dialog__confirmBtn.btn {
+//     min-height: 44px;
+//     padding: 0 16px;
+//     background-image: none;
+//     background-size: auto;
+//     background-color: var(--brand-gold);
+//     border-color: var(--brand-gold);
+//     color: var(--brand-black);
+//     transition:
+//       background-color 160ms ease,
+//       border-color 160ms ease,
+//       color 160ms ease,
+//       box-shadow 160ms ease;
+//   }
+
+//   .storno-dialog__confirmBtn.btn:hover:not(:disabled),
+//   .storno-dialog__confirmBtn.btn:focus-visible:not(:disabled) {
+//     background-color: var(--brand-black);
+//     border-color: var(--brand-black);
+//     color: var(--brand-white);
+//     outline: none;
+//     box-shadow: none;
+//   }
+
+//   .storno-dialog__confirmBtn.btn:disabled {
+//     opacity: 0.55;
+//     cursor: not-allowed;
+//     box-shadow: none;
+//   }
+
+//   .ks-storno__filters {
+//     display: grid;
+//     grid-template-columns: minmax(260px, 2fr) minmax(180px, 1fr) minmax(
+//         180px,
+//         1fr
+//       );
+//     gap: 8px;
+//     align-items: end;
+//   }
+
+//   .ks-storno__filter {
+//     min-width: 0;
+//     display: flex;
+//     flex-direction: column;
+//     gap: 6px;
+//   }
+
+//   .ks-storno__filter > div,
+//   .ks-storno__filter .ks-selectbox,
+//   .ks-storno__filter .ks-selectbox__trigger {
+//     width: 100%;
+//   }
+
+//   .ks-storno__section {
+//     display: grid;
+//     gap: 8px;
+//   }
+
+//   .ks-storno__menu {
+//     padding: 0;
+//   }
+
+//   .ks-storno__menu .ks-selectbox__option,
+//   .ks-storno__menu .ks-storno__option {
+//     border-bottom: 1px solid var(--admin-sep);
+//     border-radius: 0;
+//   }
+
+//   .ks-storno__menu .ks-selectbox__option:last-child,
+//   .ks-storno__menu .ks-storno__option:last-child {
+//     border-bottom: 0;
+//   }
+
+//   .storno-dialog__anchor {
+//     position: relative;
+//     width: 100%;
+//   }
+
+//   .storno-dialog__panel {
+//     position: absolute;
+//     top: calc(100% + 6px);
+//     left: 0;
+//     width: 100%;
+//     z-index: 40;
+//     overflow-y: auto;
+//     border-radius: 12px;
+//   }
+
+//   .storno-dialog__panel--booking {
+//     max-height: min(320px, calc(100dvh - 280px));
+//   }
+
+//   .ks-booking-select__triggerLabel {
+//     display: block;
+//   }
+
+//   .ks-booking-select__row {
+//     display: block;
+//     width: 100%;
+//   }
+
+//   .ks-booking-select__top {
+//     display: flex;
+//     align-items: center;
+//     gap: 12px;
+//   }
+
+//   .ks-booking-select__title {
+//     flex: 1;
+//     min-width: 0;
+//     font-weight: 700;
+//     overflow: hidden;
+//     text-overflow: ellipsis;
+//     white-space: nowrap;
+//   }
+
+//   .ks-booking-select__invoiceCol {
+//     flex: 0 0 auto;
+//     display: inline-flex;
+//     align-items: center;
+//     justify-content: flex-end;
+//     margin-left: auto;
+//   }
+
+//   .ks-booking-select__invoice {
+//     min-width: 92px;
+//     padding: 2px 8px;
+//     border: 1px solid rgba(0, 0, 0, 0.18);
+//     border-radius: 999px;
+//     background: rgba(255, 255, 255, 0.9);
+//     color: rgba(0, 0, 0, 0.92);
+//     font-size: 12px;
+//     font-weight: 600;
+//     text-align: center;
+//     white-space: nowrap;
+//   }
+
+//   .ks-booking-select__bottom {
+//     min-width: 0;
+//     margin-top: 2px;
+//     font-size: 12px;
+//     opacity: 0.8;
+//     overflow: hidden;
+//     text-overflow: ellipsis;
+//     white-space: nowrap;
+//   }
+
+//   .ks-booking-select__bottom--cancelled {
+//     opacity: 0.6;
+//   }
+
+//   .ks-storno__trigger--cancelled {
+//     opacity: 0.8;
+//   }
+// }
+
+// @media (max-width: 720px) {
+//   .storno-dialog.dialog-backdrop {
+//     padding: 12px;
+//     place-items: center;
+//   }
+
+//   .storno-dialog {
+//     .storno-dialog__dialog {
+//       width: 100%;
+//       max-width: 100%;
+//       max-height: calc(100dvh - 24px);
+//     }
+
+//     .storno-dialog__summary {
+//       grid-template-columns: 1fr;
+//     }
+
+//     .storno-dialog__footerActions {
+//       justify-content: stretch;
+//     }
+
+//     .storno-dialog__confirmBtn {
+//       flex: 1 1 auto;
+//       justify-content: center;
+//     }
+
+//     .ks-storno__filters {
+//       grid-template-columns: 1fr;
+//     }
+//   }
+
+//   .storno-dialog .ks-booking-select__top {
+//     align-items: flex-start;
+//     flex-direction: column;
+//   }
+
+//   .storno-dialog .ks-booking-select__invoiceCol {
+//     width: 100%;
+//     min-width: 0;
+//     justify-content: flex-start;
+//     margin-left: 0;
+//   }
+// }
+
+// @media (max-width: 480px) {
+//   .storno-dialog.dialog-backdrop {
+//     padding: 8px;
+//   }
+
+//   .storno-dialog {
+//     .storno-dialog__dialog {
+//       max-height: calc(100dvh - 16px);
+//     }
+
+//     .storno-dialog__scopeButtons {
+//       flex-direction: column;
+//       align-items: stretch;
+//     }
+
+//     .storno-dialog__scopeBtn {
+//       width: 100%;
+//     }
+//   }
+// }
+
+// .storno-dialog {
+//   .ks-storno__filters {
+//     display: grid;
+//     grid-template-columns: minmax(260px, 2fr) minmax(180px, 1fr) minmax(
+//         180px,
+//         1fr
+//       );
+//     column-gap: 12px;
+//     row-gap: 8px;
+//     align-items: end;
+//   }
+
+//   .ks-storno__filter {
+//     min-width: 0;
+//     display: flex;
+//     flex-direction: column;
+//     gap: 6px;
+//   }
+
+//   .ks-storno__filter > div,
+//   .ks-storno__filter > .grid,
+//   .ks-storno__filter .ks-selectbox,
+//   .ks-storno__filter .ks-selectbox__trigger {
+//     width: 100%;
+//     min-width: 0;
+//   }
+
+//   .ks-storno__section {
+//     display: grid;
+//     gap: 8px;
+//     position: relative;
+//     overflow: visible;
+//   }
+
+//   .storno-dialog__anchor {
+//     position: relative;
+//     width: 100%;
+//   }
+
+//   .storno-dialog__panel {
+//     position: absolute;
+//     top: calc(100% + 6px);
+//     left: 0;
+//     width: 100%;
+//     z-index: 60;
+//     overflow-y: auto;
+//     border-radius: 12px;
+//   }
+
+//   .storno-dialog__panel--booking {
+//     max-height: min(320px, calc(100dvh - 280px));
+//   }
+// }

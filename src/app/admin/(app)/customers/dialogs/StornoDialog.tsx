@@ -219,6 +219,28 @@ function isSelfScopedBooking(b: any) {
   );
 }
 
+function rememberButtonFocusState(e: React.MouseEvent<HTMLButtonElement>) {
+  e.currentTarget.dataset.wasFocused = String(
+    document.activeElement === e.currentTarget,
+  );
+}
+
+function toggleButtonFocus(
+  e: React.MouseEvent<HTMLButtonElement>,
+  action: () => void,
+) {
+  const btn = e.currentTarget;
+  const wasFocused = btn.dataset.wasFocused === "true";
+
+  action();
+
+  requestAnimationFrame(() => {
+    if (wasFocused) btn.blur();
+    else btn.focus({ preventScroll: true });
+    delete btn.dataset.wasFocused;
+  });
+}
+
 export default function StornoDialog({
   customer,
   // childFirst,
@@ -556,123 +578,598 @@ export default function StornoDialog({
     }
   }
 
+  // return (
+  //   <div className="ks-modal-root ks-modal-root--top ks-storno">
+  //     <div className="ks-backdrop" onClick={onClose} />
+  //     <div
+  //       className="ks-panel card ks-panel--md"
+  //       onClick={(e) => e.stopPropagation()}
+  //     >
+  //       <div className="dialog-subhead">
+  //         <h3 className="text-lg font-bold">Storno</h3>
+  //       </div>
+
+  //       <div className="mb-3 p-3 rounded border bg-gray-50 text-sm">
+  //         <div className="font-semibold mb-1">Storno for</div>
+
+  //         {familyLoading && (
+  //           <div className="text-gray-600">Loading family…</div>
+  //         )}
+
+  //         {familyError && (
+  //           <div className="text-red-600">
+  //             Family could not be loaded – storno list may be incomplete.
+  //           </div>
+  //         )}
+
+  //         {family && family.length > 0 ? (
+  //           <>
+  //             <div className="mb-2">
+  //               <label className="lbl">Elternteil</label>
+  //               <div
+  //                 className={
+  //                   "ks-selectbox" +
+  //                   (isParentDropdownOpen ? " ks-selectbox--open" : "")
+  //                 }
+  //                 ref={parentDropdownRef}
+  //               >
+  //                 <button
+  //                   type="button"
+  //                   className="ks-selectbox__trigger"
+  //                   onClick={() => setIsParentDropdownOpen((o) => !o)}
+  //                 >
+  //                   <span className="ks-selectbox__label">
+  //                     {selectedParentLabel || "Elternteil wählen …"}
+  //                   </span>
+  //                   <span
+  //                     className="ks-selectbox__chevron"
+  //                     aria-hidden="true"
+  //                   />
+  //                 </button>
+
+  //                 {isParentDropdownOpen && (
+  //                   <div className="ks-selectbox__panel" role="listbox">
+  //                     {parentOptions.map((item) => (
+  //                       <button
+  //                         type="button"
+  //                         key={item.id}
+  //                         className={
+  //                           "ks-selectbox__option" +
+  //                           (item.id === selfMemberId
+  //                             ? " ks-selectbox__option--active"
+  //                             : "")
+  //                         }
+  //                         onClick={() => {
+  //                           setSelectedParentId(item.id);
+  //                           setIsParentDropdownOpen(false);
+  //                         }}
+  //                       >
+  //                         {item.label}
+  //                       </button>
+  //                     ))}
+  //                   </div>
+  //                 )}
+  //               </div>
+  //             </div>
+
+  //             <div className="flex gap-2 mb-2">
+  //               <button
+  //                 type="button"
+  //                 className={`btn btn-sm ${
+  //                   bookingTarget === "self" ? "btn--tab-active" : "btn-outline"
+  //                 }`}
+  //                 onClick={() => setBookingTarget("self")}
+  //               >
+  //                 Kunde selbst
+  //               </button>
+
+  //               <button
+  //                 type="button"
+  //                 className={`btn btn-sm ${
+  //                   bookingTarget === "child"
+  //                     ? "btn--tab-active"
+  //                     : "btn-outline"
+  //                 }`}
+  //                 onClick={() => setBookingTarget("child")}
+  //               >
+  //                 Kind
+  //               </button>
+  //             </div>
+
+  //             {bookingTarget === "child" && (
+  //               <div className="mb-2">
+  //                 <label className="lbl">Kind</label>
+  //                 <div
+  //                   className={
+  //                     "ks-selectbox" +
+  //                     (isChildDropdownOpen ? " ks-selectbox--open" : "")
+  //                   }
+  //                   ref={childDropdownRef}
+  //                 >
+  //                   <button
+  //                     type="button"
+  //                     className="ks-selectbox__trigger"
+  //                     onClick={() => setIsChildDropdownOpen((o) => !o)}
+  //                   >
+  //                     <span className="ks-selectbox__label">
+  //                       {activeChild
+  //                         ? `${activeChild.firstName} ${activeChild.lastName}`.trim()
+  //                         : "Kind wählen …"}
+  //                     </span>
+  //                     <span
+  //                       className="ks-selectbox__chevron"
+  //                       aria-hidden="true"
+  //                     />
+  //                   </button>
+
+  //                   {isChildDropdownOpen && (
+  //                     <div className="ks-selectbox__panel" role="listbox">
+  //                       {childOptions.map((item) => (
+  //                         <button
+  //                           type="button"
+  //                           key={item.uid}
+  //                           className={
+  //                             "ks-selectbox__option" +
+  //                             (item.uid === selectedChildUid
+  //                               ? " ks-selectbox__option--active"
+  //                               : "")
+  //                           }
+  //                           onClick={() => {
+  //                             setSelectedChildUid(item.uid);
+  //                             setIsChildDropdownOpen(false);
+  //                           }}
+  //                         >
+  //                           {item.label}
+  //                         </button>
+  //                       ))}
+  //                     </div>
+  //                   )}
+  //                 </div>
+  //               </div>
+  //             )}
+
+  //             <div className="text-gray-700 mt-2">
+  //               <div>
+  //                 <span className="font-medium">Parent:</span>{" "}
+  //                 {selectedParent
+  //                   ? `${selectedParent.parent.firstName} ${selectedParent.parent.lastName}`.trim()
+  //                   : "—"}
+  //               </div>
+
+  //               <div>
+  //                 <span className="font-medium">Child:</span>{" "}
+  //                 {bookingTarget === "child" && activeChild
+  //                   ? `${activeChild.firstName} ${activeChild.lastName}`.trim()
+  //                   : "—"}
+  //               </div>
+  //             </div>
+  //           </>
+  //         ) : (
+  //           !familyLoading && (
+  //             <div className="text-gray-700">
+  //               Storno entries are shown for the current customer.
+  //             </div>
+  //           )
+  //         )}
+  //       </div>
+
+  //       {err && <div className="mb-2 text-red-600">{err}</div>}
+  //       {loading && <div className="mb-2 text-gray-600">Loading…</div>}
+
+  //       <div className="ks-storno__filters mb-2">
+  //         <div className="ks-storno__filter">
+  //           <label className="lbl">Courses</label>
+
+  //           <div
+  //             ref={courseDropdownRef}
+  //             className={cx(
+  //               "ks-selectbox",
+  //               isCourseDropdownOpen && "ks-selectbox--open",
+  //             )}
+  //           >
+  //             <button
+  //               type="button"
+  //               className="ks-selectbox__trigger"
+  //               onClick={() => setIsCourseDropdownOpen((o) => !o)}
+  //               aria-haspopup="listbox"
+  //               aria-expanded={isCourseDropdownOpen}
+  //             >
+  //               <span className="ks-selectbox__label">
+  //                 {selectedCourseLabel}
+  //               </span>
+  //               <span className="ks-selectbox__chevron" aria-hidden="true" />
+  //             </button>
+
+  //             {isCourseDropdownOpen && (
+  //               <div className="ks-selectbox__panel" role="listbox">
+  //                 <button
+  //                   type="button"
+  //                   className={cx(
+  //                     "ks-selectbox__option",
+  //                     !courseValue && "ks-selectbox__option--active",
+  //                   )}
+  //                   onClick={() => {
+  //                     setCourseValue("");
+  //                     setIsCourseDropdownOpen(false);
+  //                   }}
+  //                 >
+  //                   All courses
+  //                 </button>
+
+  //                 {GROUPED_COURSE_OPTIONS.map((g) => (
+  //                   <div key={g.label} className="ks-selectbox__group">
+  //                     <div className="ks-selectbox__group-label">{g.label}</div>
+  //                     {g.items.map((opt) => (
+  //                       <button
+  //                         key={opt.value}
+  //                         type="button"
+  //                         className={cx(
+  //                           "ks-selectbox__option",
+  //                           courseValue === opt.value &&
+  //                             "ks-selectbox__option--active",
+  //                         )}
+  //                         onClick={() => {
+  //                           setCourseValue(opt.value);
+  //                           setIsCourseDropdownOpen(false);
+  //                         }}
+  //                       >
+  //                         {opt.label}
+  //                       </button>
+  //                     ))}
+  //                   </div>
+  //                 ))}
+  //               </div>
+  //             )}
+  //           </div>
+  //         </div>
+
+  //         <div className="ks-storno__filter">
+  //           <InlineSelect
+  //             label="Status"
+  //             value={statusFilter}
+  //             displayLabel={statusLabel}
+  //             options={STATUS_OPTIONS}
+  //             rootRef={statusDropdownRef}
+  //             open={isStatusOpen}
+  //             setOpen={setIsStatusOpen}
+  //             onChange={(v) => setStatusFilter(v as StatusFilter)}
+  //           />
+  //         </div>
+
+  //         <div className="ks-storno__filter">
+  //           <InlineSelect
+  //             label="Sort"
+  //             value={sortOrder}
+  //             displayLabel={sortLabel}
+  //             options={SORT_OPTIONS}
+  //             rootRef={sortDropdownRef}
+  //             open={isSortOpen}
+  //             setOpen={setIsSortOpen}
+  //             onChange={(v) => setSortOrder(v as SortOrder)}
+  //           />
+  //         </div>
+  //       </div>
+
+  //       <div className="ks-storno__section mb-2">
+  //         <BookingSelect
+  //           label="Booking"
+  //           open={menuOpen}
+  //           setOpen={setMenuOpen}
+  //           openMenu={openMenu}
+  //           triggerRef={triggerRef}
+  //           menuRef={menuRef}
+  //           disabled={!filtered.length}
+  //           trigger={bookingTrigger}
+  //           items={filtered}
+  //           selectedId={selectedId}
+  //           onSelect={(id: string) => setSelectedId(id)}
+  //           statusFilter={statusFilter}
+  //           isCancelledSelected={isCancelled}
+  //         />
+  //       </div>
+
+  //       <div className="ks-storno__section">
+  //         <div>
+  //           <label className="lbl">Note (optional)</label>
+  //           <textarea
+  //             className="input"
+  //             rows={3}
+  //             value={note}
+  //             onChange={(e) => setNote(e.target.value)}
+  //             placeholder="e.g., partial refund, goodwill"
+  //             disabled={!selected || isCancelled}
+  //           />
+  //         </div>
+  //       </div>
+
+  //       <div className="flex justify-end gap-2 mt-3">
+  //         <button
+  //           type="button"
+  //           className="modal__close"
+  //           aria-label="Close"
+  //           onClick={onClose}
+  //         >
+  //           <img
+  //             src="/icons/close.svg"
+  //             alt=""
+  //             aria-hidden="true"
+  //             className="icon-img"
+  //           />
+  //         </button>
+
+  //         <button className="btn" disabled={disabled} onClick={submit}>
+  //           {saving ? "Processing…" : "Confirm storno"}
+  //         </button>
+  //       </div>
+  //     </div>
+  //   </div>
+  // );
+
   return (
-    <div className="ks-modal-root ks-modal-root--top ks-storno">
-      <div className="ks-backdrop" onClick={onClose} />
+    <div
+      className="dialog-backdrop storno-dialog"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="storno-dialog-title"
+    >
+      <button
+        type="button"
+        className="dialog-backdrop-hit"
+        aria-label="Close"
+        onClick={onClose}
+      />
+
       <div
-        className="ks-panel card ks-panel--md"
+        className="dialog storno-dialog__dialog"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="dialog-subhead">
-          <h3 className="text-lg font-bold">Storno</h3>
+        <div className="dialog-head storno-dialog__head">
+          <div className="storno-dialog__head-main">
+            <h3 id="storno-dialog-title" className="dialog-title">
+              Confirm storno
+            </h3>
+            <p className="dialog-subtitle">
+              Select scope, booking, and optional note for the storno process.
+            </p>
+          </div>
+
+          <div className="dialog-head__actions">
+            <button
+              type="button"
+              className="dialog-close"
+              aria-label="Close"
+              onClick={onClose}
+            >
+              <img
+                src="/icons/close.svg"
+                alt=""
+                aria-hidden="true"
+                className="icon-img"
+              />
+            </button>
+          </div>
         </div>
 
-        <div className="mb-3 p-3 rounded border bg-gray-50 text-sm">
-          <div className="font-semibold mb-1">Storno for</div>
-
-          {familyLoading && (
-            <div className="text-gray-600">Loading family…</div>
-          )}
-
-          {familyError && (
-            <div className="text-red-600">
-              Family could not be loaded – storno list may be incomplete.
+        <div className="dialog-body storno-dialog__body">
+          <section className="dialog-section storno-dialog__scopeSection">
+            <div className="dialog-section__head">
+              <h4 className="dialog-section__title">Storno scope</h4>
             </div>
-          )}
 
-          {family && family.length > 0 ? (
-            <>
-              <div className="mb-2">
-                <label className="lbl">Elternteil</label>
-                <div
-                  className={
-                    "ks-selectbox" +
-                    (isParentDropdownOpen ? " ks-selectbox--open" : "")
-                  }
-                  ref={parentDropdownRef}
-                >
-                  <button
-                    type="button"
-                    className="ks-selectbox__trigger"
-                    onClick={() => setIsParentDropdownOpen((o) => !o)}
-                  >
-                    <span className="ks-selectbox__label">
-                      {selectedParentLabel || "Elternteil wählen …"}
-                    </span>
-                    <span
-                      className="ks-selectbox__chevron"
-                      aria-hidden="true"
-                    />
-                  </button>
+            <div className="dialog-section__body storno-dialog__scopeBody">
+              {familyLoading && (
+                <div className="storno-dialog__note">Loading family…</div>
+              )}
 
-                  {isParentDropdownOpen && (
-                    <div className="ks-selectbox__panel" role="listbox">
-                      {parentOptions.map((item) => (
+              {familyError && (
+                <div className="storno-dialog__error">
+                  Family could not be loaded – storno list may be incomplete.
+                </div>
+              )}
+
+              {family && family.length > 0 ? (
+                <>
+                  <div className="storno-dialog__field">
+                    <label className="dialog-label">Parent</label>
+
+                    <div
+                      className={
+                        "ks-selectbox" +
+                        (isParentDropdownOpen ? " ks-selectbox--open" : "")
+                      }
+                      ref={parentDropdownRef}
+                    >
+                      <button
+                        type="button"
+                        className="ks-selectbox__trigger"
+                        onClick={() => setIsParentDropdownOpen((o) => !o)}
+                      >
+                        <span className="ks-selectbox__label">
+                          {selectedParentLabel || "Select parent …"}
+                        </span>
+                        <span
+                          className="ks-selectbox__chevron"
+                          aria-hidden="true"
+                        />
+                      </button>
+
+                      {isParentDropdownOpen && (
+                        <div className="ks-selectbox__panel" role="listbox">
+                          {parentOptions.map((item) => (
+                            <button
+                              type="button"
+                              key={item.id}
+                              className={
+                                "ks-selectbox__option" +
+                                (item.id === selfMemberId
+                                  ? " ks-selectbox__option--active"
+                                  : "")
+                              }
+                              onClick={() => {
+                                setSelectedParentId(item.id);
+                                setIsParentDropdownOpen(false);
+                              }}
+                            >
+                              {item.label}
+                            </button>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="storno-dialog__scopeButtons">
+                    <button
+                      type="button"
+                      className={
+                        "btn btn-sm storno-dialog__scopeBtn" +
+                        (bookingTarget === "self"
+                          ? " storno-dialog__scopeBtn--active"
+                          : "")
+                      }
+                      onMouseDown={rememberButtonFocusState}
+                      onClick={(e) =>
+                        toggleButtonFocus(e, () => setBookingTarget("self"))
+                      }
+                    >
+                      Customer self
+                    </button>
+
+                    <button
+                      type="button"
+                      className={
+                        "btn btn-sm storno-dialog__scopeBtn" +
+                        (bookingTarget === "child"
+                          ? " storno-dialog__scopeBtn--active"
+                          : "")
+                      }
+                      onMouseDown={rememberButtonFocusState}
+                      onClick={(e) =>
+                        toggleButtonFocus(e, () => setBookingTarget("child"))
+                      }
+                    >
+                      Child
+                    </button>
+                  </div>
+
+                  {bookingTarget === "child" && (
+                    <div className="storno-dialog__field">
+                      <label className="dialog-label">Child</label>
+
+                      <div
+                        className={
+                          "ks-selectbox" +
+                          (isChildDropdownOpen ? " ks-selectbox--open" : "")
+                        }
+                        ref={childDropdownRef}
+                      >
                         <button
                           type="button"
-                          key={item.id}
-                          className={
-                            "ks-selectbox__option" +
-                            (item.id === selfMemberId
-                              ? " ks-selectbox__option--active"
-                              : "")
-                          }
-                          onClick={() => {
-                            setSelectedParentId(item.id);
-                            setIsParentDropdownOpen(false);
-                          }}
+                          className="ks-selectbox__trigger"
+                          onClick={() => setIsChildDropdownOpen((o) => !o)}
                         >
-                          {item.label}
+                          <span className="ks-selectbox__label">
+                            {activeChild
+                              ? `${activeChild.firstName} ${activeChild.lastName}`.trim()
+                              : "Select child …"}
+                          </span>
+                          <span
+                            className="ks-selectbox__chevron"
+                            aria-hidden="true"
+                          />
                         </button>
-                      ))}
+
+                        {isChildDropdownOpen && (
+                          <div className="ks-selectbox__panel" role="listbox">
+                            {childOptions.map((item) => (
+                              <button
+                                type="button"
+                                key={item.uid}
+                                className={
+                                  "ks-selectbox__option" +
+                                  (item.uid === selectedChildUid
+                                    ? " ks-selectbox__option--active"
+                                    : "")
+                                }
+                                onClick={() => {
+                                  setSelectedChildUid(item.uid);
+                                  setIsChildDropdownOpen(false);
+                                }}
+                              >
+                                {item.label}
+                              </button>
+                            ))}
+                          </div>
+                        )}
+                      </div>
                     </div>
                   )}
-                </div>
+
+                  <div className="storno-dialog__summary">
+                    <div className="storno-dialog__summaryItem">
+                      <span className="dialog-label">Parent</span>
+                      <span className="dialog-value">
+                        {selectedParent
+                          ? `${selectedParent.parent.firstName} ${selectedParent.parent.lastName}`.trim()
+                          : "—"}
+                      </span>
+                    </div>
+
+                    <div className="storno-dialog__summaryItem">
+                      <span className="dialog-label">Child</span>
+                      <span className="dialog-value">
+                        {bookingTarget === "child" && activeChild
+                          ? `${activeChild.firstName} ${activeChild.lastName}`.trim()
+                          : "—"}
+                      </span>
+                    </div>
+                  </div>
+                </>
+              ) : (
+                !familyLoading && (
+                  <div className="dialog-value">
+                    Storno entries are shown for the current customer.
+                  </div>
+                )
+              )}
+            </div>
+          </section>
+
+          {(err || loading) && (
+            <section className="dialog-section storno-dialog__statusSection">
+              <div className="dialog-section__body">
+                {err && <div className="storno-dialog__error">{err}</div>}
+                {loading && <div className="storno-dialog__note">Loading…</div>}
               </div>
+            </section>
+          )}
 
-              <div className="flex gap-2 mb-2">
-                <button
-                  type="button"
-                  className={`btn btn-sm ${
-                    bookingTarget === "self" ? "btn--tab-active" : "btn-outline"
-                  }`}
-                  onClick={() => setBookingTarget("self")}
-                >
-                  Kunde selbst
-                </button>
+          <section className="dialog-section storno-dialog__filtersSection">
+            <div className="dialog-section__head">
+              <h4 className="dialog-section__title">Filters</h4>
+            </div>
 
-                <button
-                  type="button"
-                  className={`btn btn-sm ${
-                    bookingTarget === "child"
-                      ? "btn--tab-active"
-                      : "btn-outline"
-                  }`}
-                  onClick={() => setBookingTarget("child")}
-                >
-                  Kind
-                </button>
-              </div>
+            <div className="dialog-section__body">
+              <div className="ks-storno__filters mb-2">
+                <div className="ks-storno__filter">
+                  <label className="dialog-label">Courses</label>
 
-              {bookingTarget === "child" && (
-                <div className="mb-2">
-                  <label className="lbl">Kind</label>
                   <div
-                    className={
-                      "ks-selectbox" +
-                      (isChildDropdownOpen ? " ks-selectbox--open" : "")
-                    }
-                    ref={childDropdownRef}
+                    ref={courseDropdownRef}
+                    className={cx(
+                      "ks-selectbox",
+                      isCourseDropdownOpen && "ks-selectbox--open",
+                    )}
                   >
                     <button
                       type="button"
                       className="ks-selectbox__trigger"
-                      onClick={() => setIsChildDropdownOpen((o) => !o)}
+                      onClick={() => setIsCourseDropdownOpen((o) => !o)}
+                      aria-haspopup="listbox"
+                      aria-expanded={isCourseDropdownOpen}
                     >
                       <span className="ks-selectbox__label">
-                        {activeChild
-                          ? `${activeChild.firstName} ${activeChild.lastName}`.trim()
-                          : "Kind wählen …"}
+                        {selectedCourseLabel}
                       </span>
                       <span
                         className="ks-selectbox__chevron"
@@ -680,204 +1177,129 @@ export default function StornoDialog({
                       />
                     </button>
 
-                    {isChildDropdownOpen && (
+                    {isCourseDropdownOpen && (
                       <div className="ks-selectbox__panel" role="listbox">
-                        {childOptions.map((item) => (
-                          <button
-                            type="button"
-                            key={item.uid}
-                            className={
-                              "ks-selectbox__option" +
-                              (item.uid === selectedChildUid
-                                ? " ks-selectbox__option--active"
-                                : "")
-                            }
-                            onClick={() => {
-                              setSelectedChildUid(item.uid);
-                              setIsChildDropdownOpen(false);
-                            }}
-                          >
-                            {item.label}
-                          </button>
+                        <button
+                          type="button"
+                          className={cx(
+                            "ks-selectbox__option",
+                            !courseValue && "ks-selectbox__option--active",
+                          )}
+                          onClick={() => {
+                            setCourseValue("");
+                            setIsCourseDropdownOpen(false);
+                          }}
+                        >
+                          All courses
+                        </button>
+
+                        {GROUPED_COURSE_OPTIONS.map((g) => (
+                          <div key={g.label} className="ks-selectbox__group">
+                            <div className="ks-selectbox__group-label">
+                              {g.label}
+                            </div>
+                            {g.items.map((opt) => (
+                              <button
+                                key={opt.value}
+                                type="button"
+                                className={cx(
+                                  "ks-selectbox__option",
+                                  courseValue === opt.value &&
+                                    "ks-selectbox__option--active",
+                                )}
+                                onClick={() => {
+                                  setCourseValue(opt.value);
+                                  setIsCourseDropdownOpen(false);
+                                }}
+                              >
+                                {opt.label}
+                              </button>
+                            ))}
+                          </div>
                         ))}
                       </div>
                     )}
                   </div>
                 </div>
-              )}
 
-              <div className="text-gray-700 mt-2">
-                <div>
-                  <span className="font-medium">Parent:</span>{" "}
-                  {selectedParent
-                    ? `${selectedParent.parent.firstName} ${selectedParent.parent.lastName}`.trim()
-                    : "—"}
+                <div className="ks-storno__filter">
+                  <InlineSelect
+                    label="Status"
+                    value={statusFilter}
+                    displayLabel={statusLabel}
+                    options={STATUS_OPTIONS}
+                    rootRef={statusDropdownRef}
+                    open={isStatusOpen}
+                    setOpen={setIsStatusOpen}
+                    onChange={(v) => setStatusFilter(v as StatusFilter)}
+                  />
                 </div>
 
-                <div>
-                  <span className="font-medium">Child:</span>{" "}
-                  {bookingTarget === "child" && activeChild
-                    ? `${activeChild.firstName} ${activeChild.lastName}`.trim()
-                    : "—"}
+                <div className="ks-storno__filter">
+                  <InlineSelect
+                    label="Sort"
+                    value={sortOrder}
+                    displayLabel={sortLabel}
+                    options={SORT_OPTIONS}
+                    rootRef={sortDropdownRef}
+                    open={isSortOpen}
+                    setOpen={setIsSortOpen}
+                    onChange={(v) => setSortOrder(v as SortOrder)}
+                  />
                 </div>
               </div>
-            </>
-          ) : (
-            !familyLoading && (
-              <div className="text-gray-700">
-                Storno entries are shown for the current customer.
+
+              <div className="ks-storno__section mb-2">
+                <BookingSelect
+                  label="Booking"
+                  open={menuOpen}
+                  setOpen={setMenuOpen}
+                  openMenu={openMenu}
+                  triggerRef={triggerRef}
+                  menuRef={menuRef}
+                  disabled={!filtered.length}
+                  trigger={bookingTrigger}
+                  items={filtered}
+                  selectedId={selectedId}
+                  onSelect={(id: string) => setSelectedId(id)}
+                  statusFilter={statusFilter}
+                  isCancelledSelected={isCancelled}
+                />
               </div>
-            )
-          )}
-        </div>
-
-        {err && <div className="mb-2 text-red-600">{err}</div>}
-        {loading && <div className="mb-2 text-gray-600">Loading…</div>}
-
-        <div className="ks-storno__filters mb-2">
-          <div className="ks-storno__filter">
-            <label className="lbl">Courses</label>
-
-            <div
-              ref={courseDropdownRef}
-              className={cx(
-                "ks-selectbox",
-                isCourseDropdownOpen && "ks-selectbox--open",
-              )}
-            >
-              <button
-                type="button"
-                className="ks-selectbox__trigger"
-                onClick={() => setIsCourseDropdownOpen((o) => !o)}
-                aria-haspopup="listbox"
-                aria-expanded={isCourseDropdownOpen}
-              >
-                <span className="ks-selectbox__label">
-                  {selectedCourseLabel}
-                </span>
-                <span className="ks-selectbox__chevron" aria-hidden="true" />
-              </button>
-
-              {isCourseDropdownOpen && (
-                <div className="ks-selectbox__panel" role="listbox">
-                  <button
-                    type="button"
-                    className={cx(
-                      "ks-selectbox__option",
-                      !courseValue && "ks-selectbox__option--active",
-                    )}
-                    onClick={() => {
-                      setCourseValue("");
-                      setIsCourseDropdownOpen(false);
-                    }}
-                  >
-                    All courses
-                  </button>
-
-                  {GROUPED_COURSE_OPTIONS.map((g) => (
-                    <div key={g.label} className="ks-selectbox__group">
-                      <div className="ks-selectbox__group-label">{g.label}</div>
-                      {g.items.map((opt) => (
-                        <button
-                          key={opt.value}
-                          type="button"
-                          className={cx(
-                            "ks-selectbox__option",
-                            courseValue === opt.value &&
-                              "ks-selectbox__option--active",
-                          )}
-                          onClick={() => {
-                            setCourseValue(opt.value);
-                            setIsCourseDropdownOpen(false);
-                          }}
-                        >
-                          {opt.label}
-                        </button>
-                      ))}
-                    </div>
-                  ))}
-                </div>
-              )}
             </div>
-          </div>
+          </section>
 
-          <div className="ks-storno__filter">
-            <InlineSelect
-              label="Status"
-              value={statusFilter}
-              displayLabel={statusLabel}
-              options={STATUS_OPTIONS}
-              rootRef={statusDropdownRef}
-              open={isStatusOpen}
-              setOpen={setIsStatusOpen}
-              onChange={(v) => setStatusFilter(v as StatusFilter)}
-            />
-          </div>
+          <section className="dialog-section storno-dialog__detailsSection">
+            <div className="dialog-section__head">
+              <h4 className="dialog-section__title">Storno details</h4>
+            </div>
 
-          <div className="ks-storno__filter">
-            <InlineSelect
-              label="Sort"
-              value={sortOrder}
-              displayLabel={sortLabel}
-              options={SORT_OPTIONS}
-              rootRef={sortDropdownRef}
-              open={isSortOpen}
-              setOpen={setIsSortOpen}
-              onChange={(v) => setSortOrder(v as SortOrder)}
-            />
-          </div>
+            <div className="dialog-section__body ks-storno__section">
+              <div>
+                <label className="dialog-label">Note (optional)</label>
+                <textarea
+                  className="input"
+                  rows={3}
+                  value={note}
+                  onChange={(e) => setNote(e.target.value)}
+                  placeholder="e.g., partial refund, goodwill"
+                  disabled={!selected || isCancelled}
+                />
+              </div>
+            </div>
+          </section>
         </div>
 
-        <div className="ks-storno__section mb-2">
-          <BookingSelect
-            label="Booking"
-            open={menuOpen}
-            setOpen={setMenuOpen}
-            openMenu={openMenu}
-            triggerRef={triggerRef}
-            menuRef={menuRef}
-            disabled={!filtered.length}
-            trigger={bookingTrigger}
-            items={filtered}
-            selectedId={selectedId}
-            onSelect={(id: string) => setSelectedId(id)}
-            statusFilter={statusFilter}
-            isCancelledSelected={isCancelled}
-          />
-        </div>
-
-        <div className="ks-storno__section">
-          <div>
-            <label className="lbl">Note (optional)</label>
-            <textarea
-              className="input"
-              rows={3}
-              value={note}
-              onChange={(e) => setNote(e.target.value)}
-              placeholder="e.g., partial refund, goodwill"
-              disabled={!selected || isCancelled}
-            />
+        <div className="dialog-footer storno-dialog__footer">
+          <div className="storno-dialog__footerActions">
+            <button
+              className="btn storno-dialog__confirmBtn"
+              disabled={disabled}
+              onClick={submit}
+            >
+              {saving ? "Processing…" : "Confirm storno"}
+            </button>
           </div>
-        </div>
-
-        <div className="flex justify-end gap-2 mt-3">
-          <button
-            type="button"
-            className="modal__close"
-            aria-label="Close"
-            onClick={onClose}
-          >
-            <img
-              src="/icons/close.svg"
-              alt=""
-              aria-hidden="true"
-              className="icon-img"
-            />
-          </button>
-
-          <button className="btn" disabled={disabled} onClick={submit}>
-            {saving ? "Processing…" : "Confirm storno"}
-          </button>
         </div>
       </div>
     </div>
