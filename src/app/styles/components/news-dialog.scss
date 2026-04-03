@@ -236,12 +236,15 @@
 
   .news-reject__head-left {
     min-width: 0;
+    flex: 1 1 auto;
+    padding-right: 18px;
   }
 
   .news-reject__head-right {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: 10px;
+    margin-left: auto;
     flex: 0 0 auto;
   }
 
