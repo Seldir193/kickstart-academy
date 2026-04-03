@@ -926,10 +926,11 @@ export default function StornoDialog({
         <div className="dialog-head storno-dialog__head">
           <div className="storno-dialog__head-main">
             <h3 id="storno-dialog-title" className="dialog-title">
-              Confirm storno
+              Confirm Cancellation
             </h3>
             <p className="dialog-subtitle">
-              Select scope, booking, and optional note for the storno process.
+              Select scope, booking, and optional note for the Cancellation
+              process.
             </p>
           </div>
 
@@ -953,7 +954,7 @@ export default function StornoDialog({
         <div className="dialog-body storno-dialog__body">
           <section className="dialog-section storno-dialog__scopeSection">
             <div className="dialog-section__head">
-              <h4 className="dialog-section__title">Storno scope</h4>
+              <h4 className="dialog-section__title">Cancellation scope</h4>
             </div>
 
             <div className="dialog-section__body storno-dialog__scopeBody">
@@ -963,7 +964,8 @@ export default function StornoDialog({
 
               {familyError && (
                 <div className="storno-dialog__error">
-                  Family could not be loaded – storno list may be incomplete.
+                  Family could not be loaded – Cancellation list may be
+                  incomplete.
                 </div>
               )}
 
@@ -1128,7 +1130,7 @@ export default function StornoDialog({
               ) : (
                 !familyLoading && (
                   <div className="dialog-value">
-                    Storno entries are shown for the current customer.
+                    Cancellation entries are shown for the current customer.
                   </div>
                 )
               )}
@@ -1254,7 +1256,7 @@ export default function StornoDialog({
                   label="Booking"
                   open={menuOpen}
                   setOpen={setMenuOpen}
-                  openMenu={openMenu}
+                  // openMenu={openMenu}
                   triggerRef={triggerRef}
                   menuRef={menuRef}
                   disabled={!filtered.length}
@@ -1271,7 +1273,7 @@ export default function StornoDialog({
 
           <section className="dialog-section storno-dialog__detailsSection">
             <div className="dialog-section__head">
-              <h4 className="dialog-section__title">Storno details</h4>
+              <h4 className="dialog-section__title">Cancellation details</h4>
             </div>
 
             <div className="dialog-section__body ks-storno__section">
@@ -1297,7 +1299,7 @@ export default function StornoDialog({
               disabled={disabled}
               onClick={submit}
             >
-              {saving ? "Processing…" : "Confirm storno"}
+              {saving ? "Processing…" : "Confirm Cancellation"}
             </button>
           </div>
         </div>

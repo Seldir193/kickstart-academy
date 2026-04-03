@@ -732,16 +732,20 @@ tr:focus-within .ks-row-action {
   flex-wrap: wrap;
 }
 
-.ks-file__input {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0 0 0 0);
-  white-space: nowrap;
-  border: 0;
+// .ks-file__input {
+//   position: absolute;
+//   width: 1px;
+//   height: 1px;
+//   padding: 0;
+//   margin: -1px;
+//   overflow: hidden;
+//   clip: rect(0 0 0 0);
+//   white-space: nowrap;
+//   border: 0;
+// }
+
+.offer-create-dialog .ks-file__input {
+  display: none;
 }
 
 .ks-file__name {

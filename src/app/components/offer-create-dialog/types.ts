@@ -1,3 +1,4 @@
+//src\app\components\offer-create-dialog\types.ts
 import type { Place } from "@/types/place";
 
 export type OfferType =

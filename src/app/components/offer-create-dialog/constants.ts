@@ -1,3 +1,4 @@
+//src\app\components\offer-create-dialog\constants.ts
 import type { CategoryKey, CourseOption } from "./types";
 
 export const COURSES: CourseOption[] = [

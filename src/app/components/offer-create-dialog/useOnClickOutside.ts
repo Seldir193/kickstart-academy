@@ -1,3 +1,4 @@
+//src\app\components\offer-create-dialog\useOnClickOutside.ts
 "use client";
 
 import { useEffect } from "react";
@@ -8,7 +9,7 @@ type AnyRef<T extends HTMLElement> =
 
 export function useOnClickOutside<T extends HTMLElement>(
   ref: AnyRef<T>,
-  handler: () => void
+  handler: () => void,
 ) {
   useEffect(() => {
     function onPointerDown(e: PointerEvent) {
