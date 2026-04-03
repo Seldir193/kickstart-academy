@@ -354,7 +354,6 @@ export default function BookingDialog({
 
     return "Zahlung freigegeben (E-Mail gesendet)";
   }
-
   return (
     <ModalPortal>
       <div
@@ -420,6 +419,160 @@ export default function BookingDialog({
           </div>
 
           <div className="dialog-body booking-dialog__body">
+            <div className="booking-dialog__grid">
+              <section className="dialog-section booking-dialog__section">
+                <div className="dialog-section__head">
+                  <h3 className="dialog-section__title booking-dialog__section-title">
+                    Booking
+                  </h3>
+                </div>
+
+                <div className="dialog-section__body">
+                  <div className="booking-dialog__details">
+                    <div className="booking-dialog__row booking-dialog__row--full">
+                      <div className="dialog-label">Program</div>
+                      <div className="dialog-value">{programText}</div>
+                    </div>
+
+                    <div className="booking-dialog__row booking-dialog__row--full">
+                      <div className="dialog-label">Venue</div>
+                      <div className="dialog-value">{venueText}</div>
+                    </div>
+
+                    <div className="booking-dialog__row">
+                      <div className="dialog-label">Name</div>
+                      <div className="dialog-value">
+                        {booking.firstName} {booking.lastName}
+                      </div>
+                    </div>
+
+                    <div className="booking-dialog__row">
+                      <div className="dialog-label">Email</div>
+                      <div className="dialog-value">{booking.email || "—"}</div>
+                    </div>
+
+                    <div className="booking-dialog__row">
+                      <div className="dialog-label">Age</div>
+                      <div className="dialog-value">{booking.age ?? "—"}</div>
+                    </div>
+
+                    <div className="booking-dialog__row">
+                      <div className="dialog-label">
+                        {isWishDate ? "Preferred date" : "Date / Start date"}
+                      </div>
+                      <div className="dialog-value">
+                        {formatDateOnlyDe(booking.date)}
+                      </div>
+                    </div>
+
+                    <div className="booking-dialog__row">
+                      <div className="dialog-label">Created</div>
+                      <div className="dialog-value">
+                        {formatDateDe(booking.createdAt)}
+                      </div>
+                    </div>
+
+                    <div className="booking-dialog__row">
+                      <div className="dialog-label">
+                        {isOneTimeType
+                          ? "Payment approved at"
+                          : "Subscription approved at"}
+                      </div>
+                      <div className="dialog-value">
+                        {isOneTimeType
+                          ? booking.meta?.paymentApprovedAt
+                            ? formatDateDe(booking.meta.paymentApprovedAt)
+                            : "—"
+                          : booking.meta?.subscriptionEligibleAt
+                            ? formatDateDe(booking.meta.subscriptionEligibleAt)
+                            : "—"}
+                      </div>
+                    </div>
+
+                    <div className="booking-dialog__row">
+                      <div className="dialog-label">Confirmation code</div>
+                      <div className="dialog-value">
+                        {booking.confirmationCode || "—"}
+                      </div>
+                    </div>
+
+                    {showInvoiceDetails ? (
+                      <>
+                        <div className="booking-dialog__row">
+                          <div className="dialog-label">Invoice number</div>
+                          <div className="dialog-value">
+                            {booking.invoiceNumber || booking.invoiceNo || "—"}
+                          </div>
+                        </div>
+
+                        <div className="booking-dialog__row">
+                          <div className="dialog-label">Invoice date</div>
+                          <div className="dialog-value">
+                            {formatDateOnlyDe(booking.invoiceDate)}
+                          </div>
+                        </div>
+                      </>
+                    ) : null}
+                  </div>
+                </div>
+              </section>
+
+              <section className="dialog-section booking-dialog__section">
+                <div className="dialog-section__head">
+                  <h3 className="dialog-section__title booking-dialog__section-title">
+                    Message
+                  </h3>
+                </div>
+
+                <div className="dialog-section__body">
+                  {messageLines.length ? (
+                    // <ul className="card-list">
+                    //   {messageLines.map((ln, i) => {
+                    //     const { label, value } = splitLabelValue(ln);
+                    //     return (
+                    //       <li key={i}>
+                    //         {label ? (
+                    //           <>
+                    //             <strong>{label}:</strong> {value || "—"}
+                    //           </>
+                    //         ) : (
+                    //           ln
+                    //         )}
+                    //       </li>
+                    //     );
+                    //   })}
+                    // </ul>
+
+                    <div className="booking-dialog__message-list">
+                      {messageLines.map((ln, i) => {
+                        const { label, value } = splitLabelValue(ln);
+
+                        if (!label) {
+                          return (
+                            <div
+                              key={i}
+                              className="booking-dialog__message-line"
+                            >
+                              <div className="dialog-value">{ln}</div>
+                            </div>
+                          );
+                        }
+
+                        return (
+                          <div key={i} className="booking-dialog__message-row">
+                            <div className="dialog-label">{label}</div>
+                            <div className="dialog-value">{value || "—"}</div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  ) : (
+                    <div className="dialog-value">—</div>
+                  )}
+                </div>
+              </section>
+            </div>
+
             <div className="booking-dialog__actions">
               {canShowProcessing ? (
                 <button
@@ -430,7 +583,7 @@ export default function BookingDialog({
                     run("processing", () => onSetStatus("processing"))
                   }
                 >
-                  {busy === "processing" ? "Bitte warten…" : "In Bearbeitung"}
+                  {busy === "processing" ? "Please wait..." : "Processing"}
                 </button>
               ) : null}
 
@@ -441,7 +594,7 @@ export default function BookingDialog({
                   aria-disabled={busy ? true : undefined}
                   onClick={() => run("confirm", () => onConfirm())}
                 >
-                  {busy === "confirm" ? "Bitte warten…" : "Bestätigen"}
+                  {busy === "confirm" ? "Please wait..." : "Confirm"}
                 </button>
               ) : null}
 
@@ -453,7 +606,7 @@ export default function BookingDialog({
                     aria-disabled={busy ? true : undefined}
                     onClick={() => run("resend", () => onResend())}
                   >
-                    {busy === "resend" ? "Bitte warten…" : "Erneut senden"}
+                    {busy === "resend" ? "Please wait..." : "Resend"}
                   </button>
 
                   <button
@@ -465,8 +618,8 @@ export default function BookingDialog({
                     }
                   >
                     {busy === "cancelConfirmed"
-                      ? "Bitte warten…"
-                      : "Bestätigten Termin absagen"}
+                      ? "Please wait..."
+                      : "Cancel confirmed booking"}
                   </button>
                 </>
               ) : null}
@@ -480,7 +633,7 @@ export default function BookingDialog({
                     run("cancelled", () => onSetStatus("cancelled"))
                   }
                 >
-                  {busy === "cancelled" ? "Bitte warten…" : "Absagen"}
+                  {busy === "cancelled" ? "Please wait..." : "Cancel"}
                 </button>
               ) : null}
 
@@ -498,10 +651,10 @@ export default function BookingDialog({
                   }
                 >
                   {busy === "eligible"
-                    ? "Bitte warten…"
+                    ? "Please wait..."
                     : booking.meta?.subscriptionEligible
-                      ? "Abo-Freigabe entfernen"
-                      : "Für Abo freigeben"}
+                      ? "Remove subscription approval"
+                      : "Approve for subscription"}
                 </button>
               ) : null}
 
@@ -513,8 +666,8 @@ export default function BookingDialog({
                   onClick={() => run("approvePayment", () => approvePayment())}
                 >
                   {busy === "approvePayment"
-                    ? "Bitte warten…"
-                    : "Zahlung freigeben"}
+                    ? "Please wait..."
+                    : "Approve payment"}
                 </button>
               ) : null}
 
@@ -525,135 +678,9 @@ export default function BookingDialog({
                   aria-disabled={busy ? true : undefined}
                   onClick={() => run("delete", () => onDelete())}
                 >
-                  {busy === "delete" ? "Bitte warten…" : "Löschen"}
+                  {busy === "delete" ? "Please wait..." : "Delete"}
                 </button>
               ) : null}
-            </div>
-
-            <div className="booking-dialog__grid">
-              <section className="dialog-section booking-dialog__section">
-                <div className="dialog-section__head">
-                  <h3 className="dialog-section__title">Buchung</h3>
-                </div>
-
-                <div className="dialog-section__body">
-                  <div className="booking-dialog__details">
-                    <div className="booking-dialog__row booking-dialog__row--full">
-                      <div className="dialog-label">Programm</div>
-                      <div className="dialog-value">{programText}</div>
-                    </div>
-
-                    <div className="booking-dialog__row booking-dialog__row--full">
-                      <div className="dialog-label">Standort</div>
-                      <div className="dialog-value">{venueText}</div>
-                    </div>
-
-                    <div className="booking-dialog__row">
-                      <div className="dialog-label">Name</div>
-                      <div className="dialog-value">
-                        {booking.firstName} {booking.lastName}
-                      </div>
-                    </div>
-
-                    <div className="booking-dialog__row">
-                      <div className="dialog-label">E-Mail</div>
-                      <div className="dialog-value">{booking.email || "—"}</div>
-                    </div>
-
-                    <div className="booking-dialog__row">
-                      <div className="dialog-label">Alter</div>
-                      <div className="dialog-value">{booking.age ?? "—"}</div>
-                    </div>
-
-                    <div className="booking-dialog__row">
-                      <div className="dialog-label">
-                        {isWishDate ? "Wunschtermin" : "Termin / Startdatum"}
-                      </div>
-                      <div className="dialog-value">
-                        {formatDateOnlyDe(booking.date)}
-                      </div>
-                    </div>
-
-                    <div className="booking-dialog__row">
-                      <div className="dialog-label">Erstellt</div>
-                      <div className="dialog-value">
-                        {formatDateDe(booking.createdAt)}
-                      </div>
-                    </div>
-
-                    <div className="booking-dialog__row">
-                      <div className="dialog-label">
-                        {isOneTimeType
-                          ? "Zahlung freigegeben am"
-                          : "Für Abo freigegeben am"}
-                      </div>
-                      <div className="dialog-value">
-                        {isOneTimeType
-                          ? booking.meta?.paymentApprovedAt
-                            ? formatDateDe(booking.meta.paymentApprovedAt)
-                            : "—"
-                          : booking.meta?.subscriptionEligibleAt
-                            ? formatDateDe(booking.meta.subscriptionEligibleAt)
-                            : "—"}
-                      </div>
-                    </div>
-
-                    <div className="booking-dialog__row">
-                      <div className="dialog-label">Bestätigungscode</div>
-                      <div className="dialog-value">
-                        {booking.confirmationCode || "—"}
-                      </div>
-                    </div>
-
-                    {showInvoiceDetails ? (
-                      <>
-                        <div className="booking-dialog__row">
-                          <div className="dialog-label">Rechnungsnummer</div>
-                          <div className="dialog-value">
-                            {booking.invoiceNumber || booking.invoiceNo || "—"}
-                          </div>
-                        </div>
-
-                        <div className="booking-dialog__row">
-                          <div className="dialog-label">Rechnungsdatum</div>
-                          <div className="dialog-value">
-                            {formatDateOnlyDe(booking.invoiceDate)}
-                          </div>
-                        </div>
-                      </>
-                    ) : null}
-                  </div>
-                </div>
-              </section>
-
-              <section className="dialog-section booking-dialog__section">
-                <div className="dialog-section__head">
-                  <h3 className="dialog-section__title">Nachricht</h3>
-                </div>
-
-                <div className="dialog-section__body">
-                  {messageLines.length ? (
-                    <ul className="card-list">
-                      {messageLines.map((ln, i) => {
-                        const { label, value } = splitLabelValue(ln);
-                        return (
-                          <li key={i}>
-                            {label ? (
-                              <>
-                                <strong>{label}:</strong> {value || "—"}
-                              </>
-                            ) : (
-                              ln
-                            )}
-                          </li>
-                        );
-                      })}
-                    </ul>
-                  ) : (
-                    <div className="dialog-value">—</div>
-                  )}
-                </div>
-              </section>
             </div>
           </div>
         </div>
