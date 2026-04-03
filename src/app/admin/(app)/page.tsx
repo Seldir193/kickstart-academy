@@ -42,10 +42,10 @@ function formatPrice(value?: number) {
 
 function courseTitle(offer: Offer) {
   const raw = safeText(offer.title);
-  if (!raw) return "Kurs";
+  if (!raw) return "Course";
   const dash = raw.split(" — ")[0];
   const dot = dash.split(" • ")[0];
-  return safeText(dot) || "Kurs";
+  return safeText(dot) || "Course";
 }
 
 function courseMeta(offer: Offer) {
@@ -201,23 +201,24 @@ export default function AdminHomePage() {
         <section className="hero">
           <div className="hero-content">
             <h1>
-              {dayGreeting()} {adminName ? `${firstNameOf(adminName)}` : ""}
+              {dayGreeting(new Date(), "en-US")}{" "}
+              {adminName ? `${firstNameOf(adminName)}` : ""}
               {adminName ? "!" : ""}
             </h1>
-            <p>Verwalte Trainings, Orte, Kunden und Buchungen an einem Ort.</p>
+            <p>Manage courses, places, customers, and bookings in one place.</p>
             <div className="hero-actions">
               <Link href="/admin/trainings" className="btn">
-                Kurs anlegen
+                Create course
               </Link>
               <Link href="/admin/orte" className="btn">
-                Ort anlegen
+                Create place
               </Link>
               <button
                 className="btn"
                 onClick={() => setQuickOpen(true)}
                 type="button"
               >
-                Buchung erstellen
+                Create booking
               </button>
             </div>
           </div>
@@ -226,48 +227,48 @@ export default function AdminHomePage() {
         <section className="grid">
           <div className="card">
             <div className="card-head">
-              <h3 className="card-title">Kurse online</h3>
+              <h3 className="card-title">Courses online</h3>
             </div>
             <div className="text-xl font-bold">{onlineCount}</div>
             <div className="card-actions">
               <Link href="/trainings" className="btn">
-                Alle Trainings
+                All courses
               </Link>
             </div>
           </div>
 
           <div className="card">
             <div className="card-head">
-              <h3 className="card-title">Orte</h3>
+              <h3 className="card-title">Places</h3>
             </div>
             <div className="text-xl font-bold">{placesCount}</div>
             <div className="card-actions">
               <Link href="/orte" className="btn">
-                Orte verwalten
+                Manage places
               </Link>
             </div>
           </div>
 
           <div className="card">
             <div className="card-head">
-              <h3 className="card-title">Newsletter-Leads</h3>
+              <h3 className="card-title">Newsletter leads</h3>
             </div>
             <div className="text-xl font-bold">{newsletterLeads}</div>
             <div className="card-actions">
               <Link href="/customers?tab=newsletter" className="btn">
-                Leads ansehen
+                View leads
               </Link>
             </div>
           </div>
 
           <div className="card">
             <div className="card-head">
-              <h3 className="card-title">Offene Anfragen</h3>
+              <h3 className="card-title">Open requests</h3>
             </div>
             <div className="text-xl font-bold">{openBookingsCount}</div>
             <div className="card-actions">
               <Link href="/admin/bookings" className="btn">
-                Zu den Buchungen
+                Go to bookings
               </Link>
             </div>
           </div>
@@ -275,25 +276,25 @@ export default function AdminHomePage() {
 
         <section className="card news-list admin-home__recent">
           <div className="card-head">
-            <h3 className="card-title">Zuletzt bearbeitete Kurse</h3>
+            <h3 className="card-title">Recently edited courses</h3>
             <Link href="/trainings" className="btn">
-              Alle anzeigen
+              Show all
             </Link>
           </div>
 
           {loadingList ? (
             <div className="card__empty">Loading…</div>
           ) : items.length === 0 ? (
-            <div className="card__empty">Keine Kurse gefunden.</div>
+            <div className="card__empty">No courses found.</div>
           ) : (
             <div className="news-list__table">
               <div className="news-list__head" aria-hidden="true">
                 <div className="news-list__h">Coach</div>
-                <div className="news-list__h">Kurs</div>
-                <div className="news-list__h">Ort</div>
-                <div className="news-list__h">Preis</div>
-                <div className="news-list__h">Datum</div>
-                <div className="news-list__h news-list__h--right">Aktion</div>
+                <div className="news-list__h">Course</div>
+                <div className="news-list__h">Place</div>
+                <div className="news-list__h">Price</div>
+                <div className="news-list__h">Date</div>
+                <div className="news-list__h news-list__h--right">Action</div>
               </div>
 
               <ul className="list list--bleed">
@@ -317,7 +318,7 @@ export default function AdminHomePage() {
                       }}
                       tabIndex={0}
                       role="button"
-                      aria-label={`Filtern nach Kurs: ${courseValue || courseTitle(offer)}`}
+                      aria-label={`Filter by course: ${courseValue || courseTitle(offer)}`}
                     >
                       <div className="news-list__cell">
                         <img
@@ -338,7 +339,7 @@ export default function AdminHomePage() {
                         <div className="news-list__title">
                           {courseTitle(offer)}{" "}
                           {isLatest ? (
-                            <span className="badge">Zuletzt geändert</span>
+                            <span className="badge">Last updated</span>
                           ) : null}
                         </div>
                         <div className="news-list__excerpt">
@@ -382,8 +383,8 @@ export default function AdminHomePage() {
                           className="edit-trigger ks-filter-open"
                           role="button"
                           tabIndex={0}
-                          title="Nach diesem Kurs filtern"
-                          aria-label="Nach diesem Kurs filtern"
+                          title="Filter by this course"
+                          aria-label="Filter by this course"
                           onClick={() => router.push(filterHref)}
                           onKeyDown={(e) => {
                             if (e.key === "Enter" || e.key === " ") {
@@ -449,14 +450,13 @@ export default function AdminHomePage() {
     </div>
   );
 }
+
 // "use client";
 
 // import Link from "next/link";
 // import { useEffect, useMemo, useState } from "react";
 // import { useRouter } from "next/navigation";
 // import { dayGreeting, firstNameOf } from "@/app/lib/greeting";
-// //import QuickBookingDialog from "./customers/QuickBookingDialog";
-// //import QuickBookingDialog from "@/app/admin/(app)/customers/QuickBookingDialog";
 
 // type Offer = {
 //   _id: string;
@@ -467,43 +467,54 @@ export default function AdminHomePage() {
 //   location?: string;
 //   price?: number;
 //   updatedAt?: string;
+//   coachImage?: string;
+//   coachName?: string;
 // };
+
 // type OffersResponse = { items: Offer[]; total: number };
 
-// function fmt_updated_de(value?: string) {
-//   if (!value) return "";
-//   const d = new Date(value);
-//   if (Number.isNaN(d.getTime())) return "";
-//   return d.toLocaleString("de-DE", {
+// function safeText(value: unknown) {
+//   return String(value ?? "").trim();
+// }
+
+// function formatDateDe(value?: string) {
+//   if (!value) return "—";
+//   const date = new Date(value);
+//   if (Number.isNaN(date.getTime())) return "—";
+//   return date.toLocaleDateString("de-DE", {
 //     day: "2-digit",
 //     month: "2-digit",
 //     year: "numeric",
-//     hour: "2-digit",
-//     minute: "2-digit",
 //   });
 // }
 
-// function safe_str(v: unknown) {
-//   return String(v ?? "").trim();
+// function formatPrice(value?: number) {
+//   if (typeof value !== "number") return "—";
+//   return `${value} €`;
 // }
 
-// function build_course_meta(o: Offer) {
-//   const title = safe_str(o.title);
-//   const course = safe_str(o.sub_type || o.type);
-//   const location = safe_str(o.location);
-//   const updated = fmt_updated_de(o.updatedAt);
+// function courseTitle(offer: Offer) {
+//   const raw = safeText(offer.title);
+//   if (!raw) return "Kurs";
+//   const dash = raw.split(" — ")[0];
+//   const dot = dash.split(" • ")[0];
+//   return safeText(dot) || "Kurs";
+// }
 
-//   const parts: string[] = [];
+// function courseMeta(offer: Offer) {
+//   const titleLower = safeText(offer.title).toLowerCase();
+//   const course = safeText(offer.sub_type || offer.type);
+//   if (!course) return "\u00A0";
+//   if (titleLower.includes(course.toLowerCase())) return "\u00A0";
+//   return course;
+// }
 
-//   const title_l = title.toLowerCase();
-//   if (course && !title_l.includes(course.toLowerCase())) parts.push(course);
-//   if (location && !title_l.includes(location.toLowerCase()))
-//     parts.push(location);
-
-//   if (typeof o.price === "number") parts.push(`${o.price} €`);
-//   if (updated) parts.push(`aktualisiert am ${updated}`);
-
-//   return parts.join(" · ");
+// function sortByUpdatedDesc(items: Offer[]) {
+//   return [...items].sort((a, b) => {
+//     const ta = (a.updatedAt && Date.parse(a.updatedAt)) || 0;
+//     const tb = (b.updatedAt && Date.parse(b.updatedAt)) || 0;
+//     return tb - ta;
+//   });
 // }
 
 // export default function AdminHomePage() {
@@ -521,65 +532,60 @@ export default function AdminHomePage() {
 //   const [loadingList, setLoadingList] = useState(true);
 
 //   const [quickOpen, setQuickOpen] = useState(false);
+//   const [adminName, setAdminName] = useState<string>("");
 
 //   useEffect(() => {
 //     let abort = false;
-//     (async () => {
+
+//     async function loadCounts() {
 //       try {
-//         const rOffers = await fetch(
-//           "/api/admin/offers?onlineActive=true&limit=1",
-//           {
-//             cache: "no-store",
-//             credentials: "include",
-//           },
-//         );
-//         const jrOffers: OffersResponse = await rOffers
+//         const r = await fetch("/api/admin/offers?onlineActive=true&limit=1", {
+//           cache: "no-store",
+//           credentials: "include",
+//         });
+//         const j: OffersResponse = await r
 //           .json()
 //           .catch(() => ({ items: [], total: 0 }));
-//         if (!abort) setOnlineCount(Number(jrOffers?.total || 0));
+//         if (!abort) setOnlineCount(Number(j?.total || 0));
 //       } catch {
 //         if (!abort) setOnlineCount(0);
 //       }
 
 //       try {
-//         const rPlaces = await fetch("/api/admin/places?limit=1", {
+//         const r = await fetch("/api/admin/places?limit=1", {
 //           cache: "no-store",
 //           credentials: "include",
 //         });
-//         const jp: any = await rPlaces.json().catch(() => ({}));
-//         if (!abort) setPlacesCount(Number(jp?.total || 0));
+//         const j = await r.json().catch(() => ({}));
+//         if (!abort) setPlacesCount(Number(j?.total || 0));
 //       } catch {
 //         if (!abort) setPlacesCount(0);
 //       }
 
 //       try {
-//         const rLead = await fetch(
-//           "/api/admin/customers?tab=newsletter&limit=1",
-//           {
-//             cache: "no-store",
-//             credentials: "include",
-//           },
-//         );
-//         const jl: any = await rLead.json().catch(() => ({}));
-//         if (!abort) setNewsletterLeads(Number(jl?.total || 0));
+//         const r = await fetch("/api/admin/customers?tab=newsletter&limit=1", {
+//           cache: "no-store",
+//           credentials: "include",
+//         });
+//         const j = await r.json().catch(() => ({}));
+//         if (!abort) setNewsletterLeads(Number(j?.total || 0));
 //       } catch {
 //         if (!abort) setNewsletterLeads(0);
 //       }
 
 //       try {
-//         const rPend = await fetch(
-//           "/api/admin/bookings?status=pending&limit=1",
-//           {
-//             cache: "no-store",
-//             credentials: "include",
-//           },
-//         );
-//         const jPend = await rPend.json().catch(() => ({ total: 0 }));
-//         if (!abort) setOpenBookingsCount(Number(jPend?.total || 0));
+//         const r = await fetch("/api/admin/bookings?status=pending&limit=1", {
+//           cache: "no-store",
+//           credentials: "include",
+//         });
+//         const j = await r.json().catch(() => ({ total: 0 }));
+//         if (!abort) setOpenBookingsCount(Number(j?.total || 0));
 //       } catch {
 //         if (!abort) setOpenBookingsCount(0);
 //       }
-//     })();
+//     }
+
+//     loadCounts();
 //     return () => {
 //       abort = true;
 //     };
@@ -587,7 +593,30 @@ export default function AdminHomePage() {
 
 //   useEffect(() => {
 //     let abort = false;
-//     (async () => {
+
+//     async function loadAdminName() {
+//       try {
+//         const r = await fetch("/api/admin/auth/me", {
+//           cache: "no-store",
+//           credentials: "include",
+//         });
+//         const j = await r.json().catch(() => ({}));
+//         if (abort || !j?.ok || !j?.user) return;
+//         const dn = j.user.fullName || j.user.displayName || j.user.email || "";
+//         setAdminName(dn);
+//       } catch {}
+//     }
+
+//     loadAdminName();
+//     return () => {
+//       abort = true;
+//     };
+//   }, []);
+
+//   useEffect(() => {
+//     let abort = false;
+
+//     async function loadRecent() {
 //       try {
 //         setLoadingList(true);
 //         const r = await fetch(`/api/admin/offers?page=${page}&limit=${limit}`, {
@@ -598,47 +627,26 @@ export default function AdminHomePage() {
 //           .json()
 //           .catch(() => ({ items: [], total: 0 }));
 //         const list = Array.isArray(j?.items) ? j.items : [];
-//         list.sort((a, b) => {
-//           const ta = (a.updatedAt && Date.parse(a.updatedAt)) || 0;
-//           const tb = (b.updatedAt && Date.parse(b.updatedAt)) || 0;
-//           return tb - ta;
-//         });
+//         const sorted = sortByUpdatedDesc(list);
 //         if (!abort) {
-//           setItems(list);
-//           setTotal(Number(j?.total || list.length));
+//           setItems(sorted);
+//           setTotal(Number(j?.total || sorted.length));
 //         }
 //       } finally {
 //         if (!abort) setLoadingList(false);
 //       }
-//     })();
+//     }
+
+//     loadRecent();
 //     return () => {
 //       abort = true;
 //     };
 //   }, [page]);
 
-//   const [adminName, setAdminName] = useState<string>("");
-//   useEffect(() => {
-//     let abort = false;
-//     (async () => {
-//       try {
-//         const r = await fetch("/api/admin/auth/me", {
-//           cache: "no-store",
-//           credentials: "include",
-//         });
-//         const j = await r.json().catch(() => ({}));
-//         if (!abort && j?.ok && j?.user) {
-//           const dn =
-//             j.user.fullName || j.user.displayName || j.user.email || "";
-//           setAdminName(dn);
-//         }
-//       } catch {}
-//     })();
-//     return () => {
-//       abort = true;
-//     };
-//   }, []);
-
-//   const pageCount = Math.max(1, Math.ceil(total / limit));
+//   const pageCount = useMemo(
+//     () => Math.max(1, Math.ceil(total / limit)),
+//     [total, limit],
+//   );
 
 //   return (
 //     <div className="ks admin-home">
@@ -718,7 +726,7 @@ export default function AdminHomePage() {
 //           </div>
 //         </section>
 
-//         <section className="card">
+//         <section className="card news-list admin-home__recent">
 //           <div className="card-head">
 //             <h3 className="card-title">Zuletzt bearbeitete Kurse</h3>
 //             <Link href="/trainings" className="btn">
@@ -731,85 +739,125 @@ export default function AdminHomePage() {
 //           ) : items.length === 0 ? (
 //             <div className="card__empty">Keine Kurse gefunden.</div>
 //           ) : (
-//             <ul className="list list--bleed">
-//               {items.map((o, i) => {
-//                 const courseValue = (o.sub_type || o.type || "").trim();
-//                 const filterHref = courseValue
-//                   ? `/trainings?course=${encodeURIComponent(courseValue)}`
-//                   : "/trainings";
+//             <div className="news-list__table">
+//               <div className="news-list__head" aria-hidden="true">
+//                 <div className="news-list__h">Coach</div>
+//                 <div className="news-list__h">Kurs</div>
+//                 <div className="news-list__h">Ort</div>
+//                 <div className="news-list__h">Preis</div>
+//                 <div className="news-list__h">Datum</div>
+//                 <div className="news-list__h news-list__h--right">Aktion</div>
+//               </div>
 
-//                 const isLatest = page === 1 && i === 0;
+//               <ul className="list list--bleed">
+//                 {items.map((offer, index) => {
+//                   const courseValue = safeText(offer.sub_type || offer.type);
+//                   const filterHref = courseValue
+//                     ? `/trainings?course=${encodeURIComponent(courseValue)}`
+//                     : "/trainings";
+//                   const isLatest = page === 1 && index === 0;
 
-//                 return (
-//                   <li
-//                     key={o._id}
-//                     className="list__item chip is-fullhover is-interactive ks-course-row"
-//                     onClick={() => router.push(filterHref)}
-//                     onKeyDown={(e) => {
-//                       if (e.key === "Enter" || e.key === " ") {
-//                         e.preventDefault();
-//                         router.push(filterHref);
-//                       }
-//                     }}
-//                     tabIndex={0}
-//                     role="button"
-//                     aria-label={`Filtern nach Kurs: ${
-//                       courseValue || (o.title ?? "Kurs")
-//                     }`}
-//                   >
-//                     <img
-//                       src={(o as any).coachImage || "/assets/img/avatar.png"}
-//                       alt={
-//                         (o as any).coachName
-//                           ? `Coach ${(o as any).coachName}`
-//                           : "Coach"
-//                       }
-//                       className="list__avatar"
-//                       onError={(e) => {
-//                         e.currentTarget.src = "/assets/img/avatar.png";
+//                   return (
+//                     <li
+//                       key={offer._id}
+//                       className="list__item chip news-list__row is-fullhover is-interactive"
+//                       onClick={() => router.push(filterHref)}
+//                       onKeyDown={(e) => {
+//                         if (e.key === "Enter" || e.key === " ") {
+//                           e.preventDefault();
+//                           router.push(filterHref);
+//                         }
 //                       }}
-//                     />
-
-//                     <div className="list__body">
-//                       <div className="list__title">
-//                         {o.title ?? "Kurs"}{" "}
-//                         {isLatest ? (
-//                           <span className="badge">Zuletzt geändert</span>
-//                         ) : null}
-//                       </div>
-//                       <div className="list__meta">{build_course_meta(o)}</div>
-//                     </div>
-
-//                     <div
-//                       className="list__actions"
-//                       onClick={(e) => e.stopPropagation()}
+//                       tabIndex={0}
+//                       role="button"
+//                       aria-label={`Filtern nach Kurs: ${courseValue || courseTitle(offer)}`}
 //                     >
-//                       <span
-//                         className="edit-trigger ks-filter-open"
-//                         role="button"
-//                         tabIndex={0}
-//                         title="Nach diesem Kurs filtern"
-//                         aria-label="Nach diesem Kurs filtern"
-//                         onClick={() => router.push(filterHref)}
-//                         onKeyDown={(e) => {
-//                           if (e.key === "Enter" || e.key === " ") {
-//                             e.preventDefault();
-//                             router.push(filterHref);
-//                           }
-//                         }}
-//                       >
+//                       <div className="news-list__cell">
 //                         <img
-//                           src="/icons/filter.svg"
-//                           alt=""
-//                           aria-hidden="true"
-//                           className="icon-img"
+//                           src={offer.coachImage || "/assets/img/avatar.png"}
+//                           alt={
+//                             offer.coachName
+//                               ? `Coach ${offer.coachName}`
+//                               : "Coach"
+//                           }
+//                           className="list__avatar"
+//                           onError={(e) => {
+//                             e.currentTarget.src = "/assets/img/avatar.png";
+//                           }}
 //                         />
-//                       </span>
-//                     </div>
-//                   </li>
-//                 );
-//               })}
-//             </ul>
+//                       </div>
+
+//                       <div className="news-list__cell">
+//                         <div className="news-list__title">
+//                           {courseTitle(offer)}{" "}
+//                           {isLatest ? (
+//                             <span className="badge">Zuletzt geändert</span>
+//                           ) : null}
+//                         </div>
+//                         <div className="news-list__excerpt">
+//                           {courseMeta(offer)}
+//                         </div>
+//                       </div>
+
+//                       <div className="news-list__cell">
+//                         <div className="news-list__title">
+//                           {safeText(offer.location) || "—"}
+//                         </div>
+//                         <div className="news-list__excerpt is-empty">
+//                           {"\u00A0"}
+//                         </div>
+//                       </div>
+
+//                       <div className="news-list__cell">
+//                         <div className="news-list__title">
+//                           {formatPrice(offer.price)}
+//                         </div>
+//                         <div className="news-list__excerpt is-empty">
+//                           {"\u00A0"}
+//                         </div>
+//                       </div>
+
+//                       <div className="news-list__cell">
+//                         <div className="news-list__title">
+//                           {formatDateDe(offer.updatedAt)}
+//                         </div>
+//                         <div className="news-list__excerpt is-empty">
+//                           {"\u00A0"}
+//                         </div>
+//                       </div>
+
+//                       <div
+//                         className="news-list__cell news-list__cell--action"
+//                         onClick={(e) => e.stopPropagation()}
+//                         onMouseDown={(e) => e.stopPropagation()}
+//                       >
+//                         <span
+//                           className="edit-trigger ks-filter-open"
+//                           role="button"
+//                           tabIndex={0}
+//                           title="Nach diesem Kurs filtern"
+//                           aria-label="Nach diesem Kurs filtern"
+//                           onClick={() => router.push(filterHref)}
+//                           onKeyDown={(e) => {
+//                             if (e.key === "Enter" || e.key === " ") {
+//                               e.preventDefault();
+//                               router.push(filterHref);
+//                             }
+//                           }}
+//                         >
+//                           <img
+//                             src="/icons/filter.svg"
+//                             alt=""
+//                             aria-hidden="true"
+//                             className="icon-img"
+//                           />
+//                         </span>
+//                       </div>
+//                     </li>
+//                   );
+//                 })}
+//               </ul>
+//             </div>
 //           )}
 //         </section>
 //       </main>
@@ -850,7 +898,7 @@ export default function AdminHomePage() {
 //         </button>
 //       </div>
 
-//       {/* {quickOpen && <QuickBookingDialog onClose={() => setQuickOpen(false)} />} */}
+//       {quickOpen ? null : null}
 //     </div>
 //   );
 // }

@@ -249,7 +249,7 @@ export default function AdminLoginClient() {
 
             <div className="auth-links">
               <a href="/admin/password-reset" className="auth-link">
-                Passwort vergessen?
+                Forgot password?
               </a>
             </div>
 
