@@ -1,10 +1,9 @@
-//src\app\components\Footer.tsx
 "use client";
 
 import React from "react";
 import { usePathname } from "next/navigation";
 
-function isAdminAuthRoute(pathname: string) {
+function isAdminMinimalFooterRoute(pathname: string) {
   const path = pathname.toLowerCase();
 
   return (
@@ -12,17 +11,23 @@ function isAdminAuthRoute(pathname: string) {
     path === "/admin/signup" ||
     path === "/admin/password-reset" ||
     path === "/admin/new-password" ||
+    path === "/admin/imprint" ||
+    path === "/admin/privacy" ||
+    path === "/admin/agb" ||
     path.startsWith("/admin/login/") ||
     path.startsWith("/admin/signup/") ||
     path.startsWith("/admin/password-reset/") ||
-    path.startsWith("/admin/new-password/")
+    path.startsWith("/admin/new-password/") ||
+    path.startsWith("/admin/imprint/") ||
+    path.startsWith("/admin/privacy/") ||
+    path.startsWith("/admin/agb/")
   );
 }
 
 export default function Footer() {
   const year = new Date().getFullYear();
   const pathname = usePathname() || "";
-  const isAdminAuth = isAdminAuthRoute(pathname);
+  const isMinimalFooterRoute = isAdminMinimalFooterRoute(pathname);
 
   const IMPRINT_URL =
     process.env.NEXT_PUBLIC_LEGAL_IMPRINT_URL || "/admin/imprint";
@@ -41,7 +46,7 @@ export default function Footer() {
       ? `${process.env.NEXT_PUBLIC_WP_BASE_URL.replace(/\/$/, "")}/?page_id=143`
       : "/kontakt");
 
-  if (isAdminAuth) {
+  if (isMinimalFooterRoute) {
     return (
       <footer
         className="site-footer site-footer--auth-minimal"

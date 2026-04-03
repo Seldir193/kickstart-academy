@@ -34,26 +34,39 @@ const WP_CONTACT_URL =
 const adminNav = [
   { href: "/admin", label: "Home" },
   { href: "/admin/orte", label: "Places" },
-  { href: "/admin/trainings", label: "Trainings" },
+
+  { href: "/admin/trainings", label: "Courses" },
   { href: "/admin/coaches", label: "Coaches" },
-  { href: "/admin/invoices", label: "Rechnungen" },
+  { href: "/admin/invoices", label: "Invoices" },
   { href: "/admin/customers", label: "Customers" },
   { href: "/admin/datev", label: "DATEV" },
   { href: "/admin/news", label: "News" },
-  { href: "/admin/revenue", label: "Umsatz" },
+  { href: "/admin/revenue", label: "Revenue" },
   { href: "/admin/bookings", label: "Bookings" },
-  { href: "/admin/online-bookings", label: "Online" },
+  { href: "/admin/online-bookings", label: "Holiday bookings" },
   { href: "/admin/vouchers", label: "Vouchers" },
-  { href: "/admin/franchise-locations", label: "Standorte" },
-  { href: "/admin/members", label: "Mitglieder" },
+  { href: "/admin/franchise-locations", label: "Locations" },
+  { href: "/admin/members", label: "Members" },
 ];
 
-function isAuthRoute(pathname: string) {
+function isMinimalHeaderRoute(pathname: string) {
+  const path = pathname.toLowerCase();
+
   return (
-    pathname === "/admin/login" ||
-    pathname === "/admin/signup" ||
-    pathname.startsWith("/admin/login") ||
-    pathname.startsWith("/admin/signup")
+    path === "/admin/login" ||
+    path === "/admin/signup" ||
+    path === "/admin/password-reset" ||
+    path === "/admin/new-password" ||
+    path === "/admin/imprint" ||
+    path === "/admin/privacy" ||
+    path === "/admin/agb" ||
+    path.startsWith("/admin/login/") ||
+    path.startsWith("/admin/signup/") ||
+    path.startsWith("/admin/password-reset/") ||
+    path.startsWith("/admin/new-password/") ||
+    path.startsWith("/admin/imprint/") ||
+    path.startsWith("/admin/privacy/") ||
+    path.startsWith("/admin/agb/")
   );
 }
 
@@ -124,7 +137,10 @@ export default function Header({ isAdminInitial = false }: Props) {
   const [showStandorteSignal, setShowStandorteSignal] = useState(false);
   const [showCoachesSignal, setShowCoachesSignal] = useState(false);
 
-  const hidePublicNav = useMemo(() => isAuthRoute(pathname), [pathname]);
+  const hidePublicNav = useMemo(
+    () => isMinimalHeaderRoute(pathname),
+    [pathname],
+  );
 
   const isSuperAdmin = useMemo(() => {
     const role = String(meUser?.role || "")
@@ -306,7 +322,7 @@ export default function Header({ isAdminInitial = false }: Props) {
   return (
     <header className="site-header">
       <div className="container header-inner">
-        <Link href="/" className="brand" aria-label="Startseite">
+        <Link href="/" className="brand" aria-label="Home page">
           <img src="/assets/img/logo.jpg" alt="Dortmunder Fussballschule" />
         </Link>
 
@@ -343,7 +359,7 @@ export default function Header({ isAdminInitial = false }: Props) {
                       aria-expanded={isMoreOpen}
                       onClick={() => setIsMoreOpen((v) => !v)}
                     >
-                      Mehr
+                      More
                     </button>
 
                     <div className={`nav-more ${isMoreOpen ? "is-open" : ""}`}>
@@ -401,15 +417,17 @@ export default function Header({ isAdminInitial = false }: Props) {
     </header>
   );
 }
-
-// // //src\app\components\Header.tsx
-// //src\app\components\Header.tsx
 // "use client";
 
 // import React, { useEffect, useMemo, useRef, useState } from "react";
 // import Link from "next/link";
 // import { usePathname } from "next/navigation";
 // import dynamic from "next/dynamic";
+// import { PAGE_LIMIT } from "@/app/admin/(app)/news/constants";
+// import { fetchNewsPage } from "@/app/admin/(app)/news/api";
+// import { fetchAdmin as fetchFranchiseAdmin } from "@/app/admin/(app)/franchise-locations/franchise_locations.api";
+// import { fetchCoachesList } from "@/app/admin/(app)/coaches/api";
+// import { FETCH_LIMIT } from "@/app/admin/(app)/coaches/constants";
 
 // const ProfileButton = dynamic(() => import("./ProfileButton"), { ssr: false });
 
@@ -488,12 +506,42 @@ export default function Header({ isAdminInitial = false }: Props) {
 //   return candidates.some((c) => is_match(current, c));
 // }
 
+// function NavLabel({
+//   label,
+//   showSignal,
+// }: {
+//   label: string;
+//   showSignal: boolean;
+// }) {
+//   return (
+//     <span className="nav-link__label">
+//       <span>{label}</span>
+//       {showSignal ? (
+//         <span
+//           className="nav-link__signal nav-link__signal--pulse"
+//           aria-hidden="true"
+//         />
+//       ) : null}
+//     </span>
+//   );
+// }
+
+// function hasCoachPending(resp: any) {
+//   const items = Array.isArray(resp?.providerPending?.items)
+//     ? resp.providerPending.items
+//     : [];
+//   return items.length > 0;
+// }
+
 // export default function Header({ isAdminInitial = false }: Props) {
 //   const pathname = usePathname();
 //   const isAdmin = isAdminInitial;
 
 //   const [isLoggingOut] = useState(false);
 //   const [meUser, setMeUser] = useState<MeUser | null>(null);
+//   const [showNewsSignal, setShowNewsSignal] = useState(false);
+//   const [showStandorteSignal, setShowStandorteSignal] = useState(false);
+//   const [showCoachesSignal, setShowCoachesSignal] = useState(false);
 
 //   const hidePublicNav = useMemo(() => isAuthRoute(pathname), [pathname]);
 
@@ -527,6 +575,87 @@ export default function Header({ isAdminInitial = false }: Props) {
 //       cancelled = true;
 //     };
 //   }, [isAdmin]);
+
+//   useEffect(() => {
+//     if (!isAdmin || !isSuperAdmin) {
+//       setShowNewsSignal(false);
+//       return;
+//     }
+
+//     let cancelled = false;
+
+//     (async () => {
+//       try {
+//         const data = await fetchNewsPage({
+//           page: 1,
+//           limit: PAGE_LIMIT,
+//           view: "provider_pending",
+//           search: "",
+//         });
+
+//         if (cancelled) return;
+//         setShowNewsSignal(Array.isArray(data?.items) && data.items.length > 0);
+//       } catch {
+//         if (!cancelled) setShowNewsSignal(false);
+//       }
+//     })();
+
+//     return () => {
+//       cancelled = true;
+//     };
+//   }, [isAdmin, isSuperAdmin]);
+
+//   useEffect(() => {
+//     if (!isAdmin || !isSuperAdmin) {
+//       setShowStandorteSignal(false);
+//       return;
+//     }
+
+//     let cancelled = false;
+
+//     (async () => {
+//       try {
+//         const data = await fetchFranchiseAdmin("view=provider_pending");
+//         const items = Array.isArray(data?.items) ? data.items : [];
+
+//         if (cancelled) return;
+//         setShowStandorteSignal(items.length > 0);
+//       } catch {
+//         if (!cancelled) setShowStandorteSignal(false);
+//       }
+//     })();
+
+//     return () => {
+//       cancelled = true;
+//     };
+//   }, [isAdmin, isSuperAdmin]);
+
+//   useEffect(() => {
+//     if (!isAdmin || !isSuperAdmin) {
+//       setShowCoachesSignal(false);
+//       return;
+//     }
+
+//     let cancelled = false;
+
+//     (async () => {
+//       try {
+//         const data = await fetchCoachesList({
+//           page: 1,
+//           limit: FETCH_LIMIT,
+//         });
+
+//         if (cancelled) return;
+//         setShowCoachesSignal(hasCoachPending(data));
+//       } catch {
+//         if (!cancelled) setShowCoachesSignal(false);
+//       }
+//     })();
+
+//     return () => {
+//       cancelled = true;
+//     };
+//   }, [isAdmin, isSuperAdmin]);
 
 //   const [isMoreOpen, setIsMoreOpen] = useState(false);
 //   const moreRef = useRef<HTMLDivElement | null>(null);
@@ -568,11 +697,8 @@ export default function Header({ isAdminInitial = false }: Props) {
 //       "/admin/customers",
 //       "/admin/news",
 //       "/admin/bookings",
-
 //       "/admin/franchise-locations",
 //     ]);
-
-//     //const filtered = adminNav.filter(() => true);
 
 //     const filtered = adminNav.filter((i) => {
 //       if (i.href === "/admin/members") return isSuperAdmin;
@@ -588,6 +714,13 @@ export default function Header({ isAdminInitial = false }: Props) {
 //   const isMoreActive = useMemo(() => {
 //     return moreLinks.some((item) => is_active_route(pathname, item.href));
 //   }, [moreLinks, pathname]);
+
+//   function signalFor(href: string) {
+//     if (href === "/admin/news") return showNewsSignal;
+//     if (href === "/admin/coaches") return showCoachesSignal;
+//     if (href === "/admin/franchise-locations") return showStandorteSignal;
+//     return false;
+//   }
 
 //   return (
 //     <header className="site-header">
@@ -610,7 +743,10 @@ export default function Header({ isAdminInitial = false }: Props) {
 //                       href={item.href}
 //                       className={`nav-link ${addActive ? "active" : ""}`}
 //                     >
-//                       {item.label}
+//                       <NavLabel
+//                         label={item.label}
+//                         showSignal={signalFor(item.href)}
+//                       />
 //                     </Link>
 //                   );
 //                 })}
@@ -646,7 +782,10 @@ export default function Header({ isAdminInitial = false }: Props) {
 //                             }`}
 //                             onClick={() => setIsMoreOpen(false)}
 //                           >
-//                             {item.label}
+//                             <NavLabel
+//                               label={item.label}
+//                               showSignal={signalFor(item.href)}
+//                             />
 //                           </Link>
 //                         );
 //                       })}

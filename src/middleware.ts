@@ -6,6 +6,9 @@ const PUBLIC_PAGES = new Set([
   "/admin/signup",
   "/admin/password-reset",
   "/admin/new-password",
+  "/admin/imprint",
+  "/admin/privacy",
+  "/admin/agb",
 ]);
 
 const PUBLIC_API = new Set([
@@ -20,13 +23,6 @@ const PUBLIC_API = new Set([
 
 export function middleware(req: NextRequest) {
   const { pathname, searchParams, search } = req.nextUrl;
-
-  // const host = req.nextUrl.hostname;
-  // if (host === "127.0.0.1") {
-  //   const url = req.nextUrl.clone();
-  //   url.hostname = "localhost";
-  //   return NextResponse.redirect(url, 308);
-  // }
 
   const host = req.nextUrl.hostname;
   if (host === "127.0.0.1" || host === "::1" || host === "0.0.0.0") {
@@ -108,28 +104,42 @@ export const config = {
   ],
 };
 
-// // src\middleware.ts
+// //src\middleware.ts
 // import { NextResponse, type NextRequest } from "next/server";
 
 // const PUBLIC_PAGES = new Set([
 //   "/admin/login",
 //   "/admin/signup",
-//   "/admin/password-reset", // <- allow forgot page
-//   "/admin/new-password", // <- allow new password page
+//   "/admin/password-reset",
+//   "/admin/new-password",
 // ]);
 
 // const PUBLIC_API = new Set([
 //   "/api/admin/auth/login",
 //   "/api/admin/auth/signup",
 //   "/api/admin/auth/logout",
-//   "/api/admin/auth/forgot", // <- allow send reset mail
-//   "/api/admin/auth/reset", // <- allow apply new password
+//   "/api/admin/auth/forgot",
+//   "/api/admin/auth/reset",
 //   "/api/ping",
 //   "/api/health",
 // ]);
 
 // export function middleware(req: NextRequest) {
 //   const { pathname, searchParams, search } = req.nextUrl;
+
+//   // const host = req.nextUrl.hostname;
+//   // if (host === "127.0.0.1") {
+//   //   const url = req.nextUrl.clone();
+//   //   url.hostname = "localhost";
+//   //   return NextResponse.redirect(url, 308);
+//   // }
+
+//   const host = req.nextUrl.hostname;
+//   if (host === "127.0.0.1" || host === "::1" || host === "0.0.0.0") {
+//     const url = req.nextUrl.clone();
+//     url.hostname = "localhost";
+//     return NextResponse.redirect(url, 308);
+//   }
 
 //   if (req.method === "OPTIONS" || req.method === "HEAD") {
 //     return NextResponse.next();
@@ -157,22 +167,17 @@ export const config = {
 
 //   const token = req.cookies.get("admin_token")?.value;
 
-//   // --- API guard ---
 //   if (pathname.startsWith("/api/admin")) {
 //     if (PUBLIC_API.has(pathname)) return NextResponse.next();
 //     if (!token) {
 //       return new NextResponse(
 //         JSON.stringify({ ok: false, error: "Unauthorized" }),
-//         {
-//           status: 401,
-//           headers: { "Content-Type": "application/json" },
-//         },
+//         { status: 401, headers: { "Content-Type": "application/json" } },
 //       );
 //     }
 //     return NextResponse.next();
 //   }
 
-//   // --- Page guard ---
 //   if (pathname.startsWith("/admin")) {
 //     if (PUBLIC_PAGES.has(pathname)) return NextResponse.next();
 //     if (!token) {
