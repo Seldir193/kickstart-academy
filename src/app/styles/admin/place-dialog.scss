@@ -94,12 +94,14 @@
     }
 
     .place-dialog__actions {
-      flex-direction: column;
+      //flex-direction: column;
       align-items: stretch;
+      justify-content: center;
     }
 
     .place-dialog__actions .btn {
-      width: 100%;
+      // width: 100%;
+      // align-items: flex-start;
       justify-content: center;
     }
   }

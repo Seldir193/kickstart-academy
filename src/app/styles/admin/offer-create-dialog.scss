@@ -153,7 +153,8 @@
 
     .ks-file {
       flex-direction: column;
-      align-items: stretch;
+      // align-items: stretch;
+      align-items: flex-start;
     }
 
     .upload-row {
@@ -211,6 +212,10 @@
       max-height: calc(100dvh - 24px);
     }
   }
+
+  .offer-create-dialog .ks-file__name {
+    flex: unset;
+  }
 }
 
 @media (max-width: 480px) {
@@ -222,6 +227,12 @@
     .offer-create-dialog-shell__dialog {
       max-height: calc(100dvh - 16px);
     }
+  }
+}
+
+.offer-create-dialog {
+  .ks-file__input {
+    display: none;
   }
 }
 
