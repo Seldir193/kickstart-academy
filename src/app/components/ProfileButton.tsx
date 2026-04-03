@@ -626,9 +626,9 @@ export default function ProfileButton({ user }: Props) {
               </div>
             </div>
 
-            {loading && (
+            {/* {loading && (
               <div className="text-gray-600 mt-3">Loading profile...</div>
-            )}
+            )} */}
             {error && <div className="text-red-600 mt-3">{error}</div>}
             {okMsg && <div className="ok mt-3">{okMsg}</div>}
           </form>
