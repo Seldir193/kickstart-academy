@@ -47,15 +47,36 @@ export function firstChildOf(member: FamilyMember | null | undefined) {
   return null;
 }
 
+// export function formatChildLabel(m: FamilyMember): string {
+//   const ch = firstChildOf(m);
+//   if (!ch) {
+//     return m.userId != null ? `#${m.userId} · (kein Kind)` : "(kein Kind)";
+//   }
+
+//   const parts: string[] = [];
+
+//   if (m.userId != null) parts.push(`#${m.userId}`);
+
+//   if (typeof m.childNumber === "number" && m.childNumber > 0) {
+//     parts.push(`Kind ${m.childNumber}`);
+//   } else {
+//     const idx = childIndexFromId(m._id);
+//     if (idx != null) parts.push(`Kind ${idx >= 0 ? idx + 1 : 1}`);
+//   }
+
+//   parts.push(childBase(ch.firstName, ch.lastName));
+
+//   const birth = childBirth(ch.birthDate);
+//   if (birth) parts.push(birth);
+
+//   return parts.join(" · ");
+// }
+
 export function formatChildLabel(m: FamilyMember): string {
   const ch = firstChildOf(m);
-  if (!ch) {
-    return m.userId != null ? `#${m.userId} · (kein Kind)` : "(kein Kind)";
-  }
+  if (!ch) return "(kein Kind)";
 
   const parts: string[] = [];
-
-  if (m.userId != null) parts.push(`#${m.userId}`);
 
   if (typeof m.childNumber === "number" && m.childNumber > 0) {
     parts.push(`Kind ${m.childNumber}`);
@@ -65,9 +86,6 @@ export function formatChildLabel(m: FamilyMember): string {
   }
 
   parts.push(childBase(ch.firstName, ch.lastName));
-
-  const birth = childBirth(ch.birthDate);
-  if (birth) parts.push(birth);
 
   return parts.join(" · ");
 }

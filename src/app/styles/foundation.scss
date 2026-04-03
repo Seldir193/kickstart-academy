@@ -57,22 +57,9 @@ body {
   width: 100%;
 }
 
-// .site-main {
-//   min-height: 0;
-//   overflow-y: auto;
-//   -webkit-overflow-scrolling: touch;
-//   padding-block: 24px;
-//   padding-inline: 0;
-//   display: flex;
-//   flex-direction: column;
-//   align-items: center;
-//   justify-content: flex-start;
-// }
-
 .site-main {
   min-height: 0;
   overflow-y: auto;
-  scrollbar-gutter: stable;
   -webkit-overflow-scrolling: touch;
   padding-block: 24px;
   padding-inline: 0;
@@ -81,6 +68,19 @@ body {
   align-items: center;
   justify-content: flex-start;
 }
+
+// .site-main {
+//   min-height: 0;
+//   overflow-y: auto;
+//   scrollbar-gutter: stable;
+//   -webkit-overflow-scrolling: touch;
+//   padding-block: 24px;
+//   padding-inline: 0;
+//   display: flex;
+//   flex-direction: column;
+//   align-items: center;
+//   justify-content: flex-start;
+// }
 
 .site-main--auth {
   display: flex;

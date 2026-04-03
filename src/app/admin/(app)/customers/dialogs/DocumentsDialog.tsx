@@ -57,10 +57,14 @@ function formatDateOnlyDe(value?: string | null) {
   }).format(d);
 }
 
+// // function childLabel(child: FamilyChild) {
+// //   const full = `${child.firstName} ${child.lastName}`.trim();
+// //   const birth = formatDateOnlyDe(child.birthDate);
+// //   return [full || "Child", birth].filter(Boolean).join(" - ");
+// }
+
 function childLabel(child: FamilyChild) {
-  const full = `${child.firstName} ${child.lastName}`.trim();
-  const birth = formatDateOnlyDe(child.birthDate);
-  return [full || "Child", birth].filter(Boolean).join(" - ");
+  return `${child.firstName} ${child.lastName}`.trim() || "Kind";
 }
 
 function buildChildOptions(family: FamilyMember[] | null) {
