@@ -1,25 +1,29 @@
+/* src/app/styles/footer.scss */
 /* Minimal admin footer — dark, clean, legal-only */
 
-.site-footer--minimal {
+.site-footer--minimal,
+.site-footer--auth-minimal {
   --footer-bg: #0e0e10;
   --footer-fg: #eaeaea;
   --footer-fg-muted: #b9bec4;
 
+  width: 100%;
   background: var(--footer-bg);
   color: var(--footer-fg);
-  width: 100%;
   border-top: 1px solid #1a1b1e;
 }
 
-.site-footer--minimal .container {
+.site-footer--minimal .container,
+.site-footer--auth-minimal .container {
   max-width: 1440px;
   margin: 0 auto;
-  // padding: 14px 16px;
-
-  min-height: var(--header-height);
   padding: 0 16px;
   display: flex;
   align-items: center;
+}
+
+.site-footer--minimal .container {
+  min-height: var(--header-height);
 }
 
 .footer-min {
@@ -28,9 +32,9 @@
   justify-content: space-between;
   gap: 12px;
   flex-wrap: wrap;
+  width: 100%;
 }
 
-/* left: logo + brand */
 .footer-min__left {
   display: flex;
   align-items: center;
@@ -42,7 +46,6 @@
   width: 26px;
   height: auto;
   display: block;
-  filter: none; /* don’t invert; provide white logo if needed */
   opacity: 0.95;
 }
 
@@ -54,8 +57,8 @@
 }
 
 .footer-min__brand-name {
-  font-weight: 700;
   color: #fff;
+  font-weight: 700;
   letter-spacing: 0.01em;
 }
 
@@ -64,12 +67,12 @@
   font-size: 0.95rem;
 }
 
-/* center: email */
 .footer-min__mail {
   color: var(--footer-fg-muted);
   text-decoration: none;
   white-space: nowrap;
 }
+
 .footer-min__mail:hover,
 .footer-min__mail:focus-visible {
   color: #fff;
@@ -77,18 +80,19 @@
   outline: none;
 }
 
-/* right: legal nav */
 .footer-min__links {
   display: flex;
   align-items: center;
   gap: 16px;
   flex-wrap: wrap;
 }
+
 .footer-min__links a {
   color: var(--footer-fg-muted);
   text-decoration: none;
   white-space: nowrap;
 }
+
 .footer-min__links a:hover,
 .footer-min__links a:focus-visible {
   color: #fff;
@@ -96,15 +100,182 @@
   outline: none;
 }
 
-/* responsive: stack + center */
+.site-footer--auth-minimal {
+  .container.footer-auth-min {
+    min-height: 56px;
+    padding: 10px 16px;
+    justify-content: center;
+  }
+
+  .footer-auth-min {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    width: 100%;
+    text-align: center;
+  }
+
+  .footer-auth-min__links {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    flex-wrap: wrap;
+  }
+
+  .footer-auth-min__links a {
+    color: var(--footer-fg-muted);
+    text-decoration: none;
+    white-space: nowrap;
+  }
+
+  .footer-auth-min__links a:hover,
+  .footer-auth-min__links a:focus-visible {
+    color: #fff;
+    text-decoration: none;
+    outline: none;
+  }
+
+  .footer-auth-min__copy {
+    color: var(--footer-fg-muted);
+    font-size: 0.92rem;
+    line-height: 1.3;
+  }
+}
+
 @media (max-width: 700px) {
   .footer-min {
     flex-direction: column;
     align-items: center;
-    text-align: center;
     gap: 8px;
+    text-align: center;
   }
+
   .footer-min__links {
     gap: 12px;
   }
+
+  .site-footer--auth-minimal {
+    .container.footer-auth-min {
+      min-height: 56px;
+      padding: 10px 12px;
+    }
+
+    .footer-auth-min__links {
+      gap: 12px;
+    }
+  }
 }
+
+// /* Minimal admin footer — dark, clean, legal-only */
+
+// .site-footer--minimal {
+//   --footer-bg: #0e0e10;
+//   --footer-fg: #eaeaea;
+//   --footer-fg-muted: #b9bec4;
+
+//   background: var(--footer-bg);
+//   color: var(--footer-fg);
+//   width: 100%;
+//   border-top: 1px solid #1a1b1e;
+// }
+
+// .site-footer--minimal .container {
+//   max-width: 1440px;
+//   margin: 0 auto;
+//   // padding: 14px 16px;
+
+//   min-height: var(--header-height);
+//   padding: 0 16px;
+//   display: flex;
+//   align-items: center;
+// }
+
+// .footer-min {
+//   display: flex;
+//   align-items: center;
+//   justify-content: space-between;
+//   gap: 12px;
+//   flex-wrap: wrap;
+// }
+
+// /* left: logo + brand */
+// .footer-min__left {
+//   display: flex;
+//   align-items: center;
+//   gap: 10px;
+//   min-width: 0;
+// }
+
+// .footer-min__logo {
+//   width: 26px;
+//   height: auto;
+//   display: block;
+//   filter: none; /* don’t invert; provide white logo if needed */
+//   opacity: 0.95;
+// }
+
+// .footer-min__brand {
+//   display: flex;
+//   align-items: baseline;
+//   gap: 8px;
+//   flex-wrap: wrap;
+// }
+
+// .footer-min__brand-name {
+//   font-weight: 700;
+//   color: #fff;
+//   letter-spacing: 0.01em;
+// }
+
+// .footer-min__copy {
+//   color: var(--footer-fg-muted);
+//   font-size: 0.95rem;
+// }
+
+// /* center: email */
+// .footer-min__mail {
+//   color: var(--footer-fg-muted);
+//   text-decoration: none;
+//   white-space: nowrap;
+// }
+// .footer-min__mail:hover,
+// .footer-min__mail:focus-visible {
+//   color: #fff;
+//   text-decoration: none;
+//   outline: none;
+// }
+
+// /* right: legal nav */
+// .footer-min__links {
+//   display: flex;
+//   align-items: center;
+//   gap: 16px;
+//   flex-wrap: wrap;
+// }
+// .footer-min__links a {
+//   color: var(--footer-fg-muted);
+//   text-decoration: none;
+//   white-space: nowrap;
+// }
+// .footer-min__links a:hover,
+// .footer-min__links a:focus-visible {
+//   color: #fff;
+//   text-decoration: none;
+//   outline: none;
+// }
+
+// /* responsive: stack + center */
+// @media (max-width: 700px) {
+//   .footer-min {
+//     flex-direction: column;
+//     align-items: center;
+//     text-align: center;
+//     gap: 8px;
+//   }
+//   .footer-min__links {
+//     gap: 12px;
+//   }
+// }
