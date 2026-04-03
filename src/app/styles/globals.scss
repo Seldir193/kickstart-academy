@@ -8,6 +8,8 @@
 @use "./admin/book-dialog.scss" as *;
 @use "./admin/cancel-dialog.scss" as *;
 @use "./admin/storno-dialog.scss" as *;
+@use "./admin/place-dialog.scss" as *;
+@use "./admin/offer-create-dialog.scss" as *;
 //@use "./bookDialog" as *;
 // @use "./customerDialog" as *;
 @use "./profile" as *;
@@ -65,7 +67,7 @@
 @use "./public/book-status.scss" as *;
 @use "./public/contract.scss" as *;
 @use "./weekly-cancel.scss" as *;
-@use "./offer-create-dialog.scss" as *;
+
 @use "./weekly-revoke.scss" as *;
 @use "./vouchers.scss" as *;
 @use "./dialog-style/dialog-system.scss" as *;

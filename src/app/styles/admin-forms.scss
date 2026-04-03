@@ -978,3 +978,32 @@ button.input[aria-haspopup="listbox"] {
   margin-top: 8px;
   margin-bottom: 12px;
 }
+
+//
+.input-with-icon {
+  position: relative;
+
+  &__icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 20px;
+    height: 20px;
+    opacity: 0.7;
+    pointer-events: none;
+    transition:
+      opacity 125ms ease,
+      filter 125ms ease;
+  }
+
+  &__input {
+    width: 100%;
+    padding-left: 40px;
+  }
+
+  &:focus-within .input-with-icon__icon {
+    opacity: 1;
+    filter: brightness(0) saturate(100%);
+  }
+}

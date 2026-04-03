@@ -141,3 +141,25 @@
   font-family: inherit;
   font-weight: 700; /* wie gehabt */
 }
+
+//neu
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.btn__icon {
+  width: 20px;
+  height: 20px;
+  display: inline-block;
+  flex: 0 0 auto;
+}
+
+.btn:hover .btn__icon,
+.btn:focus .btn__icon,
+.btn:focus-visible .btn__icon {
+  filter: invert(1);
+}

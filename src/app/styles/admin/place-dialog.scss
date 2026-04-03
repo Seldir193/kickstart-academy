@@ -1,0 +1,118 @@
+.place-dialog.dialog-backdrop {
+  z-index: 1100;
+}
+
+.place-dialog {
+  .place-dialog__dialog {
+    width: min(1080px, calc(100% - 40px));
+    max-width: 1080px;
+    max-height: calc(100dvh - var(--header-height, 64px) - 48px);
+    grid-template-rows: auto minmax(0, 1fr);
+  }
+
+  .place-dialog__head-main {
+    min-width: 0;
+    flex: 1 1 auto;
+    padding-right: 12px;
+  }
+
+  .place-dialog__body {
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+
+  .place-dialog__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(360px, 0.95fr);
+    gap: 16px;
+    align-items: start;
+  }
+
+  .place-dialog__section {
+    min-width: 0;
+  }
+
+  .place-dialog__section-body {
+    display: grid;
+    gap: 16px;
+  }
+
+  .place-dialog__row--zip-city {
+    display: grid;
+    grid-template-columns: minmax(120px, 1fr) minmax(0, 2fr);
+    gap: 12px;
+    align-items: start;
+  }
+
+  .place-dialog__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .place-dialog__message {
+    margin: 0;
+  }
+
+  .place-dialog__coords {
+    margin-top: 8px;
+  }
+
+  .leaflet-container {
+    border-radius: 12px;
+  }
+}
+
+@media (max-width: 920px) {
+  .place-dialog {
+    .place-dialog__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+}
+
+@media (max-width: 720px) {
+  .place-dialog.dialog-backdrop {
+    padding: 12px;
+    place-items: center;
+  }
+
+  .place-dialog {
+    .place-dialog__dialog {
+      width: 100%;
+      max-width: 100%;
+      max-height: calc(100dvh - 24px);
+    }
+  }
+}
+
+@media (max-width: 560px) {
+  .place-dialog {
+    .place-dialog__row--zip-city {
+      grid-template-columns: 1fr;
+    }
+
+    .place-dialog__actions {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .place-dialog__actions .btn {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .place-dialog.dialog-backdrop {
+    padding: 8px;
+  }
+
+  .place-dialog {
+    .place-dialog__dialog {
+      max-height: calc(100dvh - 16px);
+    }
+  }
+}

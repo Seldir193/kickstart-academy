@@ -1,3 +1,4 @@
+//src\app\admin\(app)\orte\components\PlacesTableList.tsx
 "use client";
 
 import type { RefObject } from "react";
