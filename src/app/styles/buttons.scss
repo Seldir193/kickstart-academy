@@ -163,3 +163,37 @@
 .btn:focus-visible .btn__icon {
   filter: invert(1);
 }
+
+//nez
+
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 44px;
+  padding: 0 16px;
+  border: 2px solid #d9dee6;
+  border-radius: 8px;
+  background: #f3f4f6;
+  color: var(--brand-black);
+  cursor: pointer;
+  transition:
+    background-color 160ms ease,
+    border-color 160ms ease,
+    color 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.btn-ghost:hover:not(:disabled),
+.btn-ghost:focus-visible {
+  background: #e5e7eb;
+  border-color: #cbd5e1;
+  outline: none;
+  box-shadow: none;
+}
+
+.btn-ghost:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
