@@ -1,0 +1,121 @@
+.booking-dialog.dialog-backdrop {
+  z-index: 1100;
+}
+
+.booking-dialog {
+  .booking-dialog__dialog {
+    width: min(980px, calc(100vw - 32px));
+    max-width: 980px;
+    max-height: calc(100dvh - var(--header-height, 64px) - 48px);
+    grid-template-rows: auto minmax(0, 1fr);
+  }
+
+  .booking-dialog__head-main {
+    min-width: 0;
+    flex: 1 1 auto;
+    padding-right: 12px;
+  }
+
+  .booking-dialog__title-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    min-width: 0;
+  }
+
+  .booking-dialog__title {
+    min-width: 0;
+    word-break: break-word;
+  }
+
+  .booking-dialog__body {
+    display: grid;
+    gap: 16px;
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+
+  .booking-dialog__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: flex-end;
+  }
+
+  .booking-dialog__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.95fr);
+    gap: 16px;
+    align-items: start;
+  }
+
+  .booking-dialog__section {
+    min-width: 0;
+  }
+
+  .booking-dialog__details {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .booking-dialog__row {
+    display: grid;
+    gap: 4px;
+    min-width: 0;
+  }
+
+  .booking-dialog__row--full {
+    grid-column: 1 / -1;
+  }
+
+  .booking-dialog__section .card-list {
+    gap: 8px;
+  }
+}
+
+@media (max-width: 900px) {
+  .booking-dialog {
+    .booking-dialog__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+}
+
+@media (max-width: 640px) {
+  .booking-dialog.dialog-backdrop {
+    padding: 12px;
+    place-items: center;
+  }
+
+  .booking-dialog {
+    .booking-dialog__dialog {
+      width: 100%;
+      max-width: 100%;
+      max-height: calc(100dvh - 24px);
+    }
+
+    .booking-dialog__details {
+      grid-template-columns: 1fr;
+    }
+
+    .booking-dialog__actions .btn {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .booking-dialog.dialog-backdrop {
+    padding: 8px;
+  }
+
+  .booking-dialog {
+    .booking-dialog__dialog {
+      max-height: calc(100dvh - 16px);
+    }
+  }
+}
