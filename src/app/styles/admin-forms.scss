@@ -838,7 +838,7 @@ button.input[aria-haspopup="listbox"] {
 
 // .ks-customers-table-scroll {
 //   overflow-y: auto;
-//   //  max-height: calc(100dvh - 430px);
+//    max-height: calc(100dvh - 430px);
 //   max-height: calc(100dvh - 260px);
 //   min-height: 0;
 
@@ -866,7 +866,7 @@ button.input[aria-haspopup="listbox"] {
 //   background: #f9fafb;
 // }
 
-// //neu customer
+// neu customer
 
 // .ks-customers-toolbar {
 //   display: grid;
@@ -924,17 +924,17 @@ button.input[aria-haspopup="listbox"] {
 //   align-items: center;
 // }
 
-// .ks-invoices__downloadBtn {
-//   display: inline-flex;
-//   align-items: center;
-//   gap: 8px;
-// }
+.ks-invoices__downloadBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
 
-// .ks-invoices__downloadIcon {
-//   width: 16px;
-//   height: 16px;
-//   flex-shrink: 0;
-// }
+.ks-invoices__downloadIcon {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
 
 // @media (max-width: 1180px) {
 //   .ks-customers-toolbar {
@@ -979,32 +979,32 @@ button.input[aria-haspopup="listbox"] {
 //   margin-bottom: 12px;
 // }
 
-// //
+//
 
-// .input-with-icon {
-//   position: relative;
+.input-with-icon {
+  position: relative;
 
-//   &__icon {
-//     position: absolute;
-//     left: 12px;
-//     top: 50%;
-//     transform: translateY(-50%);
-//     width: 20px;
-//     height: 20px;
-//     opacity: 0.7;
-//     pointer-events: none;
-//     transition:
-//       opacity 125ms ease,
-//       filter 125ms ease;
-//   }
+  &__icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 20px;
+    height: 20px;
+    opacity: 0.7;
+    pointer-events: none;
+    transition:
+      opacity 125ms ease,
+      filter 125ms ease;
+  }
 
-//   &__input {
-//     width: 100%;
-//     padding-left: 40px;
-//   }
+  &__input {
+    width: 100%;
+    padding-left: 40px;
+  }
 
-//   &:focus-within .input-with-icon__icon {
-//     opacity: 1;
-//     filter: brightness(0) saturate(100%);
-//   }
-// }
+  &:focus-within .input-with-icon__icon {
+    opacity: 1;
+    filter: brightness(0) saturate(100%);
+  }
+}

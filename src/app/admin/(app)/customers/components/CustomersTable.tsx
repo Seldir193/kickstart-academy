@@ -118,7 +118,7 @@ export default function CustomersTable({
     <div className="ks-customers-table-scroll">
       <section
         className={
-          "card admin-card p-0 overflow-hidden ks-customers-card ks-customers-list" +
+          "card admin-card p-0 ks-customers-card ks-customers-list" +
           (showListLoading ? " is-loading" : "")
         }
       >
@@ -158,7 +158,7 @@ export default function CustomersTable({
                     {c.userId ?? "—"}
                   </div>
 
-                  <div className="ks-customers-list__cell">
+                  <div className="ks-customers-list__cell ks-customers-list__cell--children">
                     {childCell(c, disableTooltips)}
                   </div>
 
