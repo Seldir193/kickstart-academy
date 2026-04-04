@@ -59,7 +59,7 @@ export default function BulkActions({
           onClick={onToggleSelectMode}
           disabled={disabled}
         >
-          Auswählen
+          Select
         </button>
       </div>
     );
@@ -68,7 +68,7 @@ export default function BulkActions({
   return (
     <div className="bulkbar">
       <div className="bulkbar__left">
-        <strong>{count}</strong>&nbsp;ausgewählt
+        <strong>{count}</strong>&nbsp;selected
       </div>
 
       <div className="bulkbar__right">
@@ -80,7 +80,7 @@ export default function BulkActions({
             onClick={onClear}
             disabled={disabled}
           >
-            Alles aufheben
+            Clear selection
           </button>
         ) : (
           <button
@@ -89,7 +89,7 @@ export default function BulkActions({
             onClick={onToggleAll}
             disabled={disabled}
           >
-            {isAllSelected ? "Alles aufheben" : "Alle auswählen"}
+            {isAllSelected ? "Clear selection" : "Select all"}
           </button>
         )}
 
@@ -99,7 +99,7 @@ export default function BulkActions({
           onClick={onDelete}
           disabled={disabled || count === 0}
         >
-          Löschen ({count})
+          Delete ({count})
         </button>
 
         <button
@@ -109,7 +109,7 @@ export default function BulkActions({
           onClick={onToggleSelectMode}
           disabled={disabled}
         >
-          Abbrechen
+          Cancel
         </button>
       </div>
     </div>
@@ -121,6 +121,21 @@ export default function BulkActions({
 
 // import type { RefObject } from "react";
 // import { useEffect } from "react";
+
+// type Props = {
+//   toggleRef: RefObject<HTMLButtonElement | null>;
+//   cancelRef: RefObject<HTMLButtonElement | null>;
+//   clearRef: RefObject<HTMLButtonElement | null>;
+//   selectMode: boolean;
+//   onToggleSelectMode: () => void;
+//   count: number;
+//   isAllSelected?: boolean;
+//   disabled: boolean;
+//   onToggleAll: () => void;
+//   onClear: () => void;
+//   showClear: boolean;
+//   onDelete: () => void;
+// };
 
 // export default function BulkActions({
 //   toggleRef,
@@ -135,20 +150,7 @@ export default function BulkActions({
 //   onClear,
 //   showClear,
 //   onDelete,
-// }: {
-//   toggleRef: RefObject<HTMLButtonElement | null>;
-//   cancelRef: RefObject<HTMLButtonElement | null>;
-//   clearRef: RefObject<HTMLButtonElement | null>;
-//   selectMode: boolean;
-//   onToggleSelectMode: () => void;
-//   count: number;
-//   isAllSelected?: boolean;
-//   disabled: boolean;
-//   onToggleAll: () => void;
-//   onClear: () => void;
-//   showClear: boolean;
-//   onDelete: () => void;
-// }) {
+// }: Props) {
 //   useEffect(() => {
 //     if (!selectMode) return;
 
@@ -162,9 +164,7 @@ export default function BulkActions({
 //       return;
 //     }
 
-//     if (active === cancelEl) {
-//       requestAnimationFrame(() => cancelEl.blur());
-//     }
+//     if (active === cancelEl) requestAnimationFrame(() => cancelEl.blur());
 //   }, [selectMode, count, cancelRef]);
 
 //   if (!selectMode) {
