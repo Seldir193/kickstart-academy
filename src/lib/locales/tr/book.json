@@ -96,5 +96,8 @@
   "billing.source.options.socialMedia": "Sosyal Medya",
   "billing.source.options.friendsFamily": "Arkadaşlar / Aile",
   "billing.source.options.posterFlyer": "Afiş / Broşür",
-  "billing.source.options.other": "Diğer"
+  "billing.source.options.other": "Diğer",
+
+  "agb.campHint": "Çocuğunuz haftalık bir kursa kayıtlıysa 14€ indirim vardır.",
+  "agb.accept": "Genel şartları ve cayma hakkını kabul ediyorum"
 }

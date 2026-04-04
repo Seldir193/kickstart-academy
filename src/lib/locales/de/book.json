@@ -96,5 +96,8 @@
   "billing.source.options.socialMedia": "Social Media",
   "billing.source.options.friendsFamily": "Freunde / Familie",
   "billing.source.options.posterFlyer": "Plakat / Flyer",
-  "billing.source.options.other": "Sonstiges"
+  "billing.source.options.other": "Sonstiges",
+
+  "agb.campHint": "Wenn ihr Kind ein Wochenkurs belegt, gibt es 14€ Rabatt.",
+  "agb.accept": "Hiermit nehme ich die AGB und das Widerrufsrecht zur Kenntnis"
 }

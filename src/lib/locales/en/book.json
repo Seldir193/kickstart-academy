@@ -96,5 +96,8 @@
   "billing.source.options.socialMedia": "Social Media",
   "billing.source.options.friendsFamily": "Friends / Family",
   "billing.source.options.posterFlyer": "Poster / Flyer",
-  "billing.source.options.other": "Other"
+  "billing.source.options.other": "Other",
+
+  "agb.campHint": "If your child is enrolled in a weekly course, there is a €14 discount.",
+  "agb.accept": "I acknowledge the terms and conditions and the right of withdrawal"
 }
