@@ -175,6 +175,35 @@
   font-weight: 600;
 }
 
+.ks-inv-dialog__head {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.ks-inv-dialog__headText {
+  min-width: 0;
+  flex: 1 1 auto;
+  padding-right: 56px;
+}
+
+.ks-inv-dialog__title,
+.ks-inv-dialog__meta {
+  min-width: 0;
+}
+
+.ks-inv-dialog__meta {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.ks-inv-dialog .dialog-head__actions {
+  position: absolute;
+  top: 0;
+  right: 0;
+  flex: 0 0 auto;
+}
 @media (max-width: 720px) {
   .ks-inv-dialog__panel {
     max-height: calc(100dvh - 24px);
