@@ -7,7 +7,6 @@ type Props = {
   state: RowActionState;
   onSubmitReturned: () => void;
   onSubmitDunning: () => void;
-
   onSubmitRefund: () => void;
   onSubmitWithdraw: () => void;
 };
@@ -49,7 +48,7 @@ export default function DialogFooter({
   }
 
   return (
-    <div className="ks-inv-dialog__footer">
+    <div className="dialog-footer ks-inv-dialog__footer">
       <div className="ks-inv-dialog__footerMain">
         <button
           type="button"
@@ -73,7 +72,6 @@ export default function DialogFooter({
   );
 }
 
-// //src\app\admin\(app)\invoices\components\invoice-dunning-dialog\DialogFooter.tsx
 // "use client";
 
 // import React from "react";
@@ -83,6 +81,9 @@ export default function DialogFooter({
 //   state: RowActionState;
 //   onSubmitReturned: () => void;
 //   onSubmitDunning: () => void;
+
+//   onSubmitRefund: () => void;
+//   onSubmitWithdraw: () => void;
 // };
 
 // function noticeClass(tone?: string) {
@@ -91,33 +92,47 @@ export default function DialogFooter({
 //   return "";
 // }
 
+// function primaryLabel(state: RowActionState) {
+//   if (state.mode === "returned")
+//     return state.loading ? "Saving..." : "Save returned";
+//   if (state.mode === "refund")
+//     return state.loading ? "Processing..." : "Refund";
+//   if (state.mode === "withdraw")
+//     return state.loading ? "Processing..." : "Withdraw (14 days)";
+//   return state.loading ? "Sending..." : "Send";
+// }
+
+// function isDisabled(state: RowActionState) {
+//   if (state.loading) return true;
+//   if (state.mode === "dunning") return !state.canSend;
+//   return false;
+// }
+
 // export default function DialogFooter({
 //   state,
 //   onSubmitReturned,
 //   onSubmitDunning,
+//   onSubmitRefund,
+//   onSubmitWithdraw,
 // }: Props) {
+//   function onSubmit() {
+//     if (state.mode === "returned") return onSubmitReturned();
+//     if (state.mode === "refund") return onSubmitRefund();
+//     if (state.mode === "withdraw") return onSubmitWithdraw();
+//     return onSubmitDunning();
+//   }
+
 //   return (
 //     <div className="ks-inv-dialog__footer">
 //       <div className="ks-inv-dialog__footerMain">
-//         {state.mode === "returned" ? (
-//           <button
-//             type="button"
-//             className="btn"
-//             onClick={onSubmitReturned}
-//             disabled={state.loading}
-//           >
-//             {state.loading ? "Saving..." : "Save returned"}
-//           </button>
-//         ) : (
-//           <button
-//             type="button"
-//             className="btn"
-//             onClick={onSubmitDunning}
-//             disabled={state.loading || !state.canSend}
-//           >
-//             {state.loading ? "Sending..." : "Send"}
-//           </button>
-//         )}
+//         <button
+//           type="button"
+//           className="btn"
+//           onClick={onSubmit}
+//           disabled={isDisabled(state)}
+//         >
+//           {primaryLabel(state)}
+//         </button>
 
 //         {state.notice ? (
 //           <span
