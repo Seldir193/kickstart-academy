@@ -61,5 +61,16 @@
   "child.birthdate.year": "YYYY",
   "child.birthdate.error": "Please select a valid date of birth",
   "child.firstName": "First name (child)*",
-  "child.lastName": "Last name (child)*"
+  "child.lastName": "Last name (child)*",
+
+  "common.yes": "Yes",
+  "common.no": "No",
+  "camp.legend": "Camp options",
+  "camp.tshirtMain": "T-shirt size*",
+  "camp.selectPlaceholder": "Please select an option",
+  "camp.goalkeeperMain": "Goalkeeper training? (+40€)*",
+  "camp.sibling.title": "Book a sibling",
+  "camp.sibling.discount": "Yes (receive a 14 euro discount)",
+  "camp.sibling.tshirt": "T-shirt size (sibling)*",
+  "camp.sibling.goalkeeper": "Goalkeeper training (sibling)? (+40€)"
 }

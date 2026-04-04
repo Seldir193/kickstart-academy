@@ -61,5 +61,16 @@
   "child.birthdate.year": "YYYY",
   "child.birthdate.error": "Lütfen geçerli bir doğum tarihi seçin",
   "child.firstName": "Ad (çocuk)*",
-  "child.lastName": "Soyad (çocuk)*"
+  "child.lastName": "Soyad (çocuk)*",
+
+  "common.yes": "Evet",
+  "common.no": "Hayır",
+  "camp.legend": "Kamp seçenekleri",
+  "camp.tshirtMain": "Tişört bedeni*",
+  "camp.selectPlaceholder": "Lütfen bir seçenek seçin",
+  "camp.goalkeeperMain": "Kaleci antrenmanı? (+40€)*",
+  "camp.sibling.title": "Kardeş ekle",
+  "camp.sibling.discount": "Evet (14 euro indirim alın)",
+  "camp.sibling.tshirt": "Tişört bedeni (kardeş)*",
+  "camp.sibling.goalkeeper": "Kaleci antrenmanı (kardeş)? (+40€)"
 }

@@ -61,5 +61,16 @@
   "child.birthdate.year": "JJJJ",
   "child.birthdate.error": "Bitte gültiges Geburtsdatum wählen",
   "child.firstName": "Vorname (Kind)*",
-  "child.lastName": "Nachname (Kind)*"
+  "child.lastName": "Nachname (Kind)*",
+
+  "common.yes": "Ja",
+  "common.no": "Nein",
+  "camp.legend": "Camp-Optionen",
+  "camp.tshirtMain": "T-Shirt-Größe*",
+  "camp.selectPlaceholder": "Bitte einen Eintrag auswählen",
+  "camp.goalkeeperMain": "Torwartschule? (+40€)*",
+  "camp.sibling.title": "Geschwister dazu buchen",
+  "camp.sibling.discount": "Ja (14 Euro Rabatt erhalten)",
+  "camp.sibling.tshirt": "T-Shirt-Größe (Geschwister)*",
+  "camp.sibling.goalkeeper": "Torwartschule (Geschwister)? (+40€)"
 }
