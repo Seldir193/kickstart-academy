@@ -72,5 +72,8 @@
   "camp.sibling.title": "Kardeş ekle",
   "camp.sibling.discount": "Evet (14 euro indirim alın)",
   "camp.sibling.tshirt": "Tişört bedeni (kardeş)*",
-  "camp.sibling.goalkeeper": "Kaleci antrenmanı (kardeş)? (+40€)"
+  "camp.sibling.goalkeeper": "Kaleci antrenmanı (kardeş)? (+40€)",
+
+  "actions.success": "Talep gönderildi!",
+  "actions.error": "Bir şeyler yanlış gitti."
 }

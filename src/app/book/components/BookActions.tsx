@@ -1,3 +1,5 @@
+import { useTranslation } from "react-i18next";
+
 type Props = {
   status: "idle" | "sending" | "success" | "error";
   submitLabel: string;
@@ -15,15 +17,19 @@ export function BookActions({
   offerError,
   offerLoading,
 }: Props) {
+  const { t } = useTranslation("book");
+
   return (
     <>
       <div className="book-actions">
         <button className="btn" disabled={isSubmitDisabled}>
           {submitLabel}
         </button>
-        {status === "success" && <span className="ok">Request sent!</span>}
+        {status === "success" && (
+          <span className="ok">{t("actions.success")}</span>
+        )}
         {status === "error" && (
-          <span className="error">Something went wrong.</span>
+          <span className="error">{t("actions.error")}</span>
         )}
         {errors.offerId && <span className="error">{errors.offerId}</span>}
       </div>

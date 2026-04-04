@@ -72,5 +72,8 @@
   "camp.sibling.title": "Geschwister dazu buchen",
   "camp.sibling.discount": "Ja (14 Euro Rabatt erhalten)",
   "camp.sibling.tshirt": "T-Shirt-Größe (Geschwister)*",
-  "camp.sibling.goalkeeper": "Torwartschule (Geschwister)? (+40€)"
+  "camp.sibling.goalkeeper": "Torwartschule (Geschwister)? (+40€)",
+
+  "actions.success": "Anfrage gesendet!",
+  "actions.error": "Etwas ist schiefgelaufen."
 }
