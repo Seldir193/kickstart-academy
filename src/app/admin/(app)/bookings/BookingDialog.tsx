@@ -104,15 +104,15 @@ function messageToLines(msg?: string): string[] {
   let t = msg.trim();
 
   t = t
-    .replace(/\s*,\s*Geburtstag:/gi, "\nGeburtstag:")
-    .replace(/\s*,\s*Kontakt:/gi, "\nKontakt:")
-    .replace(/\s*,\s*Adresse:/gi, "\nAdresse:")
-    .replace(/\s*,\s*Telefon:/gi, "\nTelefon:")
-    .replace(/\s*,\s*Gutschein:/gi, "\nGutschein:")
-    .replace(/\s*,\s*Quelle:/gi, "\nQuelle:")
-    .replace(/\s*,\s*Kind:/gi, "\nKind:");
+    .replace(/\s*,\s*Geburtstag:/gi, "\nBirthday:")
+    .replace(/\s*,\s*Kontakt:/gi, "\nContact:")
+    .replace(/\s*,\s*Adresse:/gi, "\nAddress:")
+    .replace(/\s*,\s*Telefon:/gi, "\nPhone:")
+    .replace(/\s*,\s*Gutschein:/gi, "\nVoucher:")
+    .replace(/\s*,\s*Quelle:/gi, "\nSource:")
+    .replace(/\s*,\s*Kind:/gi, "\nChild:");
 
-  t = t.replace(/^\s*Anmeldung\b/i, "Anmeldung");
+  t = t.replace(/^\s*Anmeldung\b/i, "Registration");
 
   return t
     .split("\n")
@@ -139,7 +139,7 @@ function extractAddress(msg?: string) {
   for (const ln of lines) {
     const { label, value } = splitLabelValue(ln);
     if (!label) continue;
-    if (label.toLowerCase().includes("adresse")) return value;
+    if (label.toLowerCase().includes("address")) return value;
   }
   return "";
 }
@@ -219,12 +219,12 @@ function adminMessageLines(booking: Booking, detail: BookingDetail) {
   const address = safeText(detail?.address) || inferVenue(booking);
   const phone = safeText(detail?.parent?.phone);
 
-  lines.push(`Anmeldung ${program}`);
-  if (child) lines.push(`Kind: ${child}`);
-  if (birthDate !== "—") lines.push(`Geburtstag: ${birthDate}`);
-  if (contact) lines.push(`Kontakt: ${contact}`);
-  if (address && address !== "—") lines.push(`Adresse: ${address}`);
-  if (phone) lines.push(`Telefon: ${phone}`);
+  lines.push(`Registration ${program}`);
+  if (child) lines.push(`Child: ${child}`);
+  if (birthDate !== "—") lines.push(`Birthday: ${birthDate}`);
+  if (contact) lines.push(`Contact: ${contact}`);
+  if (address && address !== "—") lines.push(`Address: ${address}`);
+  if (phone) lines.push(`Phone: ${phone}`);
   return lines;
 }
 
@@ -290,7 +290,7 @@ export default function BookingDialog({
       notify(text);
       if (action === "delete") onClose();
     } catch (e: any) {
-      notify(e?.message || "Aktion fehlgeschlagen");
+      notify(e?.message || "Action failed");
     } finally {
       setBusy("");
     }
@@ -309,7 +309,7 @@ export default function BookingDialog({
         },
       });
 
-      return "Für Abo freigegeben (E-Mail gesendet)";
+      return "Approved for subscription (email sent)";
     }
 
     const data = await setSubscriptionEligible({
@@ -325,7 +325,7 @@ export default function BookingDialog({
       },
     });
 
-    return "Abo-Freigabe entfernt";
+    return "Subscription approval removed";
   }
 
   async function approvePayment() {
@@ -340,7 +340,7 @@ export default function BookingDialog({
 
     const data = await res.json().catch(() => null);
     if (!res.ok) {
-      throw new Error(data?.error || data?.message || "Aktion fehlgeschlagen");
+      throw new Error(data?.error || data?.message || "Action failed");
     }
 
     onUpdateBooking({
@@ -352,7 +352,7 @@ export default function BookingDialog({
       },
     });
 
-    return "Zahlung freigegeben (E-Mail gesendet)";
+    return "Payment approved (email sent)";
   }
   return (
     <ModalPortal>
@@ -526,23 +526,6 @@ export default function BookingDialog({
 
                 <div className="dialog-section__body">
                   {messageLines.length ? (
-                    // <ul className="card-list">
-                    //   {messageLines.map((ln, i) => {
-                    //     const { label, value } = splitLabelValue(ln);
-                    //     return (
-                    //       <li key={i}>
-                    //         {label ? (
-                    //           <>
-                    //             <strong>{label}:</strong> {value || "—"}
-                    //           </>
-                    //         ) : (
-                    //           ln
-                    //         )}
-                    //       </li>
-                    //     );
-                    //   })}
-                    // </ul>
-
                     <div className="booking-dialog__message-list">
                       {messageLines.map((ln, i) => {
                         const { label, value } = splitLabelValue(ln);
@@ -689,7 +672,6 @@ export default function BookingDialog({
   );
 }
 
-// //src\app\admin\(app)\bookings\BookingDialog.tsx
 // "use client";
 
 // import React, { useMemo, useState } from "react";
@@ -1046,51 +1028,57 @@ export default function BookingDialog({
 
 //     return "Zahlung freigegeben (E-Mail gesendet)";
 //   }
-
 //   return (
 //     <ModalPortal>
-//       <div className="ks-modal-root ks-modal-root--top">
-//         <div className="ks-backdrop" onClick={onClose} />
-//         <div
-//           className="ks-panel ks-panel--md card"
-//           role="dialog"
-//           aria-modal="true"
-//           aria-label="Booking details"
-//           onClick={(e) => e.stopPropagation()}
-//         >
-//           <div className="dialog-head">
-//             <div className="dialog-head__left">
-//               <h2 className="text-xl font-bold">
-//                 {booking.firstName} {booking.lastName}
-//               </h2>
+//       <div
+//         className="dialog-backdrop booking-dialog"
+//         role="dialog"
+//         aria-modal="true"
+//         aria-label="Booking details"
+//       >
+//         <button
+//           type="button"
+//           className="dialog-backdrop-hit"
+//           aria-label="Close"
+//           onClick={onClose}
+//         />
 
-//               <span
-//                 className={`badge ${
-//                   s === "cancelled" || s === "deleted" ? "badge-muted" : ""
-//                 }`}
-//               >
-//                 {asStatus(booking.status)}
-//               </span>
+//         <div className="dialog booking-dialog__dialog">
+//           <div className="dialog-head booking-dialog__head">
+//             <div className="booking-dialog__head-main">
+//               <div className="booking-dialog__title-row">
+//                 <h2 className="dialog-title booking-dialog__title">
+//                   {booking.firstName} {booking.lastName}
+//                 </h2>
 
-//               {booking.paymentStatus ? (
 //                 <span
 //                   className={`badge ${
-//                     booking.paymentStatus === "paid"
-//                       ? "badge-success"
-//                       : booking.paymentStatus === "returned"
-//                         ? "badge-danger"
-//                         : ""
+//                     s === "cancelled" || s === "deleted" ? "badge-muted" : ""
 //                   }`}
 //                 >
-//                   {booking.paymentStatus}
+//                   {asStatus(booking.status)}
 //                 </span>
-//               ) : null}
+
+//                 {booking.paymentStatus ? (
+//                   <span
+//                     className={`badge ${
+//                       booking.paymentStatus === "paid"
+//                         ? "badge-success"
+//                         : booking.paymentStatus === "returned"
+//                           ? "badge-danger"
+//                           : ""
+//                     }`}
+//                   >
+//                     {booking.paymentStatus}
+//                   </span>
+//                 ) : null}
+//               </div>
 //             </div>
 
 //             <div className="dialog-head__actions">
 //               <button
 //                 type="button"
-//                 className="modal__close"
+//                 className="dialog-close"
 //                 aria-label="Close"
 //                 onClick={onClose}
 //               >
@@ -1104,221 +1092,270 @@ export default function BookingDialog({
 //             </div>
 //           </div>
 
-//           <div className="flex flex-wrap gap-2 justify-end mb-3">
-//             {canShowProcessing ? (
-//               <button
-//                 type="button"
-//                 className="btn"
-//                 aria-disabled={busy ? true : undefined}
-//                 onClick={() =>
-//                   run("processing", () => onSetStatus("processing"))
-//                 }
-//               >
-//                 {busy === "processing" ? "Bitte warten…" : "In Bearbeitung"}
-//               </button>
-//             ) : null}
+//           <div className="dialog-body booking-dialog__body">
+//             <div className="booking-dialog__grid">
+//               <section className="dialog-section booking-dialog__section">
+//                 <div className="dialog-section__head">
+//                   <h3 className="dialog-section__title booking-dialog__section-title">
+//                     Booking
+//                   </h3>
+//                 </div>
 
-//             {canShowConfirm ? (
-//               <button
-//                 type="button"
-//                 className="btn"
-//                 aria-disabled={busy ? true : undefined}
-//                 onClick={() => run("confirm", () => onConfirm())}
-//               >
-//                 {busy === "confirm" ? "Bitte warten…" : "Bestätigen"}
-//               </button>
-//             ) : null}
+//                 <div className="dialog-section__body">
+//                   <div className="booking-dialog__details">
+//                     <div className="booking-dialog__row booking-dialog__row--full">
+//                       <div className="dialog-label">Program</div>
+//                       <div className="dialog-value">{programText}</div>
+//                     </div>
 
-//             {s === "confirmed" ? (
-//               <>
+//                     <div className="booking-dialog__row booking-dialog__row--full">
+//                       <div className="dialog-label">Venue</div>
+//                       <div className="dialog-value">{venueText}</div>
+//                     </div>
+
+//                     <div className="booking-dialog__row">
+//                       <div className="dialog-label">Name</div>
+//                       <div className="dialog-value">
+//                         {booking.firstName} {booking.lastName}
+//                       </div>
+//                     </div>
+
+//                     <div className="booking-dialog__row">
+//                       <div className="dialog-label">Email</div>
+//                       <div className="dialog-value">{booking.email || "—"}</div>
+//                     </div>
+
+//                     <div className="booking-dialog__row">
+//                       <div className="dialog-label">Age</div>
+//                       <div className="dialog-value">{booking.age ?? "—"}</div>
+//                     </div>
+
+//                     <div className="booking-dialog__row">
+//                       <div className="dialog-label">
+//                         {isWishDate ? "Preferred date" : "Date / Start date"}
+//                       </div>
+//                       <div className="dialog-value">
+//                         {formatDateOnlyDe(booking.date)}
+//                       </div>
+//                     </div>
+
+//                     <div className="booking-dialog__row">
+//                       <div className="dialog-label">Created</div>
+//                       <div className="dialog-value">
+//                         {formatDateDe(booking.createdAt)}
+//                       </div>
+//                     </div>
+
+//                     <div className="booking-dialog__row">
+//                       <div className="dialog-label">
+//                         {isOneTimeType
+//                           ? "Payment approved at"
+//                           : "Subscription approved at"}
+//                       </div>
+//                       <div className="dialog-value">
+//                         {isOneTimeType
+//                           ? booking.meta?.paymentApprovedAt
+//                             ? formatDateDe(booking.meta.paymentApprovedAt)
+//                             : "—"
+//                           : booking.meta?.subscriptionEligibleAt
+//                             ? formatDateDe(booking.meta.subscriptionEligibleAt)
+//                             : "—"}
+//                       </div>
+//                     </div>
+
+//                     <div className="booking-dialog__row">
+//                       <div className="dialog-label">Confirmation code</div>
+//                       <div className="dialog-value">
+//                         {booking.confirmationCode || "—"}
+//                       </div>
+//                     </div>
+
+//                     {showInvoiceDetails ? (
+//                       <>
+//                         <div className="booking-dialog__row">
+//                           <div className="dialog-label">Invoice number</div>
+//                           <div className="dialog-value">
+//                             {booking.invoiceNumber || booking.invoiceNo || "—"}
+//                           </div>
+//                         </div>
+
+//                         <div className="booking-dialog__row">
+//                           <div className="dialog-label">Invoice date</div>
+//                           <div className="dialog-value">
+//                             {formatDateOnlyDe(booking.invoiceDate)}
+//                           </div>
+//                         </div>
+//                       </>
+//                     ) : null}
+//                   </div>
+//                 </div>
+//               </section>
+
+//               <section className="dialog-section booking-dialog__section">
+//                 <div className="dialog-section__head">
+//                   <h3 className="dialog-section__title booking-dialog__section-title">
+//                     Message
+//                   </h3>
+//                 </div>
+
+//                 <div className="dialog-section__body">
+//                   {messageLines.length ? (
+//                     // <ul className="card-list">
+//                     //   {messageLines.map((ln, i) => {
+//                     //     const { label, value } = splitLabelValue(ln);
+//                     //     return (
+//                     //       <li key={i}>
+//                     //         {label ? (
+//                     //           <>
+//                     //             <strong>{label}:</strong> {value || "—"}
+//                     //           </>
+//                     //         ) : (
+//                     //           ln
+//                     //         )}
+//                     //       </li>
+//                     //     );
+//                     //   })}
+//                     // </ul>
+
+//                     <div className="booking-dialog__message-list">
+//                       {messageLines.map((ln, i) => {
+//                         const { label, value } = splitLabelValue(ln);
+
+//                         if (!label) {
+//                           return (
+//                             <div
+//                               key={i}
+//                               className="booking-dialog__message-line"
+//                             >
+//                               <div className="dialog-value">{ln}</div>
+//                             </div>
+//                           );
+//                         }
+
+//                         return (
+//                           <div key={i} className="booking-dialog__message-row">
+//                             <div className="dialog-label">{label}</div>
+//                             <div className="dialog-value">{value || "—"}</div>
+//                           </div>
+//                         );
+//                       })}
+//                     </div>
+//                   ) : (
+//                     <div className="dialog-value">—</div>
+//                   )}
+//                 </div>
+//               </section>
+//             </div>
+
+//             <div className="booking-dialog__actions">
+//               {canShowProcessing ? (
 //                 <button
 //                   type="button"
 //                   className="btn"
 //                   aria-disabled={busy ? true : undefined}
-//                   onClick={() => run("resend", () => onResend())}
+//                   onClick={() =>
+//                     run("processing", () => onSetStatus("processing"))
+//                   }
 //                 >
-//                   {busy === "resend" ? "Bitte warten…" : "Erneut senden"}
+//                   {busy === "processing" ? "Please wait..." : "Processing"}
 //                 </button>
+//               ) : null}
 
+//               {canShowConfirm ? (
+//                 <button
+//                   type="button"
+//                   className="btn"
+//                   aria-disabled={busy ? true : undefined}
+//                   onClick={() => run("confirm", () => onConfirm())}
+//                 >
+//                   {busy === "confirm" ? "Please wait..." : "Confirm"}
+//                 </button>
+//               ) : null}
+
+//               {s === "confirmed" ? (
+//                 <>
+//                   <button
+//                     type="button"
+//                     className="btn"
+//                     aria-disabled={busy ? true : undefined}
+//                     onClick={() => run("resend", () => onResend())}
+//                   >
+//                     {busy === "resend" ? "Please wait..." : "Resend"}
+//                   </button>
+
+//                   <button
+//                     type="button"
+//                     className="btn btn--danger"
+//                     aria-disabled={busy ? true : undefined}
+//                     onClick={() =>
+//                       run("cancelConfirmed", () => onCancelConfirmed())
+//                     }
+//                   >
+//                     {busy === "cancelConfirmed"
+//                       ? "Please wait..."
+//                       : "Cancel confirmed booking"}
+//                   </button>
+//                 </>
+//               ) : null}
+
+//               {canShowCancel ? (
+//                 <button
+//                   type="button"
+//                   className="btn"
+//                   aria-disabled={busy ? true : undefined}
+//                   onClick={() =>
+//                     run("cancelled", () => onSetStatus("cancelled"))
+//                   }
+//                 >
+//                   {busy === "cancelled" ? "Please wait..." : "Cancel"}
+//                 </button>
+//               ) : null}
+
+//               {canShowSubscriptionApprove ? (
+//                 <button
+//                   type="button"
+//                   className="btn"
+//                   aria-disabled={busy ? true : undefined}
+//                   onClick={() =>
+//                     run("eligible", () =>
+//                       setSubscriptionEligibleValue(
+//                         !(booking.meta?.subscriptionEligible === true),
+//                       ),
+//                     )
+//                   }
+//                 >
+//                   {busy === "eligible"
+//                     ? "Please wait..."
+//                     : booking.meta?.subscriptionEligible
+//                       ? "Remove subscription approval"
+//                       : "Approve for subscription"}
+//                 </button>
+//               ) : null}
+
+//               {canShowPaymentApprove ? (
+//                 <button
+//                   type="button"
+//                   className="btn btn--success"
+//                   aria-disabled={busy ? true : undefined}
+//                   onClick={() => run("approvePayment", () => approvePayment())}
+//                 >
+//                   {busy === "approvePayment"
+//                     ? "Please wait..."
+//                     : "Approve payment"}
+//                 </button>
+//               ) : null}
+
+//               {s !== "deleted" ? (
 //                 <button
 //                   type="button"
 //                   className="btn btn--danger"
 //                   aria-disabled={busy ? true : undefined}
-//                   onClick={() =>
-//                     run("cancelConfirmed", () => onCancelConfirmed())
-//                   }
+//                   onClick={() => run("delete", () => onDelete())}
 //                 >
-//                   {busy === "cancelConfirmed"
-//                     ? "Bitte warten…"
-//                     : "Bestätigten Termin absagen"}
+//                   {busy === "delete" ? "Please wait..." : "Delete"}
 //                 </button>
-//               </>
-//             ) : null}
-
-//             {canShowCancel ? (
-//               <button
-//                 type="button"
-//                 className="btn"
-//                 aria-disabled={busy ? true : undefined}
-//                 onClick={() => run("cancelled", () => onSetStatus("cancelled"))}
-//               >
-//                 {busy === "cancelled" ? "Bitte warten…" : "Absagen"}
-//               </button>
-//             ) : null}
-
-//             {canShowSubscriptionApprove ? (
-//               <button
-//                 type="button"
-//                 className="btn"
-//                 aria-disabled={busy ? true : undefined}
-//                 onClick={() =>
-//                   run("eligible", () =>
-//                     setSubscriptionEligibleValue(
-//                       !(booking.meta?.subscriptionEligible === true),
-//                     ),
-//                   )
-//                 }
-//               >
-//                 {busy === "eligible"
-//                   ? "Bitte warten…"
-//                   : booking.meta?.subscriptionEligible
-//                     ? "Abo-Freigabe entfernen"
-//                     : "Für Abo freigeben"}
-//               </button>
-//             ) : null}
-
-//             {canShowPaymentApprove ? (
-//               <button
-//                 type="button"
-//                 className="btn btn--success"
-//                 aria-disabled={busy ? true : undefined}
-//                 onClick={() => run("approvePayment", () => approvePayment())}
-//               >
-//                 {busy === "approvePayment"
-//                   ? "Bitte warten…"
-//                   : "Zahlung freigeben"}
-//               </button>
-//             ) : null}
-
-//             {s !== "deleted" ? (
-//               <button
-//                 type="button"
-//                 className="btn btn--danger"
-//                 aria-disabled={busy ? true : undefined}
-//                 onClick={() => run("delete", () => onDelete())}
-//               >
-//                 {busy === "delete" ? "Bitte warten…" : "Löschen"}
-//               </button>
-//             ) : null}
-//           </div>
-
-//           <div className="form-columns mb-3">
-//             <fieldset className="card">
-//               <legend className="font-bold">Buchung</legend>
-//               <div className="grid grid-cols-2 gap-2">
-//                 <div className="col-span-2">
-//                   <label className="lbl">Programm</label>
-//                   <div>{programText}</div>
-//                 </div>
-
-//                 <div className="col-span-2">
-//                   <label className="lbl">Standort</label>
-//                   <div>{venueText}</div>
-//                 </div>
-
-//                 <div>
-//                   <label className="lbl">Name</label>
-//                   <div>
-//                     {booking.firstName} {booking.lastName}
-//                   </div>
-//                 </div>
-
-//                 <div>
-//                   <label className="lbl">E-Mail</label>
-//                   <div>{booking.email || "—"}</div>
-//                 </div>
-
-//                 <div>
-//                   <label className="lbl">Alter</label>
-//                   <div>{booking.age ?? "—"}</div>
-//                 </div>
-
-//                 <div>
-//                   <label className="lbl">
-//                     {isWishDate ? "Wunschtermin" : "Termin / Startdatum"}
-//                   </label>
-//                   <div>{formatDateOnlyDe(booking.date)}</div>
-//                 </div>
-
-//                 <div>
-//                   <label className="lbl">Erstellt</label>
-//                   <div>{formatDateDe(booking.createdAt)}</div>
-//                 </div>
-
-//                 <div>
-//                   <label className="lbl">
-//                     {isOneTimeType
-//                       ? "Zahlung freigegeben am"
-//                       : "Für Abo freigegeben am"}
-//                   </label>
-//                   <div>
-//                     {isOneTimeType
-//                       ? booking.meta?.paymentApprovedAt
-//                         ? formatDateDe(booking.meta.paymentApprovedAt)
-//                         : "—"
-//                       : booking.meta?.subscriptionEligibleAt
-//                         ? formatDateDe(booking.meta.subscriptionEligibleAt)
-//                         : "—"}
-//                   </div>
-//                 </div>
-
-//                 <div>
-//                   <label className="lbl">Bestätigungscode</label>
-//                   <div>{booking.confirmationCode || "—"}</div>
-//                 </div>
-
-//                 {showInvoiceDetails ? (
-//                   <>
-//                     <div>
-//                       <label className="lbl">Rechnungsnummer</label>
-//                       <div>
-//                         {booking.invoiceNumber || booking.invoiceNo || "—"}
-//                       </div>
-//                     </div>
-
-//                     <div>
-//                       <label className="lbl">Rechnungsdatum</label>
-//                       <div>{formatDateOnlyDe(booking.invoiceDate)}</div>
-//                     </div>
-//                   </>
-//                 ) : null}
-//               </div>
-//             </fieldset>
-
-//             <fieldset className="card">
-//               <legend className="font-bold">Nachricht</legend>
-
-//               {messageLines.length ? (
-//                 <ul className="card-list">
-//                   {messageLines.map((ln, i) => {
-//                     const { label, value } = splitLabelValue(ln);
-//                     return (
-//                       <li key={i}>
-//                         {label ? (
-//                           <>
-//                             <strong>{label}:</strong> {value || "—"}
-//                           </>
-//                         ) : (
-//                           ln
-//                         )}
-//                       </li>
-//                     );
-//                   })}
-//                 </ul>
-//               ) : (
-//                 <div>—</div>
-//               )}
-//             </fieldset>
+//               ) : null}
+//             </div>
 //           </div>
 //         </div>
 //       </div>
