@@ -75,5 +75,26 @@
   "camp.sibling.goalkeeper": "Goalkeeper training (sibling)? (+40€)",
 
   "actions.success": "Request sent!",
-  "actions.error": "Something went wrong."
+  "actions.error": "Something went wrong.",
+
+  "billing.legend": "2. Invoice & contact",
+  "billing.salutation.female": "Ms.",
+  "billing.salutation.male": "Mr.",
+  "billing.parentFirst": "Your first name",
+  "billing.parentLast": "Your last name",
+  "billing.street": "Street",
+  "billing.houseNo": "House no.",
+  "billing.zip": "ZIP code",
+  "billing.city": "City",
+  "billing.phone": "Phone",
+  "billing.phone2": "Phone 2",
+  "billing.email": "Email*",
+  "billing.voucher": "Voucher / company code",
+  "billing.source.label": "How did you hear about us?",
+  "billing.source.placeholder": "Please choose",
+  "billing.source.options.google": "Google",
+  "billing.source.options.socialMedia": "Social Media",
+  "billing.source.options.friendsFamily": "Friends / Family",
+  "billing.source.options.posterFlyer": "Poster / Flyer",
+  "billing.source.options.other": "Other"
 }

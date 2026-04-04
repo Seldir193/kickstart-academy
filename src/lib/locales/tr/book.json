@@ -75,5 +75,26 @@
   "camp.sibling.goalkeeper": "Kaleci antrenmanı (kardeş)? (+40€)",
 
   "actions.success": "Talep gönderildi!",
-  "actions.error": "Bir şeyler yanlış gitti."
+  "actions.error": "Bir şeyler yanlış gitti.",
+
+  "billing.legend": "2. Fatura ve iletişim",
+  "billing.salutation.female": "Bayan",
+  "billing.salutation.male": "Bay",
+  "billing.parentFirst": "Adınız",
+  "billing.parentLast": "Soyadınız",
+  "billing.street": "Sokak",
+  "billing.houseNo": "Kapı no.",
+  "billing.zip": "Posta kodu",
+  "billing.city": "Şehir",
+  "billing.phone": "Telefon",
+  "billing.phone2": "Telefon 2",
+  "billing.email": "E-posta*",
+  "billing.voucher": "Kupon / şirket kodu",
+  "billing.source.label": "Bizi nasıl duydunuz?",
+  "billing.source.placeholder": "Lütfen seçin",
+  "billing.source.options.google": "Google",
+  "billing.source.options.socialMedia": "Sosyal Medya",
+  "billing.source.options.friendsFamily": "Arkadaşlar / Aile",
+  "billing.source.options.posterFlyer": "Afiş / Broşür",
+  "billing.source.options.other": "Diğer"
 }

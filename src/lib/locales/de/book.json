@@ -75,5 +75,26 @@
   "camp.sibling.goalkeeper": "Torwartschule (Geschwister)? (+40€)",
 
   "actions.success": "Anfrage gesendet!",
-  "actions.error": "Etwas ist schiefgelaufen."
+  "actions.error": "Etwas ist schiefgelaufen.",
+
+  "billing.legend": "2. Rechnung & Kontakt",
+  "billing.salutation.female": "Frau",
+  "billing.salutation.male": "Herr",
+  "billing.parentFirst": "Ihr Vorname",
+  "billing.parentLast": "Ihr Nachname",
+  "billing.street": "Straße",
+  "billing.houseNo": "Hausnr.",
+  "billing.zip": "PLZ",
+  "billing.city": "Ort",
+  "billing.phone": "Telefon",
+  "billing.phone2": "Telefon 2",
+  "billing.email": "E-Mail*",
+  "billing.voucher": "Gutschein / Firmencode",
+  "billing.source.label": "Wie sind Sie auf uns aufmerksam geworden?",
+  "billing.source.placeholder": "Bitte wählen",
+  "billing.source.options.google": "Google",
+  "billing.source.options.socialMedia": "Social Media",
+  "billing.source.options.friendsFamily": "Freunde / Familie",
+  "billing.source.options.posterFlyer": "Plakat / Flyer",
+  "billing.source.options.other": "Sonstiges"
 }
