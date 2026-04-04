@@ -99,5 +99,17 @@
   "billing.source.options.other": "Sonstiges",
 
   "agb.campHint": "Wenn ihr Kind ein Wochenkurs belegt, gibt es 14€ Rabatt.",
-  "agb.accept": "Hiermit nehme ich die AGB und das Widerrufsrecht zur Kenntnis"
+  "agb.accept": "Hiermit nehme ich die AGB und das Widerrufsrecht zur Kenntnis",
+
+  "tshirt.playerXXS116": "Spielertrikot XXS (116)",
+  "tshirt.playerXS128": "Spielertrikot XS (128)",
+  "tshirt.playerS140": "Spielertrikot S (140)",
+  "tshirt.playerM152": "Spielertrikot M (152)",
+  "tshirt.playerL164": "Spielertrikot L (164)",
+  "tshirt.playerXL174": "Spielertrikot XL (174)",
+  "tshirt.menS": "Herren S",
+  "tshirt.goalkeeperXS128": "Torwarttrikot XS (128)",
+  "tshirt.goalkeeperM152": "Torwarttrikot M (152)",
+  "tshirt.goalkeeperL164": "Torwarttrikot L (164)",
+  "tshirt.goalkeeperXL174": "Torwarttrikot XL (174)"
 }

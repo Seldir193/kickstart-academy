@@ -99,5 +99,17 @@
   "billing.source.options.other": "Diğer",
 
   "agb.campHint": "Çocuğunuz haftalık bir kursa kayıtlıysa 14€ indirim vardır.",
-  "agb.accept": "Genel şartları ve cayma hakkını kabul ediyorum"
+  "agb.accept": "Genel şartları ve cayma hakkını kabul ediyorum",
+
+  "tshirt.playerXXS116": "Oyuncu forması XXS (116)",
+  "tshirt.playerXS128": "Oyuncu forması XS (128)",
+  "tshirt.playerS140": "Oyuncu forması S (140)",
+  "tshirt.playerM152": "Oyuncu forması M (152)",
+  "tshirt.playerL164": "Oyuncu forması L (164)",
+  "tshirt.playerXL174": "Oyuncu forması XL (174)",
+  "tshirt.menS": "Erkek S",
+  "tshirt.goalkeeperXS128": "Kaleci forması XS (128)",
+  "tshirt.goalkeeperM152": "Kaleci forması M (152)",
+  "tshirt.goalkeeperL164": "Kaleci forması L (164)",
+  "tshirt.goalkeeperXL174": "Kaleci forması XL (174)"
 }

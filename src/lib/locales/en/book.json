@@ -99,5 +99,17 @@
   "billing.source.options.other": "Other",
 
   "agb.campHint": "If your child is enrolled in a weekly course, there is a €14 discount.",
-  "agb.accept": "I acknowledge the terms and conditions and the right of withdrawal"
+  "agb.accept": "I acknowledge the terms and conditions and the right of withdrawal",
+
+  "tshirt.playerXXS116": "Player jersey XXS (116)",
+  "tshirt.playerXS128": "Player jersey XS (128)",
+  "tshirt.playerS140": "Player jersey S (140)",
+  "tshirt.playerM152": "Player jersey M (152)",
+  "tshirt.playerL164": "Player jersey L (164)",
+  "tshirt.playerXL174": "Player jersey XL (174)",
+  "tshirt.menS": "Men S",
+  "tshirt.goalkeeperXS128": "Goalkeeper jersey XS (128)",
+  "tshirt.goalkeeperM152": "Goalkeeper jersey M (152)",
+  "tshirt.goalkeeperL164": "Goalkeeper jersey L (164)",
+  "tshirt.goalkeeperXL174": "Goalkeeper jersey XL (174)"
 }

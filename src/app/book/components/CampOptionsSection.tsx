@@ -153,7 +153,11 @@ export function CampOptionsSection({
           name="tshirtSize"
           value={form.tshirtSize}
           placeholder={t("camp.selectPlaceholder")}
-          options={TSHIRT_OPTIONS.map((opt) => ({ value: opt, label: opt }))}
+          // options={TSHIRT_OPTIONS.map((opt) => ({ value: opt, label: opt }))}
+          options={TSHIRT_OPTIONS.map((opt) => ({
+            value: opt.value,
+            label: t(opt.labelKey),
+          }))}
           onChange={onChange}
         />
 
@@ -297,9 +301,13 @@ export function CampOptionsSection({
               name="siblingTshirtSize"
               value={form.siblingTshirtSize}
               placeholder={t("camp.selectPlaceholder")}
+              // options={TSHIRT_OPTIONS.map((opt) => ({
+              //   value: opt,
+              //   label: opt,
+              // }))}
               options={TSHIRT_OPTIONS.map((opt) => ({
-                value: opt,
-                label: opt,
+                value: opt.value,
+                label: t(opt.labelKey),
               }))}
               onChange={onChange}
             />
