@@ -72,10 +72,16 @@ function sinceLabel(c: Coach) {
   return raw;
 }
 
+// function normalizedPendingLabel(c: Coach, authorDash?: boolean) {
+//   const raw = pendingReviewLabel(c);
+//   if (!authorDash) return raw;
+//   return raw === "Bitte prüfen" ? "Under review" : raw;
+// }
+
 function normalizedPendingLabel(c: Coach, authorDash?: boolean) {
   const raw = pendingReviewLabel(c);
   if (!authorDash) return raw;
-  return raw === "Bitte prüfen" ? "Under review" : raw;
+  return raw === "Please review" ? "Under review" : raw;
 }
 
 function statusLabel(c: Coach, authorDash?: boolean) {

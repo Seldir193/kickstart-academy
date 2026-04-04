@@ -801,6 +801,13 @@ button.input[aria-haspopup="listbox"] {
   }
 }
 
+.input.input,
+select.input,
+textarea.input,
+button.input {
+  height: 40px;
+}
+
 // .ks-customers-loading-row {
 //   padding: 12px 16px;
 //   border-bottom: 1px solid var(--admin-sep);

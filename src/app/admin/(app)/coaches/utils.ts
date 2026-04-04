@@ -59,7 +59,7 @@ export function isPending(c: Coach) {
 }
 
 export function pendingReviewLabel(c: Coach) {
-  return everApproved(c) ? "Bitte prüfen" : "Wartet auf Freigabe";
+  return everApproved(c) ? "Please review" : "Awaiting approval";
 }
 
 export function displaySince(c: Coach) {
@@ -175,6 +175,7 @@ export function draftSummary(c: Coach) {
   return legacy;
 }
 
+// // src/app/admin/(app)/coaches/utils.ts
 // import type { Coach, SortKey } from "./types";
 
 // export function isAbortError(e: unknown) {
@@ -193,23 +194,23 @@ export function draftSummary(c: Coach) {
 
 // export function fullName(c: Coach) {
 //   return (
-//     (c.name || [c.firstName, c.lastName].filter(Boolean).join(" ")).trim() ||
+//     cleanStr(c.name) ||
+//     [cleanStr(c.firstName), cleanStr(c.lastName)].filter(Boolean).join(" ") ||
 //     "—"
 //   ).trim();
 // }
 
 // export function providerLabel(c: Coach) {
-//   const p = c.provider;
+//   const p = (c as any).provider;
 //   const name = cleanStr(p?.fullName);
 //   if (name) return name;
 //   const mail = cleanStr(p?.email);
 //   if (mail) return mail;
-//   const pid = cleanStr(c.providerId);
-//   return pid || "—";
+//   return "—";
 // }
 
 // export function getSlug(c: Coach) {
-//   return String(c.slug || "");
+//   return cleanStr((c as any).slug);
 // }
 
 // export function msValue(v: unknown) {
@@ -223,21 +224,25 @@ export function draftSummary(c: Coach) {
 // }
 
 // export function isApproved(c: Coach) {
-//   return String((c as any).status || "") === "approved" || c.published === true;
+//   return cleanStr((c as any).status) === "approved";
 // }
 
 // export function isRejected(c: Coach) {
-//   const st = String((c as any).status || "") === "rejected";
-//   const rr = cleanStr((c as any).rejectionReason).length > 0;
-//   return st || (c.published === false && rr);
+//   return cleanStr((c as any).status) === "rejected";
 // }
 
 // export function isPending(c: Coach) {
-//   return !isApproved(c) && !isRejected(c);
+//   return cleanStr((c as any).status) === "pending";
 // }
 
 // export function pendingReviewLabel(c: Coach) {
 //   return everApproved(c) ? "Bitte prüfen" : "Wartet auf Freigabe";
+// }
+
+// export function displaySince(c: Coach) {
+//   const raw = cleanStr((c as any).since);
+//   if (!raw) return "—";
+//   return /^\d{4}-\d{2}-\d{2}/.test(raw) ? raw.slice(0, 4) : raw;
 // }
 
 // export function canSubmitUpdate(c: Coach) {
@@ -257,7 +262,7 @@ export function draftSummary(c: Coach) {
 // }
 
 // export function tsValue(c: Coach) {
-//   const t = c.createdAt || c.updatedAt;
+//   const t = (c as any).createdAt || (c as any).updatedAt;
 //   const ms = t ? new Date(t).getTime() : 0;
 //   return Number.isFinite(ms) ? ms : 0;
 // }
@@ -266,7 +271,14 @@ export function draftSummary(c: Coach) {
 //   const s = q.trim().toLowerCase();
 //   if (!s) return true;
 
-//   const hay = [fullName(c), c.slug, c.position, c.firstName, c.lastName, c.name]
+//   const hay = [
+//     fullName(c),
+//     cleanStr((c as any).slug),
+//     cleanStr((c as any).position),
+//     cleanStr((c as any).firstName),
+//     cleanStr((c as any).lastName),
+//     cleanStr((c as any).name),
+//   ]
 //     .filter(Boolean)
 //     .join(" ")
 //     .toLowerCase();
@@ -281,7 +293,9 @@ export function draftSummary(c: Coach) {
 //     arr.sort(
 //       (a, b) =>
 //         tsValue(b) - tsValue(a) ||
-//         String(b._id || "").localeCompare(String(a._id || "")),
+//         String((b as any)._id || "").localeCompare(
+//           String((a as any)._id || ""),
+//         ),
 //     );
 //     return arr;
 //   }
@@ -290,7 +304,9 @@ export function draftSummary(c: Coach) {
 //     arr.sort(
 //       (a, b) =>
 //         tsValue(a) - tsValue(b) ||
-//         String(a._id || "").localeCompare(String(b._id || "")),
+//         String((a as any)._id || "").localeCompare(
+//           String((b as any)._id || ""),
+//         ),
 //     );
 //     return arr;
 //   }
@@ -313,6 +329,7 @@ export function draftSummary(c: Coach) {
 //   const pages = Math.max(1, Math.ceil(total / limit));
 //   const safePage = Math.min(Math.max(1, page), pages);
 //   const start = (safePage - 1) * limit;
+
 //   return {
 //     slice: items.slice(start, start + limit),
 //     pages,
@@ -326,11 +343,11 @@ export function draftSummary(c: Coach) {
 // }
 
 // export function draftSummary(c: Coach) {
-//   const s = String((c as any).draftSummary || "").trim();
+//   const s = cleanStr((c as any).lastChangeSummary);
 //   if (s) return s;
 
-//   const legacy = String(
-//     (c as any).changeTitle || (c as any).changeLine || "",
-//   ).trim();
+//   const legacy = cleanStr(
+//     (c as any).draftSummary || (c as any).changeTitle || (c as any).changeLine,
+//   );
 //   return legacy;
 // }
