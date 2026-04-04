@@ -24,8 +24,8 @@ export default function CoachesFilters({
   const menuRef = useRef<HTMLUListElement | null>(null);
 
   const sortLabel = useMemo(() => {
-    if (sort === "newest") return "Neueste zuerst";
-    if (sort === "oldest") return "Älteste zuerst";
+    if (sort === "newest") return "Newest first";
+    if (sort === "oldest") return "Oldest first";
     if (sort === "name_asc") return "Name A–Z";
     return "Name Z–A";
   }, [sort]);
@@ -104,7 +104,7 @@ export default function CoachesFilters({
                     setOpen(false);
                   }}
                 >
-                  Neueste zuerst
+                  Newest first
                 </button>
               </li>
               <li>
@@ -119,7 +119,7 @@ export default function CoachesFilters({
                     setOpen(false);
                   }}
                 >
-                  Älteste zuerst
+                  Oldest first
                 </button>
               </li>
               <li>
@@ -164,10 +164,10 @@ export default function CoachesFilters({
   );
 }
 
-// //src\app\admin\(app)\coaches\components\CoachesFilters.tsx
 // "use client";
 
 // import { useEffect, useMemo, useRef, useState } from "react";
+// import type { ReactNode } from "react";
 // import type { SortKey } from "../types";
 
 // type Props = {
@@ -175,6 +175,7 @@ export default function CoachesFilters({
 //   onChangeQ: (v: string) => void;
 //   sort: SortKey;
 //   onChangeSort: (v: SortKey) => void;
+//   actionSlot?: ReactNode;
 // };
 
 // export default function CoachesFilters({
@@ -182,6 +183,7 @@ export default function CoachesFilters({
 //   onChangeQ,
 //   sort,
 //   onChangeSort,
+//   actionSlot,
 // }: Props) {
 //   const [open, setOpen] = useState(false);
 //   const triggerRef = useRef<HTMLButtonElement | null>(null);
@@ -212,18 +214,8 @@ export default function CoachesFilters({
 //   }, [open]);
 
 //   return (
-//     <div
-//       className="coach-filters__row"
-//       style={{
-//         display: "flex",
-//         gap: 12,
-//         alignItems: "flex-end",
-//         marginBottom: 16,
-//       }}
-//     >
-//       <div className="coach-filters__search" style={{ flex: 1, minWidth: 320 }}>
-//         <label className="lbl coach-filters__label">Suche</label>
-
+//     <div className="coach-filters__row coach-filters__row--top">
+//       <div className="coach-filters__search">
 //         <div className="input-with-icon">
 //           <img
 //             src="/icons/search.svg"
@@ -243,9 +235,7 @@ export default function CoachesFilters({
 //         </div>
 //       </div>
 
-//       <div className="coach-filters__sort" style={{ width: 260 }}>
-//         <label className="block text-sm text-gray-600">Sortieren nach</label>
-
+//       <div className="coach-filters__sort">
 //         <div
 //           className={
 //             "ks-training-select" + (open ? " ks-training-select--open" : "")
@@ -332,6 +322,10 @@ export default function CoachesFilters({
 //           ) : null}
 //         </div>
 //       </div>
+
+//       {actionSlot ? (
+//         <div className="coach-filters__action">{actionSlot}</div>
+//       ) : null}
 //     </div>
 //   );
 // }

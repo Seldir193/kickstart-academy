@@ -84,7 +84,7 @@ function EmptyState() {
 function HeadRow() {
   return (
     <div className="news-list__head" aria-hidden="true">
-      <div className="news-list__h">Lizenznehmer</div>
+      <div className="news-list__h">Licence</div>
       <div className="news-list__h">Country</div>
       <div className="news-list__h">City</div>
       <div className="news-list__h">Status</div>
