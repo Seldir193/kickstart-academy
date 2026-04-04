@@ -18,6 +18,7 @@ import type { FamilyChild, FamilyMember } from "./bookDialog/types";
 
 type Props = {
   customerId: string;
+
   onClose: () => void;
 };
 
@@ -211,7 +212,35 @@ function toggleButtonFocus(
   });
 }
 
-function DocumentRow({ d }: { d: DocItem }) {
+// function DocumentRow({ d }: { d: DocItem }) {
+//   const title = trimTitle(d);
+//   const badge = badgeTextFrom(d);
+
+//   return (
+//     <div className="ks-doc-select__row">
+//       <div className="ks-doc-select__top ks-doc-select__top--single">
+//         <div className="ks-doc-select__title" title={title}>
+//           <span className="ks-doc-select__typeIcon" aria-hidden="true">
+//             <img src={iconForType(d.type)} alt="" />
+//           </span>
+//           <span className="ks-doc-select__titleText">{title}</span>
+//         </div>
+
+//         <div className="ks-doc-select__badgeCol">
+//           {badge ? <span className="ks-doc-select__badge">{badge}</span> : null}
+//         </div>
+//       </div>
+// //     </div>
+// //   );
+// }
+
+function DocumentRow({
+  d,
+  hideTitleText = false,
+}: {
+  d: DocItem;
+  hideTitleText?: boolean;
+}) {
   const title = trimTitle(d);
   const badge = badgeTextFrom(d);
 
@@ -222,7 +251,9 @@ function DocumentRow({ d }: { d: DocItem }) {
           <span className="ks-doc-select__typeIcon" aria-hidden="true">
             <img src={iconForType(d.type)} alt="" />
           </span>
-          <span className="ks-doc-select__titleText">{title}</span>
+          {!hideTitleText ? (
+            <span className="ks-doc-select__titleText">{title}</span>
+          ) : null}
         </div>
 
         <div className="ks-doc-select__badgeCol">
