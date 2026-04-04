@@ -22,8 +22,12 @@ type Props = {
   busySlug?: string | null;
 };
 
+// function isFirstReviewText(s: string) {
+//   return cleanStr(s).toLowerCase() === "erstprüfung";
+// }
+
 function isFirstReviewText(s: string) {
-  return cleanStr(s).toLowerCase() === "erstprüfung";
+  return cleanStr(s).toLowerCase() === "first review";
 }
 
 function changeText(c: Coach) {
