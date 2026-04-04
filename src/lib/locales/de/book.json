@@ -1,0 +1,54 @@
+{
+  "product.default": "Programm",
+  "heading.trial": "Kostenfreies Schnuppertraining anfragen",
+  "heading.holiday": "Anmeldung",
+  "heading.request": "Anfrage senden",
+
+  "offer.missing": "Offer fehlt.",
+  "offer.missingUrl": "Missing offerId in URL.",
+  "offer.unreachable": "Offer not found or API unreachable.",
+
+  "validation.invalidEmail": "Ungültige E-Mail",
+  "validation.birthdateComplete": "Bitte vollständiges Geburtsdatum wählen",
+  "validation.ageRange": "Alter muss zwischen 5 und 19 liegen",
+  "validation.required": "Pflichtfeld",
+  "validation.dateRequired": "Bitte Datum wählen",
+  "validation.datePast": "Datum darf nicht in der Vergangenheit liegen",
+  "validation.acceptRequired": "Bitte AGB/Widerruf bestätigen",
+  "validation.tshirtRequired": "Bitte T-Shirt-Größe wählen",
+
+  "submit.sending": "Senden…",
+  "submit.subscription": "Abo abschließen",
+  "submit.checking": "Prüfe Freigabe…",
+  "submit.trial": "Schnuppertraining anfragen",
+  "submit.paid": "Kostenpflichtig buchen",
+  "submit.request": "Anfragen",
+
+  "form.wishDate": "Wunschtermin*",
+  "form.wishDatePlaceholder": "tt.mm.jjjj",
+  "contact.title": "Ansprechpartner",
+
+  "summary.registration": "Anmeldung",
+  "summary.perMonth": "/Monat",
+
+  "message.interested": "Interessent",
+  "message.trialHeader": "Anmeldung Schnuppertraining",
+  "message.holidayHeader": "Anmeldung Ferienprogramm",
+  "message.requestHeader": "Anfrage",
+  "message.holiday": "Ferien",
+  "message.period": "Zeitraum",
+  "message.campOptions": "Camp-Optionen",
+  "message.childTshirt": "T-Shirt-Größe (Kind)",
+  "message.childGoalkeeper": "Torwartschule (Kind)",
+  "message.yes40": "Ja (+40€)",
+  "message.no": "Nein",
+  "message.sibling": "Geschwisterkind",
+  "message.gender": "Geschlecht",
+  "message.birthdate": "Geburtstag",
+  "message.tshirt": "T-Shirt",
+  "message.goalkeeper": "Torwartschule",
+  "message.voucher": "Gutschein",
+  "message.source": "Quelle",
+
+  "errors.subscriptionStarted": "Abo wurde bereits gestartet. Bitte prüfen Sie Ihre Bestätigung oder kontaktieren Sie uns."
+}

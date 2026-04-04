@@ -1,0 +1,54 @@
+{
+  "product.default": "Program",
+  "heading.trial": "Request a free trial training session",
+  "heading.holiday": "Registration",
+  "heading.request": "Send request",
+
+  "offer.missing": "Offer is missing.",
+  "offer.missingUrl": "Missing offerId in URL.",
+  "offer.unreachable": "Offer not found or API unreachable.",
+
+  "validation.invalidEmail": "Invalid email",
+  "validation.birthdateComplete": "Please select a complete date of birth",
+  "validation.ageRange": "Age must be between 5 and 19",
+  "validation.required": "Required field",
+  "validation.dateRequired": "Please select a date",
+  "validation.datePast": "Date cannot be in the past",
+  "validation.acceptRequired": "Please confirm terms and cancellation policy",
+  "validation.tshirtRequired": "Please select a T-shirt size",
+
+  "submit.sending": "Sending…",
+  "submit.subscription": "Complete subscription",
+  "submit.checking": "Checking eligibility…",
+  "submit.trial": "Request trial training",
+  "submit.paid": "Book with payment",
+  "submit.request": "Send request",
+
+  "form.wishDate": "Preferred date*",
+  "form.wishDatePlaceholder": "dd.mm.yyyy",
+  "contact.title": "Contact person",
+
+  "summary.registration": "Registration",
+  "summary.perMonth": "/month",
+
+  "message.interested": "Interested party",
+  "message.trialHeader": "Trial training registration",
+  "message.holidayHeader": "Holiday program registration",
+  "message.requestHeader": "Request",
+  "message.holiday": "Holiday",
+  "message.period": "Period",
+  "message.campOptions": "Camp options",
+  "message.childTshirt": "T-shirt size (child)",
+  "message.childGoalkeeper": "Goalkeeper school (child)",
+  "message.yes40": "Yes (+40€)",
+  "message.no": "No",
+  "message.sibling": "Sibling",
+  "message.gender": "Gender",
+  "message.birthdate": "Date of birth",
+  "message.tshirt": "T-shirt",
+  "message.goalkeeper": "Goalkeeper school",
+  "message.voucher": "Voucher",
+  "message.source": "Source",
+
+  "errors.subscriptionStarted": "A subscription has already been started. Please check your confirmation or contact us."
+}

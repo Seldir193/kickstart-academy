@@ -1,0 +1,54 @@
+{
+  "product.default": "Program",
+  "heading.trial": "Ücretsiz deneme antrenmanı talep et",
+  "heading.holiday": "Kayıt",
+  "heading.request": "Talep gönder",
+
+  "offer.missing": "Teklif eksik.",
+  "offer.missingUrl": "URL içinde offerId eksik.",
+  "offer.unreachable": "Teklif bulunamadı veya API erişilemiyor.",
+
+  "validation.invalidEmail": "Geçersiz e-posta",
+  "validation.birthdateComplete": "Lütfen doğum tarihini eksiksiz seçin",
+  "validation.ageRange": "Yaş 5 ile 19 arasında olmalıdır",
+  "validation.required": "Zorunlu alan",
+  "validation.dateRequired": "Lütfen bir tarih seçin",
+  "validation.datePast": "Tarih geçmişte olamaz",
+  "validation.acceptRequired": "Lütfen şartları ve cayma politikasını onaylayın",
+  "validation.tshirtRequired": "Lütfen bir tişört bedeni seçin",
+
+  "submit.sending": "Gönderiliyor…",
+  "submit.subscription": "Aboneliği tamamla",
+  "submit.checking": "Uygunluk kontrol ediliyor…",
+  "submit.trial": "Deneme antrenmanı talep et",
+  "submit.paid": "Ücretli rezervasyon yap",
+  "submit.request": "Talep gönder",
+
+  "form.wishDate": "Tercih edilen tarih*",
+  "form.wishDatePlaceholder": "gg.aa.yyyy",
+  "contact.title": "İletişim kişisi",
+
+  "summary.registration": "Kayıt",
+  "summary.perMonth": "/ay",
+
+  "message.interested": "İlgilenen kişi",
+  "message.trialHeader": "Deneme antrenmanı kaydı",
+  "message.holidayHeader": "Tatil programı kaydı",
+  "message.requestHeader": "Talep",
+  "message.holiday": "Tatil",
+  "message.period": "Dönem",
+  "message.campOptions": "Kamp seçenekleri",
+  "message.childTshirt": "Tişört bedeni (çocuk)",
+  "message.childGoalkeeper": "Kaleci okulu (çocuk)",
+  "message.yes40": "Evet (+40€)",
+  "message.no": "Hayır",
+  "message.sibling": "Kardeş",
+  "message.gender": "Cinsiyet",
+  "message.birthdate": "Doğum tarihi",
+  "message.tshirt": "Tişört",
+  "message.goalkeeper": "Kaleci okulu",
+  "message.voucher": "Kupon",
+  "message.source": "Kaynak",
+
+  "errors.subscriptionStarted": "Bir abonelik zaten başlatıldı. Lütfen onayınızı kontrol edin veya bizimle iletişime geçin."
+}

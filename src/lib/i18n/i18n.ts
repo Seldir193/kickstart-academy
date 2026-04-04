@@ -2,12 +2,12 @@ import i18n from "i18next";
 import LanguageDetector from "i18next-browser-languagedetector";
 import { initReactI18next } from "react-i18next";
 
-import deCommon from "./locales/de/common.json";
-import enCommon from "./locales/en/common.json";
-import trCommon from "./locales/tr/common.json";
-import deBook from "./locales/de/book.json";
-import enBook from "./locales/en/book.json";
-import trBook from "./locales/tr/book.json";
+import deCommon from "../locales/de/common.json";
+import enCommon from "../locales/en/common.json";
+import trCommon from "../locales/tr/common.json";
+import deBook from "../locales/de/book.json";
+import enBook from "../locales/en/book.json";
+import trBook from "../locales/tr/book.json";
 import { defaultLanguage } from "./settings";
 
 const resources = {
