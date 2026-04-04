@@ -41,7 +41,7 @@ export default function InvoicesList(props: Props) {
   return (
     <div className="ks-invoices__listWrap" style={minHeightVars(minHeight)}>
       {showEmpty ? (
-        <div className="card__empty">Keine Dokumente gefunden.</div>
+        <div className="card__empty">No documents found.</div>
       ) : showList ? (
         <ul className="list list--bleed">
           {props.items.map((d, idx) => (
@@ -65,7 +65,7 @@ export default function InvoicesList(props: Props) {
           ))}
         </ul>
       ) : (
-        <div className="card__empty">Lade…</div>
+        <div className="card__empty">Loading…</div>
       )}
 
       {props.loading && showList ? (
