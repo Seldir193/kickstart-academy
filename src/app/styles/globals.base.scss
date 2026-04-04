@@ -635,25 +635,25 @@ tr:focus-within .ks-row-action {
   }
 }
 /* === Customers: Edit-Icon nur bei Hover/Focus sichtbar (wie Trainings/Coaches) === */
-.ks-customers-admin .ks-row-actions .edit-trigger {
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 160ms ease;
-}
+// .ks-customers-admin .ks-row-actions .edit-trigger {
+//   opacity: 0;
+//   pointer-events: none;
+//   transition: opacity 160ms ease;
+// }
 
-.ks-customers-admin tr:hover .ks-row-actions .edit-trigger,
-.ks-customers-admin tr:focus-within .ks-row-actions .edit-trigger {
-  opacity: 1;
-  pointer-events: auto;
-}
+// .ks-customers-admin tr:hover .ks-row-actions .edit-trigger,
+// .ks-customers-admin tr:focus-within .ks-row-actions .edit-trigger {
+//   opacity: 1;
+//   pointer-events: auto;
+// }
 
-/* Mobile/Touch: kein Hover → Icon immer sichtbar */
-@media (hover: none) {
-  .ks-customers-admin .ks-row-actions .edit-trigger {
-    opacity: 1;
-    pointer-events: auto;
-  }
-}
+// /* Mobile/Touch: kein Hover → Icon immer sichtbar */
+// @media (hover: none) {
+//   .ks-customers-admin .ks-row-actions .edit-trigger {
+//     opacity: 1;
+//     pointer-events: auto;
+//   }
+// }
 
 /* Row Actions: Edit Icon nur bei Hover/Focus sichtbar */
 .tr.is-row-action .edit-trigger {
