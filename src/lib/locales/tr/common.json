@@ -1,0 +1,28 @@
+{
+  "language.label": "Dil",
+  "language.de": "Deutsch",
+  "language.en": "English",
+  "language.tr": "Türkçe",
+
+  "nav.more": "Daha fazla",
+  "nav.trainings": "Antrenmanlar",
+  "nav.coaches": "Antrenörler",
+  "nav.contact": "İletişim",
+
+  "nav.admin.home": "Ana sayfa",
+  "nav.admin.places": "Yerler",
+  "nav.admin.courses": "Kurslar",
+  "nav.admin.coaches": "Antrenörler",
+  "nav.admin.invoices": "Faturalar",
+  "nav.admin.customers": "Müşteriler",
+  "nav.admin.datev": "DATEV",
+  "nav.admin.news": "Haberler",
+  "nav.admin.revenue": "Ciro",
+  "nav.admin.bookings": "Rezervasyonlar",
+  "nav.admin.holidayBookings": "Tatil rezervasyonları",
+  "nav.admin.vouchers": "Kuponlar",
+  "nav.admin.locations": "Lokasyonlar",
+  "nav.admin.members": "Üyeler",
+
+  "aria.home": "Ana sayfa"
+}

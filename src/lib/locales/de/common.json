@@ -1,0 +1,28 @@
+{
+  "language.label": "Sprache",
+  "language.de": "Deutsch",
+  "language.en": "English",
+  "language.tr": "Türkçe",
+
+  "nav.more": "Mehr",
+  "nav.trainings": "Trainings",
+  "nav.coaches": "Trainer",
+  "nav.contact": "Kontakt",
+
+  "nav.admin.home": "Start",
+  "nav.admin.places": "Orte",
+  "nav.admin.courses": "Kurse",
+  "nav.admin.coaches": "Trainer",
+  "nav.admin.invoices": "Rechnungen",
+  "nav.admin.customers": "Kunden",
+  "nav.admin.datev": "DATEV",
+  "nav.admin.news": "News",
+  "nav.admin.revenue": "Umsatz",
+  "nav.admin.bookings": "Buchungen",
+  "nav.admin.holidayBookings": "Ferienbuchungen",
+  "nav.admin.vouchers": "Gutscheine",
+  "nav.admin.locations": "Standorte",
+  "nav.admin.members": "Mitglieder",
+
+  "aria.home": "Startseite"
+}

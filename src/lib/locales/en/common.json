@@ -1,0 +1,28 @@
+{
+  "language.label": "Language",
+  "language.de": "Deutsch",
+  "language.en": "English",
+  "language.tr": "Türkçe",
+
+  "nav.more": "More",
+  "nav.trainings": "Trainings",
+  "nav.coaches": "Coaches",
+  "nav.contact": "Contact",
+
+  "nav.admin.home": "Home",
+  "nav.admin.places": "Places",
+  "nav.admin.courses": "Courses",
+  "nav.admin.coaches": "Coaches",
+  "nav.admin.invoices": "Invoices",
+  "nav.admin.customers": "Customers",
+  "nav.admin.datev": "DATEV",
+  "nav.admin.news": "News",
+  "nav.admin.revenue": "Revenue",
+  "nav.admin.bookings": "Bookings",
+  "nav.admin.holidayBookings": "Holiday bookings",
+  "nav.admin.vouchers": "Vouchers",
+  "nav.admin.locations": "Locations",
+  "nav.admin.members": "Members",
+
+  "aria.home": "Home page"
+}
