@@ -234,20 +234,20 @@ export default function KsDatePicker(props: KsDatePickerProps) {
                   className="ks-datepicker__link"
                   onClick={() => setYearOpen(false)}
                 >
-                  Zurück
+                  Back
                 </button>
                 <button
                   type="button"
                   className="ks-datepicker__link"
                   onClick={goToday}
                 >
-                  Heute
+                  Today
                 </button>
               </div>
             </div>
           ) : (
             <>
-              <div className="ks-datepicker__weekdays">
+              {/* <div className="ks-datepicker__weekdays">
                 <div className="ks-datepicker__weekday">Mo</div>
                 <div className="ks-datepicker__weekday">Di</div>
                 <div className="ks-datepicker__weekday">Mi</div>
@@ -255,6 +255,16 @@ export default function KsDatePicker(props: KsDatePickerProps) {
                 <div className="ks-datepicker__weekday">Fr</div>
                 <div className="ks-datepicker__weekday">Sa</div>
                 <div className="ks-datepicker__weekday">So</div>
+              </div> */}
+
+              <div className="ks-datepicker__weekdays">
+                <div className="ks-datepicker__weekday">Mon</div>
+                <div className="ks-datepicker__weekday">Tue</div>
+                <div className="ks-datepicker__weekday">Wed</div>
+                <div className="ks-datepicker__weekday">Thu</div>
+                <div className="ks-datepicker__weekday">Fri</div>
+                <div className="ks-datepicker__weekday">Sat</div>
+                <div className="ks-datepicker__weekday">Sun</div>
               </div>
 
               <div
@@ -294,14 +304,14 @@ export default function KsDatePicker(props: KsDatePickerProps) {
                   className="ks-datepicker__link"
                   onClick={clear}
                 >
-                  Löschen
+                  Delete
                 </button>
                 <button
                   type="button"
                   className="ks-datepicker__link"
                   onClick={goToday}
                 >
-                  Heute
+                  Today
                 </button>
               </div>
             </>
