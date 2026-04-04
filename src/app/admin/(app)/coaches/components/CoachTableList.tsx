@@ -192,7 +192,7 @@ export default function CoachTableList({
   if (!items.length) {
     return (
       <section className="card">
-        <div className="card__empty">Keine Einträge.</div>
+        <div className="card__empty">No entries.</div>
       </section>
     );
   }

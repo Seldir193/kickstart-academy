@@ -142,7 +142,7 @@ export default function NewsTableList({
   if (!viewItems.length) {
     return (
       <section className="card">
-        <div className="card__empty">Keine Einträge.</div>
+        <div className="card__empty">No entries.</div>
       </section>
     );
   }
@@ -182,12 +182,12 @@ export default function NewsTableList({
       <section className={`card news-list ${busy ? "is-busy" : ""}`}>
         <div className="news-list__table">
           <div className="news-list__head" aria-hidden="true">
-            <div className="news-list__h">Titel</div>
-            <div className="news-list__h">Kategorie</div>
-            <div className="news-list__h">Datum</div>
+            <div className="news-list__h">Title</div>
+            <div className="news-list__h">Category</div>
+            <div className="news-list__h">Date</div>
             <div className="news-list__h">Status</div>
-            <div className="news-list__h">Autor</div>
-            <div className="news-list__h news-list__h--right">Aktion</div>
+            <div className="news-list__h">Author</div>
+            <div className="news-list__h news-list__h--right">Action</div>
           </div>
 
           <ul className="list list--bleed">
@@ -247,13 +247,13 @@ export default function NewsTableList({
 
                     {draftTitle && draftTitle !== clean(n.title) ? (
                       <div className="news-list__draft-wrap">
-                        {draftLine("Änderung Titel", draftTitle)}
+                        {draftLine("Title change", draftTitle)}
                       </div>
                     ) : null}
 
                     {draftExcerpt && draftExcerpt !== clean(n.excerpt) ? (
                       <div className="news-list__draft-wrap">
-                        {draftLine("Änderung Lead", draftExcerpt)}
+                        {draftLine("Lead change", draftExcerpt)}
                       </div>
                     ) : null}
                   </div>
@@ -264,7 +264,7 @@ export default function NewsTableList({
                     </span>
                     {draftCategory && draftCategory !== clean(n.category) ? (
                       <span className="news-list__pill news-list__pill--draft">
-                        Änderung: {draftCategory}
+                        Change: {draftCategory}
                       </span>
                     ) : null}
                   </div>
@@ -275,7 +275,7 @@ export default function NewsTableList({
                     </div>
                     {needsCorrection ? (
                       <div className="news-list__draft-date is-alert">
-                        Bitte korrigieren
+                        Please correct
                       </div>
                     ) : null}
                   </div>
@@ -389,6 +389,7 @@ export default function NewsTableList({
 //   getDraftDelta,
 //   getNeedsCorrection,
 //   idOf,
+//   isSubmitted,
 //   onActionKey,
 //   providerLabel,
 //   statusClass,
@@ -437,6 +438,12 @@ export default function NewsTableList({
 //   return rowMode === "mine_approved" || rowMode === "provider_approved";
 // }
 
+// function filterItemsForView(items: NewsWithProvider[], rowMode: RowMode) {
+//   if (rowMode !== "mine_approved" && rowMode !== "provider_approved")
+//     return items;
+//   return items.filter((n) => !isSubmitted(n));
+// }
+
 // export default function NewsTableList({
 //   items,
 //   rowMode,
@@ -454,9 +461,14 @@ export default function NewsTableList({
 //   onTogglePublished,
 //   toggleBtnRef,
 // }: Props) {
+//   const viewItems = useMemo(
+//     () => filterItemsForView(items, rowMode),
+//     [items, rowMode],
+//   );
+
 //   const idsOnPage = useMemo(
-//     () => items.map((n) => idOf(n)).filter(Boolean),
-//     [items],
+//     () => viewItems.map((n) => idOf(n)).filter(Boolean),
+//     [viewItems],
 //   );
 //   const sel = useSelection(idsOnPage);
 
@@ -501,10 +513,10 @@ export default function NewsTableList({
 //     e.preventDefault();
 //   }
 
-//   if (!items.length) {
+//   if (!viewItems.length) {
 //     return (
 //       <section className="card">
-//         <div className="card__empty">Keine Einträge.</div>
+//         <div className="card__empty">No entries.</div>
 //       </section>
 //     );
 //   }
@@ -526,12 +538,18 @@ export default function NewsTableList({
 //           count={count}
 //           isAllSelected={sel.isAllSelected}
 //           busy={busy}
-//           isEmpty={items.length === 0}
+//           isEmpty={viewItems.length === 0}
 //           onToggleAll={onToggleAll}
 //           onClear={onClearSelection}
 //           showClear={showClear}
 //           onDelete={deleteSelected}
 //           canDelete={!!onDeleteMany}
+//           toggleLabel="Select news"
+//           selectedLabel="selected"
+//           selectAllLabel="Select all"
+//           clearAllLabel="Clear all"
+//           deleteLabel="Delete"
+//           cancelLabel="Cancel"
 //         />
 //       </div>
 
@@ -547,7 +565,7 @@ export default function NewsTableList({
 //           </div>
 
 //           <ul className="list list--bleed">
-//             {items.map((n) => {
+//             {viewItems.map((n) => {
 //               const id = idOf(n);
 //               const checked = sel.selected.has(id);
 //               const hideActions = selectMode || checked;
@@ -565,7 +583,6 @@ export default function NewsTableList({
 //                 n,
 //                 rowMode,
 //                 busy,
-//                 //busy: busy && !isSwitchBusy,
 //                 onOpen,
 //                 onInfo,
 //                 onResubmit,
@@ -630,7 +647,6 @@ export default function NewsTableList({
 //                     <div>
 //                       {fmtDateDe((n as any).date || (n as any).createdAt)}
 //                     </div>
-
 //                     {needsCorrection ? (
 //                       <div className="news-list__draft-date is-alert">
 //                         Bitte korrigieren

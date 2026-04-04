@@ -76,7 +76,7 @@ function getCanToggle(it: FranchiseLocation, mineRow: boolean) {
 function EmptyState() {
   return (
     <section className="card">
-      <div className="card__empty">Keine Einträge.</div>
+      <div className="card__empty">No entries.</div>
     </section>
   );
 }
