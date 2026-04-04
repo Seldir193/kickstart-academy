@@ -122,10 +122,6 @@ export default function CustomersTable({
           (showListLoading ? " is-loading" : "")
         }
       >
-        <div className="ks-customers-loading-pill" aria-hidden="true">
-          Loading…
-        </div>
-
         <div className="ks-customers-list__table">
           <div className="ks-customers-list__head" aria-hidden="true">
             <div className="ks-customers-list__h">ID</div>
