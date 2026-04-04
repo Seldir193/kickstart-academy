@@ -1,15 +1,16 @@
-//src\app\components\Header.tsx
 "use client";
 
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import dynamic from "next/dynamic";
+import { useTranslation } from "react-i18next";
 import { PAGE_LIMIT } from "@/app/admin/(app)/news/constants";
 import { fetchNewsPage } from "@/app/admin/(app)/news/api";
 import { fetchAdmin as fetchFranchiseAdmin } from "@/app/admin/(app)/franchise-locations/franchise_locations.api";
 import { fetchCoachesList } from "@/app/admin/(app)/coaches/api";
 import { FETCH_LIMIT } from "@/app/admin/(app)/coaches/constants";
+import LanguageSwitcher from "./LanguageSwitcher";
 
 const ProfileButton = dynamic(() => import("./ProfileButton"), { ssr: false });
 
@@ -28,26 +29,33 @@ type MeUser = {
   isOwner?: boolean;
 };
 
+type AdminNavItem = {
+  href: string;
+  labelKey: string;
+};
+
 const WP_CONTACT_URL =
   process.env.NEXT_PUBLIC_WP_CONTACT_URL ||
   "http://localhost/wordpress/index.php/home/";
 
-const adminNav = [
-  { href: "/admin", label: "Home" },
-  { href: "/admin/orte", label: "Places" },
-
-  { href: "/admin/trainings", label: "Courses" },
-  { href: "/admin/coaches", label: "Coaches" },
-  { href: "/admin/invoices", label: "Invoices" },
-  { href: "/admin/customers", label: "Customers" },
-  { href: "/admin/datev", label: "DATEV" },
-  { href: "/admin/news", label: "News" },
-  { href: "/admin/revenue", label: "Revenue" },
-  { href: "/admin/bookings", label: "Bookings" },
-  { href: "/admin/online-bookings", label: "Holiday bookings" },
-  { href: "/admin/vouchers", label: "Vouchers" },
-  { href: "/admin/franchise-locations", label: "Locations" },
-  { href: "/admin/members", label: "Members" },
+const adminNav: AdminNavItem[] = [
+  { href: "/admin", labelKey: "nav.admin.home" },
+  { href: "/admin/orte", labelKey: "nav.admin.places" },
+  { href: "/admin/trainings", labelKey: "nav.admin.courses" },
+  { href: "/admin/coaches", labelKey: "nav.admin.coaches" },
+  { href: "/admin/invoices", labelKey: "nav.admin.invoices" },
+  { href: "/admin/customers", labelKey: "nav.admin.customers" },
+  { href: "/admin/datev", labelKey: "nav.admin.datev" },
+  { href: "/admin/news", labelKey: "nav.admin.news" },
+  { href: "/admin/revenue", labelKey: "nav.admin.revenue" },
+  { href: "/admin/bookings", labelKey: "nav.admin.bookings" },
+  {
+    href: "/admin/online-bookings",
+    labelKey: "nav.admin.holidayBookings",
+  },
+  { href: "/admin/vouchers", labelKey: "nav.admin.vouchers" },
+  { href: "/admin/franchise-locations", labelKey: "nav.admin.locations" },
+  { href: "/admin/members", labelKey: "nav.admin.members" },
 ];
 
 function isMinimalHeaderRoute(pathname: string) {
@@ -131,6 +139,7 @@ function hasCoachPending(resp: any) {
 export default function Header({ isAdminInitial = false }: Props) {
   const pathname = usePathname();
   const isAdmin = isAdminInitial;
+  const { t } = useTranslation();
 
   const [isLoggingOut] = useState(false);
   const [meUser, setMeUser] = useState<MeUser | null>(null);
@@ -323,7 +332,7 @@ export default function Header({ isAdminInitial = false }: Props) {
   return (
     <header className="site-header">
       <div className="container header-inner">
-        <Link href="/" className="brand" aria-label="Home page">
+        <Link href="/" className="brand" aria-label={t("aria.home")}>
           <img src="/assets/img/logo.jpg" alt="Dortmunder Fussballschule" />
         </Link>
 
@@ -342,7 +351,7 @@ export default function Header({ isAdminInitial = false }: Props) {
                       className={`nav-link ${addActive ? "active" : ""}`}
                     >
                       <NavLabel
-                        label={item.label}
+                        label={t(item.labelKey)}
                         showSignal={signalFor(item.href)}
                       />
                     </Link>
@@ -360,7 +369,7 @@ export default function Header({ isAdminInitial = false }: Props) {
                       aria-expanded={isMoreOpen}
                       onClick={() => setIsMoreOpen((v) => !v)}
                     >
-                      More
+                      {t("nav.more")}
                     </button>
 
                     <div className={`nav-more ${isMoreOpen ? "is-open" : ""}`}>
@@ -381,7 +390,7 @@ export default function Header({ isAdminInitial = false }: Props) {
                             onClick={() => setIsMoreOpen(false)}
                           >
                             <NavLabel
-                              label={item.label}
+                              label={t(item.labelKey)}
                               showSignal={signalFor(item.href)}
                             />
                           </Link>
@@ -395,6 +404,7 @@ export default function Header({ isAdminInitial = false }: Props) {
               <div className="nav__spacer" />
 
               <div className="header__actions">
+                <LanguageSwitcher />
                 <ProfileButton />
               </div>
             </>
@@ -403,14 +413,17 @@ export default function Header({ isAdminInitial = false }: Props) {
           ) : (
             <>
               <Link href="/trainings" className="nav-link">
-                Trainings
+                {t("nav.trainings")}
               </Link>
               <Link href="/coaches" className="nav-link">
-                Coaches
+                {t("nav.coaches")}
               </Link>
               <a href={WP_CONTACT_URL} className="nav-link" rel="noopener">
-                Contact
+                {t("nav.contact")}
               </a>
+              <div className="header__actions">
+                <LanguageSwitcher />
+              </div>
             </>
           )}
         </nav>
@@ -418,6 +431,8 @@ export default function Header({ isAdminInitial = false }: Props) {
     </header>
   );
 }
+
+// //src\app\components\Header.tsx
 // "use client";
 
 // import React, { useEffect, useMemo, useRef, useState } from "react";
@@ -454,26 +469,39 @@ export default function Header({ isAdminInitial = false }: Props) {
 // const adminNav = [
 //   { href: "/admin", label: "Home" },
 //   { href: "/admin/orte", label: "Places" },
-//   { href: "/admin/trainings", label: "Trainings" },
+
+//   { href: "/admin/trainings", label: "Courses" },
 //   { href: "/admin/coaches", label: "Coaches" },
-//   { href: "/admin/invoices", label: "Rechnungen" },
+//   { href: "/admin/invoices", label: "Invoices" },
 //   { href: "/admin/customers", label: "Customers" },
 //   { href: "/admin/datev", label: "DATEV" },
 //   { href: "/admin/news", label: "News" },
-//   { href: "/admin/revenue", label: "Umsatz" },
+//   { href: "/admin/revenue", label: "Revenue" },
 //   { href: "/admin/bookings", label: "Bookings" },
-//   { href: "/admin/online-bookings", label: "Online" },
+//   { href: "/admin/online-bookings", label: "Holiday bookings" },
 //   { href: "/admin/vouchers", label: "Vouchers" },
-//   { href: "/admin/franchise-locations", label: "Standorte" },
-//   { href: "/admin/members", label: "Mitglieder" },
+//   { href: "/admin/franchise-locations", label: "Locations" },
+//   { href: "/admin/members", label: "Members" },
 // ];
 
-// function isAuthRoute(pathname: string) {
+// function isMinimalHeaderRoute(pathname: string) {
+//   const path = pathname.toLowerCase();
+
 //   return (
-//     pathname === "/admin/login" ||
-//     pathname === "/admin/signup" ||
-//     pathname.startsWith("/admin/login") ||
-//     pathname.startsWith("/admin/signup")
+//     path === "/admin/login" ||
+//     path === "/admin/signup" ||
+//     path === "/admin/password-reset" ||
+//     path === "/admin/new-password" ||
+//     path === "/admin/imprint" ||
+//     path === "/admin/privacy" ||
+//     path === "/admin/agb" ||
+//     path.startsWith("/admin/login/") ||
+//     path.startsWith("/admin/signup/") ||
+//     path.startsWith("/admin/password-reset/") ||
+//     path.startsWith("/admin/new-password/") ||
+//     path.startsWith("/admin/imprint/") ||
+//     path.startsWith("/admin/privacy/") ||
+//     path.startsWith("/admin/agb/")
 //   );
 // }
 
@@ -544,7 +572,10 @@ export default function Header({ isAdminInitial = false }: Props) {
 //   const [showStandorteSignal, setShowStandorteSignal] = useState(false);
 //   const [showCoachesSignal, setShowCoachesSignal] = useState(false);
 
-//   const hidePublicNav = useMemo(() => isAuthRoute(pathname), [pathname]);
+//   const hidePublicNav = useMemo(
+//     () => isMinimalHeaderRoute(pathname),
+//     [pathname],
+//   );
 
 //   const isSuperAdmin = useMemo(() => {
 //     const role = String(meUser?.role || "")
@@ -726,7 +757,7 @@ export default function Header({ isAdminInitial = false }: Props) {
 //   return (
 //     <header className="site-header">
 //       <div className="container header-inner">
-//         <Link href="/" className="brand" aria-label="Startseite">
+//         <Link href="/" className="brand" aria-label="Home page">
 //           <img src="/assets/img/logo.jpg" alt="Dortmunder Fussballschule" />
 //         </Link>
 
@@ -763,7 +794,7 @@ export default function Header({ isAdminInitial = false }: Props) {
 //                       aria-expanded={isMoreOpen}
 //                       onClick={() => setIsMoreOpen((v) => !v)}
 //                     >
-//                       Mehr
+//                       More
 //                     </button>
 
 //                     <div className={`nav-more ${isMoreOpen ? "is-open" : ""}`}>
