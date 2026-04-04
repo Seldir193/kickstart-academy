@@ -1,5 +1,6 @@
 // src/app/admin/(app)/news/types.ts
-export type Category = "Allgemein" | "News" | "Partnerverein" | "Projekte";
+//export type Category = "Allgemein" | "News" | "Partnerverein" | "Projekte";
+export type Category = "General" | "News" | "Partner Club" | "Projects";
 export type Status = "pending" | "approved" | "rejected";
 export type SortKey = "newest" | "oldest" | "title_asc" | "title_desc";
 

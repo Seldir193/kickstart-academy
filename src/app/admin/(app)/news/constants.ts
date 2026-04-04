@@ -3,11 +3,18 @@ import type { Category } from "./types";
 
 export const PAGE_LIMIT = 10;
 
+// export const CATEGORIES: Category[] = [
+//   "Allgemein",
+//   "News",
+//   "Partnerverein",
+//   "Projekte",
+// ];
+
 export const CATEGORIES: Category[] = [
-  "Allgemein",
+  "General",
   "News",
-  "Partnerverein",
-  "Projekte",
+  "Partner Club",
+  "Projects",
 ];
 
 export const API_BASE =
