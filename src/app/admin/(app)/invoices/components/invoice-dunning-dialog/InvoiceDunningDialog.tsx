@@ -17,7 +17,6 @@ type Props = {
   onClose: () => void;
   onSubmitReturned: () => void;
   onSubmitDunning: () => void;
-
   onSubmitRefund: () => void;
   onSubmitWithdraw: () => void;
 };
@@ -40,9 +39,9 @@ export default function InvoiceDunningDialog(props: Props) {
   const refundMode = isRefundMode(props.state.mode);
 
   return (
-    <div className="ks-inv-dialog" onClick={props.onClose}>
+    <div className="dialog-backdrop ks-inv-dialog" onClick={props.onClose}>
       <div
-        className="ks-inv-dialog__panel"
+        className="dialog ks-inv-dialog__panel"
         onClick={(e) => e.stopPropagation()}
         role="dialog"
         aria-modal="true"
@@ -50,7 +49,7 @@ export default function InvoiceDunningDialog(props: Props) {
       >
         <DialogHeader state={props.state} row={row} onClose={props.onClose} />
 
-        <div className="ks-inv-dialog__body">
+        <div className="dialog-body ks-inv-dialog__body">
           {props.state.mode === "dunning" ? (
             <StageSelectField
               row={row}
@@ -65,7 +64,7 @@ export default function InvoiceDunningDialog(props: Props) {
             <>
               <label className="ks-inv-dialog__field">
                 <span className="ks-inv-dialog__label">
-                  Rücklastschriftgebühr
+                  Returned payment fee
                 </span>
                 <input
                   className="input"
@@ -75,7 +74,7 @@ export default function InvoiceDunningDialog(props: Props) {
                   onChange={(e) =>
                     props.setState((p) => ({ ...p, bankFee: e.target.value }))
                   }
-                  placeholder="z. B. 16,76"
+                  placeholder="e.g. 16.76"
                   disabled={inputsDisabled}
                 />
               </label>
@@ -93,14 +92,14 @@ export default function InvoiceDunningDialog(props: Props) {
             </>
           ) : (
             <label className="ks-inv-dialog__field">
-              <span className="ks-inv-dialog__label">Grund (optional)</span>
+              <span className="ks-inv-dialog__label">Reason (optional)</span>
               <textarea
                 className="input"
                 value={props.state.reason || ""}
                 onChange={(e) =>
                   props.setState((p) => ({ ...p, reason: e.target.value }))
                 }
-                placeholder="z. B. Widerruf innerhalb 14 Tage / Refund auf Kundenwunsch"
+                placeholder="e.g. Withdrawal within 14 days / refund at customer request"
                 disabled={props.state.loading}
                 rows={3}
               />
@@ -125,7 +124,6 @@ export default function InvoiceDunningDialog(props: Props) {
 }
 
 // //src\app\admin\(app)\invoices\components\invoice-dunning-dialog\InvoiceDunningDialog.tsx
-
 // "use client";
 
 // import React, { useEffect, useState } from "react";
@@ -144,7 +142,14 @@ export default function InvoiceDunningDialog(props: Props) {
 //   onClose: () => void;
 //   onSubmitReturned: () => void;
 //   onSubmitDunning: () => void;
+
+//   onSubmitRefund: () => void;
+//   onSubmitWithdraw: () => void;
 // };
+
+// function isRefundMode(mode: any) {
+//   return mode === "refund" || mode === "withdraw";
+// }
 
 // export default function InvoiceDunningDialog(props: Props) {
 //   const [stageOpen, setStageOpen] = useState(false);
@@ -157,6 +162,7 @@ export default function InvoiceDunningDialog(props: Props) {
 
 //   const row = props.state.row as InvoiceRow;
 //   const inputsDisabled = props.state.loading || props.state.inputsDisabled;
+//   const refundMode = isRefundMode(props.state.mode);
 
 //   return (
 //     <div className="ks-inv-dialog" onClick={props.onClose}>
@@ -180,31 +186,51 @@ export default function InvoiceDunningDialog(props: Props) {
 //             />
 //           ) : null}
 
-//           <label className="ks-inv-dialog__field">
-//             <span className="ks-inv-dialog__label">Rücklastschriftgebühr</span>
-//             <input
-//               className="input"
-//               type="text"
-//               inputMode="decimal"
-//               value={props.state.bankFee}
-//               onChange={(e) =>
-//                 props.setState((p) => ({ ...p, bankFee: e.target.value }))
-//               }
-//               placeholder="z. B. 16,76"
-//               disabled={inputsDisabled}
-//             />
-//           </label>
+//           {!refundMode ? (
+//             <>
+//               <label className="ks-inv-dialog__field">
+//                 <span className="ks-inv-dialog__label">
+//                   Rücklastschriftgebühr
+//                 </span>
+//                 <input
+//                   className="input"
+//                   type="text"
+//                   inputMode="decimal"
+//                   value={props.state.bankFee}
+//                   onChange={(e) =>
+//                     props.setState((p) => ({ ...p, bankFee: e.target.value }))
+//                   }
+//                   placeholder="z. B. 16,76"
+//                   disabled={inputsDisabled}
+//                 />
+//               </label>
 
-//           <ReturnedFields
-//             state={props.state}
-//             setState={props.setState}
-//             inputsDisabled={inputsDisabled}
-//           />
-//           <DunningFields
-//             state={props.state}
-//             setState={props.setState}
-//             inputsDisabled={inputsDisabled}
-//           />
+//               <ReturnedFields
+//                 state={props.state}
+//                 setState={props.setState}
+//                 inputsDisabled={inputsDisabled}
+//               />
+//               <DunningFields
+//                 state={props.state}
+//                 setState={props.setState}
+//                 inputsDisabled={inputsDisabled}
+//               />
+//             </>
+//           ) : (
+//             <label className="ks-inv-dialog__field">
+//               <span className="ks-inv-dialog__label">Grund (optional)</span>
+//               <textarea
+//                 className="input"
+//                 value={props.state.reason || ""}
+//                 onChange={(e) =>
+//                   props.setState((p) => ({ ...p, reason: e.target.value }))
+//                 }
+//                 placeholder="z. B. Widerruf innerhalb 14 Tage / Refund auf Kundenwunsch"
+//                 disabled={props.state.loading}
+//                 rows={3}
+//               />
+//             </label>
+//           )}
 
 //           {props.state.error ? (
 //             <div className="ks-inv-dialog__error">{props.state.error}</div>
@@ -215,6 +241,8 @@ export default function InvoiceDunningDialog(props: Props) {
 //           state={props.state}
 //           onSubmitReturned={props.onSubmitReturned}
 //           onSubmitDunning={props.onSubmitDunning}
+//           onSubmitRefund={props.onSubmitRefund}
+//           onSubmitWithdraw={props.onSubmitWithdraw}
 //         />
 //       </div>
 //     </div>

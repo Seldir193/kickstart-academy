@@ -1,34 +1,19 @@
 // src/app/styles/invoices/invoices-dialog.scss
 
 .ks-inv-dialog {
-  position: fixed;
-  inset: 0;
   z-index: 1000;
-  padding: 16px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(17, 24, 39, 0.35);
 }
 
 .ks-inv-dialog__panel {
   width: 100%;
   max-width: 560px;
-  border-radius: 16px;
-  background: #fff;
-  border: 1px solid var(--admin-sep, #e5e7eb);
-  box-shadow: 0 20px 50px rgba(17, 24, 39, 0.18);
-  overflow: hidden;
+  max-height: min(70vh, 640px);
+  grid-template-rows: auto minmax(0, 1fr) auto;
 }
 
 .ks-inv-dialog__head {
   position: relative;
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 16px 52px 12px 16px;
-  border-bottom: 1px solid var(--admin-sep, #e5e7eb);
+  padding-right: 52px;
 }
 
 .ks-inv-dialog__headText {
@@ -48,11 +33,8 @@
 }
 
 .ks-inv-dialog__body {
-  padding: 14px 16px;
   display: grid;
   gap: 12px;
-  max-height: min(70vh, 640px);
-  overflow: auto;
 }
 
 .ks-inv-dialog__field {
@@ -77,8 +59,6 @@
 }
 
 .ks-inv-dialog__footer {
-  padding: 12px 16px 16px;
-  border-top: 1px solid var(--admin-sep, #e5e7eb);
   display: flex;
   justify-content: flex-end;
   gap: 8px;
@@ -153,8 +133,6 @@
   opacity: 1;
 }
 
-//neu
-
 .ks-invoices-filter {
   min-width: 180px;
 }
@@ -173,11 +151,9 @@
   overflow: auto;
 }
 
-//neu
 .ks-inv-dialog__footerMain {
   display: flex;
   align-items: center;
-  // justify-content: space-between;
   flex-direction: row-reverse;
   gap: 12px;
   width: 100%;
@@ -198,3 +174,224 @@
   color: #b91c1c;
   font-weight: 600;
 }
+
+@media (max-width: 720px) {
+  .ks-inv-dialog__panel {
+    max-height: calc(100dvh - 24px);
+  }
+}
+
+@media (max-width: 480px) {
+  .ks-inv-dialog__panel {
+    max-height: calc(100dvh - 16px);
+  }
+
+  .ks-inv-dialog__footerMain {
+    flex-wrap: wrap;
+  }
+
+  .ks-inv-dialog__notice {
+    white-space: normal;
+  }
+}
+
+// // src/app/styles/invoices/invoices-dialog.scss
+
+// .ks-inv-dialog {
+//   position: fixed;
+//   inset: 0;
+//   z-index: 1000;
+//   padding: 16px;
+//   display: flex;
+//   align-items: center;
+//   justify-content: center;
+//   background: rgba(17, 24, 39, 0.35);
+// }
+
+// .ks-inv-dialog__panel {
+//   width: 100%;
+//   max-width: 560px;
+//   border-radius: 16px;
+//   background: #fff;
+//   border: 1px solid var(--admin-sep, #e5e7eb);
+//   box-shadow: 0 20px 50px rgba(17, 24, 39, 0.18);
+//   overflow: hidden;
+// }
+
+// .ks-inv-dialog__head {
+//   position: relative;
+//   display: flex;
+//   align-items: flex-start;
+//   justify-content: space-between;
+//   gap: 12px;
+//   padding: 16px 52px 12px 16px;
+//   border-bottom: 1px solid var(--admin-sep, #e5e7eb);
+// }
+
+// .ks-inv-dialog__headText {
+//   min-width: 0;
+// }
+
+// .ks-inv-dialog__title {
+//   font-weight: 700;
+//   line-height: 1.2;
+// }
+
+// .ks-inv-dialog__meta {
+//   margin-top: 4px;
+//   font-size: 13px;
+//   color: #6b7280;
+//   word-break: break-word;
+// }
+
+// .ks-inv-dialog__body {
+//   padding: 14px 16px;
+//   display: grid;
+//   gap: 12px;
+//   max-height: min(70vh, 640px);
+//   overflow: auto;
+// }
+
+// .ks-inv-dialog__field {
+//   display: grid;
+//   gap: 6px;
+// }
+
+// .ks-inv-dialog__label {
+//   font-size: 13px;
+//   font-weight: 600;
+//   color: #374151;
+// }
+
+// .ks-inv-dialog__textarea {
+//   min-height: 96px;
+//   resize: vertical;
+// }
+
+// .ks-inv-dialog__error {
+//   font-size: 13px;
+//   color: #dc2626;
+// }
+
+// .ks-inv-dialog__footer {
+//   padding: 12px 16px 16px;
+//   border-top: 1px solid var(--admin-sep, #e5e7eb);
+//   display: flex;
+//   justify-content: flex-end;
+//   gap: 8px;
+// }
+
+// .ks-inv-dialog__select {
+//   width: 100%;
+//   max-width: none;
+// }
+
+// .ks-inv-dialog__select .ks-training-select__trigger {
+//   width: 100%;
+// }
+
+// .ks-inv-dialog__select .ks-training-select__menu {
+//   width: 100%;
+//   max-width: none;
+//   max-height: 260px;
+//   overflow: auto;
+// }
+
+// .ks-invoices__item {
+//   position: relative;
+// }
+
+// .ks-invoices__hoverActions {
+//   gap: 6px;
+//   opacity: 0;
+//   visibility: hidden;
+//   pointer-events: none;
+//   transition:
+//     opacity 0.16s ease,
+//     visibility 0.16s ease;
+// }
+
+// .ks-invoices__item:hover .ks-invoices__hoverActions,
+// .ks-invoices__item:focus-within .ks-invoices__hoverActions {
+//   opacity: 1;
+//   visibility: visible;
+//   pointer-events: auto;
+// }
+
+// .ks-invoices__hoverActions .ks-doc-open[disabled] {
+//   opacity: 0.45;
+//   cursor: not-allowed;
+// }
+
+// .ks-inv-dialog .dialog-head__actions {
+//   position: absolute;
+//   top: 12px;
+//   right: 12px;
+//   display: flex;
+//   align-items: center;
+//   justify-content: center;
+// }
+
+// .ks-inv-dialog .modal__close {
+//   display: inline-flex;
+//   align-items: center;
+//   justify-content: center;
+// }
+
+// .ks-inv-dialog .modal__close .icon-img {
+//   width: 25px;
+//   height: 25px;
+//   display: block;
+//   opacity: 0.72;
+// }
+
+// .ks-inv-dialog .modal__close:hover .icon-img,
+// .ks-inv-dialog .modal__close:focus-visible .icon-img {
+//   opacity: 1;
+// }
+
+// //neu
+
+// .ks-invoices-filter {
+//   min-width: 180px;
+// }
+
+// .ks-invoices-filter .ks-training-select {
+//   width: 100%;
+// }
+
+// .ks-invoices-filter .ks-training-select__trigger {
+//   width: 100%;
+// }
+
+// .ks-invoices-filter .ks-training-select__menu {
+//   width: 100%;
+//   max-height: 260px;
+//   overflow: auto;
+// }
+
+// //neu
+// .ks-inv-dialog__footerMain {
+//   display: flex;
+//   align-items: center;
+//   // justify-content: space-between;
+//   flex-direction: row-reverse;
+//   gap: 12px;
+//   width: 100%;
+// }
+
+// .ks-inv-dialog__notice {
+//   font-size: 13px;
+//   color: #6b7280;
+//   white-space: nowrap;
+// }
+
+// .ks-inv-dialog__notice.is-success {
+//   color: #166534;
+//   font-weight: 600;
+// }
+
+// .ks-inv-dialog__notice.is-error {
+//   color: #b91c1c;
+//   font-weight: 600;
+// }
