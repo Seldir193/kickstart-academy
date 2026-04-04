@@ -46,9 +46,14 @@ export function isRejected(it: FranchiseLocation) {
   return clean(it.rejectionReason).length > 0;
 }
 
+// export function pendingReviewLabel(it: FranchiseLocation) {
+//   if (isApproved(it) && it.submittedAt) return "Änderung eingereicht";
+//   return isPending(it) ? "Wartet auf Freigabe" : "";
+// }
+
 export function pendingReviewLabel(it: FranchiseLocation) {
-  if (isApproved(it) && it.submittedAt) return "Änderung eingereicht";
-  return isPending(it) ? "Wartet auf Freigabe" : "";
+  if (isApproved(it) && it.submittedAt) return "Change submitted";
+  return isPending(it) ? "Awaiting approval" : "";
 }
 
 function ms(v: any) {
@@ -81,7 +86,7 @@ export function canTogglePublished(it: FranchiseLocation) {
 export function providerLabel(it: FranchiseLocation) {
   const u = it.ownerUser;
   const name = clean(u?.fullName) || clean(it.ownerName) || "";
-  return name || "Lizenznehmer";
+  return name || "Licence";
 }
 
 export function sortLocations(arr: FranchiseLocation[], sort: SortKey) {
