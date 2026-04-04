@@ -50,5 +50,16 @@
   "message.voucher": "Gutschein",
   "message.source": "Quelle",
 
-  "errors.subscriptionStarted": "Abo wurde bereits gestartet. Bitte prüfen Sie Ihre Bestätigung oder kontaktieren Sie uns."
+  "errors.subscriptionStarted": "Abo wurde bereits gestartet. Bitte prüfen Sie Ihre Bestätigung oder kontaktieren Sie uns.",
+
+  "child.legend": "1. Angaben zum Kind",
+  "child.gender.female": "weiblich",
+  "child.gender.male": "männlich",
+  "child.birthdate.label": "Geburtstag",
+  "child.birthdate.day": "TT",
+  "child.birthdate.month": "MM",
+  "child.birthdate.year": "JJJJ",
+  "child.birthdate.error": "Bitte gültiges Geburtsdatum wählen",
+  "child.firstName": "Vorname (Kind)*",
+  "child.lastName": "Nachname (Kind)*"
 }

@@ -1,5 +1,6 @@
 import type React from "react";
 import { useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import type { FormState } from "../bookTypes";
 
 type Props = {
@@ -132,9 +133,11 @@ export function ChildSection({
   YEAR_OPTS,
   onChange,
 }: Props) {
+  const { t } = useTranslation("book");
+
   return (
     <fieldset className="card">
-      <legend>1. Child details</legend>
+      <legend>{t("child.legend")}</legend>
 
       <div className="field-row">
         <label className="radio">
@@ -145,7 +148,7 @@ export function ChildSection({
             checked={form.childGender === "weiblich"}
             onChange={onChange}
           />
-          Female
+          {t("child.gender.female")}
         </label>
         <label className="radio">
           <input
@@ -155,18 +158,18 @@ export function ChildSection({
             checked={form.childGender === "männlich"}
             onChange={onChange}
           />
-          Male
+          {t("child.gender.male")}
         </label>
       </div>
 
       <div className="field-grid">
         <div className="field">
-          <label>Date of birth</label>
+          <label>{t("child.birthdate.label")}</label>
           <div className="dob">
             <KsSelectbox
               name="birthDay"
               value={form.birthDay}
-              placeholder="DD"
+              placeholder={t("child.birthdate.day")}
               options={DAY_OPTS.map((d) => ({ value: d, label: d }))}
               onChange={onChange}
             />
@@ -174,7 +177,7 @@ export function ChildSection({
             <KsSelectbox
               name="birthMonth"
               value={form.birthMonth}
-              placeholder="MM"
+              placeholder={t("child.birthdate.month")}
               options={MONTH_OPTS.map((m) => ({ value: m, label: m }))}
               onChange={onChange}
             />
@@ -182,19 +185,19 @@ export function ChildSection({
             <KsSelectbox
               name="birthYear"
               value={form.birthYear}
-              placeholder="YYYY"
+              placeholder={t("child.birthdate.year")}
               options={YEAR_OPTS.map((y) => ({ value: y, label: y }))}
               onChange={onChange}
             />
           </div>
 
           {(errors.birthDay || errors.birthMonth || errors.birthYear) && (
-            <span className="error">Please select a valid date of birth</span>
+            <span className="error">{t("child.birthdate.error")}</span>
           )}
         </div>
 
         <div className="field">
-          <label>First name (child)*</label>
+          <label>{t("child.firstName")}</label>
           <input
             name="childFirst"
             value={form.childFirst}
@@ -206,7 +209,7 @@ export function ChildSection({
         </div>
 
         <div className="field">
-          <label>Last name (child)*</label>
+          <label>{t("child.lastName")}</label>
           <input name="childLast" value={form.childLast} onChange={onChange} />
           {errors.childLast && (
             <span className="error">{errors.childLast}</span>

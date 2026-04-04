@@ -50,5 +50,16 @@
   "message.voucher": "Kupon",
   "message.source": "Kaynak",
 
-  "errors.subscriptionStarted": "Bir abonelik zaten başlatıldı. Lütfen onayınızı kontrol edin veya bizimle iletişime geçin."
+  "errors.subscriptionStarted": "Bir abonelik zaten başlatıldı. Lütfen onayınızı kontrol edin veya bizimle iletişime geçin.",
+
+  "child.legend": "1. Çocuk bilgileri",
+  "child.gender.female": "Kız",
+  "child.gender.male": "Erkek",
+  "child.birthdate.label": "Doğum tarihi",
+  "child.birthdate.day": "GG",
+  "child.birthdate.month": "AA",
+  "child.birthdate.year": "YYYY",
+  "child.birthdate.error": "Lütfen geçerli bir doğum tarihi seçin",
+  "child.firstName": "Ad (çocuk)*",
+  "child.lastName": "Soyad (çocuk)*"
 }

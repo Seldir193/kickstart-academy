@@ -50,5 +50,16 @@
   "message.voucher": "Voucher",
   "message.source": "Source",
 
-  "errors.subscriptionStarted": "A subscription has already been started. Please check your confirmation or contact us."
+  "errors.subscriptionStarted": "A subscription has already been started. Please check your confirmation or contact us.",
+
+  "child.legend": "1. Child details",
+  "child.gender.female": "Female",
+  "child.gender.male": "Male",
+  "child.birthdate.label": "Date of birth",
+  "child.birthdate.day": "DD",
+  "child.birthdate.month": "MM",
+  "child.birthdate.year": "YYYY",
+  "child.birthdate.error": "Please select a valid date of birth",
+  "child.firstName": "First name (child)*",
+  "child.lastName": "Last name (child)*"
 }
