@@ -24,5 +24,25 @@
   "nav.admin.locations": "Standorte",
   "nav.admin.members": "Mitglieder",
 
-  "aria.home": "Startseite"
+  "aria.home": "Startseite",
+
+  "common": {
+    "admin": {
+      "bookings": {
+        "sort": {
+          "newest": "Neueste zuerst",
+          "oldest": "Älteste zuerst",
+          "nameAsc": "Name A–Z",
+          "nameDesc": "Name Z–A"
+        },
+        "notice": {
+          "deleted": "Gelöscht ({{count}}).",
+          "restored": "Wiederhergestellt ({{count}})."
+        },
+        "error": {
+          "detailsLoad": "Details konnten nicht geladen werden."
+        }
+      }
+    }
+  }
 }

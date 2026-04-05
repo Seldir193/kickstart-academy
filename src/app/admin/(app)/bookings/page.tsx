@@ -22,6 +22,7 @@ import type { Booking, ProgramFilter, Status, StatusOrAll } from "./types";
 import { programLabel, statusLabel } from "./utils";
 import { sortBookings } from "./page.helpers";
 import { useDropdown } from "./components/useDropdown";
+import { useTranslation } from "react-i18next";
 
 type SortKey = "newest" | "oldest" | "nameAsc" | "nameDesc";
 
@@ -52,14 +53,25 @@ type DialogBooking = Booking & {
   detail?: BookingDialogDetail;
 };
 
-function sortLabel(sort: SortKey) {
+// function sortLabel(sort: SortKey) {
+//   const map: Record<SortKey, string> = {
+//     newest: "Newest first",
+//     oldest: "Oldest first",
+//     nameAsc: "Name A–Z",
+//     nameDesc: "Name Z–A",
+
+//   };
+//   return map[sort] || "Newest first";
+// }
+
+function sortLabel(sort: SortKey, t: (key: string) => string) {
   const map: Record<SortKey, string> = {
-    newest: "Newest first",
-    oldest: "Oldest first",
-    nameAsc: "Name A–Z",
-    nameDesc: "Name Z–A",
+    newest: t("common.admin.bookings.sort.newest"),
+    oldest: t("common.admin.bookings.sort.oldest"),
+    nameAsc: t("common.admin.bookings.sort.nameAsc"),
+    nameDesc: t("common.admin.bookings.sort.nameDesc"),
   };
-  return map[sort] || "Newest first";
+  return map[sort] || t("common.admin.bookings.sort.newest");
 }
 
 export default function AdminBookingsPage() {
@@ -80,6 +92,7 @@ export default function AdminBookingsPage() {
   const programDd = useDropdown();
   const statusDd = useDropdown();
   const sortDd = useDropdown();
+  const { t } = useTranslation();
 
   const computedStatusLabel = useMemo(
     () =>
@@ -151,7 +164,10 @@ export default function AdminBookingsPage() {
       await list.reload();
       setSelectMode(false);
     });
-    showOk(`Deleted (${ids.length}).`);
+    //showOk(`Deleted (${ids.length}).`);
+    //  showOk(t("common.admin.bookings.notice.deleted", { count: ids.length }));
+
+    showOk(`${t("common.admin.bookings.notice.deleted")} (${ids.length}).`);
   }
 
   async function onRestoreMany(ids: string[]) {
@@ -161,7 +177,9 @@ export default function AdminBookingsPage() {
       await list.reload();
       setSelectMode(false);
     });
-    showOk(`Restored (${ids.length}).`);
+    //  showOk(`Restored (${ids.length}).`);
+    // showOk(t("common.admin.bookings.notice.restored", { count: ids.length }));
+    showOk(`${t("common.admin.bookings.notice.restored")} (${ids.length}).`);
   }
 
   async function openBooking(b: Booking) {
@@ -177,7 +195,8 @@ export default function AdminBookingsPage() {
         detail: data?.detail || null,
       });
     } catch (e: any) {
-      showError(e?.message || "Details could not be loaded.");
+      showError(e?.message || t("common.admin.bookings.error.detailsLoad"));
+      //  showError(e?.message || "Details could not be loaded.");
       setSel(b);
     }
   }
@@ -245,7 +264,8 @@ export default function AdminBookingsPage() {
             sortDd={sortDd}
             programLabel={programLabel(program)}
             statusLabel={computedStatusLabel}
-            sortLabel={sortLabel(sort)}
+            sortLabel={sortLabel(sort, t)}
+            // sortLabel={sortLabel(sort)}
             program={program}
             status={status}
             sort={sort}

@@ -24,5 +24,25 @@
   "nav.admin.locations": "Lokasyonlar",
   "nav.admin.members": "Üyeler",
 
-  "aria.home": "Ana sayfa"
+  "aria.home": "Ana sayfa",
+
+  "common": {
+    "admin": {
+      "bookings": {
+        "sort": {
+          "newest": "En yeniler önce",
+          "oldest": "En eskiler önce",
+          "nameAsc": "İsim A–Z",
+          "nameDesc": "İsim Z–A"
+        },
+        "notice": {
+          "deleted": "Silindi ({{count}}).",
+          "restored": "Geri yüklendi ({{count}})."
+        },
+        "error": {
+          "detailsLoad": "Detaylar yüklenemedi."
+        }
+      }
+    }
+  }
 }
