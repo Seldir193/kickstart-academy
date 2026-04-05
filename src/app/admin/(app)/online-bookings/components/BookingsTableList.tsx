@@ -8,6 +8,8 @@ import { useSelection } from "@/app/admin/(app)/news/hooks/useSelection";
 import type { Booking } from "../types";
 import { asStatus, formatDateOnlyDE, programAbbr, safeText } from "../utils";
 
+import { useTranslation } from "react-i18next";
+
 type Props = {
   items: Booking[];
   selectMode: boolean;
@@ -29,7 +31,7 @@ function getRestoreIds(items: Booking[], ids: Set<string>) {
     .map((b) => b._id);
 }
 
-function renderPayment(b: Booking) {
+function renderPayment(t: (key: string) => string, b: Booking) {
   const payment = String(b?.paymentStatus || "")
     .trim()
     .toLowerCase();
@@ -43,12 +45,21 @@ function renderPayment(b: Booking) {
         ? "badge badge-danger"
         : "badge";
 
-  return <span className={className}>{payment}</span>;
+  const label =
+    payment === "paid"
+      ? t("common.admin.onlineBookings.payment.paid")
+      : payment === "returned"
+        ? t("common.admin.onlineBookings.payment.returned")
+        : payment;
+
+  //      return <span className={className}>{payment}</span>;
+  return <span className={className}>{label}</span>;
 }
 
-function rowLabel(b: Booking, selectMode: boolean) {
+function rowLabel(t: (key: string) => string, b: Booking, selectMode: boolean) {
   const fullName = `${safeText(b.firstName)} ${safeText(b.lastName)}`.trim();
-  return `${selectMode ? "Select" : "Open"}: ${fullName}`;
+  //return `${selectMode ? "Select" : "Open"}: ${fullName}`;
+  return `${selectMode ? t("common.admin.onlineBookings.table.row.select") : t("common.admin.onlineBookings.table.row.open")}: ${fullName}`;
 }
 
 function onKeyActivate(e: React.KeyboardEvent<HTMLLIElement>, run: () => void) {
@@ -76,6 +87,7 @@ export default function BookingsTableList({
   const count = sel.selected.size;
   const showClear = selectMode && count >= 2;
   const restoreCount = getRestoreIds(items, sel.selected).length;
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (!selectMode) {
@@ -131,7 +143,11 @@ export default function BookingsTableList({
   if (!items.length) {
     return (
       <section className="card">
-        <div className="card__empty">{busy ? "Loading..." : "No entries."}</div>
+        <div className="card__empty">
+          {busy
+            ? t("common.admin.onlineBookings.table.loading")
+            : t("common.admin.onlineBookings.table.empty")}
+        </div>
       </section>
     );
   }
@@ -156,12 +172,18 @@ export default function BookingsTableList({
           onClear={clearSelection}
           showClear={showClear}
           onDelete={deleteSelected}
-          toggleLabel="Select holiday bookings"
-          selectedLabel="selected"
-          selectAllLabel="Select all"
-          clearAllLabel="Clear all"
-          deleteLabel="Delete"
-          cancelLabel="Cancel"
+          // toggleLabel="Select holiday bookings"
+          // selectedLabel="selected"
+          // selectAllLabel="Select all"
+          // clearAllLabel="Clear all"
+          // deleteLabel="Delete"
+          // cancelLabel="Cancel"
+          toggleLabel={t("common.admin.onlineBookings.bulk.toggleLabel")}
+          selectedLabel={t("common.admin.onlineBookings.bulk.selectedLabel")}
+          selectAllLabel={t("common.admin.onlineBookings.bulk.selectAllLabel")}
+          clearAllLabel={t("common.admin.onlineBookings.bulk.clearAllLabel")}
+          deleteLabel={t("common.admin.onlineBookings.bulk.deleteLabel")}
+          cancelLabel={t("common.admin.onlineBookings.bulk.cancelLabel")}
         />
 
         {selectMode && restoreCount ? (
@@ -171,7 +193,8 @@ export default function BookingsTableList({
             disabled={busy}
             onClick={restoreSelected}
           >
-            Restore ({restoreCount})
+            {t("common.admin.onlineBookings.bulk.restoreLabel")} ({restoreCount}
+            )
           </button>
         ) : null}
       </div>
@@ -179,7 +202,7 @@ export default function BookingsTableList({
       <div className="news-table__scroll">
         <section className="card news-list">
           <div className="news-list__table">
-            <div className="news-list__head" aria-hidden="true">
+            {/* <div className="news-list__head" aria-hidden="true">
               <div className="news-list__h">Name</div>
               <div className="news-list__h">Email</div>
               <div className="news-list__h">Age</div>
@@ -189,8 +212,37 @@ export default function BookingsTableList({
               <div className="news-list__h">Payment</div>
               <div className="news-list__h">Created</div>
               <div className="news-list__h news-list__h--right">Action</div>
+            </div> */}
+            // table head
+            <div className="news-list__head" aria-hidden="true">
+              <div className="news-list__h">
+                {t("common.admin.onlineBookings.table.head.name")}
+              </div>
+              <div className="news-list__h">
+                {t("common.admin.onlineBookings.table.head.email")}
+              </div>
+              <div className="news-list__h">
+                {t("common.admin.onlineBookings.table.head.age")}
+              </div>
+              <div className="news-list__h">
+                {t("common.admin.onlineBookings.table.head.date")}
+              </div>
+              <div className="news-list__h">
+                {t("common.admin.onlineBookings.table.head.program")}
+              </div>
+              <div className="news-list__h">
+                {t("common.admin.onlineBookings.table.head.status")}
+              </div>
+              <div className="news-list__h">
+                {t("common.admin.onlineBookings.table.head.payment")}
+              </div>
+              <div className="news-list__h">
+                {t("common.admin.onlineBookings.table.head.created")}
+              </div>
+              <div className="news-list__h news-list__h--right">
+                {t("common.admin.onlineBookings.table.head.action")}
+              </div>
             </div>
-
             <ul className="list list--bleed">
               {items.map((b) => {
                 const id = idOf(b);
@@ -208,7 +260,8 @@ export default function BookingsTableList({
                     tabIndex={0}
                     role="button"
                     aria-pressed={selectMode ? checked : undefined}
-                    aria-label={rowLabel(b, selectMode)}
+                    // aria-label={rowLabel(b, selectMode)}
+                    aria-label={rowLabel(t, b, selectMode)}
                   >
                     <div className="news-list__cell news-list__cell--name">
                       <div className="news-list__title">
@@ -241,7 +294,7 @@ export default function BookingsTableList({
                     </div>
 
                     <div className="news-list__cell news-list__cell--payment">
-                      {renderPayment(b)}
+                      {renderPayment(t, b)}
                     </div>
 
                     <div className="news-list__cell news-list__cell--created">
@@ -266,7 +319,11 @@ export default function BookingsTableList({
                           className="edit-trigger"
                           role="button"
                           tabIndex={0}
-                          aria-label="Edit"
+                          // aria-label="Edit"
+
+                          aria-label={t(
+                            "common.admin.onlineBookings.table.edit",
+                          )}
                         >
                           <img
                             src="/icons/edit.svg"
