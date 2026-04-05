@@ -12,12 +12,13 @@ import { toastErrorMessage, toastText } from "@/lib/toast-messages";
 type Props = {
   booking: Booking;
   onClose: () => void;
-  onConfirm: () => Promise<string>;
-  onResend: () => Promise<string>;
-  onSetStatus: (s: Status) => Promise<string>;
-  onDelete: () => Promise<string>;
-  onCancelConfirmed: () => Promise<string>;
-  onApprovePayment: () => Promise<string>;
+
+  onConfirm: () => Promise<unknown>;
+  onResend: () => Promise<unknown>;
+  onSetStatus: (s: Status) => Promise<unknown>;
+  onDelete: () => Promise<unknown>;
+  onCancelConfirmed: () => Promise<unknown>;
+  onApprovePayment: () => Promise<unknown>;
   notify: (text: string) => void;
   onUpdateBooking: (patch: Partial<Booking>) => void;
 };
@@ -513,24 +514,6 @@ export default function OnlineBookingDialog({
     [t, i18n.language, booking],
   );
 
-  // async function run(action: string, fn: () => Promise<string>) {
-  //   if (busy) return;
-
-  //   try {
-  //     setBusy(action);
-  //     const text = await fn();
-  //     notify(text);
-  //     if (action === "delete") onClose();
-  //   } catch (e: any) {
-  //     notify(
-  //       e?.message ||
-  //         t("common.admin.onlineBookings.dialog.error.actionFailed"),
-  //     );
-  //   } finally {
-  //     setBusy("");
-  //   }
-  // }
-
   async function run(action: string, fn: () => Promise<unknown>) {
     if (busy) return;
 
@@ -553,7 +536,7 @@ export default function OnlineBookingDialog({
   }
 
   async function approvePayment() {
-    const text = await onApprovePayment();
+    await onApprovePayment();
 
     onUpdateBooking({
       meta: {
@@ -562,8 +545,6 @@ export default function OnlineBookingDialog({
         paymentApprovedAt: new Date().toISOString(),
       },
     });
-
-    return text;
   }
 
   function successMessageKey(action: string) {
