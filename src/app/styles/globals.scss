@@ -76,6 +76,7 @@
 @use "./dialog-style/dialog-system.scss" as *;
 @use "./components/news-dialog-mobile.scss" as *;
 @use "./customers.scss" as *;
+@use "./notice-toast.scss" as *;
 
 root {
   --brand-navy: #0f1e2e;
