@@ -142,8 +142,6 @@ async function runAll(tasks: Array<() => Promise<unknown>>) {
     : new Error("Bulk action failed");
 }
 
-//neu
-
 export async function setSubscriptionEligible(params: {
   id: string;
   eligible: boolean;
