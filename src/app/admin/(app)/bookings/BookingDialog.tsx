@@ -306,8 +306,8 @@ export default function BookingDialog({
     } catch (e: any) {
       notify(
         toastErrorMessage(
-          e,
           t,
+          e,
           "common.admin.bookings.dialog.error.actionFailed",
         ),
       );
@@ -328,6 +328,7 @@ export default function BookingDialog({
             data?.subscriptionEligibleAt || new Date().toISOString(),
         },
       });
+      return;
     }
 
     const data = await setSubscriptionEligible({
