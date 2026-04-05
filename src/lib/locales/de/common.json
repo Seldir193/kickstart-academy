@@ -87,5 +87,62 @@
   "common.admin.bookings.row.open": "Öffnen",
   "common.admin.bookings.row.openAction": "Öffnen",
 
-  "common.admin.bookings.error.loadFailed": "Laden fehlgeschlagen."
+  "common.admin.bookings.error.loadFailed": "Laden fehlgeschlagen.",
+
+  "common.admin.bookings.dialog.ariaLabel": "Buchungsdetails",
+  "common.admin.bookings.dialog.close": "Schließen",
+  "common.admin.bookings.dialog.empty": "—",
+
+  "common.admin.bookings.dialog.sections.booking": "Buchung",
+  "common.admin.bookings.dialog.sections.message": "Nachricht",
+
+  "common.admin.bookings.dialog.labels.program": "Programm",
+  "common.admin.bookings.dialog.labels.venue": "Ort",
+  "common.admin.bookings.dialog.labels.name": "Name",
+  "common.admin.bookings.dialog.labels.email": "E-Mail",
+  "common.admin.bookings.dialog.labels.age": "Alter",
+  "common.admin.bookings.dialog.labels.preferredDate": "Wunschtermin",
+  "common.admin.bookings.dialog.labels.dateStartDate": "Datum / Startdatum",
+  "common.admin.bookings.dialog.labels.created": "Erstellt",
+  "common.admin.bookings.dialog.labels.paymentApprovedAt": "Zahlung freigegeben am",
+  "common.admin.bookings.dialog.labels.subscriptionApprovedAt": "Abo freigegeben am",
+  "common.admin.bookings.dialog.labels.confirmationCode": "Bestätigungscode",
+  "common.admin.bookings.dialog.labels.invoiceNumber": "Rechnungsnummer",
+  "common.admin.bookings.dialog.labels.invoiceDate": "Rechnungsdatum",
+
+  "common.admin.bookings.dialog.actions.pleaseWait": "Bitte warten...",
+  "common.admin.bookings.dialog.actions.processing": "In Bearbeitung",
+  "common.admin.bookings.dialog.actions.confirm": "Bestätigen",
+  "common.admin.bookings.dialog.actions.resend": "Erneut senden",
+  "common.admin.bookings.dialog.actions.cancelConfirmedBooking": "Bestätigte Buchung stornieren",
+  "common.admin.bookings.dialog.actions.cancel": "Stornieren",
+  "common.admin.bookings.dialog.actions.removeSubscriptionApproval": "Abo-Freigabe entfernen",
+  "common.admin.bookings.dialog.actions.approveForSubscription": "Für Abo freigeben",
+  "common.admin.bookings.dialog.actions.approvePayment": "Zahlung freigeben",
+  "common.admin.bookings.dialog.actions.delete": "Löschen",
+
+  "common.admin.bookings.dialog.notice.subscriptionApproved": "Für Abo freigegeben (E-Mail gesendet)",
+  "common.admin.bookings.dialog.notice.subscriptionApprovalRemoved": "Abo-Freigabe entfernt",
+  "common.admin.bookings.dialog.notice.paymentApproved": "Zahlung freigegeben (E-Mail gesendet)",
+
+  "common.admin.bookings.dialog.error.actionFailed": "Aktion fehlgeschlagen",
+
+  "common.admin.bookings.dialog.message.registration": "Anmeldung",
+  "common.admin.bookings.dialog.message.birthday": "Geburtstag",
+  "common.admin.bookings.dialog.message.contact": "Kontakt",
+  "common.admin.bookings.dialog.message.address": "Adresse",
+  "common.admin.bookings.dialog.message.phone": "Telefon",
+  "common.admin.bookings.dialog.message.voucher": "Gutschein",
+  "common.admin.bookings.dialog.message.source": "Quelle",
+  "common.admin.bookings.dialog.message.child": "Kind",
+
+  "common.admin.bookings.status.pending": "Ausstehend",
+  "common.admin.bookings.status.processing": "In Bearbeitung",
+  "common.admin.bookings.status.confirmed": "Bestätigt",
+  "common.admin.bookings.status.cancelled": "Storniert",
+  "common.admin.bookings.status.deleted": "Gelöscht",
+
+  "common.admin.bookings.payment.open": "Offen",
+  "common.admin.bookings.payment.paid": "Bezahlt",
+  "common.admin.bookings.payment.returned": "Zurückgebucht"
 }

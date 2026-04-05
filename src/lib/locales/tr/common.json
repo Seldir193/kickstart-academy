@@ -87,5 +87,62 @@
   "common.admin.bookings.row.open": "Open",
   "common.admin.bookings.row.openAction": "Open",
 
-  "common.admin.bookings.error.loadFailed": "Yükleme başarısız oldu."
+  "common.admin.bookings.error.loadFailed": "Yükleme başarısız oldu.",
+
+  "common.admin.bookings.dialog.ariaLabel": "Rezervasyon detayları",
+  "common.admin.bookings.dialog.close": "Kapat",
+  "common.admin.bookings.dialog.empty": "—",
+
+  "common.admin.bookings.dialog.sections.booking": "Rezervasyon",
+  "common.admin.bookings.dialog.sections.message": "Mesaj",
+
+  "common.admin.bookings.dialog.labels.program": "Program",
+  "common.admin.bookings.dialog.labels.venue": "Konum",
+  "common.admin.bookings.dialog.labels.name": "Ad",
+  "common.admin.bookings.dialog.labels.email": "E-posta",
+  "common.admin.bookings.dialog.labels.age": "Yaş",
+  "common.admin.bookings.dialog.labels.preferredDate": "Tercih edilen tarih",
+  "common.admin.bookings.dialog.labels.dateStartDate": "Tarih / Başlangıç tarihi",
+  "common.admin.bookings.dialog.labels.created": "Oluşturuldu",
+  "common.admin.bookings.dialog.labels.paymentApprovedAt": "Ödeme onay tarihi",
+  "common.admin.bookings.dialog.labels.subscriptionApprovedAt": "Abonelik onay tarihi",
+  "common.admin.bookings.dialog.labels.confirmationCode": "Onay kodu",
+  "common.admin.bookings.dialog.labels.invoiceNumber": "Fatura numarası",
+  "common.admin.bookings.dialog.labels.invoiceDate": "Fatura tarihi",
+
+  "common.admin.bookings.dialog.actions.pleaseWait": "Lütfen bekleyin...",
+  "common.admin.bookings.dialog.actions.processing": "İşleniyor",
+  "common.admin.bookings.dialog.actions.confirm": "Onayla",
+  "common.admin.bookings.dialog.actions.resend": "Tekrar gönder",
+  "common.admin.bookings.dialog.actions.cancelConfirmedBooking": "Onaylanmış rezervasyonu iptal et",
+  "common.admin.bookings.dialog.actions.cancel": "İptal et",
+  "common.admin.bookings.dialog.actions.removeSubscriptionApproval": "Abonelik onayını kaldır",
+  "common.admin.bookings.dialog.actions.approveForSubscription": "Abonelik için onayla",
+  "common.admin.bookings.dialog.actions.approvePayment": "Ödemeyi onayla",
+  "common.admin.bookings.dialog.actions.delete": "Sil",
+
+  "common.admin.bookings.dialog.notice.subscriptionApproved": "Abonelik için onaylandı (e-posta gönderildi)",
+  "common.admin.bookings.dialog.notice.subscriptionApprovalRemoved": "Abonelik onayı kaldırıldı",
+  "common.admin.bookings.dialog.notice.paymentApproved": "Ödeme onaylandı (e-posta gönderildi)",
+
+  "common.admin.bookings.dialog.error.actionFailed": "İşlem başarısız oldu",
+
+  "common.admin.bookings.dialog.message.registration": "Kayıt",
+  "common.admin.bookings.dialog.message.birthday": "Doğum günü",
+  "common.admin.bookings.dialog.message.contact": "İletişim",
+  "common.admin.bookings.dialog.message.address": "Adres",
+  "common.admin.bookings.dialog.message.phone": "Telefon",
+  "common.admin.bookings.dialog.message.voucher": "Kupon",
+  "common.admin.bookings.dialog.message.source": "Kaynak",
+  "common.admin.bookings.dialog.message.child": "Çocuk",
+
+  "common.admin.bookings.status.pending": "Beklemede",
+  "common.admin.bookings.status.processing": "İşleniyor",
+  "common.admin.bookings.status.confirmed": "Onaylandı",
+  "common.admin.bookings.status.cancelled": "İptal edildi",
+  "common.admin.bookings.status.deleted": "Silindi",
+
+  "common.admin.bookings.payment.open": "Açık",
+  "common.admin.bookings.payment.paid": "Ödendi",
+  "common.admin.bookings.payment.returned": "İade edildi"
 }

@@ -1,8 +1,10 @@
+//src\app\admin\(app)\bookings\BookingDialog.tsx
 "use client";
 
 import React, { useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 import { setSubscriptionEligible, weeklyApproveBooking } from "./api";
+import { useTranslation } from "react-i18next";
 
 type Status = "pending" | "processing" | "confirmed" | "cancelled" | "deleted";
 
@@ -65,6 +67,7 @@ type Props = {
   onDelete: () => Promise<string>;
   onCancelConfirmed: () => Promise<string>;
   notify: (text: string) => void;
+
   onUpdateBooking: (patch: Partial<Booking>) => void;
 };
 
@@ -99,22 +102,49 @@ function asStatus(s?: Booking["status"]): Status {
   return (s ?? "pending") as Status;
 }
 
-function messageToLines(msg?: string): string[] {
+function messageToLines(
+  msg: string | undefined,
+  t: (key: string) => string,
+): string[] {
   if (!msg) return [];
-  let t = msg.trim();
+  let text = msg.trim();
 
-  t = t
-    .replace(/\s*,\s*Geburtstag:/gi, "\nBirthday:")
-    .replace(/\s*,\s*Kontakt:/gi, "\nContact:")
-    .replace(/\s*,\s*Adresse:/gi, "\nAddress:")
-    .replace(/\s*,\s*Telefon:/gi, "\nPhone:")
-    .replace(/\s*,\s*Gutschein:/gi, "\nVoucher:")
-    .replace(/\s*,\s*Quelle:/gi, "\nSource:")
-    .replace(/\s*,\s*Kind:/gi, "\nChild:");
+  text = text
+    .replace(
+      /\s*,\s*Geburtstag:/gi,
+      `\n${t("common.admin.bookings.dialog.message.birthday")}:`,
+    )
+    .replace(
+      /\s*,\s*Kontakt:/gi,
+      `\n${t("common.admin.bookings.dialog.message.contact")}:`,
+    )
+    .replace(
+      /\s*,\s*Adresse:/gi,
+      `\n${t("common.admin.bookings.dialog.message.address")}:`,
+    )
+    .replace(
+      /\s*,\s*Telefon:/gi,
+      `\n${t("common.admin.bookings.dialog.message.phone")}:`,
+    )
+    .replace(
+      /\s*,\s*Gutschein:/gi,
+      `\n${t("common.admin.bookings.dialog.message.voucher")}:`,
+    )
+    .replace(
+      /\s*,\s*Quelle:/gi,
+      `\n${t("common.admin.bookings.dialog.message.source")}:`,
+    )
+    .replace(
+      /\s*,\s*Kind:/gi,
+      `\n${t("common.admin.bookings.dialog.message.child")}:`,
+    );
 
-  t = t.replace(/^\s*Anmeldung\b/i, "Registration");
+  text = text.replace(
+    /^\s*Anmeldung\b/i,
+    t("common.admin.bookings.dialog.message.registration"),
+  );
 
-  return t
+  return text
     .split("\n")
     .map((s) => s.trim())
     .filter(Boolean);
@@ -134,8 +164,10 @@ function extractProgramName(msg?: string): string {
   return m ? m[1].trim() : "";
 }
 
-function extractAddress(msg?: string) {
-  const lines = messageToLines(msg);
+function extractAddress(msg: string | undefined, t: (key: string) => string) {
+  // const lines = messageToLines(msg);
+
+  const lines = messageToLines(msg, t);
   for (const ln of lines) {
     const { label, value } = splitLabelValue(ln);
     if (!label) continue;
@@ -156,7 +188,7 @@ function inferProgram(booking: Booking) {
   return left || raw;
 }
 
-function inferVenue(booking: Booking) {
+function inferVenue(booking: Booking, t: (key: string) => string) {
   const directVenue = safeText(booking.venue);
   if (directVenue) return directVenue;
 
@@ -167,7 +199,7 @@ function inferVenue(booking: Booking) {
     if (tail) return tail;
   }
 
-  const address = extractAddress(booking.message);
+  const address = extractAddress(booking.message, t);
   return address || "—";
 }
 
@@ -210,21 +242,44 @@ function childLine(detail: BookingDetail, booking: Booking) {
   return gender ? `${name} (${gender})` : name;
 }
 
-function adminMessageLines(booking: Booking, detail: BookingDetail) {
+function adminMessageLines(
+  booking: Booking,
+  detail: BookingDetail,
+  t: (key: string) => string,
+) {
   const lines: string[] = [];
   const program = inferProgram(booking);
   const child = childLine(detail, booking);
   const birthDate = formatDateOnlyDe(detail?.child?.birthDate || null);
   const contact = safeText(detail?.contact);
-  const address = safeText(detail?.address) || inferVenue(booking);
+  const address = safeText(detail?.address) || inferVenue(booking, t);
   const phone = safeText(detail?.parent?.phone);
 
-  lines.push(`Registration ${program}`);
-  if (child) lines.push(`Child: ${child}`);
-  if (birthDate !== "—") lines.push(`Birthday: ${birthDate}`);
-  if (contact) lines.push(`Contact: ${contact}`);
-  if (address && address !== "—") lines.push(`Address: ${address}`);
-  if (phone) lines.push(`Phone: ${phone}`);
+  // lines.push(`Registration ${program}`);
+  // if (child) lines.push(`Child: ${child}`);
+  // if (birthDate !== "—") lines.push(`Birthday: ${birthDate}`);
+  // if (contact) lines.push(`Contact: ${contact}`);
+  // if (address && address !== "—") lines.push(`Address: ${address}`);
+  // if (phone) lines.push(`Phone: ${phone}`);
+  lines.push(
+    `${t("common.admin.bookings.dialog.message.registration")} ${program}`,
+  );
+  if (child)
+    lines.push(`${t("common.admin.bookings.dialog.message.child")}: ${child}`);
+  if (birthDate !== "—")
+    lines.push(
+      `${t("common.admin.bookings.dialog.message.birthday")}: ${birthDate}`,
+    );
+  if (contact)
+    lines.push(
+      `${t("common.admin.bookings.dialog.message.contact")}: ${contact}`,
+    );
+  if (address && address !== "—")
+    lines.push(
+      `${t("common.admin.bookings.dialog.message.address")}: ${address}`,
+    );
+  if (phone)
+    lines.push(`${t("common.admin.bookings.dialog.message.phone")}: ${phone}`);
   return lines;
 }
 
@@ -239,12 +294,13 @@ export default function BookingDialog({
   notify,
   onUpdateBooking,
 }: Props) {
+  const { t } = useTranslation();
   const [busy, setBusy] = useState("");
 
   const s = booking.status ?? "pending";
   const isAdminBooking = booking.source === "admin_booking";
   const programText = useMemo(() => inferProgram(booking), [booking]);
-  const venueText = useMemo(() => inferVenue(booking), [booking]);
+  const venueText = useMemo(() => inferVenue(booking, t), [booking, t]);
   const bookingType = useMemo(() => inferBookingType(booking), [booking]);
   const isWeeklyType = bookingType === "Weekly";
   const isOneTimeType = bookingType === "One-Time";
@@ -271,16 +327,16 @@ export default function BookingDialog({
 
   const messageLines = useMemo(() => {
     if (isAdminBooking) {
-      return adminMessageLines(booking, booking.detail || null);
+      return adminMessageLines(booking, booking.detail || null, t);
     }
 
-    const lines = messageToLines(booking.message);
+    const lines = messageToLines(booking.message, t);
     return lines.filter((ln) => {
       const { label } = splitLabelValue(ln);
       if (!label) return true;
       return !label.toLowerCase().includes("programm");
     });
-  }, [booking, isAdminBooking]);
+  }, [booking, isAdminBooking, t]);
 
   async function run(action: string, fn: () => Promise<string>) {
     if (busy) return;
@@ -290,7 +346,11 @@ export default function BookingDialog({
       notify(text);
       if (action === "delete") onClose();
     } catch (e: any) {
-      notify(e?.message || "Action failed");
+      // notify(e?.message || "Action failed");
+
+      notify(
+        e?.message || t("common.admin.bookings.dialog.error.actionFailed"),
+      );
     } finally {
       setBusy("");
     }
@@ -309,7 +369,8 @@ export default function BookingDialog({
         },
       });
 
-      return "Approved for subscription (email sent)";
+      // return "Approved for subscription (email sent)";
+      return t("common.admin.bookings.dialog.notice.subscriptionApproved");
     }
 
     const data = await setSubscriptionEligible({
@@ -325,7 +386,8 @@ export default function BookingDialog({
       },
     });
 
-    return "Subscription approval removed";
+    //return "Subscription approval removed";
+    return t("common.admin.bookings.dialog.notice.subscriptionApprovalRemoved");
   }
 
   async function approvePayment() {
@@ -340,7 +402,12 @@ export default function BookingDialog({
 
     const data = await res.json().catch(() => null);
     if (!res.ok) {
-      throw new Error(data?.error || data?.message || "Action failed");
+      //  throw new Error(data?.error || data?.message || "Action failed");
+      throw new Error(
+        data?.error ||
+          data?.message ||
+          t("common.admin.bookings.dialog.error.actionFailed"),
+      );
     }
 
     onUpdateBooking({
@@ -352,20 +419,24 @@ export default function BookingDialog({
       },
     });
 
-    return "Payment approved (email sent)";
+    // return "Payment approved (email sent)";
+    return t("common.admin.bookings.dialog.notice.paymentApproved");
   }
+
   return (
     <ModalPortal>
       <div
         className="dialog-backdrop booking-dialog"
         role="dialog"
         aria-modal="true"
-        aria-label="Booking details"
+        //  aria-label="Booking details"
+        aria-label={t("common.admin.bookings.dialog.ariaLabel")}
       >
         <button
           type="button"
           className="dialog-backdrop-hit"
-          aria-label="Close"
+          //aria-label="Close"
+          aria-label={t("common.admin.bookings.dialog.close")}
           onClick={onClose}
         />
 
@@ -382,7 +453,9 @@ export default function BookingDialog({
                     s === "cancelled" || s === "deleted" ? "badge-muted" : ""
                   }`}
                 >
-                  {asStatus(booking.status)}
+                  {t(
+                    `common.admin.bookings.status.${asStatus(booking.status)}`,
+                  )}
                 </span>
 
                 {booking.paymentStatus ? (
@@ -395,7 +468,9 @@ export default function BookingDialog({
                           : ""
                     }`}
                   >
-                    {booking.paymentStatus}
+                    {t(
+                      `common.admin.bookings.payment.${booking.paymentStatus}`,
+                    )}
                   </span>
                 ) : null}
               </div>
@@ -405,7 +480,8 @@ export default function BookingDialog({
               <button
                 type="button"
                 className="dialog-close"
-                aria-label="Close"
+                //  aria-label="Close"
+                aria-label={t("common.admin.bookings.dialog.close")}
                 onClick={onClose}
               >
                 <img
@@ -423,42 +499,66 @@ export default function BookingDialog({
               <section className="dialog-section booking-dialog__section">
                 <div className="dialog-section__head">
                   <h3 className="dialog-section__title booking-dialog__section-title">
-                    Booking
+                    {t("common.admin.bookings.dialog.sections.booking")}
                   </h3>
                 </div>
 
                 <div className="dialog-section__body">
                   <div className="booking-dialog__details">
                     <div className="booking-dialog__row booking-dialog__row--full">
-                      <div className="dialog-label">Program</div>
+                      <div className="dialog-label">
+                        {t("common.admin.bookings.dialog.labels.program")}
+                      </div>
                       <div className="dialog-value">{programText}</div>
                     </div>
 
                     <div className="booking-dialog__row booking-dialog__row--full">
-                      <div className="dialog-label">Venue</div>
+                      <div className="dialog-label">
+                        {t("common.admin.bookings.dialog.labels.venue")}
+                      </div>
                       <div className="dialog-value">{venueText}</div>
                     </div>
 
                     <div className="booking-dialog__row">
-                      <div className="dialog-label">Name</div>
+                      <div className="dialog-label">
+                        {t("common.admin.bookings.dialog.labels.name")}
+                      </div>
                       <div className="dialog-value">
                         {booking.firstName} {booking.lastName}
                       </div>
                     </div>
 
                     <div className="booking-dialog__row">
-                      <div className="dialog-label">Email</div>
-                      <div className="dialog-value">{booking.email || "—"}</div>
-                    </div>
-
-                    <div className="booking-dialog__row">
-                      <div className="dialog-label">Age</div>
-                      <div className="dialog-value">{booking.age ?? "—"}</div>
+                      <div className="dialog-label">
+                        {t("common.admin.bookings.dialog.labels.email")}
+                      </div>
+                      {/* <div className="dialog-value">{booking.email || "—"}</div> */}
+                      <div className="dialog-value">
+                        {booking.email ||
+                          t("common.admin.bookings.dialog.empty")}
+                      </div>
                     </div>
 
                     <div className="booking-dialog__row">
                       <div className="dialog-label">
-                        {isWishDate ? "Preferred date" : "Date / Start date"}
+                        {t("common.admin.bookings.dialog.labels.age")}
+                      </div>
+                      {/* <div className="dialog-value">{booking.age ?? "—"}</div> */}
+                      <div className="dialog-value">
+                        {booking.age ?? t("common.admin.bookings.dialog.empty")}
+                      </div>
+                    </div>
+
+                    <div className="booking-dialog__row">
+                      <div className="dialog-label">
+                        {/* {isWishDate ? "Preferred date" : "Date / Start date"} */}
+                        {isWishDate
+                          ? t(
+                              "common.admin.bookings.dialog.labels.preferredDate",
+                            )
+                          : t(
+                              "common.admin.bookings.dialog.labels.dateStartDate",
+                            )}
                       </div>
                       <div className="dialog-value">
                         {formatDateOnlyDe(booking.date)}
@@ -466,7 +566,9 @@ export default function BookingDialog({
                     </div>
 
                     <div className="booking-dialog__row">
-                      <div className="dialog-label">Created</div>
+                      <div className="dialog-label">
+                        {t("common.admin.bookings.dialog.labels.created")}
+                      </div>
                       <div className="dialog-value">
                         {formatDateDe(booking.createdAt)}
                       </div>
@@ -474,9 +576,17 @@ export default function BookingDialog({
 
                     <div className="booking-dialog__row">
                       <div className="dialog-label">
-                        {isOneTimeType
+                        {/* {isOneTimeType
                           ? "Payment approved at"
-                          : "Subscription approved at"}
+                          : "Subscription approved at"} */}
+
+                        {isOneTimeType
+                          ? t(
+                              "common.admin.bookings.dialog.labels.paymentApprovedAt",
+                            )
+                          : t(
+                              "common.admin.bookings.dialog.labels.subscriptionApprovedAt",
+                            )}
                       </div>
                       <div className="dialog-value">
                         {isOneTimeType
@@ -490,23 +600,41 @@ export default function BookingDialog({
                     </div>
 
                     <div className="booking-dialog__row">
-                      <div className="dialog-label">Confirmation code</div>
+                      <div className="dialog-label">
+                        {t(
+                          "common.admin.bookings.dialog.labels.confirmationCode",
+                        )}
+                      </div>
                       <div className="dialog-value">
-                        {booking.confirmationCode || "—"}
+                        {/* {booking.confirmationCode || "—"} */}
+                        {booking.confirmationCode ||
+                          t("common.admin.bookings.dialog.empty")}
                       </div>
                     </div>
 
                     {showInvoiceDetails ? (
                       <>
                         <div className="booking-dialog__row">
-                          <div className="dialog-label">Invoice number</div>
+                          <div className="dialog-label">
+                            {t(
+                              "common.admin.bookings.dialog.labels.invoiceNumber",
+                            )}
+                          </div>
                           <div className="dialog-value">
-                            {booking.invoiceNumber || booking.invoiceNo || "—"}
+                            {/* {booking.invoiceNumber || booking.invoiceNo || "—"} */}
+
+                            {booking.invoiceNumber ||
+                              booking.invoiceNo ||
+                              t("common.admin.bookings.dialog.empty")}
                           </div>
                         </div>
 
                         <div className="booking-dialog__row">
-                          <div className="dialog-label">Invoice date</div>
+                          <div className="dialog-label">
+                            {t(
+                              "common.admin.bookings.dialog.labels.invoiceDate",
+                            )}
+                          </div>
                           <div className="dialog-value">
                             {formatDateOnlyDe(booking.invoiceDate)}
                           </div>
@@ -520,7 +648,7 @@ export default function BookingDialog({
               <section className="dialog-section booking-dialog__section">
                 <div className="dialog-section__head">
                   <h3 className="dialog-section__title booking-dialog__section-title">
-                    Message
+                    {t("common.admin.bookings.dialog.sections.message")}
                   </h3>
                 </div>
 
@@ -544,13 +672,18 @@ export default function BookingDialog({
                         return (
                           <div key={i} className="booking-dialog__message-row">
                             <div className="dialog-label">{label}</div>
-                            <div className="dialog-value">{value || "—"}</div>
+
+                            <div className="dialog-value">
+                              {value || t("common.admin.bookings.dialog.empty")}
+                            </div>
                           </div>
                         );
                       })}
                     </div>
                   ) : (
-                    <div className="dialog-value">—</div>
+                    <div className="dialog-value">
+                      {t("common.admin.bookings.dialog.empty")}
+                    </div>
                   )}
                 </div>
               </section>
@@ -566,7 +699,11 @@ export default function BookingDialog({
                     run("processing", () => onSetStatus("processing"))
                   }
                 >
-                  {busy === "processing" ? "Please wait..." : "Processing"}
+                  {/* {busy === "processing" ? "Please wait..." : "Processing"} */}
+
+                  {busy === "processing"
+                    ? t("common.admin.bookings.dialog.actions.pleaseWait")
+                    : t("common.admin.bookings.dialog.actions.processing")}
                 </button>
               ) : null}
 
@@ -577,7 +714,10 @@ export default function BookingDialog({
                   aria-disabled={busy ? true : undefined}
                   onClick={() => run("confirm", () => onConfirm())}
                 >
-                  {busy === "confirm" ? "Please wait..." : "Confirm"}
+                  {/* {busy === "confirm" ? "Please wait..." : "Confirm"} */}
+                  {busy === "confirm"
+                    ? t("common.admin.bookings.dialog.actions.pleaseWait")
+                    : t("common.admin.bookings.dialog.actions.confirm")}
                 </button>
               ) : null}
 
@@ -589,7 +729,10 @@ export default function BookingDialog({
                     aria-disabled={busy ? true : undefined}
                     onClick={() => run("resend", () => onResend())}
                   >
-                    {busy === "resend" ? "Please wait..." : "Resend"}
+                    {/* {busy === "resend" ? "Please wait..." : "Resend"} */}
+                    {busy === "resend"
+                      ? t("common.admin.bookings.dialog.actions.pleaseWait")
+                      : t("common.admin.bookings.dialog.actions.resend")}
                   </button>
 
                   <button
@@ -600,9 +743,15 @@ export default function BookingDialog({
                       run("cancelConfirmed", () => onCancelConfirmed())
                     }
                   >
-                    {busy === "cancelConfirmed"
+                    {/* {busy === "cancelConfirmed"
                       ? "Please wait..."
-                      : "Cancel confirmed booking"}
+                      : "Cancel confirmed booking"} */}
+
+                    {busy === "cancelConfirmed"
+                      ? t("common.admin.bookings.dialog.actions.pleaseWait")
+                      : t(
+                          "common.admin.bookings.dialog.actions.cancelConfirmedBooking",
+                        )}
                   </button>
                 </>
               ) : null}
@@ -616,7 +765,10 @@ export default function BookingDialog({
                     run("cancelled", () => onSetStatus("cancelled"))
                   }
                 >
-                  {busy === "cancelled" ? "Please wait..." : "Cancel"}
+                  {/* {busy === "cancelled" ? "Please wait..." : "Cancel"} */}
+                  {busy === "cancelled"
+                    ? t("common.admin.bookings.dialog.actions.pleaseWait")
+                    : t("common.admin.bookings.dialog.actions.cancel")}
                 </button>
               ) : null}
 
@@ -633,11 +785,21 @@ export default function BookingDialog({
                     )
                   }
                 >
-                  {busy === "eligible"
+                  {/* {busy === "eligible"
                     ? "Please wait..."
                     : booking.meta?.subscriptionEligible
                       ? "Remove subscription approval"
-                      : "Approve for subscription"}
+                      : "Approve for subscription"} */}
+
+                  {busy === "eligible"
+                    ? t("common.admin.bookings.dialog.actions.pleaseWait")
+                    : booking.meta?.subscriptionEligible
+                      ? t(
+                          "common.admin.bookings.dialog.actions.removeSubscriptionApproval",
+                        )
+                      : t(
+                          "common.admin.bookings.dialog.actions.approveForSubscription",
+                        )}
                 </button>
               ) : null}
 
@@ -648,9 +810,13 @@ export default function BookingDialog({
                   aria-disabled={busy ? true : undefined}
                   onClick={() => run("approvePayment", () => approvePayment())}
                 >
-                  {busy === "approvePayment"
+                  {/* {busy === "approvePayment"
                     ? "Please wait..."
-                    : "Approve payment"}
+                    : "Approve payment"} */}
+
+                  {busy === "approvePayment"
+                    ? t("common.admin.bookings.dialog.actions.pleaseWait")
+                    : t("common.admin.bookings.dialog.actions.approvePayment")}
                 </button>
               ) : null}
 
@@ -661,7 +827,11 @@ export default function BookingDialog({
                   aria-disabled={busy ? true : undefined}
                   onClick={() => run("delete", () => onDelete())}
                 >
-                  {busy === "delete" ? "Please wait..." : "Delete"}
+                  {/* {busy === "delete" ? "Please wait..." : "Delete"} */}
+
+                  {busy === "delete"
+                    ? t("common.admin.bookings.dialog.actions.pleaseWait")
+                    : t("common.admin.bookings.dialog.actions.delete")}
                 </button>
               ) : null}
             </div>
