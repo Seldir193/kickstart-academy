@@ -81,7 +81,7 @@ export default function LanguageSwitcher() {
         onClick={() => setIsOpen((value) => !value)}
       >
         <span className="language-switcher__label">{currentLabel}</span>
-        <span className="language-switcher__caret" aria-hidden="true">
+        <span className="ks-selectbox__chevron" aria-hidden="true">
           ▾
         </span>
       </button>
