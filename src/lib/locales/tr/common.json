@@ -62,5 +62,23 @@
   "common.admin.bookings.filters.status.cancelled": "İptal edildi",
   "common.admin.bookings.filters.status.deleted": "Silindi",
 
-  "common.admin.bookings.search.placeholder": "Ad, e-posta, seviye, kod, mesaj…"
+  "common.admin.bookings.search.placeholder": "Ad, e-posta, seviye, kod, mesaj…",
+
+  "common.admin.bookings.bulk.toggleLabel": "Rezervasyonları seç",
+  "common.admin.bookings.bulk.selectedLabel": "seçildi",
+  "common.admin.bookings.bulk.selectAllLabel": "Tümünü seç",
+  "common.admin.bookings.bulk.clearAllLabel": "Seçimi temizle",
+  "common.admin.bookings.bulk.deleteLabel": "Sil",
+  "common.admin.bookings.bulk.cancelLabel": "İptal",
+  "common.admin.bookings.bulk.restoreLabel": "Geri yükle",
+
+  "common.admin.bookings.table.empty": "Kayıt yok.",
+  "common.admin.bookings.table.head.name": "Ad",
+  "common.admin.bookings.table.head.email": "E-posta",
+  "common.admin.bookings.table.head.date": "Tarih",
+  "common.admin.bookings.table.head.program": "Program",
+  "common.admin.bookings.table.head.status": "Durum",
+  "common.admin.bookings.table.head.payment": "Ödeme",
+  "common.admin.bookings.table.head.created": "Oluşturuldu",
+  "common.admin.bookings.table.head.action": "İşlem"
 }

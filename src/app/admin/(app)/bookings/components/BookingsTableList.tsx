@@ -11,6 +11,7 @@ import {
   renderRow,
   restoreIds,
 } from "./BookingsTableList.helpers";
+import { useTranslation } from "react-i18next";
 
 type Props = {
   items: Booking[];
@@ -42,6 +43,7 @@ export default function BookingsTableList(props: Props) {
   const busyDelete = props.busyBulkDelete === true;
   const busyRestore = props.busyBulkRestore === true;
   const busyAny = busyDelete || busyRestore;
+  const { t } = useTranslation();
 
   useEffect(
     () =>
@@ -94,7 +96,10 @@ export default function BookingsTableList(props: Props) {
   if (!props.items.length) {
     return (
       <section className="card">
-        <div className="card__empty">No items.</div>
+        {/* <div className="card__empty">No items.</div> */}
+        <div className="card__empty">
+          {t("common.admin.bookings.table.empty")}
+        </div>
       </section>
     );
   }
@@ -122,12 +127,19 @@ export default function BookingsTableList(props: Props) {
           onClear={clearSelection}
           showClear={showClear}
           onDelete={deleteSelected}
-          toggleLabel="Select bookings"
-          selectedLabel="selected"
-          selectAllLabel="Select all"
-          clearAllLabel="Clear all"
-          deleteLabel="Delete"
-          cancelLabel="Cancel"
+          // toggleLabel="Select bookings"
+          // selectedLabel="selected"
+          // selectAllLabel="Select all"
+          // clearAllLabel="Clear all"
+          // deleteLabel="Delete"
+          // cancelLabel="Cancel"
+
+          toggleLabel={t("common.admin.bookings.bulk.toggleLabel")}
+          selectedLabel={t("common.admin.bookings.bulk.selectedLabel")}
+          selectAllLabel={t("common.admin.bookings.bulk.selectAllLabel")}
+          clearAllLabel={t("common.admin.bookings.bulk.clearAllLabel")}
+          deleteLabel={t("common.admin.bookings.bulk.deleteLabel")}
+          cancelLabel={t("common.admin.bookings.bulk.cancelLabel")}
         />
 
         {props.selectMode ? (
@@ -138,7 +150,8 @@ export default function BookingsTableList(props: Props) {
               disabled={busyRestore || restoreCount === 0}
               onClick={restoreSelected}
             >
-              Restore ({restoreCount})
+              {/* Restore ({restoreCount}) */}
+              {t("common.admin.bookings.bulk.restoreLabel")} ({restoreCount})
             </button>
 
             <button
@@ -147,7 +160,8 @@ export default function BookingsTableList(props: Props) {
               disabled={busyDelete || count === 0}
               onClick={deleteSelected}
             >
-              Delete ({count})
+              {/* Delete ({count}) */}
+              {t("common.admin.bookings.bulk.deleteLabel")} ({count})
             </button>
           </div>
         ) : null}
@@ -157,14 +171,39 @@ export default function BookingsTableList(props: Props) {
         <section className="card news-list">
           <div className="news-list__table">
             <div className="news-list__head" aria-hidden="true">
-              <div className="news-list__h">Name</div>
+              {/* <div className="news-list__h">Name</div>
               <div className="news-list__h">Email</div>
               <div className="news-list__h">Date</div>
               <div className="news-list__h">Program</div>
               <div className="news-list__h">Status</div>
               <div className="news-list__h">Payment</div>
               <div className="news-list__h">Created</div>
-              <div className="news-list__h news-list__h--right">Action</div>
+              <div className="news-list__h news-list__h--right">Action</div> */}
+
+              <div className="news-list__h">
+                {t("common.admin.bookings.table.head.name")}
+              </div>
+              <div className="news-list__h">
+                {t("common.admin.bookings.table.head.email")}
+              </div>
+              <div className="news-list__h">
+                {t("common.admin.bookings.table.head.date")}
+              </div>
+              <div className="news-list__h">
+                {t("common.admin.bookings.table.head.program")}
+              </div>
+              <div className="news-list__h">
+                {t("common.admin.bookings.table.head.status")}
+              </div>
+              <div className="news-list__h">
+                {t("common.admin.bookings.table.head.payment")}
+              </div>
+              <div className="news-list__h">
+                {t("common.admin.bookings.table.head.created")}
+              </div>
+              <div className="news-list__h news-list__h--right">
+                {t("common.admin.bookings.table.head.action")}
+              </div>
             </div>
 
             <ul className="list list--bleed">

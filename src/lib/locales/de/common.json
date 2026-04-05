@@ -62,5 +62,23 @@
   "common.admin.bookings.filters.status.cancelled": "Storniert",
   "common.admin.bookings.filters.status.deleted": "Gelöscht",
 
-  "common.admin.bookings.search.placeholder": "Name, E-Mail, Level, Code, Nachricht…"
+  "common.admin.bookings.search.placeholder": "Name, E-Mail, Level, Code, Nachricht…",
+
+  "common.admin.bookings.bulk.toggleLabel": "Buchungen auswählen",
+  "common.admin.bookings.bulk.selectedLabel": "ausgewählt",
+  "common.admin.bookings.bulk.selectAllLabel": "Alle auswählen",
+  "common.admin.bookings.bulk.clearAllLabel": "Auswahl aufheben",
+  "common.admin.bookings.bulk.deleteLabel": "Löschen",
+  "common.admin.bookings.bulk.cancelLabel": "Abbrechen",
+  "common.admin.bookings.bulk.restoreLabel": "Wiederherstellen",
+
+  "common.admin.bookings.table.empty": "Keine Einträge.",
+  "common.admin.bookings.table.head.name": "Name",
+  "common.admin.bookings.table.head.email": "E-Mail",
+  "common.admin.bookings.table.head.date": "Datum",
+  "common.admin.bookings.table.head.program": "Programm",
+  "common.admin.bookings.table.head.status": "Status",
+  "common.admin.bookings.table.head.payment": "Zahlung",
+  "common.admin.bookings.table.head.created": "Erstellt",
+  "common.admin.bookings.table.head.action": "Aktion"
 }

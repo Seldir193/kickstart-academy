@@ -62,5 +62,23 @@
   "common.admin.bookings.filters.status.cancelled": "Cancelled",
   "common.admin.bookings.filters.status.deleted": "Deleted",
 
-  "common.admin.bookings.search.placeholder": "Name, email, level, code, message…"
+  "common.admin.bookings.search.placeholder": "Name, email, level, code, message…",
+
+  "common.admin.bookings.bulk.toggleLabel": "Select bookings",
+  "common.admin.bookings.bulk.selectedLabel": "selected",
+  "common.admin.bookings.bulk.selectAllLabel": "Select all",
+  "common.admin.bookings.bulk.clearAllLabel": "Clear all",
+  "common.admin.bookings.bulk.deleteLabel": "Delete",
+  "common.admin.bookings.bulk.cancelLabel": "Cancel",
+  "common.admin.bookings.bulk.restoreLabel": "Restore",
+
+  "common.admin.bookings.table.empty": "No items.",
+  "common.admin.bookings.table.head.name": "Name",
+  "common.admin.bookings.table.head.email": "Email",
+  "common.admin.bookings.table.head.date": "Date",
+  "common.admin.bookings.table.head.program": "Program",
+  "common.admin.bookings.table.head.status": "Status",
+  "common.admin.bookings.table.head.payment": "Payment",
+  "common.admin.bookings.table.head.created": "Created",
+  "common.admin.bookings.table.head.action": "Action"
 }
