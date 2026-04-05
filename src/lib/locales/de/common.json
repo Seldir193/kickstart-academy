@@ -144,5 +144,26 @@
 
   "common.admin.bookings.payment.open": "Offen",
   "common.admin.bookings.payment.paid": "Bezahlt",
-  "common.admin.bookings.payment.returned": "Zurückgebucht"
+  "common.admin.bookings.payment.returned": "Zurückgebucht",
+
+  "common.admin.onlineBookings.search.placeholder": "Name, E-Mail, Level...",
+  "common.admin.onlineBookings.course.ariaLabel": "Kurse",
+  "common.admin.onlineBookings.course.all": "Alle Kurse",
+  "common.admin.onlineBookings.course.camp": "Camps (Indoor/Outdoor)",
+  "common.admin.onlineBookings.course.power": "Powertraining",
+  "common.admin.onlineBookings.course.group.holidayPrograms": "Ferienprogramme",
+  "common.admin.onlineBookings.status.ariaLabel": "Status",
+  "common.admin.onlineBookings.status.all": "Alle",
+  "common.admin.onlineBookings.status.confirmed": "Bestätigt",
+  "common.admin.onlineBookings.status.cancelled": "Storniert",
+  "common.admin.onlineBookings.status.deleted": "Gelöscht",
+  "common.admin.onlineBookings.sort.ariaLabel": "Sortierung",
+  "common.admin.onlineBookings.sort.newest": "Neueste zuerst",
+  "common.admin.onlineBookings.sort.oldest": "Älteste zuerst",
+  "common.admin.onlineBookings.sort.nameAsc": "Name A–Z",
+  "common.admin.onlineBookings.sort.nameDesc": "Name Z–A",
+  "common.admin.onlineBookings.bulk.deleted": "gelöscht",
+  "common.admin.onlineBookings.bulk.restored": "wiederhergestellt",
+  "common.admin.onlineBookings.pagination.previousPage": "Vorherige Seite",
+  "common.admin.onlineBookings.pagination.nextPage": "Nächste Seite"
 }

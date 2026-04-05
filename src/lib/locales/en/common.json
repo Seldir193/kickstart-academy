@@ -144,5 +144,26 @@
 
   "common.admin.bookings.payment.open": "Open",
   "common.admin.bookings.payment.paid": "Paid",
-  "common.admin.bookings.payment.returned": "Returned"
+  "common.admin.bookings.payment.returned": "Returned",
+
+  "common.admin.onlineBookings.search.placeholder": "Name, email, level...",
+  "common.admin.onlineBookings.course.ariaLabel": "Courses",
+  "common.admin.onlineBookings.course.all": "All courses",
+  "common.admin.onlineBookings.course.camp": "Camps (Indoor/Outdoor)",
+  "common.admin.onlineBookings.course.power": "Powertraining",
+  "common.admin.onlineBookings.course.group.holidayPrograms": "Holiday programs",
+  "common.admin.onlineBookings.status.ariaLabel": "Status",
+  "common.admin.onlineBookings.status.all": "All",
+  "common.admin.onlineBookings.status.confirmed": "Confirmed",
+  "common.admin.onlineBookings.status.cancelled": "Cancelled",
+  "common.admin.onlineBookings.status.deleted": "Deleted",
+  "common.admin.onlineBookings.sort.ariaLabel": "Sort order",
+  "common.admin.onlineBookings.sort.newest": "Newest first",
+  "common.admin.onlineBookings.sort.oldest": "Oldest first",
+  "common.admin.onlineBookings.sort.nameAsc": "Name A–Z",
+  "common.admin.onlineBookings.sort.nameDesc": "Name Z–A",
+  "common.admin.onlineBookings.bulk.deleted": "deleted",
+  "common.admin.onlineBookings.bulk.restored": "restored",
+  "common.admin.onlineBookings.pagination.previousPage": "Previous page",
+  "common.admin.onlineBookings.pagination.nextPage": "Next page"
 }

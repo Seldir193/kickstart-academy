@@ -144,5 +144,26 @@
 
   "common.admin.bookings.payment.open": "Açık",
   "common.admin.bookings.payment.paid": "Ödendi",
-  "common.admin.bookings.payment.returned": "İade edildi"
+  "common.admin.bookings.payment.returned": "İade edildi",
+
+  "common.admin.onlineBookings.search.placeholder": "İsim, e-posta, seviye...",
+  "common.admin.onlineBookings.course.ariaLabel": "Kurslar",
+  "common.admin.onlineBookings.course.all": "Tüm kurslar",
+  "common.admin.onlineBookings.course.camp": "Kamplar (Kapalı/Açık Alan)",
+  "common.admin.onlineBookings.course.power": "Powertraining",
+  "common.admin.onlineBookings.course.group.holidayPrograms": "Tatil programları",
+  "common.admin.onlineBookings.status.ariaLabel": "Durum",
+  "common.admin.onlineBookings.status.all": "Tümü",
+  "common.admin.onlineBookings.status.confirmed": "Onaylandı",
+  "common.admin.onlineBookings.status.cancelled": "İptal edildi",
+  "common.admin.onlineBookings.status.deleted": "Silindi",
+  "common.admin.onlineBookings.sort.ariaLabel": "Sıralama",
+  "common.admin.onlineBookings.sort.newest": "Önce en yeni",
+  "common.admin.onlineBookings.sort.oldest": "Önce en eski",
+  "common.admin.onlineBookings.sort.nameAsc": "İsim A–Z",
+  "common.admin.onlineBookings.sort.nameDesc": "İsim Z–A",
+  "common.admin.onlineBookings.bulk.deleted": "silindi",
+  "common.admin.onlineBookings.bulk.restored": "geri yüklendi",
+  "common.admin.onlineBookings.pagination.previousPage": "Önceki sayfa",
+  "common.admin.onlineBookings.pagination.nextPage": "Sonraki sayfa"
 }

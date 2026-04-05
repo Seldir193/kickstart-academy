@@ -18,39 +18,74 @@ import {
   PAGE_SIZE,
 } from "./api";
 import type { Booking, ProgramFilter, Status, StatusOrAll } from "./types";
+import { useTranslation } from "react-i18next";
 
-function courseLabel(program: ProgramFilter) {
-  if (program === "camp") return "Camps (Indoor/Outdoor)";
-  if (program === "power") return "Powertraining";
-  return "All courses";
+// function courseLabel(program: ProgramFilter) {
+//   if (program === "camp") return "Camps (Indoor/Outdoor)";
+//   if (program === "power") return "Powertraining";
+//   return "All courses";
+// }
+
+function courseLabel(t: (key: string) => string, program: ProgramFilter) {
+  if (program === "camp") return t("common.admin.onlineBookings.course.camp");
+  if (program === "power") return t("common.admin.onlineBookings.course.power");
+  return t("common.admin.onlineBookings.course.all");
 }
 
-function statusLabel(params: {
-  status: StatusOrAll;
-  total: number;
-  totalAll: number | null;
-  counts: Partial<Record<Status, number>>;
-}) {
+function statusLabel(
+  t: (key: string) => string,
+  params: {
+    status: StatusOrAll;
+    total: number;
+    totalAll: number | null;
+    counts: Partial<Record<Status, number>>;
+  },
+) {
   if (params.status === "all") {
-    return `All (${params.totalAll ?? params.total})`;
+    return `${t("common.admin.onlineBookings.status.all")} (${params.totalAll ?? params.total})`;
   }
   if (params.status === "confirmed") {
-    return `Confirmed (${params.counts.confirmed ?? 0})`;
+    return `${t("common.admin.onlineBookings.status.confirmed")} (${params.counts.confirmed ?? 0})`;
   }
   if (params.status === "cancelled") {
-    return `Cancelled (${params.counts.cancelled ?? 0})`;
+    return `${t("common.admin.onlineBookings.status.cancelled")} (${params.counts.cancelled ?? 0})`;
   }
-  return `Deleted (${params.counts.deleted ?? 0})`;
+  return `${t("common.admin.onlineBookings.status.deleted")} (${params.counts.deleted ?? 0})`;
 }
+
+function sortLabel(t: (key: string) => string, sort: SortKey) {
+  if (sort === "newest") return t("common.admin.onlineBookings.sort.newest");
+  if (sort === "oldest") return t("common.admin.onlineBookings.sort.oldest");
+  if (sort === "name_asc") return t("common.admin.onlineBookings.sort.nameAsc");
+  return t("common.admin.onlineBookings.sort.nameDesc");
+}
+
+// function statusLabel(params: {
+//   status: StatusOrAll;
+//   total: number;
+//   totalAll: number | null;
+//   counts: Partial<Record<Status, number>>;
+// }) {
+//   if (params.status === "all") {
+//     return `All (${params.totalAll ?? params.total})`;
+//   }
+//   if (params.status === "confirmed") {
+//     return `Confirmed (${params.counts.confirmed ?? 0})`;
+//   }
+//   if (params.status === "cancelled") {
+//     return `Cancelled (${params.counts.cancelled ?? 0})`;
+//   }
+//   return `Deleted (${params.counts.deleted ?? 0})`;
+// }
 
 type SortKey = "newest" | "oldest" | "name_asc" | "name_desc";
 
-function sortLabel(sort: SortKey) {
-  if (sort === "newest") return "Newest first";
-  if (sort === "oldest") return "Oldest first";
-  if (sort === "name_asc") return "Name A–Z";
-  return "Name Z–A";
-}
+// function sortLabel(sort: SortKey) {
+//   if (sort === "newest") return "Newest first";
+//   if (sort === "oldest") return "Oldest first";
+//   if (sort === "name_asc") return "Name A–Z";
+//   return "Name Z–A";
+// }
 
 function tsOf(v: unknown) {
   const t = new Date(String(v ?? "")).getTime();
@@ -97,6 +132,7 @@ export default function AdminOnlineBookingsPage() {
   const toggleBtnRef = useRef<HTMLButtonElement | null>(null);
   const [sel, setSel] = useState<Booking | null>(null);
   const { notice, showOk, showError } = useNotice(5000);
+  const { t } = useTranslation();
 
   const list = useOnlineBookingsList({
     status,
@@ -116,21 +152,37 @@ export default function AdminOnlineBookingsPage() {
   const sortTriggerRef = useRef<HTMLButtonElement | null>(null);
   const sortMenuRef = useRef<HTMLUListElement | null>(null);
 
+  // const computedStatusLabel = useMemo(
+  //   () =>
+  //     statusLabel({
+  //       status,
+  //       total: list.total,
+  //       totalAll: list.totalAll,
+  //       counts: list.counts,
+  //     }),
+  //   [status, list.total, list.totalAll, list.counts],
+  // );
+  // computed status label
   const computedStatusLabel = useMemo(
     () =>
-      statusLabel({
+      statusLabel(t, {
         status,
         total: list.total,
         totalAll: list.totalAll,
         counts: list.counts,
       }),
-    [status, list.total, list.totalAll, list.counts],
+    [t, status, list.total, list.totalAll, list.counts],
   );
 
   const itemsSorted = useMemo(
     () => sortBookings(list.items, sort),
     [list.items, sort],
   );
+
+  // const itemsSorted = useMemo(
+  //   () => sortBookings(list.items, sort),
+  //   [list.items, sort],
+  // );
 
   useEffect(
     () => setSelectMode(false),
@@ -268,7 +320,8 @@ export default function AdminOnlineBookingsPage() {
       await list.reload();
       setSelectMode(false);
     });
-    showOk(`(${ids.length}) deleted.`);
+    // showOk(`(${ids.length}) deleted.`);
+    showOk(`(${ids.length}) ${t("common.admin.onlineBookings.bulk.deleted")}.`);
   }
 
   async function onRestoreMany(ids: string[]) {
@@ -278,7 +331,10 @@ export default function AdminOnlineBookingsPage() {
       await list.reload();
       setSelectMode(false);
     });
-    showOk(`(${ids.length}) restored.`);
+    //showOk(`(${ids.length}) restored.`);
+    showOk(
+      `(${ids.length}) ${t("common.admin.onlineBookings.bulk.restored")}.`,
+    );
   }
 
   useEffect(() => {
@@ -323,7 +379,10 @@ export default function AdminOnlineBookingsPage() {
               />
               <input
                 className="input input-with-icon__input"
-                placeholder="Name, email, level..."
+                //placeholder="Name, email, level..."
+                placeholder={t(
+                  "common.admin.onlineBookings.search.placeholder",
+                )}
                 value={q}
                 onChange={(e) => onSearchChange(e.target.value)}
                 onKeyDown={(e) => onSearchKeyDown(e.key)}
@@ -344,10 +403,11 @@ export default function AdminOnlineBookingsPage() {
                 className="ks-training-select__trigger"
                 onClick={() => setCourseOpen((o) => !o)}
                 disabled={mutating}
-                aria-label="Courses"
+                //aria-label="Courses"
+                aria-label={t("common.admin.onlineBookings.course.ariaLabel")}
               >
                 <span className="ks-training-select__label">
-                  {courseLabel(program)}
+                  {courseLabel(t, program)}
                 </span>
                 <span
                   className="ks-training-select__chevron"
@@ -360,7 +420,7 @@ export default function AdminOnlineBookingsPage() {
                   ref={courseMenuRef}
                   className="ks-training-select__menu ks-training-select__menu--grouped"
                   role="listbox"
-                  aria-label="Courses"
+                  aria-label={t("common.admin.onlineBookings.course.ariaLabel")}
                 >
                   <li>
                     <button
@@ -371,13 +431,15 @@ export default function AdminOnlineBookingsPage() {
                       }
                       onClick={() => applyProgram("all")}
                     >
-                      All courses
+                      {t("common.admin.onlineBookings.course.all")}
                     </button>
                   </li>
 
                   <li className="ks-training-select__group">
                     <div className="ks-training-select__group-label">
-                      Holiday programs
+                      {t(
+                        "common.admin.onlineBookings.course.group.holidayPrograms",
+                      )}
                     </div>
 
                     <button
@@ -388,7 +450,7 @@ export default function AdminOnlineBookingsPage() {
                       }
                       onClick={() => applyProgram("camp")}
                     >
-                      Camps (Indoor/Outdoor)
+                      {t("common.admin.onlineBookings.course.camp")}
                     </button>
 
                     <button
@@ -399,7 +461,7 @@ export default function AdminOnlineBookingsPage() {
                       }
                       onClick={() => applyProgram("power")}
                     >
-                      Powertraining
+                      {t("common.admin.onlineBookings.course.power")}
                     </button>
                   </li>
                 </ul>
@@ -420,7 +482,8 @@ export default function AdminOnlineBookingsPage() {
                 className="ks-training-select__trigger"
                 onClick={() => setStatusOpen((o) => !o)}
                 disabled={mutating}
-                aria-label="Status"
+                //aria-label="Status"
+                aria-label={t("common.admin.onlineBookings.status.ariaLabel")}
               >
                 <span className="ks-training-select__label">
                   {computedStatusLabel}
@@ -436,7 +499,8 @@ export default function AdminOnlineBookingsPage() {
                   ref={statusMenuRef}
                   className="ks-training-select__menu"
                   role="listbox"
-                  aria-label="Status"
+                  //aria-label="Status"
+                  aria-label={t("common.admin.onlineBookings.status.ariaLabel")}
                 >
                   <li>
                     <button
@@ -447,7 +511,8 @@ export default function AdminOnlineBookingsPage() {
                       }
                       onClick={() => applyStatus("all")}
                     >
-                      All ({list.totalAll ?? list.total})
+                      {t("common.admin.onlineBookings.status.all")} (
+                      {list.totalAll ?? list.total})
                     </button>
                   </li>
                   <li>
@@ -459,7 +524,8 @@ export default function AdminOnlineBookingsPage() {
                       }
                       onClick={() => applyStatus("confirmed")}
                     >
-                      Confirmed ({list.counts.confirmed ?? 0})
+                      {t("common.admin.onlineBookings.status.confirmed")} (
+                      {list.counts.confirmed ?? 0})
                     </button>
                   </li>
                   <li>
@@ -471,7 +537,8 @@ export default function AdminOnlineBookingsPage() {
                       }
                       onClick={() => applyStatus("cancelled")}
                     >
-                      Cancelled ({list.counts.cancelled ?? 0})
+                      {t("common.admin.onlineBookings.status.cancelled")} (
+                      {list.counts.cancelled ?? 0})
                     </button>
                   </li>
                   <li>
@@ -483,7 +550,8 @@ export default function AdminOnlineBookingsPage() {
                       }
                       onClick={() => applyStatus("deleted")}
                     >
-                      Deleted ({list.counts.deleted ?? 0})
+                      {t("common.admin.onlineBookings.status.deleted")} (
+                      {list.counts.deleted ?? 0})
                     </button>
                   </li>
                 </ul>
@@ -504,10 +572,11 @@ export default function AdminOnlineBookingsPage() {
                 className="ks-training-select__trigger"
                 onClick={() => setSortOpen((o) => !o)}
                 disabled={mutating}
-                aria-label="Sort order"
+                // aria-label="Sort order"
+                aria-label={t("common.admin.onlineBookings.sort.ariaLabel")}
               >
                 <span className="ks-training-select__label">
-                  {sortLabel(sort)}
+                  {sortLabel(t, sort)}
                 </span>
                 <span
                   className="ks-training-select__chevron"
@@ -520,7 +589,8 @@ export default function AdminOnlineBookingsPage() {
                   ref={sortMenuRef}
                   className="ks-training-select__menu"
                   role="listbox"
-                  aria-label="Sort order"
+                  // aria-label="Sort order"
+                  aria-label={t("common.admin.onlineBookings.sort.ariaLabel")}
                 >
                   <li>
                     <button
@@ -531,7 +601,7 @@ export default function AdminOnlineBookingsPage() {
                       }
                       onClick={() => applySort("newest")}
                     >
-                      Newest first
+                      {t("common.admin.onlineBookings.sort.newest")}
                     </button>
                   </li>
                   <li>
@@ -543,7 +613,7 @@ export default function AdminOnlineBookingsPage() {
                       }
                       onClick={() => applySort("oldest")}
                     >
-                      Oldest first
+                      {t("common.admin.onlineBookings.sort.oldest")}
                     </button>
                   </li>
                   <li>
@@ -555,7 +625,7 @@ export default function AdminOnlineBookingsPage() {
                       }
                       onClick={() => applySort("name_asc")}
                     >
-                      Name A–Z
+                      {t("common.admin.onlineBookings.sort.nameAsc")}
                     </button>
                   </li>
                   <li>
@@ -567,7 +637,7 @@ export default function AdminOnlineBookingsPage() {
                       }
                       onClick={() => applySort("name_desc")}
                     >
-                      Name Z–A
+                      {t("common.admin.onlineBookings.sort.nameDesc")}
                     </button>
                   </li>
                 </ul>
@@ -611,7 +681,10 @@ export default function AdminOnlineBookingsPage() {
             <button
               type="button"
               className="btn"
-              aria-label="Previous page"
+              // aria-label="Previous page"
+              aria-label={t(
+                "common.admin.onlineBookings.pagination.previousPage",
+              )}
               disabled={mutating || page <= 1}
               onClick={goPrev}
             >
@@ -630,7 +703,8 @@ export default function AdminOnlineBookingsPage() {
             <button
               type="button"
               className="btn"
-              aria-label="Next page"
+              //aria-label="Next page"
+              aria-label={t("common.admin.onlineBookings.pagination.nextPage")}
               disabled={mutating || page >= list.pages}
               onClick={goNext}
             >
