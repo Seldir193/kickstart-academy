@@ -20,12 +20,6 @@ import {
 import type { Booking, ProgramFilter, Status, StatusOrAll } from "./types";
 import { useTranslation } from "react-i18next";
 
-// function courseLabel(program: ProgramFilter) {
-//   if (program === "camp") return "Camps (Indoor/Outdoor)";
-//   if (program === "power") return "Powertraining";
-//   return "All courses";
-// }
-
 function courseLabel(t: (key: string) => string, program: ProgramFilter) {
   if (program === "camp") return t("common.admin.onlineBookings.course.camp");
   if (program === "power") return t("common.admin.onlineBookings.course.power");
@@ -60,32 +54,7 @@ function sortLabel(t: (key: string) => string, sort: SortKey) {
   return t("common.admin.onlineBookings.sort.nameDesc");
 }
 
-// function statusLabel(params: {
-//   status: StatusOrAll;
-//   total: number;
-//   totalAll: number | null;
-//   counts: Partial<Record<Status, number>>;
-// }) {
-//   if (params.status === "all") {
-//     return `All (${params.totalAll ?? params.total})`;
-//   }
-//   if (params.status === "confirmed") {
-//     return `Confirmed (${params.counts.confirmed ?? 0})`;
-//   }
-//   if (params.status === "cancelled") {
-//     return `Cancelled (${params.counts.cancelled ?? 0})`;
-//   }
-//   return `Deleted (${params.counts.deleted ?? 0})`;
-// }
-
 type SortKey = "newest" | "oldest" | "name_asc" | "name_desc";
-
-// function sortLabel(sort: SortKey) {
-//   if (sort === "newest") return "Newest first";
-//   if (sort === "oldest") return "Oldest first";
-//   if (sort === "name_asc") return "Name A–Z";
-//   return "Name Z–A";
-// }
 
 function tsOf(v: unknown) {
   const t = new Date(String(v ?? "")).getTime();
@@ -152,17 +121,6 @@ export default function AdminOnlineBookingsPage() {
   const sortTriggerRef = useRef<HTMLButtonElement | null>(null);
   const sortMenuRef = useRef<HTMLUListElement | null>(null);
 
-  // const computedStatusLabel = useMemo(
-  //   () =>
-  //     statusLabel({
-  //       status,
-  //       total: list.total,
-  //       totalAll: list.totalAll,
-  //       counts: list.counts,
-  //     }),
-  //   [status, list.total, list.totalAll, list.counts],
-  // );
-  // computed status label
   const computedStatusLabel = useMemo(
     () =>
       statusLabel(t, {
@@ -178,11 +136,6 @@ export default function AdminOnlineBookingsPage() {
     () => sortBookings(list.items, sort),
     [list.items, sort],
   );
-
-  // const itemsSorted = useMemo(
-  //   () => sortBookings(list.items, sort),
-  //   [list.items, sort],
-  // );
 
   useEffect(
     () => setSelectMode(false),
@@ -320,7 +273,7 @@ export default function AdminOnlineBookingsPage() {
       await list.reload();
       setSelectMode(false);
     });
-    // showOk(`(${ids.length}) deleted.`);
+
     showOk(`(${ids.length}) ${t("common.admin.onlineBookings.bulk.deleted")}.`);
   }
 
@@ -331,7 +284,7 @@ export default function AdminOnlineBookingsPage() {
       await list.reload();
       setSelectMode(false);
     });
-    //showOk(`(${ids.length}) restored.`);
+
     showOk(
       `(${ids.length}) ${t("common.admin.onlineBookings.bulk.restored")}.`,
     );
@@ -379,7 +332,6 @@ export default function AdminOnlineBookingsPage() {
               />
               <input
                 className="input input-with-icon__input"
-                //placeholder="Name, email, level..."
                 placeholder={t(
                   "common.admin.onlineBookings.search.placeholder",
                 )}
@@ -403,7 +355,6 @@ export default function AdminOnlineBookingsPage() {
                 className="ks-training-select__trigger"
                 onClick={() => setCourseOpen((o) => !o)}
                 disabled={mutating}
-                //aria-label="Courses"
                 aria-label={t("common.admin.onlineBookings.course.ariaLabel")}
               >
                 <span className="ks-training-select__label">
@@ -482,7 +433,6 @@ export default function AdminOnlineBookingsPage() {
                 className="ks-training-select__trigger"
                 onClick={() => setStatusOpen((o) => !o)}
                 disabled={mutating}
-                //aria-label="Status"
                 aria-label={t("common.admin.onlineBookings.status.ariaLabel")}
               >
                 <span className="ks-training-select__label">
@@ -499,7 +449,6 @@ export default function AdminOnlineBookingsPage() {
                   ref={statusMenuRef}
                   className="ks-training-select__menu"
                   role="listbox"
-                  //aria-label="Status"
                   aria-label={t("common.admin.onlineBookings.status.ariaLabel")}
                 >
                   <li>
@@ -572,7 +521,6 @@ export default function AdminOnlineBookingsPage() {
                 className="ks-training-select__trigger"
                 onClick={() => setSortOpen((o) => !o)}
                 disabled={mutating}
-                // aria-label="Sort order"
                 aria-label={t("common.admin.onlineBookings.sort.ariaLabel")}
               >
                 <span className="ks-training-select__label">
@@ -589,7 +537,6 @@ export default function AdminOnlineBookingsPage() {
                   ref={sortMenuRef}
                   className="ks-training-select__menu"
                   role="listbox"
-                  // aria-label="Sort order"
                   aria-label={t("common.admin.onlineBookings.sort.ariaLabel")}
                 >
                   <li>
@@ -681,7 +628,6 @@ export default function AdminOnlineBookingsPage() {
             <button
               type="button"
               className="btn"
-              // aria-label="Previous page"
               aria-label={t(
                 "common.admin.onlineBookings.pagination.previousPage",
               )}
@@ -703,7 +649,6 @@ export default function AdminOnlineBookingsPage() {
             <button
               type="button"
               className="btn"
-              //aria-label="Next page"
               aria-label={t("common.admin.onlineBookings.pagination.nextPage")}
               disabled={mutating || page >= list.pages}
               onClick={goNext}
