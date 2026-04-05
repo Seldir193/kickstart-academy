@@ -2,9 +2,9 @@
 
 import React, { useMemo, useState } from "react";
 import { createPortal } from "react-dom";
-import type { Booking } from "./types";
+import type { Booking, Status } from "./types";
 
-type Status = "pending" | "processing" | "confirmed" | "cancelled" | "deleted";
+import { useTranslation } from "react-i18next";
 
 type Props = {
   booking: Booking;
@@ -36,14 +36,14 @@ function stripProgramTitle(raw?: string) {
   return left || text;
 }
 
-function fallbackCampRange(booking: Booking) {
+function fallbackCampRange(booking: Booking, lang?: string) {
   const from = safeText((booking as any)?.meta?.holidayFrom);
   const to = safeText((booking as any)?.meta?.holidayTo);
 
   if (!from && !to) return "—";
 
-  const a = formatDateOnlyDe(from || null);
-  const b = formatDateOnlyDe(to || null);
+  const a = formatDateOnly(from || null, lang);
+  const b = formatDateOnly(to || null, lang);
 
   if (a !== "—" && b !== "—") return `${a} – ${b}`;
   return a !== "—" ? a : b;
@@ -65,32 +65,83 @@ function pickValue(...values: unknown[]) {
   return "—";
 }
 
-function goalkeeperLabel(value: unknown) {
+function goalkeeperLabel(t: (key: string) => string, value: unknown) {
   const raw = safeText(value).toLowerCase();
-  if (!raw || raw === "-" || raw === "—") return "No";
-  if (raw === "nein" || raw === "false" || raw === "0") return "No";
+  if (!raw || raw === "-" || raw === "—") {
+    return t("common.admin.onlineBookings.dialog.goalkeeper.no");
+  }
+  if (raw === "nein" || raw === "false" || raw === "0") {
+    return t("common.admin.onlineBookings.dialog.goalkeeper.no");
+  }
   if (raw === "ja" || raw === "ja (+40€)" || raw === "true" || raw === "1") {
-    return "Yes (+40€)";
+    return t("common.admin.onlineBookings.dialog.goalkeeper.yesExtra");
   }
   return safeText(value);
 }
 
-function formatDateDe(value?: string) {
+function renderStatus(t: (key: string) => string, status?: Booking["status"]) {
+  const value = asStatus(status);
+
+  if (value === "pending") {
+    return t("common.admin.onlineBookings.status.pending");
+  }
+  if (value === "processing") {
+    return t("common.admin.onlineBookings.status.processing");
+  }
+  if (value === "confirmed") {
+    return t("common.admin.onlineBookings.status.confirmed");
+  }
+  if (value === "cancelled") {
+    return t("common.admin.onlineBookings.status.cancelled");
+  }
+  if (value === "deleted") {
+    return t("common.admin.onlineBookings.status.deleted");
+  }
+  return value;
+}
+
+function renderPaymentStatus(
+  t: (key: string) => string,
+  status?: Booking["paymentStatus"],
+) {
+  if (status === "open") {
+    return t("common.admin.onlineBookings.payment.open");
+  }
+  if (status === "paid") {
+    return t("common.admin.onlineBookings.payment.paid");
+  }
+  if (status === "returned") {
+    return t("common.admin.onlineBookings.payment.returned");
+  }
+  return status ?? "—";
+}
+
+function dateLocale(lang?: string) {
+  if (lang === "tr") return "tr-TR";
+  if (lang === "en") return "en-US";
+  return "de-DE";
+}
+
+function formatDate(value: string | undefined, lang?: string) {
   if (!value) return "—";
-  const d = new Date(value);
+  const s = String(value);
+  const d = new Date(s.length === 10 ? `${s}T00:00:00` : s);
   if (Number.isNaN(d.getTime())) return value;
-  return new Intl.DateTimeFormat("de-DE", {
+  return new Intl.DateTimeFormat(dateLocale(lang), {
     dateStyle: "medium",
     timeStyle: "short",
   }).format(d);
 }
 
-function formatDateOnlyDe(value?: string | null) {
+function formatDateOnly(value?: string | null, lang?: string) {
   if (!value) return "—";
-  const isoGuess = /T|\d{2}:\d{2}/.test(value) ? value : `${value}T00:00:00`;
-  const d = new Date(isoGuess);
+  const s = String(value);
+  const d = new Date(s.length === 10 ? `${s}T00:00:00` : s);
   if (Number.isNaN(d.getTime())) return value;
-  return new Intl.DateTimeFormat("de-DE", { dateStyle: "medium" }).format(d);
+
+  return new Intl.DateTimeFormat(dateLocale(lang), {
+    dateStyle: "medium",
+  }).format(d);
 }
 
 function asStatus(s?: Booking["status"]): Status {
@@ -204,6 +255,8 @@ function buildKindLine(map: Record<string, string>, booking: Booking) {
 }
 
 function buildCampRows(
+  t: (key: string) => string,
+  lang: string,
   map: Record<string, string>,
   booking: Booking,
 ): MessageRow[] {
@@ -217,90 +270,122 @@ function buildCampRows(
     (booking as any)?.meta?.siblingGoalkeeperSchool === true;
 
   const rows: MessageRow[] = [
-    { value: "Holiday program registration" },
+    {
+      value: t(
+        "common.admin.onlineBookings.dialog.message.holidayProgramRegistration",
+      ),
+    },
     row(
-      "Holiday",
+      t("common.admin.onlineBookings.dialog.message.holiday"),
       pickValue(map["ferien"], (booking as any)?.meta?.holidayLabel),
     ),
-    row("Period", pickValue(map["zeitraum"], fallbackCampRange(booking))),
     row(
-      "T-shirt size (child)",
+      t("common.admin.onlineBookings.dialog.message.period"),
+      pickValue(map["zeitraum"], fallbackCampRange(booking, lang)),
+    ),
+    row(
+      t("common.admin.onlineBookings.dialog.message.tShirtSizeChild"),
       pickValue(
         map["t-shirt-größe (kind)"],
         (booking as any)?.meta?.mainTShirtSize,
       ),
     ),
     row(
-      "Goalkeeper school (child)",
+      t("common.admin.onlineBookings.dialog.message.goalkeeperSchoolChild"),
       goalkeeperLabel(
+        t,
         pickValue(
           map["torwartschule (kind)"],
           (booking as any)?.meta?.mainGoalkeeperSchool === true ? "Ja" : "Nein",
         ),
       ),
     ),
-    row("Sibling booking", hasSibling ? "Yes" : "No"),
-    row("Child", buildKindLine(map, booking)),
+
     row(
-      "Birth date",
+      t("common.admin.onlineBookings.dialog.message.siblingBooking"),
+      hasSibling
+        ? t("common.admin.onlineBookings.dialog.yes")
+        : t("common.admin.onlineBookings.dialog.no"),
+    ),
+
+    row(
+      t("common.admin.onlineBookings.dialog.message.child"),
+      buildKindLine(map, booking),
+    ),
+    row(
+      t("common.admin.onlineBookings.dialog.message.birthDate"),
       pickValue(
         map["geburtstag"],
-        formatDateOnlyDe((booking as any)?.meta?.childBirthDate),
+        formatDateOnly((booking as any)?.meta?.childBirthDate, lang),
       ),
     ),
-    row("Contact", map["kontakt"]),
-    row("Address", map["adresse"]),
-    row("Phone", map["telefon"]),
+
     row(
-      "Voucher",
+      t("common.admin.onlineBookings.dialog.message.contact"),
+      map["kontakt"],
+    ),
+    row(
+      t("common.admin.onlineBookings.dialog.message.address"),
+      map["adresse"],
+    ),
+    row(t("common.admin.onlineBookings.dialog.message.phone"), map["telefon"]),
+    row(
+      t("common.admin.onlineBookings.dialog.message.voucher"),
       pickValue(map["gutschein"], (booking as any)?.meta?.voucher),
     ),
-    row("Source", pickValue(map["quelle"], (booking as any)?.meta?.source)),
+    row(
+      t("common.admin.onlineBookings.dialog.message.source"),
+      pickValue(map["quelle"], (booking as any)?.meta?.source),
+    ),
   ];
 
   if (!hasSibling) return rows;
 
   return [
     ...rows,
-    { value: "Add sibling booking" },
+
+    {
+      value: t("common.admin.onlineBookings.dialog.message.addSiblingBooking"),
+    },
     row(
-      "Gender (sibling)",
+      t("common.admin.onlineBookings.dialog.message.genderSibling"),
       pickValue(
         map["geschlecht (geschwister)"],
         (booking as any)?.meta?.siblingGender,
       ),
     ),
     row(
-      "Birth date (sibling)",
+      t("common.admin.onlineBookings.dialog.message.birthDateSibling"),
       pickValue(
         map["geburtstag (geschwister)"],
-        formatDateOnlyDe((booking as any)?.meta?.siblingBirthDate),
+        formatDateOnly((booking as any)?.meta?.siblingBirthDate, lang),
       ),
     ),
     row(
-      "First name (sibling)",
+      t("common.admin.onlineBookings.dialog.message.firstNameSibling"),
       pickValue(
         map["vorname (geschwister)"],
         (booking as any)?.meta?.siblingFirstName,
       ),
     ),
     row(
-      "Last name (sibling)",
+      t("common.admin.onlineBookings.dialog.message.lastNameSibling"),
       pickValue(
         map["nachname (geschwister)"],
         (booking as any)?.meta?.siblingLastName,
       ),
     ),
     row(
-      "T-shirt size (sibling)",
+      t("common.admin.onlineBookings.dialog.message.tShirtSizeSibling"),
       pickValue(
         map["t-shirt-größe (geschwister)"],
         (booking as any)?.meta?.siblingTShirtSize,
       ),
     ),
     row(
-      "Goalkeeper school (sibling)",
+      t("common.admin.onlineBookings.dialog.message.goalkeeperSchoolSibling"),
       goalkeeperLabel(
+        t,
         pickValue(
           map["torwartschule (geschwister)"],
           (booking as any)?.meta?.siblingGoalkeeperSchool === true
@@ -313,26 +398,47 @@ function buildCampRows(
 }
 
 function buildPowerRows(
+  t: (key: string) => string,
+  lang: string,
   map: Record<string, string>,
   booking: Booking,
 ): MessageRow[] {
   return [
-    { value: "Holiday program registration" },
+    {
+      value: t(
+        "common.admin.onlineBookings.dialog.message.holidayProgramRegistration",
+      ),
+    },
     row(
-      "Holiday",
+      t("common.admin.onlineBookings.dialog.message.holiday"),
       pickValue(map["ferien"], (booking as any)?.meta?.holidayLabel),
     ),
-    row("Period", pickValue(map["zeitraum"], fallbackCampRange(booking))),
-    row("Child", map["kind"]),
-    row("Birth date", map["geburtstag"]),
-    row("Contact", map["kontakt"]),
-    row("Address", map["adresse"]),
-    row("Phone", map["telefon"]),
     row(
-      "Voucher",
+      t("common.admin.onlineBookings.dialog.message.period"),
+      pickValue(map["zeitraum"], fallbackCampRange(booking, lang)),
+    ),
+    row(t("common.admin.onlineBookings.dialog.message.child"), map["kind"]),
+    row(
+      t("common.admin.onlineBookings.dialog.message.birthDate"),
+      map["geburtstag"],
+    ),
+    row(
+      t("common.admin.onlineBookings.dialog.message.contact"),
+      map["kontakt"],
+    ),
+    row(
+      t("common.admin.onlineBookings.dialog.message.address"),
+      map["adresse"],
+    ),
+    row(t("common.admin.onlineBookings.dialog.message.phone"), map["telefon"]),
+    row(
+      t("common.admin.onlineBookings.dialog.message.voucher"),
       pickValue(map["gutschein"], (booking as any)?.meta?.voucher),
     ),
-    row("Source", pickValue(map["quelle"], (booking as any)?.meta?.source)),
+    row(
+      t("common.admin.onlineBookings.dialog.message.source"),
+      pickValue(map["quelle"], (booking as any)?.meta?.source),
+    ),
   ];
 }
 
@@ -345,13 +451,17 @@ function buildFallbackRows(lines: string[]): MessageRow[] {
     });
 }
 
-function buildHolidayRows(booking: Booking): MessageRow[] {
+function buildHolidayRows(
+  t: (key: string) => string,
+  lang: string,
+  booking: Booking,
+): MessageRow[] {
   const lines = messageToLines(booking.message);
   const map = toLabelMap(lines);
   const kind = detectHolidayKind(booking);
 
-  if (kind === "camp") return buildCampRows(map, booking);
-  if (kind === "powertraining") return buildPowerRows(map, booking);
+  if (kind === "camp") return buildCampRows(t, lang, map, booking);
+  if (kind === "powertraining") return buildPowerRows(t, lang, map, booking);
   return buildFallbackRows(lines);
 }
 
@@ -367,6 +477,7 @@ export default function OnlineBookingDialog({
   notify,
   onUpdateBooking,
 }: Props) {
+  const { t, i18n } = useTranslation();
   const [busy, setBusy] = useState("");
 
   const s = booking.status ?? "pending";
@@ -380,7 +491,10 @@ export default function OnlineBookingDialog({
   const canShowPaymentApprove =
     s !== "cancelled" && s !== "deleted" && booking.paymentStatus !== "paid";
 
-  const messageRows = useMemo(() => buildHolidayRows(booking), [booking]);
+  const messageRows = useMemo(
+    () => buildHolidayRows(t, i18n.language, booking),
+    [t, i18n.language, booking],
+  );
 
   async function run(action: string, fn: () => Promise<string>) {
     if (busy) return;
@@ -391,7 +505,10 @@ export default function OnlineBookingDialog({
       notify(text);
       if (action === "delete") onClose();
     } catch (e: any) {
-      notify(e?.message || "Action failed");
+      notify(
+        e?.message ||
+          t("common.admin.onlineBookings.dialog.error.actionFailed"),
+      );
     } finally {
       setBusy("");
     }
@@ -417,12 +534,12 @@ export default function OnlineBookingDialog({
         className="dialog-backdrop online-booking-dialog"
         role="dialog"
         aria-modal="true"
-        aria-label="Online booking details"
+        aria-label={t("common.admin.onlineBookings.dialog.ariaLabel")}
       >
         <button
           type="button"
           className="dialog-backdrop-hit"
-          aria-label="Close"
+          aria-label={t("common.admin.onlineBookings.dialog.close")}
           onClick={onClose}
         />
 
@@ -439,7 +556,7 @@ export default function OnlineBookingDialog({
                     s === "cancelled" || s === "deleted" ? "badge-muted" : ""
                   }`}
                 >
-                  {asStatus(booking.status)}
+                  {renderStatus(t, booking.status)}
                 </span>
 
                 {booking.paymentStatus ? (
@@ -452,7 +569,7 @@ export default function OnlineBookingDialog({
                           : ""
                     }`}
                   >
-                    {booking.paymentStatus}
+                    {renderPaymentStatus(t, booking.paymentStatus)}
                   </span>
                 ) : null}
               </div>
@@ -462,7 +579,7 @@ export default function OnlineBookingDialog({
               <button
                 type="button"
                 className="dialog-close"
-                aria-label="Close"
+                aria-label={t("common.admin.onlineBookings.dialog.close")}
                 onClick={onClose}
               >
                 <img
@@ -480,66 +597,93 @@ export default function OnlineBookingDialog({
               <section className="dialog-section online-booking-dialog__section">
                 <div className="dialog-section__head">
                   <h3 className="dialog-section__title online-booking-dialog__section-title">
-                    Booking
+                    {t("common.admin.onlineBookings.dialog.section.booking")}
                   </h3>
                 </div>
 
                 <div className="dialog-section__body">
                   <div className="online-booking-dialog__details">
                     <div className="online-booking-dialog__row online-booking-dialog__row--full">
-                      <div className="dialog-label">Program</div>
+                      <div className="dialog-label">
+                        {t("common.admin.onlineBookings.dialog.field.program")}
+                      </div>
                       <div className="dialog-value">
                         {stripProgramTitle(booking.offerTitle)}
                       </div>
                     </div>
 
                     <div className="online-booking-dialog__row online-booking-dialog__row--full">
-                      <div className="dialog-label">Venue</div>
+                      <div className="dialog-label">
+                        {t("common.admin.onlineBookings.dialog.field.venue")}
+                      </div>
                       <div className="dialog-value">{booking.venue || "—"}</div>
                     </div>
 
                     <div className="online-booking-dialog__row">
-                      <div className="dialog-label">Name</div>
+                      <div className="dialog-label">
+                        {t("common.admin.onlineBookings.dialog.field.name")}
+                      </div>
                       <div className="dialog-value">
                         {booking.firstName} {booking.lastName}
                       </div>
                     </div>
 
                     <div className="online-booking-dialog__row">
-                      <div className="dialog-label">Email</div>
+                      <div className="dialog-label">
+                        {t("common.admin.onlineBookings.dialog.field.email")}
+                      </div>
                       <div className="dialog-value">{booking.email || "—"}</div>
                     </div>
 
                     <div className="online-booking-dialog__row">
-                      <div className="dialog-label">Age</div>
+                      <div className="dialog-label">
+                        {t("common.admin.onlineBookings.dialog.field.age")}
+                      </div>
                       <div className="dialog-value">{booking.age ?? "—"}</div>
                     </div>
 
                     <div className="online-booking-dialog__row">
-                      <div className="dialog-label">Date / Start date</div>
+                      <div className="dialog-label">
+                        {t(
+                          "common.admin.onlineBookings.dialog.field.dateStart",
+                        )}
+                      </div>
                       <div className="dialog-value">
-                        {formatDateOnlyDe(booking.date)}
+                        {formatDateOnly(booking.date, i18n.language)}
                       </div>
                     </div>
 
                     <div className="online-booking-dialog__row">
-                      <div className="dialog-label">Created</div>
+                      <div className="dialog-label">
+                        {t("common.admin.onlineBookings.dialog.field.created")}
+                      </div>
                       <div className="dialog-value">
-                        {formatDateDe(booking.createdAt)}
+                        {formatDate(booking.createdAt, i18n.language)}
                       </div>
                     </div>
 
                     <div className="online-booking-dialog__row">
-                      <div className="dialog-label">Payment approved at</div>
+                      <div className="dialog-label">
+                        {t(
+                          "common.admin.onlineBookings.dialog.field.paymentApprovedAt",
+                        )}
+                      </div>
                       <div className="dialog-value">
                         {booking.meta?.paymentApprovedAt
-                          ? formatDateDe(booking.meta.paymentApprovedAt)
+                          ? formatDate(
+                              booking.meta.paymentApprovedAt,
+                              i18n.language,
+                            )
                           : "—"}
                       </div>
                     </div>
 
                     <div className="online-booking-dialog__row">
-                      <div className="dialog-label">Confirmation code</div>
+                      <div className="dialog-label">
+                        {t(
+                          "common.admin.onlineBookings.dialog.field.confirmationCode",
+                        )}
+                      </div>
                       <div className="dialog-value">
                         {booking.confirmationCode || "—"}
                       </div>
@@ -548,16 +692,24 @@ export default function OnlineBookingDialog({
                     {showInvoiceDetails ? (
                       <>
                         <div className="online-booking-dialog__row">
-                          <div className="dialog-label">Invoice number</div>
+                          <div className="dialog-label">
+                            {t(
+                              "common.admin.onlineBookings.dialog.field.invoiceNumber",
+                            )}
+                          </div>
                           <div className="dialog-value">
                             {booking.invoiceNumber || booking.invoiceNo || "—"}
                           </div>
                         </div>
 
                         <div className="online-booking-dialog__row">
-                          <div className="dialog-label">Invoice date</div>
+                          <div className="dialog-label">
+                            {t(
+                              "common.admin.onlineBookings.dialog.field.invoiceDate",
+                            )}
+                          </div>
                           <div className="dialog-value">
-                            {formatDateOnlyDe(booking.invoiceDate)}
+                            {formatDateOnly(booking.invoiceDate, i18n.language)}
                           </div>
                         </div>
                       </>
@@ -569,7 +721,7 @@ export default function OnlineBookingDialog({
               <section className="dialog-section online-booking-dialog__section">
                 <div className="dialog-section__head">
                   <h3 className="dialog-section__title online-booking-dialog__section-title">
-                    Message
+                    {t("common.admin.onlineBookings.dialog.section.message")}
                   </h3>
                 </div>
 
@@ -618,7 +770,9 @@ export default function OnlineBookingDialog({
                     run("processing", () => onSetStatus("processing"))
                   }
                 >
-                  {busy === "processing" ? "Please wait..." : "Processing"}
+                  {busy === "processing"
+                    ? t("common.admin.onlineBookings.dialog.action.pleaseWait")
+                    : t("common.admin.onlineBookings.dialog.action.processing")}
                 </button>
               ) : null}
 
@@ -629,7 +783,9 @@ export default function OnlineBookingDialog({
                   aria-disabled={busy ? true : undefined}
                   onClick={() => run("confirm", () => onConfirm())}
                 >
-                  {busy === "confirm" ? "Please wait..." : "Confirm"}
+                  {busy === "confirm"
+                    ? t("common.admin.onlineBookings.dialog.action.pleaseWait")
+                    : t("common.admin.onlineBookings.dialog.action.confirm")}
                 </button>
               ) : null}
 
@@ -641,7 +797,11 @@ export default function OnlineBookingDialog({
                     aria-disabled={busy ? true : undefined}
                     onClick={() => run("resend", () => onResend())}
                   >
-                    {busy === "resend" ? "Please wait..." : "Resend"}
+                    {busy === "resend"
+                      ? t(
+                          "common.admin.onlineBookings.dialog.action.pleaseWait",
+                        )
+                      : t("common.admin.onlineBookings.dialog.action.resend")}
                   </button>
 
                   <button
@@ -653,8 +813,12 @@ export default function OnlineBookingDialog({
                     }
                   >
                     {busy === "cancelConfirmed"
-                      ? "Please wait..."
-                      : "Cancel confirmed booking"}
+                      ? t(
+                          "common.admin.onlineBookings.dialog.action.pleaseWait",
+                        )
+                      : t(
+                          "common.admin.onlineBookings.dialog.action.cancelConfirmedBooking",
+                        )}
                   </button>
                 </>
               ) : null}
@@ -668,7 +832,9 @@ export default function OnlineBookingDialog({
                     run("cancelled", () => onSetStatus("cancelled"))
                   }
                 >
-                  {busy === "cancelled" ? "Please wait..." : "Cancel"}
+                  {busy === "cancelled"
+                    ? t("common.admin.onlineBookings.dialog.action.pleaseWait")
+                    : t("common.admin.onlineBookings.dialog.action.cancel")}
                 </button>
               ) : null}
 
@@ -680,8 +846,10 @@ export default function OnlineBookingDialog({
                   onClick={() => run("approvePayment", () => approvePayment())}
                 >
                   {busy === "approvePayment"
-                    ? "Please wait..."
-                    : "Approve payment"}
+                    ? t("common.admin.onlineBookings.dialog.action.pleaseWait")
+                    : t(
+                        "common.admin.onlineBookings.dialog.action.approvePayment",
+                      )}
                 </button>
               ) : null}
 
@@ -692,7 +860,9 @@ export default function OnlineBookingDialog({
                   aria-disabled={busy ? true : undefined}
                   onClick={() => run("delete", () => onDelete())}
                 >
-                  {busy === "delete" ? "Please wait..." : "Delete"}
+                  {busy === "delete"
+                    ? t("common.admin.onlineBookings.dialog.action.pleaseWait")
+                    : t("common.admin.onlineBookings.dialog.action.delete")}
                 </button>
               ) : null}
             </div>
@@ -702,662 +872,3 @@ export default function OnlineBookingDialog({
     </ModalPortal>
   );
 }
-
-// //src\app\admin\(app)\online-bookings\OnlineBookingDialog.tsx
-// "use client";
-
-// import React, { useMemo, useState } from "react";
-// import { createPortal } from "react-dom";
-// import type { Booking } from "./types";
-
-// type Status = "pending" | "processing" | "confirmed" | "cancelled" | "deleted";
-
-// type Props = {
-//   booking: Booking;
-//   onClose: () => void;
-//   onConfirm: () => Promise<string>;
-//   onResend: () => Promise<string>;
-//   onSetStatus: (s: Status) => Promise<string>;
-//   onDelete: () => Promise<string>;
-//   onCancelConfirmed: () => Promise<string>;
-//   onApprovePayment: () => Promise<string>;
-//   notify: (text: string) => void;
-//   onUpdateBooking: (patch: Partial<Booking>) => void;
-// };
-
-// type MessageRow = {
-//   label?: string;
-//   value: string;
-// };
-
-// function ModalPortal({ children }: { children: React.ReactNode }) {
-//   if (typeof document === "undefined") return null;
-//   return createPortal(children, document.body);
-// }
-
-// function stripProgramTitle(raw?: string) {
-//   const text = safeText(raw);
-//   if (!text) return "—";
-//   const left = text.split("•")[0]?.trim();
-//   return left || text;
-// }
-
-// function fallbackCampRange(booking: Booking) {
-//   const from = safeText((booking as any)?.meta?.holidayFrom);
-//   const to = safeText((booking as any)?.meta?.holidayTo);
-
-//   if (!from && !to) return "—";
-
-//   const a = formatDateOnlyDe(from || null);
-//   const b = formatDateOnlyDe(to || null);
-
-//   if (a !== "—" && b !== "—") return `${a} – ${b}`;
-//   return a !== "—" ? a : b;
-// }
-
-// function safeText(v: unknown) {
-//   return String(v ?? "").trim();
-// }
-
-// function hasRealValue(v: unknown) {
-//   const t = safeText(v);
-//   return t !== "" && t !== "-" && t !== "—";
-// }
-
-// function pickValue(...values: unknown[]) {
-//   for (const value of values) {
-//     if (hasRealValue(value)) return safeText(value);
-//   }
-//   return "—";
-// }
-
-// function goalkeeperLabel(value: unknown) {
-//   const raw = safeText(value).toLowerCase();
-//   if (!raw || raw === "-" || raw === "—") return "Nein";
-//   if (raw === "nein" || raw === "false" || raw === "0") return "Nein";
-//   if (raw === "ja" || raw === "ja (+40€)" || raw === "true" || raw === "1") {
-//     return "Ja (+40€)";
-//   }
-//   return safeText(value);
-// }
-
-// function formatDateDe(value?: string) {
-//   if (!value) return "—";
-//   const d = new Date(value);
-//   if (Number.isNaN(d.getTime())) return value;
-//   return new Intl.DateTimeFormat("de-DE", {
-//     dateStyle: "medium",
-//     timeStyle: "short",
-//   }).format(d);
-// }
-
-// function formatDateOnlyDe(value?: string | null) {
-//   if (!value) return "—";
-//   const isoGuess = /T|\d{2}:\d{2}/.test(value) ? value : `${value}T00:00:00`;
-//   const d = new Date(isoGuess);
-//   if (Number.isNaN(d.getTime())) return value;
-//   return new Intl.DateTimeFormat("de-DE", { dateStyle: "medium" }).format(d);
-// }
-
-// function asStatus(s?: Booking["status"]): Status {
-//   return (s ?? "pending") as Status;
-// }
-
-// function messageToLines(msg?: string): string[] {
-//   if (!msg) return [];
-//   let t = msg.trim();
-
-//   t = t
-//     .replace(/\s*,\s*Programm:/gi, "\nProgramm:")
-//     .replace(/\s*,\s*Ferien:/gi, "\nFerien:")
-//     .replace(/\s*,\s*Zeitraum:/gi, "\nZeitraum:")
-//     .replace(/\s*,\s*Ausgewählte Tage:/gi, "\nAusgewählte Tage:")
-//     .replace(/\s*,\s*T-Shirt-Größe \(Kind\):/gi, "\nT-Shirt-Größe (Kind):")
-//     .replace(/\s*,\s*Torwartschule \(Kind\):/gi, "\nTorwartschule (Kind):")
-//     .replace(/\s*,\s*Geschwisterkind:/gi, "\nGeschwisterkind:")
-//     .replace(
-//       /\s*,\s*Geschlecht \(Geschwister\):/gi,
-//       "\nGeschlecht (Geschwister):",
-//     )
-//     .replace(
-//       /\s*,\s*Geburtstag \(Geschwister\):/gi,
-//       "\nGeburtstag (Geschwister):",
-//     )
-//     .replace(/\s*,\s*Vorname \(Geschwister\):/gi, "\nVorname (Geschwister):")
-//     .replace(/\s*,\s*Nachname \(Geschwister\):/gi, "\nNachname (Geschwister):")
-//     .replace(
-//       /\s*,\s*T-Shirt-Größe \(Geschwister\):/gi,
-//       "\nT-Shirt-Größe (Geschwister):",
-//     )
-//     .replace(
-//       /\s*,\s*Torwartschule \(Geschwister\):/gi,
-//       "\nTorwartschule (Geschwister):",
-//     )
-//     .replace(/\s*,\s*Geschwister Name:/gi, "\nGeschwister Name:")
-//     .replace(/\s*,\s*Kind:/gi, "\nKind:")
-//     .replace(/\s*,\s*Geburtstag:/gi, "\nGeburtstag:")
-//     .replace(/\s*,\s*Kontakt:/gi, "\nKontakt:")
-//     .replace(/\s*,\s*Adresse:/gi, "\nAdresse:")
-//     .replace(/\s*,\s*Telefon:/gi, "\nTelefon:")
-//     .replace(/\s*,\s*Gutschein:/gi, "\nGutschein:")
-//     .replace(/\s*,\s*Quelle:/gi, "\nQuelle:");
-
-//   return t
-//     .split("\n")
-//     .map((s) => s.trim())
-//     .filter(Boolean);
-// }
-
-// function splitLabelValue(line: string): { label?: string; value: string } {
-//   const i = line.indexOf(":");
-//   if (i === -1) return { value: line };
-//   const label = line.slice(0, i).trim();
-//   const value = line.slice(i + 1).trim();
-//   return { label, value };
-// }
-
-// function toLabelMap(lines: string[]) {
-//   return lines.reduce<Record<string, string>>((acc, line) => {
-//     const { label, value } = splitLabelValue(line);
-//     if (label) acc[label.toLowerCase()] = value || "—";
-//     return acc;
-//   }, {});
-// }
-
-// function detectHolidayKind(booking: Booking) {
-//   const haystack = [
-//     safeText(booking.offerType),
-//     safeText(booking.offerTitle),
-//     safeText((booking as any)?.message),
-//     safeText((booking as any)?.meta?.holidayType),
-//   ]
-//     .join(" ")
-//     .toLowerCase();
-
-//   if (haystack.includes("powertraining")) return "powertraining";
-//   if (haystack.includes("camp")) return "camp";
-//   return "holiday";
-// }
-
-// function row(label: string, value?: string): MessageRow {
-//   return { label, value: safeText(value) || "—" };
-// }
-
-// function buildKindLine(map: Record<string, string>, booking: Booking) {
-//   const raw = safeText(map["kind"]);
-//   const first = safeText(booking.firstName);
-//   const last = safeText(booking.lastName);
-//   const metaGender = safeText((booking as any)?.meta?.childGender);
-//   const fallbackName = [first, last].filter(Boolean).join(" ").trim() || "-";
-//   const fallbackGender = metaGender || "";
-
-//   if (!raw) {
-//     return fallbackGender
-//       ? `${fallbackName} (${fallbackGender})`
-//       : fallbackName;
-//   }
-
-//   const match = raw.match(/^(.*)\((.*)\)$/);
-//   if (!match) return raw;
-
-//   const rawName = safeText(match[1]);
-//   const rawGender = safeText(match[2]);
-//   const finalName = rawName || fallbackName;
-//   const finalGender = pickValue(rawGender, fallbackGender);
-
-//   if (!hasRealValue(finalGender)) return finalName;
-//   return `${finalName} (${finalGender})`;
-// }
-
-// function buildCampRows(
-//   map: Record<string, string>,
-//   booking: Booking,
-// ): MessageRow[] {
-//   const hasSibling =
-//     safeText(map["geschwisterkind"]).toLowerCase() === "ja" ||
-//     hasRealValue((booking as any)?.meta?.siblingGender) ||
-//     hasRealValue((booking as any)?.meta?.siblingBirthDate) ||
-//     hasRealValue((booking as any)?.meta?.siblingFirstName) ||
-//     hasRealValue((booking as any)?.meta?.siblingLastName) ||
-//     hasRealValue((booking as any)?.meta?.siblingTShirtSize) ||
-//     (booking as any)?.meta?.siblingGoalkeeperSchool === true;
-
-//   const rows: MessageRow[] = [
-//     { value: "Anmeldung Ferienprogramm" },
-//     row(
-//       "Ferien",
-//       pickValue(map["ferien"], (booking as any)?.meta?.holidayLabel),
-//     ),
-//     row("Zeitraum", pickValue(map["zeitraum"], fallbackCampRange(booking))),
-//     row(
-//       "T-Shirt-Größe (Kind)",
-//       pickValue(
-//         map["t-shirt-größe (kind)"],
-//         (booking as any)?.meta?.mainTShirtSize,
-//       ),
-//     ),
-//     row(
-//       "Torwartschule (Kind)",
-//       goalkeeperLabel(
-//         pickValue(
-//           map["torwartschule (kind)"],
-//           (booking as any)?.meta?.mainGoalkeeperSchool === true ? "Ja" : "Nein",
-//         ),
-//       ),
-//     ),
-//     row("Geschwisterkind", hasSibling ? "Ja" : "Nein"),
-//     row("Kind", buildKindLine(map, booking)),
-//     row(
-//       "Geburtstag",
-//       pickValue(
-//         map["geburtstag"],
-//         formatDateOnlyDe((booking as any)?.meta?.childBirthDate),
-//       ),
-//     ),
-//     row("Kontakt", map["kontakt"]),
-//     row("Adresse", map["adresse"]),
-//     row("Telefon", map["telefon"]),
-//     row(
-//       "Gutschein",
-//       pickValue(map["gutschein"], (booking as any)?.meta?.voucher),
-//     ),
-//     row("Quelle", pickValue(map["quelle"], (booking as any)?.meta?.source)),
-//   ];
-
-//   if (!hasSibling) return rows;
-
-//   return [
-//     ...rows,
-//     { value: "Geschwister dazu buchen" },
-//     row(
-//       "Geschlecht (Geschwister)",
-//       pickValue(
-//         map["geschlecht (geschwister)"],
-//         (booking as any)?.meta?.siblingGender,
-//       ),
-//     ),
-//     row(
-//       "Geburtstag (Geschwister)",
-//       pickValue(
-//         map["geburtstag (geschwister)"],
-//         formatDateOnlyDe((booking as any)?.meta?.siblingBirthDate),
-//       ),
-//     ),
-//     row(
-//       "Vorname (Geschwister)",
-//       pickValue(
-//         map["vorname (geschwister)"],
-//         (booking as any)?.meta?.siblingFirstName,
-//       ),
-//     ),
-//     row(
-//       "Nachname (Geschwister)",
-//       pickValue(
-//         map["nachname (geschwister)"],
-//         (booking as any)?.meta?.siblingLastName,
-//       ),
-//     ),
-//     row(
-//       "T-Shirt-Größe (Geschwister)",
-//       pickValue(
-//         map["t-shirt-größe (geschwister)"],
-//         (booking as any)?.meta?.siblingTShirtSize,
-//       ),
-//     ),
-//     row(
-//       "Torwartschule (Geschwister)",
-//       goalkeeperLabel(
-//         pickValue(
-//           map["torwartschule (geschwister)"],
-//           (booking as any)?.meta?.siblingGoalkeeperSchool === true
-//             ? "Ja"
-//             : "Nein",
-//         ),
-//       ),
-//     ),
-//   ];
-// }
-
-// function buildPowerRows(
-//   map: Record<string, string>,
-//   booking: Booking,
-// ): MessageRow[] {
-//   return [
-//     { value: "Anmeldung Ferienprogramm" },
-//     row(
-//       "Ferien",
-//       pickValue(map["ferien"], (booking as any)?.meta?.holidayLabel),
-//     ),
-//     row("Zeitraum", pickValue(map["zeitraum"], fallbackCampRange(booking))),
-//     row("Kind", map["kind"]),
-//     row("Geburtstag", map["geburtstag"]),
-//     row("Kontakt", map["kontakt"]),
-//     row("Adresse", map["adresse"]),
-//     row("Telefon", map["telefon"]),
-//     row(
-//       "Gutschein",
-//       pickValue(map["gutschein"], (booking as any)?.meta?.voucher),
-//     ),
-//     row("Quelle", pickValue(map["quelle"], (booking as any)?.meta?.source)),
-//   ];
-// }
-
-// function buildFallbackRows(lines: string[]): MessageRow[] {
-//   return lines
-//     .filter((line) => !/^programm\s*:/i.test(line))
-//     .map((line) => {
-//       const { label, value } = splitLabelValue(line);
-//       return label ? { label, value: value || "—" } : { value: line };
-//     });
-// }
-
-// function buildHolidayRows(booking: Booking): MessageRow[] {
-//   const lines = messageToLines(booking.message);
-//   const map = toLabelMap(lines);
-//   const kind = detectHolidayKind(booking);
-
-//   if (kind === "camp") return buildCampRows(map, booking);
-//   if (kind === "powertraining") return buildPowerRows(map, booking);
-//   return buildFallbackRows(lines);
-// }
-
-// export default function OnlineBookingDialog({
-//   booking,
-//   onClose,
-//   onConfirm,
-//   onResend,
-//   onSetStatus,
-//   onDelete,
-//   onCancelConfirmed,
-//   onApprovePayment,
-//   notify,
-//   onUpdateBooking,
-// }: Props) {
-//   const [busy, setBusy] = useState("");
-
-//   const s = booking.status ?? "pending";
-//   const showInvoiceDetails = booking.paymentStatus === "paid";
-
-//   const canShowProcessing = false;
-//   const canShowConfirm =
-//     s !== "confirmed" && s !== "cancelled" && s !== "deleted";
-//   const canShowCancel =
-//     s !== "cancelled" && s !== "deleted" && s !== "confirmed";
-//   const canShowPaymentApprove =
-//     s !== "cancelled" && s !== "deleted" && booking.paymentStatus !== "paid";
-
-//   const messageRows = useMemo(() => buildHolidayRows(booking), [booking]);
-
-//   async function run(action: string, fn: () => Promise<string>) {
-//     if (busy) return;
-
-//     try {
-//       setBusy(action);
-//       const text = await fn();
-//       notify(text);
-//       if (action === "delete") onClose();
-//     } catch (e: any) {
-//       notify(e?.message || "Aktion fehlgeschlagen");
-//     } finally {
-//       setBusy("");
-//     }
-//   }
-
-//   async function approvePayment() {
-//     const text = await onApprovePayment();
-
-//     onUpdateBooking({
-//       meta: {
-//         ...booking.meta,
-//         paymentApprovalRequired: false,
-//         paymentApprovedAt: new Date().toISOString(),
-//       },
-//     });
-
-//     return text;
-//   }
-
-//   return (
-//     <ModalPortal>
-//       <div className="ks-modal-root ks-modal-root--top">
-//         <div className="ks-backdrop" onClick={onClose} />
-//         <div
-//           className="ks-panel ks-panel--md card"
-//           role="dialog"
-//           aria-modal="true"
-//           aria-label="Online booking details"
-//           onClick={(e) => e.stopPropagation()}
-//         >
-//           <div className="dialog-head">
-//             <div className="dialog-head__left">
-//               <h2 className="text-xl font-bold">
-//                 {booking.firstName} {booking.lastName}
-//               </h2>
-
-//               <span
-//                 className={`badge ${
-//                   s === "cancelled" || s === "deleted" ? "badge-muted" : ""
-//                 }`}
-//               >
-//                 {asStatus(booking.status)}
-//               </span>
-
-//               {booking.paymentStatus ? (
-//                 <span
-//                   className={`badge ${
-//                     booking.paymentStatus === "paid"
-//                       ? "badge-success"
-//                       : booking.paymentStatus === "returned"
-//                         ? "badge-danger"
-//                         : ""
-//                   }`}
-//                 >
-//                   {booking.paymentStatus}
-//                 </span>
-//               ) : null}
-//             </div>
-
-//             <div className="dialog-head__actions">
-//               <button
-//                 type="button"
-//                 className="modal__close"
-//                 aria-label="Close"
-//                 onClick={onClose}
-//               >
-//                 <img
-//                   src="/icons/close.svg"
-//                   alt=""
-//                   aria-hidden="true"
-//                   className="icon-img"
-//                 />
-//               </button>
-//             </div>
-//           </div>
-
-//           <div className="flex flex-wrap gap-2 justify-end mb-3">
-//             {canShowProcessing ? (
-//               <button
-//                 type="button"
-//                 className="btn"
-//                 aria-disabled={busy ? true : undefined}
-//                 onClick={() =>
-//                   run("processing", () => onSetStatus("processing"))
-//                 }
-//               >
-//                 {busy === "processing" ? "Bitte warten…" : "In Bearbeitung"}
-//               </button>
-//             ) : null}
-
-//             {canShowConfirm ? (
-//               <button
-//                 type="button"
-//                 className="btn"
-//                 aria-disabled={busy ? true : undefined}
-//                 onClick={() => run("confirm", () => onConfirm())}
-//               >
-//                 {busy === "confirm" ? "Bitte warten…" : "Bestätigen"}
-//               </button>
-//             ) : null}
-
-//             {s === "confirmed" ? (
-//               <>
-//                 <button
-//                   type="button"
-//                   className="btn"
-//                   aria-disabled={busy ? true : undefined}
-//                   onClick={() => run("resend", () => onResend())}
-//                 >
-//                   {busy === "resend" ? "Bitte warten…" : "Erneut senden"}
-//                 </button>
-
-//                 <button
-//                   type="button"
-//                   className="btn btn--danger"
-//                   aria-disabled={busy ? true : undefined}
-//                   onClick={() =>
-//                     run("cancelConfirmed", () => onCancelConfirmed())
-//                   }
-//                 >
-//                   {busy === "cancelConfirmed"
-//                     ? "Bitte warten…"
-//                     : "Bestätigten Termin absagen"}
-//                 </button>
-//               </>
-//             ) : null}
-
-//             {canShowCancel ? (
-//               <button
-//                 type="button"
-//                 className="btn"
-//                 aria-disabled={busy ? true : undefined}
-//                 onClick={() => run("cancelled", () => onSetStatus("cancelled"))}
-//               >
-//                 {busy === "cancelled" ? "Bitte warten…" : "Absagen"}
-//               </button>
-//             ) : null}
-
-//             {canShowPaymentApprove ? (
-//               <button
-//                 type="button"
-//                 className="btn btn--success"
-//                 aria-disabled={busy ? true : undefined}
-//                 onClick={() => run("approvePayment", () => approvePayment())}
-//               >
-//                 {busy === "approvePayment"
-//                   ? "Bitte warten…"
-//                   : "Zahlung freigeben"}
-//               </button>
-//             ) : null}
-
-//             {s !== "deleted" ? (
-//               <button
-//                 type="button"
-//                 className="btn btn--danger"
-//                 aria-disabled={busy ? true : undefined}
-//                 onClick={() => run("delete", () => onDelete())}
-//               >
-//                 {busy === "delete" ? "Bitte warten…" : "Löschen"}
-//               </button>
-//             ) : null}
-//           </div>
-
-//           <div className="form-columns mb-3">
-//             <fieldset className="card">
-//               <legend className="font-bold">Buchung</legend>
-//               <div className="grid grid-cols-2 gap-2">
-//                 <div className="col-span-2">
-//                   <label className="lbl">Programm</label>
-//                   <div>{stripProgramTitle(booking.offerTitle)}</div>
-//                 </div>
-
-//                 <div className="col-span-2">
-//                   <label className="lbl">Standort</label>
-//                   <div>{booking.venue || "—"}</div>
-//                 </div>
-
-//                 <div>
-//                   <label className="lbl">Name</label>
-//                   <div>
-//                     {booking.firstName} {booking.lastName}
-//                   </div>
-//                 </div>
-
-//                 <div>
-//                   <label className="lbl">E-Mail</label>
-//                   <div>{booking.email || "—"}</div>
-//                 </div>
-
-//                 <div>
-//                   <label className="lbl">Alter</label>
-//                   <div>{booking.age ?? "—"}</div>
-//                 </div>
-
-//                 <div>
-//                   <label className="lbl">Termin / Startdatum</label>
-//                   <div>{formatDateOnlyDe(booking.date)}</div>
-//                 </div>
-
-//                 <div>
-//                   <label className="lbl">Erstellt</label>
-//                   <div>{formatDateDe(booking.createdAt)}</div>
-//                 </div>
-
-//                 <div>
-//                   <label className="lbl">Zahlung freigegeben am</label>
-//                   <div>
-//                     {booking.meta?.paymentApprovedAt
-//                       ? formatDateDe(booking.meta.paymentApprovedAt)
-//                       : "—"}
-//                   </div>
-//                 </div>
-
-//                 <div>
-//                   <label className="lbl">Bestätigungscode</label>
-//                   <div>{booking.confirmationCode || "—"}</div>
-//                 </div>
-
-//                 {showInvoiceDetails ? (
-//                   <>
-//                     <div>
-//                       <label className="lbl">Rechnungsnummer</label>
-//                       <div>
-//                         {booking.invoiceNumber || booking.invoiceNo || "—"}
-//                       </div>
-//                     </div>
-
-//                     <div>
-//                       <label className="lbl">Rechnungsdatum</label>
-//                       <div>{formatDateOnlyDe(booking.invoiceDate)}</div>
-//                     </div>
-//                   </>
-//                 ) : null}
-//               </div>
-//             </fieldset>
-
-//             <fieldset className="card">
-//               <legend className="font-bold">Nachricht</legend>
-
-//               {messageRows.length ? (
-//                 <ul className="card-list">
-//                   {messageRows.map((row, i) => (
-//                     <li key={i}>
-//                       {row.label ? (
-//                         <>
-//                           <strong>{row.label}:</strong> {row.value || "—"}
-//                         </>
-//                       ) : (
-//                         row.value
-//                       )}
-//                     </li>
-//                   ))}
-//                 </ul>
-//               ) : (
-//                 <div>—</div>
-//               )}
-//             </fieldset>
-//           </div>
-//         </div>
-//       </div>
-//     </ModalPortal>
-//   );
-// }
