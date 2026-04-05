@@ -52,13 +52,12 @@ function renderPayment(t: (key: string) => string, b: Booking) {
         ? t("common.admin.onlineBookings.payment.returned")
         : payment;
 
-  //      return <span className={className}>{payment}</span>;
   return <span className={className}>{label}</span>;
 }
 
 function rowLabel(t: (key: string) => string, b: Booking, selectMode: boolean) {
   const fullName = `${safeText(b.firstName)} ${safeText(b.lastName)}`.trim();
-  //return `${selectMode ? "Select" : "Open"}: ${fullName}`;
+
   return `${selectMode ? t("common.admin.onlineBookings.table.row.select") : t("common.admin.onlineBookings.table.row.open")}: ${fullName}`;
 }
 
@@ -172,12 +171,6 @@ export default function BookingsTableList({
           onClear={clearSelection}
           showClear={showClear}
           onDelete={deleteSelected}
-          // toggleLabel="Select holiday bookings"
-          // selectedLabel="selected"
-          // selectAllLabel="Select all"
-          // clearAllLabel="Clear all"
-          // deleteLabel="Delete"
-          // cancelLabel="Cancel"
           toggleLabel={t("common.admin.onlineBookings.bulk.toggleLabel")}
           selectedLabel={t("common.admin.onlineBookings.bulk.selectedLabel")}
           selectAllLabel={t("common.admin.onlineBookings.bulk.selectAllLabel")}
@@ -202,18 +195,6 @@ export default function BookingsTableList({
       <div className="news-table__scroll">
         <section className="card news-list">
           <div className="news-list__table">
-            {/* <div className="news-list__head" aria-hidden="true">
-              <div className="news-list__h">Name</div>
-              <div className="news-list__h">Email</div>
-              <div className="news-list__h">Age</div>
-              <div className="news-list__h">Date</div>
-              <div className="news-list__h">Program</div>
-              <div className="news-list__h">Status</div>
-              <div className="news-list__h">Payment</div>
-              <div className="news-list__h">Created</div>
-              <div className="news-list__h news-list__h--right">Action</div>
-            </div> */}
-            // table head
             <div className="news-list__head" aria-hidden="true">
               <div className="news-list__h">
                 {t("common.admin.onlineBookings.table.head.name")}
@@ -260,7 +241,6 @@ export default function BookingsTableList({
                     tabIndex={0}
                     role="button"
                     aria-pressed={selectMode ? checked : undefined}
-                    // aria-label={rowLabel(b, selectMode)}
                     aria-label={rowLabel(t, b, selectMode)}
                   >
                     <div className="news-list__cell news-list__cell--name">
@@ -319,8 +299,6 @@ export default function BookingsTableList({
                           className="edit-trigger"
                           role="button"
                           tabIndex={0}
-                          // aria-label="Edit"
-
                           aria-label={t(
                             "common.admin.onlineBookings.table.edit",
                           )}

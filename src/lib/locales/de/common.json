@@ -189,5 +189,7 @@
   "common.admin.onlineBookings.table.row.open": "Öffnen",
   "common.admin.onlineBookings.table.edit": "Bearbeiten",
   "common.admin.onlineBookings.payment.paid": "Bezahlt",
-  "common.admin.onlineBookings.payment.returned": "Zurückerstattet"
+  "common.admin.onlineBookings.payment.returned": "Zurückerstattet",
+
+  "common.admin.onlineBookings.error.loadFailed": "Laden fehlgeschlagen"
 }

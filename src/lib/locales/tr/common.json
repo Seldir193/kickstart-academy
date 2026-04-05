@@ -189,5 +189,7 @@
   "common.admin.onlineBookings.table.row.open": "Aç",
   "common.admin.onlineBookings.table.edit": "Düzenle",
   "common.admin.onlineBookings.payment.paid": "Ödendi",
-  "common.admin.onlineBookings.payment.returned": "İade edildi"
+  "common.admin.onlineBookings.payment.returned": "İade edildi",
+
+  "common.admin.onlineBookings.error.loadFailed": "Yükleme başarısız oldu"
 }
