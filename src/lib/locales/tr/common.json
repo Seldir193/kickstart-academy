@@ -245,5 +245,12 @@
   "common.admin.onlineBookings.dialog.message.firstNameSibling": "Ad (kardeş)",
   "common.admin.onlineBookings.dialog.message.lastNameSibling": "Soyad (kardeş)",
   "common.admin.onlineBookings.dialog.message.tShirtSizeSibling": "Tişört bedeni (kardeş)",
-  "common.admin.onlineBookings.dialog.message.goalkeeperSchoolSibling": "Kaleci okulu (kardeş)"
+  "common.admin.onlineBookings.dialog.message.goalkeeperSchoolSibling": "Kaleci okulu (kardeş)",
+
+  "common.admin.onlineBookings.notice.confirmationResent": "Onay yeniden gönderildi.",
+  "common.admin.onlineBookings.notice.confirmedWithInvoice": "Rezervasyon onaylandı ve fatura gönderildi.",
+  "common.admin.onlineBookings.notice.statusUpdated": "Durum güncellendi.",
+  "common.admin.onlineBookings.notice.deleted": "Rezervasyon silindi.",
+  "common.admin.onlineBookings.notice.cancelledConfirmed": "Randevu iptal edildi.",
+  "common.admin.onlineBookings.notice.paymentApproved": "Ödeme onaylandı."
 }

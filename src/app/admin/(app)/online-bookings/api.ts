@@ -49,9 +49,10 @@ export async function confirmBooking(id: string, resend: boolean) {
   const d = await readJson<any>(r);
   if (!r.ok || d?.ok === false) throw new Error(d?.error || r.statusText);
 
-  return resend
-    ? "Bestätigung erneut gesendet."
-    : "Buchung bestätigt + Rechnung geschickt.";
+  // return resend
+  //   ? "Bestätigung erneut gesendet."
+  //   : "Buchung bestätigt + Rechnung geschickt.";
+  return d;
 }
 
 export async function setBookingStatus(id: string, next: Status) {

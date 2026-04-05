@@ -7,6 +7,8 @@ import { formatDateOnlyDE, formatDateTimeDE } from "./utils";
 
 import { useTranslation } from "react-i18next";
 
+import { toastErrorMessage, toastText } from "@/lib/toast-messages";
+
 type Props = {
   booking: Booking;
   onClose: () => void;
@@ -511,18 +513,39 @@ export default function OnlineBookingDialog({
     [t, i18n.language, booking],
   );
 
-  async function run(action: string, fn: () => Promise<string>) {
+  // async function run(action: string, fn: () => Promise<string>) {
+  //   if (busy) return;
+
+  //   try {
+  //     setBusy(action);
+  //     const text = await fn();
+  //     notify(text);
+  //     if (action === "delete") onClose();
+  //   } catch (e: any) {
+  //     notify(
+  //       e?.message ||
+  //         t("common.admin.onlineBookings.dialog.error.actionFailed"),
+  //     );
+  //   } finally {
+  //     setBusy("");
+  //   }
+  // }
+
+  async function run(action: string, fn: () => Promise<unknown>) {
     if (busy) return;
 
     try {
       setBusy(action);
-      const text = await fn();
-      notify(text);
+      await fn();
+      notify(toastText(t, successMessageKey(action)));
       if (action === "delete") onClose();
-    } catch (e: any) {
+    } catch (e) {
       notify(
-        e?.message ||
-          t("common.admin.onlineBookings.dialog.error.actionFailed"),
+        toastErrorMessage(
+          t,
+          e,
+          "common.admin.onlineBookings.dialog.error.actionFailed",
+        ),
       );
     } finally {
       setBusy("");
@@ -541,6 +564,28 @@ export default function OnlineBookingDialog({
     });
 
     return text;
+  }
+
+  function successMessageKey(action: string) {
+    if (action === "confirm") {
+      return "common.admin.onlineBookings.notice.confirmedWithInvoice";
+    }
+    if (action === "resend") {
+      return "common.admin.onlineBookings.notice.confirmationResent";
+    }
+    if (action === "processing" || action === "cancelled") {
+      return "common.admin.onlineBookings.notice.statusUpdated";
+    }
+    if (action === "delete") {
+      return "common.admin.onlineBookings.notice.deleted";
+    }
+    if (action === "cancelConfirmed") {
+      return "common.admin.onlineBookings.notice.cancelledConfirmed";
+    }
+    if (action === "approvePayment") {
+      return "common.admin.onlineBookings.notice.paymentApproved";
+    }
+    return "common.admin.onlineBookings.dialog.error.actionFailed";
   }
 
   return (

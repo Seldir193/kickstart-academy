@@ -245,5 +245,12 @@
   "common.admin.onlineBookings.dialog.message.firstNameSibling": "First name (sibling)",
   "common.admin.onlineBookings.dialog.message.lastNameSibling": "Last name (sibling)",
   "common.admin.onlineBookings.dialog.message.tShirtSizeSibling": "T-shirt size (sibling)",
-  "common.admin.onlineBookings.dialog.message.goalkeeperSchoolSibling": "Goalkeeper school (sibling)"
+  "common.admin.onlineBookings.dialog.message.goalkeeperSchoolSibling": "Goalkeeper school (sibling)",
+
+  "common.admin.onlineBookings.notice.confirmationResent": "Confirmation resent.",
+  "common.admin.onlineBookings.notice.confirmedWithInvoice": "Booking confirmed and invoice sent.",
+  "common.admin.onlineBookings.notice.statusUpdated": "Status updated.",
+  "common.admin.onlineBookings.notice.deleted": "Booking deleted.",
+  "common.admin.onlineBookings.notice.cancelledConfirmed": "Appointment cancelled.",
+  "common.admin.onlineBookings.notice.paymentApproved": "Payment approved."
 }

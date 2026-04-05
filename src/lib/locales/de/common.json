@@ -245,5 +245,12 @@
   "common.admin.onlineBookings.dialog.message.firstNameSibling": "Vorname (Geschwister)",
   "common.admin.onlineBookings.dialog.message.lastNameSibling": "Nachname (Geschwister)",
   "common.admin.onlineBookings.dialog.message.tShirtSizeSibling": "T-Shirt-Größe (Geschwister)",
-  "common.admin.onlineBookings.dialog.message.goalkeeperSchoolSibling": "Torwartschule (Geschwister)"
+  "common.admin.onlineBookings.dialog.message.goalkeeperSchoolSibling": "Torwartschule (Geschwister)",
+
+  "common.admin.onlineBookings.notice.confirmationResent": "Bestätigung erneut gesendet.",
+  "common.admin.onlineBookings.notice.confirmedWithInvoice": "Buchung bestätigt + Rechnung geschickt.",
+  "common.admin.onlineBookings.notice.statusUpdated": "Status aktualisiert.",
+  "common.admin.onlineBookings.notice.deleted": "Buchung gelöscht.",
+  "common.admin.onlineBookings.notice.cancelledConfirmed": "Termin abgesagt.",
+  "common.admin.onlineBookings.notice.paymentApproved": "Zahlung freigegeben."
 }
