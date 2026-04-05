@@ -31,8 +31,8 @@
   "common.admin.bookings.sort.nameAsc": "İsim A–Z",
   "common.admin.bookings.sort.nameDesc": "İsim Z–A",
 
-  "common.admin.bookings.notice.deleted": "Silindi",
-  "common.admin.bookings.notice.restored": "Geri yüklendi",
+  "common.admin.bookings.notice.deleted": "Rezervasyon silindi.",
+  "common.admin.bookings.notice.restored": "Rezervasyon geri yüklendi.",
 
   "common.admin.bookings.error.detailsLoad": "Detaylar yüklenemedi.",
 
@@ -83,9 +83,10 @@
   "common.admin.bookings.table.head.action": "İşlem",
 
   "common.admin.bookings.row.empty": "—",
-  "common.admin.bookings.row.select": "Select",
-  "common.admin.bookings.row.open": "Open",
-  "common.admin.bookings.row.openAction": "Open",
+
+  "common.admin.bookings.row.select": "Seç",
+  "common.admin.bookings.row.open": "Aç",
+  "common.admin.bookings.row.openAction": "Aç",
 
   "common.admin.bookings.error.loadFailed": "Yükleme başarısız oldu.",
 
@@ -120,10 +121,6 @@
   "common.admin.bookings.dialog.actions.approveForSubscription": "Abonelik için onayla",
   "common.admin.bookings.dialog.actions.approvePayment": "Ödemeyi onayla",
   "common.admin.bookings.dialog.actions.delete": "Sil",
-
-  "common.admin.bookings.dialog.notice.subscriptionApproved": "Abonelik için onaylandı (e-posta gönderildi)",
-  "common.admin.bookings.dialog.notice.subscriptionApprovalRemoved": "Abonelik onayı kaldırıldı",
-  "common.admin.bookings.dialog.notice.paymentApproved": "Ödeme onaylandı (e-posta gönderildi)",
 
   "common.admin.bookings.dialog.error.actionFailed": "İşlem başarısız oldu",
 
