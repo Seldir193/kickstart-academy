@@ -60,5 +60,7 @@
   "common.admin.bookings.filters.status.processing": "Processing",
   "common.admin.bookings.filters.status.confirmed": "Confirmed",
   "common.admin.bookings.filters.status.cancelled": "Cancelled",
-  "common.admin.bookings.filters.status.deleted": "Deleted"
+  "common.admin.bookings.filters.status.deleted": "Deleted",
+
+  "common.admin.bookings.search.placeholder": "Name, email, level, code, message…"
 }

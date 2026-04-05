@@ -60,5 +60,7 @@
   "common.admin.bookings.filters.status.processing": "İşleniyor",
   "common.admin.bookings.filters.status.confirmed": "Onaylandı",
   "common.admin.bookings.filters.status.cancelled": "İptal edildi",
-  "common.admin.bookings.filters.status.deleted": "Silindi"
+  "common.admin.bookings.filters.status.deleted": "Silindi",
+
+  "common.admin.bookings.search.placeholder": "Ad, e-posta, seviye, kod, mesaj…"
 }

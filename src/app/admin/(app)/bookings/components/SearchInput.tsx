@@ -1,10 +1,13 @@
 "use client";
 
+import { useTranslation } from "react-i18next";
+
 export default function SearchInput(props: {
   value: string;
   onChange: (v: string) => void;
   onKeyDown: (key: string) => void;
 }) {
+  const { t } = useTranslation();
   return (
     <div className="input-with-icon">
       <img
@@ -15,7 +18,8 @@ export default function SearchInput(props: {
       />
       <input
         className="input input-with-icon__input"
-        placeholder="Name, email, level, code, message…"
+        // placeholder="Name, email, level, code, message…"
+        placeholder={t("common.admin.bookings.search.placeholder")}
         value={props.value}
         onChange={(e) => props.onChange(e.target.value)}
         onKeyDown={(e) => props.onKeyDown(e.key)}
