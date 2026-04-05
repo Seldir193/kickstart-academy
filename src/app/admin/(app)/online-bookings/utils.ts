@@ -6,14 +6,41 @@ export function safeText(v: unknown) {
   return String(v ?? "").trim();
 }
 
-export function formatDateOnlyDE(value?: string) {
+function dateLocale(lang?: string) {
+  if (lang === "tr") return "tr-TR";
+  if (lang === "en") return "en-US";
+  return "de-DE";
+}
+
+export function formatDateOnlyDE(value?: string | null, lang?: string) {
   if (!value) return "—";
-  const d = new Date(value);
+  const s = String(value);
+  const d = new Date(s.length === 10 ? `${s}T00:00:00` : s);
   if (Number.isNaN(d.getTime())) return value;
-  return new Intl.DateTimeFormat("de-DE", {
+  return new Intl.DateTimeFormat(dateLocale(lang), {
     dateStyle: "medium",
   }).format(d);
 }
+
+export function formatDateTimeDE(value?: string | null, lang?: string) {
+  if (!value) return "—";
+  const s = String(value);
+  const d = new Date(s.length === 10 ? `${s}T00:00:00` : s);
+  if (Number.isNaN(d.getTime())) return value;
+  return new Intl.DateTimeFormat(dateLocale(lang), {
+    dateStyle: "medium",
+    timeStyle: "short",
+  }).format(d);
+}
+
+// export function formatDateOnlyDE(value?: string) {
+//   if (!value) return "—";
+//   const d = new Date(value);
+//   if (Number.isNaN(d.getTime())) return value;
+//   return new Intl.DateTimeFormat("de-DE", {
+//     dateStyle: "medium",
+//   }).format(d);
+// }
 
 export function asStatus(s?: Booking["status"]): Status {
   return (s ?? "confirmed") as Status;

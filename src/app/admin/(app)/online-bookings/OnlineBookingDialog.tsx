@@ -3,6 +3,7 @@
 import React, { useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 import type { Booking, Status } from "./types";
+import { formatDateOnlyDE, formatDateTimeDE } from "./utils";
 
 import { useTranslation } from "react-i18next";
 
@@ -42,8 +43,8 @@ function fallbackCampRange(booking: Booking, lang?: string) {
 
   if (!from && !to) return "—";
 
-  const a = formatDateOnly(from || null, lang);
-  const b = formatDateOnly(to || null, lang);
+  const a = formatDateOnlyDE(from || null, lang);
+  const b = formatDateOnlyDE(to || null, lang);
 
   if (a !== "—" && b !== "—") return `${a} – ${b}`;
   return a !== "—" ? a : b;
@@ -116,33 +117,33 @@ function renderPaymentStatus(
   return status ?? "—";
 }
 
-function dateLocale(lang?: string) {
-  if (lang === "tr") return "tr-TR";
-  if (lang === "en") return "en-US";
-  return "de-DE";
-}
+// function dateLocale(lang?: string) {
+//   if (lang === "tr") return "tr-TR";
+//   if (lang === "en") return "en-US";
+//   return "de-DE";
+// }
 
-function formatDate(value: string | undefined, lang?: string) {
-  if (!value) return "—";
-  const s = String(value);
-  const d = new Date(s.length === 10 ? `${s}T00:00:00` : s);
-  if (Number.isNaN(d.getTime())) return value;
-  return new Intl.DateTimeFormat(dateLocale(lang), {
-    dateStyle: "medium",
-    timeStyle: "short",
-  }).format(d);
-}
+// function formatDate(value: string | undefined, lang?: string) {
+//   if (!value) return "—";
+//   const s = String(value);
+//   const d = new Date(s.length === 10 ? `${s}T00:00:00` : s);
+//   if (Number.isNaN(d.getTime())) return value;
+//   return new Intl.DateTimeFormat(dateLocale(lang), {
+//     dateStyle: "medium",
+//     timeStyle: "short",
+//   }).format(d);
+// }
 
-function formatDateOnly(value?: string | null, lang?: string) {
-  if (!value) return "—";
-  const s = String(value);
-  const d = new Date(s.length === 10 ? `${s}T00:00:00` : s);
-  if (Number.isNaN(d.getTime())) return value;
+// function formatDateOnly(value?: string | null, lang?: string) {
+//   if (!value) return "—";
+//   const s = String(value);
+//   const d = new Date(s.length === 10 ? `${s}T00:00:00` : s);
+//   if (Number.isNaN(d.getTime())) return value;
 
-  return new Intl.DateTimeFormat(dateLocale(lang), {
-    dateStyle: "medium",
-  }).format(d);
-}
+//   return new Intl.DateTimeFormat(dateLocale(lang), {
+//     dateStyle: "medium",
+//   }).format(d);
+// }
 
 function asStatus(s?: Booking["status"]): Status {
   return (s ?? "pending") as Status;
@@ -316,7 +317,7 @@ function buildCampRows(
       t("common.admin.onlineBookings.dialog.message.birthDate"),
       pickValue(
         map["geburtstag"],
-        formatDateOnly((booking as any)?.meta?.childBirthDate, lang),
+        formatDateOnlyDE((booking as any)?.meta?.childBirthDate, lang),
       ),
     ),
 
@@ -358,7 +359,7 @@ function buildCampRows(
       t("common.admin.onlineBookings.dialog.message.birthDateSibling"),
       pickValue(
         map["geburtstag (geschwister)"],
-        formatDateOnly((booking as any)?.meta?.siblingBirthDate, lang),
+        formatDateOnlyDE((booking as any)?.meta?.siblingBirthDate, lang),
       ),
     ),
     row(
@@ -422,7 +423,7 @@ function buildPowerRows(
       t("common.admin.onlineBookings.dialog.message.birthDate"),
       pickValue(
         map["geburtstag"],
-        formatDateOnly((booking as any)?.meta?.childBirthDate, lang),
+        formatDateOnlyDE((booking as any)?.meta?.childBirthDate, lang),
       ),
     ),
     row(
@@ -691,7 +692,7 @@ export default function OnlineBookingDialog({
                         )}
                       </div>
                       <div className="dialog-value">
-                        {formatDateOnly(booking.date, i18n.language)}
+                        {formatDateOnlyDE(booking.date, i18n.language)}
                       </div>
                     </div>
 
@@ -700,7 +701,7 @@ export default function OnlineBookingDialog({
                         {t("common.admin.onlineBookings.dialog.field.created")}
                       </div>
                       <div className="dialog-value">
-                        {formatDate(booking.createdAt, i18n.language)}
+                        {formatDateTimeDE(booking.createdAt, i18n.language)}
                       </div>
                     </div>
 
@@ -712,7 +713,7 @@ export default function OnlineBookingDialog({
                       </div>
                       <div className="dialog-value">
                         {booking.meta?.paymentApprovedAt
-                          ? formatDate(
+                          ? formatDateTimeDE(
                               booking.meta.paymentApprovedAt,
                               i18n.language,
                             )
@@ -751,7 +752,10 @@ export default function OnlineBookingDialog({
                             )}
                           </div>
                           <div className="dialog-value">
-                            {formatDateOnly(booking.invoiceDate, i18n.language)}
+                            {formatDateOnlyDE(
+                              booking.invoiceDate,
+                              i18n.language,
+                            )}
                           </div>
                         </div>
                       </>

@@ -88,7 +88,7 @@ export default function BookingsTableList({
   const count = sel.selected.size;
   const showClear = selectMode && count >= 2;
   const restoreCount = getRestoreIds(items, sel.selected).length;
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   useEffect(() => {
     if (!selectMode) {
@@ -289,7 +289,7 @@ export default function BookingsTableList({
                     </div>
 
                     <div className="news-list__cell news-list__cell--date bookings-mono">
-                      {formatDateOnlyDE(b.date)}
+                      {formatDateOnlyDE(b.date, i18n.language)}
                     </div>
 
                     <div className="news-list__cell news-list__cell--program bookings-mono">
@@ -305,7 +305,7 @@ export default function BookingsTableList({
                     </div>
 
                     <div className="news-list__cell news-list__cell--created">
-                      {formatDateOnlyDE(b.createdAt)}
+                      {formatDateOnlyDE(b.createdAt, i18n.language)}
                     </div>
 
                     {hideEdit ? (
