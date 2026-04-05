@@ -52,7 +52,7 @@ export function useBookingsList(params: {
       setItems([]);
       setTotal(0);
       setCounts({});
-      //setError(e instanceof Error ? e.message : "Load failed");
+
       setError(
         e instanceof Error
           ? e.message

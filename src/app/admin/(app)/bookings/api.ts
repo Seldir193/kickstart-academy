@@ -47,22 +47,6 @@ export async function fetchBookingDetails(id: string) {
   return d;
 }
 
-// export async function confirmBooking(id: string, resend: boolean) {
-//   const p = new URLSearchParams();
-//   if (resend) p.set("resend", "1");
-//   const r = await fetch(
-//     `/api/admin/bookings/${encodeURIComponent(id)}/confirm?${p}`,
-//     {
-//       method: "POST",
-//       credentials: "include",
-//       cache: "no-store",
-//     },
-//   );
-//   const d = await readJson<any>(r);
-//   if (!r.ok || d?.ok === false) throw new Error(d?.error || r.statusText);
-//   return resend ? "Confirmation resent." : "Booking confirmed.";
-// }
-
 export async function confirmBooking(
   id: string,
   resend: boolean,
@@ -196,46 +180,3 @@ export async function weeklyApproveBooking(id: string) {
     throw new Error(data?.error || data?.message || "Request failed");
   return data;
 }
-
-// export async function setSubscriptionEligible(params: {
-//   id: string;
-//   eligible: boolean;
-//   providerId: string;
-// }) {
-//   const res = await fetch(
-//     `/api/admin/bookings/${params.id}/subscription-eligible`,
-//     {
-//       method: "PATCH",
-//       credentials: "include",
-//       headers: {
-//         "Content-Type": "application/json",
-//         "x-provider-id": params.providerId,
-//       },
-//       body: JSON.stringify({ eligible: params.eligible }),
-//     },
-//   );
-
-//   const data = await res.json().catch(() => null);
-//   if (!res.ok)
-//     throw new Error(data?.error || data?.message || "Request failed");
-//   return data;
-// }
-
-// export async function weeklyApproveBooking(params: {
-//   id: string;
-//   providerId: string;
-// }) {
-//   const r = await fetch(
-//     `/api/admin/bookings/${encodeURIComponent(params.id)}/weekly-approve`,
-//     {
-//       method: "POST",
-//       credentials: "include",
-//       cache: "no-store",
-//       headers: { "x-provider-id": params.providerId },
-//     },
-//   );
-
-//   const d = await readJson<any>(r);
-//   if (!r.ok || d?.ok === false) throw new Error(d?.error || r.statusText);
-//   return d;
-// }

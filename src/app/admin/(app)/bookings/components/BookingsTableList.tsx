@@ -96,7 +96,6 @@ export default function BookingsTableList(props: Props) {
   if (!props.items.length) {
     return (
       <section className="card">
-        {/* <div className="card__empty">No items.</div> */}
         <div className="card__empty">
           {t("common.admin.bookings.table.empty")}
         </div>
@@ -127,13 +126,6 @@ export default function BookingsTableList(props: Props) {
           onClear={clearSelection}
           showClear={showClear}
           onDelete={deleteSelected}
-          // toggleLabel="Select bookings"
-          // selectedLabel="selected"
-          // selectAllLabel="Select all"
-          // clearAllLabel="Clear all"
-          // deleteLabel="Delete"
-          // cancelLabel="Cancel"
-
           toggleLabel={t("common.admin.bookings.bulk.toggleLabel")}
           selectedLabel={t("common.admin.bookings.bulk.selectedLabel")}
           selectAllLabel={t("common.admin.bookings.bulk.selectAllLabel")}
@@ -150,7 +142,6 @@ export default function BookingsTableList(props: Props) {
               disabled={busyRestore || restoreCount === 0}
               onClick={restoreSelected}
             >
-              {/* Restore ({restoreCount}) */}
               {t("common.admin.bookings.bulk.restoreLabel")} ({restoreCount})
             </button>
 
@@ -160,7 +151,6 @@ export default function BookingsTableList(props: Props) {
               disabled={busyDelete || count === 0}
               onClick={deleteSelected}
             >
-              {/* Delete ({count}) */}
               {t("common.admin.bookings.bulk.deleteLabel")} ({count})
             </button>
           </div>
@@ -171,15 +161,6 @@ export default function BookingsTableList(props: Props) {
         <section className="card news-list">
           <div className="news-list__table">
             <div className="news-list__head" aria-hidden="true">
-              {/* <div className="news-list__h">Name</div>
-              <div className="news-list__h">Email</div>
-              <div className="news-list__h">Date</div>
-              <div className="news-list__h">Program</div>
-              <div className="news-list__h">Status</div>
-              <div className="news-list__h">Payment</div>
-              <div className="news-list__h">Created</div>
-              <div className="news-list__h news-list__h--right">Action</div> */}
-
               <div className="news-list__h">
                 {t("common.admin.bookings.table.head.name")}
               </div>

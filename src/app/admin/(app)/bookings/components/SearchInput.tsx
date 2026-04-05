@@ -18,7 +18,6 @@ export default function SearchInput(props: {
       />
       <input
         className="input input-with-icon__input"
-        // placeholder="Name, email, level, code, message…"
         placeholder={t("common.admin.bookings.search.placeholder")}
         value={props.value}
         onChange={(e) => props.onChange(e.target.value)}
