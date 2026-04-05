@@ -215,6 +215,7 @@ export default function BookingsTableList(props: Props) {
                   onRowClick,
                   props.onOpen,
                   props.busyRowId ?? null,
+                  t,
                 ),
               )}
             </ul>
