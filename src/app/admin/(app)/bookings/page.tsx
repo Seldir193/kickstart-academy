@@ -94,15 +94,29 @@ export default function AdminBookingsPage() {
   const sortDd = useDropdown();
   const { t } = useTranslation();
 
+  // const computedStatusLabel = useMemo(
+  //   () =>
+  //     statusLabel({
+  //       status,
+  //       total: list.total,
+  //       totalAll: list.totalAll,
+  //       counts: list.counts,
+  //     }),
+  //   [status, list.total, list.totalAll, list.counts, t],
+  // );
+
   const computedStatusLabel = useMemo(
     () =>
-      statusLabel({
-        status,
-        total: list.total,
-        totalAll: list.totalAll,
-        counts: list.counts,
-      }),
-    [status, list.total, list.totalAll, list.counts],
+      statusLabel(
+        {
+          status,
+          total: list.total,
+          totalAll: list.totalAll,
+          counts: list.counts,
+        },
+        t,
+      ),
+    [status, list.total, list.totalAll, list.counts, t],
   );
 
   const itemsSorted = useMemo(
@@ -262,10 +276,10 @@ export default function AdminBookingsPage() {
             programDd={programDd}
             statusDd={statusDd}
             sortDd={sortDd}
-            programLabel={programLabel(program)}
+            programLabel={programLabel(program, t)}
             statusLabel={computedStatusLabel}
             sortLabel={sortLabel(sort, t)}
-            // sortLabel={sortLabel(sort)}
+            //  sortLabel={sortLabel(sort)}
             program={program}
             status={status}
             sort={sort}

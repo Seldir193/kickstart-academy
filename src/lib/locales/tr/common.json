@@ -26,23 +26,39 @@
 
   "aria.home": "Ana sayfa",
 
-  "common": {
-    "admin": {
-      "bookings": {
-        "sort": {
-          "newest": "En yeniler önce",
-          "oldest": "En eskiler önce",
-          "nameAsc": "İsim A–Z",
-          "nameDesc": "İsim Z–A"
-        },
-        "notice": {
-          "deleted": "Silindi ({{count}}).",
-          "restored": "Geri yüklendi ({{count}})."
-        },
-        "error": {
-          "detailsLoad": "Detaylar yüklenemedi."
-        }
-      }
-    }
-  }
+  "common.admin.bookings.sort.newest": "En yeniler önce",
+  "common.admin.bookings.sort.oldest": "En eskiler önce",
+  "common.admin.bookings.sort.nameAsc": "İsim A–Z",
+  "common.admin.bookings.sort.nameDesc": "İsim Z–A",
+
+  "common.admin.bookings.notice.deleted": "Silindi",
+  "common.admin.bookings.notice.restored": "Geri yüklendi",
+
+  "common.admin.bookings.error.detailsLoad": "Detaylar yüklenemedi.",
+
+  "common.admin.bookings.filters.programAria": "Kurs",
+  "common.admin.bookings.filters.statusAria": "Durum",
+  "common.admin.bookings.filters.sortAria": "Sıralama",
+
+  "common.admin.bookings.filters.program.all": "Tüm kurslar",
+  "common.admin.bookings.filters.program.weeklyGroup": "Haftalık kurslar",
+  "common.admin.bookings.filters.program.weeklyFoerdertraining": "Gelişim antrenmanı",
+  "common.admin.bookings.filters.program.weeklyKindergarten": "Futbol anaokulu",
+  "common.admin.bookings.filters.program.weeklyGoalkeeper": "Kaleci antrenmanı",
+  "common.admin.bookings.filters.program.weeklyDevelopmentAthletik": "Gelişim antrenmanı • Atletik",
+  "common.admin.bookings.filters.program.individualGroup": "Bireysel kurslar",
+  "common.admin.bookings.filters.program.individual1to1": "1:1 antrenman",
+  "common.admin.bookings.filters.program.individual1to1Athletik": "1:1 antrenman atletik",
+  "common.admin.bookings.filters.program.individual1to1Goalkeeper": "1:1 kaleci antrenmanı",
+  "common.admin.bookings.filters.program.clubGroup": "Kulüp programları",
+  "common.admin.bookings.filters.program.clubRentACoach": "Rent-a-Coach",
+  "common.admin.bookings.filters.program.clubTrainingCamps": "Antrenman kampları",
+  "common.admin.bookings.filters.program.clubCoachEducation": "Antrenör eğitimi",
+
+  "common.admin.bookings.filters.status.all": "Tümü",
+  "common.admin.bookings.filters.status.pending": "Beklemede",
+  "common.admin.bookings.filters.status.processing": "İşleniyor",
+  "common.admin.bookings.filters.status.confirmed": "Onaylandı",
+  "common.admin.bookings.filters.status.cancelled": "İptal edildi",
+  "common.admin.bookings.filters.status.deleted": "Silindi"
 }

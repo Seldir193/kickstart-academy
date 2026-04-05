@@ -19,33 +19,93 @@ export function formatDateDe(value?: string) {
   return new Intl.DateTimeFormat("de-DE", { dateStyle: "medium" }).format(d);
 }
 
-export function programLabel(program: ProgramFilter) {
+// export function programLabel(program: ProgramFilter) {
+//   const map: Record<ProgramFilter, string> = {
+//     all: "All courses",
+//     weekly_foerdertraining: "Foerdertraining",
+//     weekly_kindergarten: "Soccer Kindergarten",
+//     weekly_goalkeeper: "Goalkeeper Training",
+//     weekly_development_athletik: "Development Training • Athletik",
+//     ind_1to1: "1:1 Training",
+//     ind_1to1_athletik: "1:1 Training Athletik",
+//     ind_1to1_goalkeeper: "1:1 Training Torwart",
+//     club_rentacoach: "Rent-a-Coach",
+//     club_trainingcamps: "Training Camps",
+//     club_coacheducation: "Coach Education",
+//   };
+//   return map[program] || "All courses";
+// }
+
+export function programLabel(
+  program: ProgramFilter,
+  t: (key: string) => string,
+) {
   const map: Record<ProgramFilter, string> = {
-    all: "All courses",
-    weekly_foerdertraining: "Foerdertraining",
-    weekly_kindergarten: "Soccer Kindergarten",
-    weekly_goalkeeper: "Goalkeeper Training",
-    weekly_development_athletik: "Development Training • Athletik",
-    ind_1to1: "1:1 Training",
-    ind_1to1_athletik: "1:1 Training Athletik",
-    ind_1to1_goalkeeper: "1:1 Training Torwart",
-    club_rentacoach: "Rent-a-Coach",
-    club_trainingcamps: "Training Camps",
-    club_coacheducation: "Coach Education",
+    all: t("common.admin.bookings.filters.program.all"),
+    weekly_foerdertraining: t(
+      "common.admin.bookings.filters.program.weeklyFoerdertraining",
+    ),
+    weekly_kindergarten: t(
+      "common.admin.bookings.filters.program.weeklyKindergarten",
+    ),
+    weekly_goalkeeper: t(
+      "common.admin.bookings.filters.program.weeklyGoalkeeper",
+    ),
+    weekly_development_athletik: t(
+      "common.admin.bookings.filters.program.weeklyDevelopmentAthletik",
+    ),
+    ind_1to1: t("common.admin.bookings.filters.program.individual1to1"),
+    ind_1to1_athletik: t(
+      "common.admin.bookings.filters.program.individual1to1Athletik",
+    ),
+    ind_1to1_goalkeeper: t(
+      "common.admin.bookings.filters.program.individual1to1Goalkeeper",
+    ),
+    club_rentacoach: t("common.admin.bookings.filters.program.clubRentACoach"),
+    club_trainingcamps: t(
+      "common.admin.bookings.filters.program.clubTrainingCamps",
+    ),
+    club_coacheducation: t(
+      "common.admin.bookings.filters.program.clubCoachEducation",
+    ),
   };
-  return map[program] || "All courses";
+  return map[program] || t("common.admin.bookings.filters.program.all");
 }
 
-export function statusLabel(params: {
-  status: StatusOrAll;
-  total: number;
-  totalAll: number | null;
-  counts: Partial<Record<Status, number>>;
-}) {
+// export function statusLabel(params: {
+//   status: StatusOrAll;
+//   total: number;
+//   totalAll: number | null;
+//   counts: Partial<Record<Status, number>>;
+// }) {
+//   const { status, total, totalAll, counts } = params;
+//   if (status === "all") return `All (${totalAll ?? total})`;
+//   const n = counts[status] ?? 0;
+//   return `${capitalize(status)} (${n})`;
+// }
+
+export function statusLabel(
+  params: {
+    status: StatusOrAll;
+    total: number;
+    totalAll: number | null;
+    counts: Partial<Record<Status, number>>;
+  },
+  t: (key: string) => string,
+) {
   const { status, total, totalAll, counts } = params;
-  if (status === "all") return `All (${totalAll ?? total})`;
+  if (status === "all") {
+    return `${t("common.admin.bookings.filters.status.all")} (${totalAll ?? total})`;
+  }
+  const map: Record<Status, string> = {
+    pending: t("common.admin.bookings.filters.status.pending"),
+    processing: t("common.admin.bookings.filters.status.processing"),
+    confirmed: t("common.admin.bookings.filters.status.confirmed"),
+    cancelled: t("common.admin.bookings.filters.status.cancelled"),
+    deleted: t("common.admin.bookings.filters.status.deleted"),
+  };
   const n = counts[status] ?? 0;
-  return `${capitalize(status)} (${n})`;
+  return `${map[status]} (${n})`;
 }
 
 export function capitalize(s: string) {

@@ -26,23 +26,39 @@
 
   "aria.home": "Startseite",
 
-  "common": {
-    "admin": {
-      "bookings": {
-        "sort": {
-          "newest": "Neueste zuerst",
-          "oldest": "Älteste zuerst",
-          "nameAsc": "Name A–Z",
-          "nameDesc": "Name Z–A"
-        },
-        "notice": {
-          "deleted": "Gelöscht ({{count}}).",
-          "restored": "Wiederhergestellt ({{count}})."
-        },
-        "error": {
-          "detailsLoad": "Details konnten nicht geladen werden."
-        }
-      }
-    }
-  }
+  "common.admin.bookings.sort.newest": "Neueste zuerst",
+  "common.admin.bookings.sort.oldest": "Älteste zuerst",
+  "common.admin.bookings.sort.nameAsc": "Name A–Z",
+  "common.admin.bookings.sort.nameDesc": "Name Z–A",
+
+  "common.admin.bookings.notice.deleted": "Gelöscht",
+  "common.admin.bookings.notice.restored": "Wiederhergestellt",
+
+  "common.admin.bookings.error.detailsLoad": "Details konnten nicht geladen werden.",
+
+  "common.admin.bookings.filters.programAria": "Kurs",
+  "common.admin.bookings.filters.statusAria": "Status",
+  "common.admin.bookings.filters.sortAria": "Sortierung",
+
+  "common.admin.bookings.filters.program.all": "Alle Kurse",
+  "common.admin.bookings.filters.program.weeklyGroup": "Wöchentliche Kurse",
+  "common.admin.bookings.filters.program.weeklyFoerdertraining": "Fördertraining",
+  "common.admin.bookings.filters.program.weeklyKindergarten": "Fußballkindergarten",
+  "common.admin.bookings.filters.program.weeklyGoalkeeper": "Torwarttraining",
+  "common.admin.bookings.filters.program.weeklyDevelopmentAthletik": "Fördertraining • Athletik",
+  "common.admin.bookings.filters.program.individualGroup": "Individuelle Kurse",
+  "common.admin.bookings.filters.program.individual1to1": "1:1 Training",
+  "common.admin.bookings.filters.program.individual1to1Athletik": "1:1 Training Athletik",
+  "common.admin.bookings.filters.program.individual1to1Goalkeeper": "1:1 Training Torwart",
+  "common.admin.bookings.filters.program.clubGroup": "Vereinsprogramme",
+  "common.admin.bookings.filters.program.clubRentACoach": "Rent-a-Coach",
+  "common.admin.bookings.filters.program.clubTrainingCamps": "Trainingslager",
+  "common.admin.bookings.filters.program.clubCoachEducation": "Trainerausbildung",
+
+  "common.admin.bookings.filters.status.all": "Alle",
+  "common.admin.bookings.filters.status.pending": "Ausstehend",
+  "common.admin.bookings.filters.status.processing": "In Bearbeitung",
+  "common.admin.bookings.filters.status.confirmed": "Bestätigt",
+  "common.admin.bookings.filters.status.cancelled": "Storniert",
+  "common.admin.bookings.filters.status.deleted": "Gelöscht"
 }
