@@ -191,5 +191,10 @@
   "common.admin.onlineBookings.payment.paid": "Paid",
   "common.admin.onlineBookings.payment.returned": "Returned",
 
-  "common.admin.onlineBookings.error.loadFailed": "Load failed"
+  "common.admin.onlineBookings.error.loadFailed": "Load failed",
+
+  "common.admin.onlineBookings.status.pending": "Pending",
+  "common.admin.onlineBookings.status.processing": "Processing",
+
+  "common.admin.onlineBookings.payment.open": "Open"
 }

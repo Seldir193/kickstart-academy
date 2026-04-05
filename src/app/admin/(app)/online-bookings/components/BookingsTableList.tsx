@@ -46,11 +46,13 @@ function renderPayment(t: (key: string) => string, b: Booking) {
         : "badge";
 
   const label =
-    payment === "paid"
-      ? t("common.admin.onlineBookings.payment.paid")
-      : payment === "returned"
-        ? t("common.admin.onlineBookings.payment.returned")
-        : payment;
+    payment === "open"
+      ? t("common.admin.onlineBookings.payment.open")
+      : payment === "paid"
+        ? t("common.admin.onlineBookings.payment.paid")
+        : payment === "returned"
+          ? t("common.admin.onlineBookings.payment.returned")
+          : payment;
 
   return <span className={className}>{label}</span>;
 }
@@ -149,6 +151,31 @@ export default function BookingsTableList({
         </div>
       </section>
     );
+  }
+
+  function renderStatus(
+    t: (key: string) => string,
+    status?: Booking["status"],
+  ) {
+    const value = asStatus(status);
+
+    if (value === "pending") {
+      return t("common.admin.onlineBookings.status.pending");
+    }
+    if (value === "processing") {
+      return t("common.admin.onlineBookings.status.processing");
+    }
+    if (value === "confirmed") {
+      return t("common.admin.onlineBookings.status.confirmed");
+    }
+    if (value === "cancelled") {
+      return t("common.admin.onlineBookings.status.cancelled");
+    }
+    if (value === "deleted") {
+      return t("common.admin.onlineBookings.status.deleted");
+    }
+
+    return value;
   }
 
   return (
@@ -270,7 +297,7 @@ export default function BookingsTableList({
                     </div>
 
                     <div className="news-list__cell news-list__cell--status">
-                      {asStatus(b.status)}
+                      {renderStatus(t, b.status)}
                     </div>
 
                     <div className="news-list__cell news-list__cell--payment">

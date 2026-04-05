@@ -63,7 +63,7 @@ export function useOnlineBookingsList(params: {
       setItems([]);
       setTotal(0);
       setCounts({});
-      // setError(e instanceof Error ? e.message : "Load failed");
+
       setError(
         e instanceof Error
           ? e.message

@@ -188,6 +188,11 @@
   "common.admin.onlineBookings.table.row.select": "Auswählen",
   "common.admin.onlineBookings.table.row.open": "Öffnen",
   "common.admin.onlineBookings.table.edit": "Bearbeiten",
+
+  "common.admin.onlineBookings.status.pending": "Ausstehend",
+  "common.admin.onlineBookings.status.processing": "In Bearbeitung",
+
+  "common.admin.onlineBookings.payment.open": "Offen",
   "common.admin.onlineBookings.payment.paid": "Bezahlt",
   "common.admin.onlineBookings.payment.returned": "Zurückerstattet",
 

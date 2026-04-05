@@ -191,5 +191,10 @@
   "common.admin.onlineBookings.payment.paid": "Ödendi",
   "common.admin.onlineBookings.payment.returned": "İade edildi",
 
-  "common.admin.onlineBookings.error.loadFailed": "Yükleme başarısız oldu"
+  "common.admin.onlineBookings.error.loadFailed": "Yükleme başarısız oldu",
+
+  "common.admin.onlineBookings.status.pending": "Beklemede",
+  "common.admin.onlineBookings.status.processing": "İşleniyor",
+
+  "common.admin.onlineBookings.payment.open": "Açık"
 }
