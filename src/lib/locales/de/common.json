@@ -80,5 +80,10 @@
   "common.admin.bookings.table.head.status": "Status",
   "common.admin.bookings.table.head.payment": "Zahlung",
   "common.admin.bookings.table.head.created": "Erstellt",
-  "common.admin.bookings.table.head.action": "Aktion"
+  "common.admin.bookings.table.head.action": "Aktion",
+
+  "common.admin.bookings.row.empty": "—",
+  "common.admin.bookings.row.select": "Auswählen",
+  "common.admin.bookings.row.open": "Öffnen",
+  "common.admin.bookings.row.openAction": "Öffnen"
 }
