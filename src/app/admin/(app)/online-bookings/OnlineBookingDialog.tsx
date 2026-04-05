@@ -420,7 +420,10 @@ function buildPowerRows(
     row(t("common.admin.onlineBookings.dialog.message.child"), map["kind"]),
     row(
       t("common.admin.onlineBookings.dialog.message.birthDate"),
-      map["geburtstag"],
+      pickValue(
+        map["geburtstag"],
+        formatDateOnly((booking as any)?.meta?.childBirthDate, lang),
+      ),
     ),
     row(
       t("common.admin.onlineBookings.dialog.message.contact"),
@@ -442,12 +445,51 @@ function buildPowerRows(
   ];
 }
 
-function buildFallbackRows(lines: string[]): MessageRow[] {
+function fallbackLabel(t: (key: string) => string, label?: string) {
+  const key = safeText(label).toLowerCase();
+
+  if (key === "kind") {
+    return t("common.admin.onlineBookings.dialog.message.child");
+  }
+  if (key === "geburtstag") {
+    return t("common.admin.onlineBookings.dialog.message.birthDate");
+  }
+  if (key === "kontakt") {
+    return t("common.admin.onlineBookings.dialog.message.contact");
+  }
+  if (key === "adresse") {
+    return t("common.admin.onlineBookings.dialog.message.address");
+  }
+  if (key === "telefon") {
+    return t("common.admin.onlineBookings.dialog.message.phone");
+  }
+  if (key === "gutschein") {
+    return t("common.admin.onlineBookings.dialog.message.voucher");
+  }
+  if (key === "quelle") {
+    return t("common.admin.onlineBookings.dialog.message.source");
+  }
+  if (key === "ferien") {
+    return t("common.admin.onlineBookings.dialog.message.holiday");
+  }
+  if (key === "zeitraum") {
+    return t("common.admin.onlineBookings.dialog.message.period");
+  }
+
+  return label;
+}
+
+function buildFallbackRows(
+  t: (key: string) => string,
+  lines: string[],
+): MessageRow[] {
   return lines
     .filter((line) => !/^programm\s*:/i.test(line))
     .map((line) => {
       const { label, value } = splitLabelValue(line);
-      return label ? { label, value: value || "—" } : { value: line };
+      return label
+        ? { label: fallbackLabel(t, label), value: value || "—" }
+        : { value: line };
     });
 }
 
@@ -462,7 +504,7 @@ function buildHolidayRows(
 
   if (kind === "camp") return buildCampRows(t, lang, map, booking);
   if (kind === "powertraining") return buildPowerRows(t, lang, map, booking);
-  return buildFallbackRows(lines);
+  return buildFallbackRows(t, lines);
 }
 
 export default function OnlineBookingDialog({
