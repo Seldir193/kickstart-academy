@@ -85,5 +85,7 @@
   "common.admin.bookings.row.empty": "—",
   "common.admin.bookings.row.select": "Select",
   "common.admin.bookings.row.open": "Open",
-  "common.admin.bookings.row.openAction": "Open"
+  "common.admin.bookings.row.openAction": "Open",
+
+  "common.admin.bookings.error.loadFailed": "Yükleme başarısız oldu."
 }

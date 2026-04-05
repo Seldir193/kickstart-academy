@@ -85,5 +85,7 @@
   "common.admin.bookings.row.empty": "—",
   "common.admin.bookings.row.select": "Auswählen",
   "common.admin.bookings.row.open": "Öffnen",
-  "common.admin.bookings.row.openAction": "Öffnen"
+  "common.admin.bookings.row.openAction": "Öffnen",
+
+  "common.admin.bookings.error.loadFailed": "Laden fehlgeschlagen."
 }

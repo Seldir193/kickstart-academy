@@ -4,6 +4,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import type { Booking, ProgramFilter, Status, StatusOrAll } from "../types";
 import { buildQuery, fetchBookings, pageSize } from "../api";
+import { useTranslation } from "react-i18next";
 
 type Counts = Partial<Record<Status, number>>;
 
@@ -19,6 +20,7 @@ export function useBookingsList(params: {
   const [totalAll, setTotalAll] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const { t } = useTranslation();
 
   const limit = pageSize;
 
@@ -50,11 +52,16 @@ export function useBookingsList(params: {
       setItems([]);
       setTotal(0);
       setCounts({});
-      setError(e instanceof Error ? e.message : "Load failed");
+      //setError(e instanceof Error ? e.message : "Load failed");
+      setError(
+        e instanceof Error
+          ? e.message
+          : t("common.admin.bookings.error.loadFailed"),
+      );
     } finally {
       setLoading(false);
     }
-  }, [query, rememberTotalAll]);
+  }, [query, rememberTotalAll, t]);
 
   useEffect(() => {
     load();
