@@ -60,7 +60,7 @@ export function renderRow(
       </div>
 
       <div className="news-list__cell news-list__cell--status">
-        {asStatus(b.status)}
+        {t(`common.admin.bookings.status.${asStatus(b.status)}`)}
       </div>
 
       <div className="news-list__cell news-list__cell--payment">
@@ -118,7 +118,7 @@ function renderPayment(b: Booking, t: (key: string) => string) {
         ? "badge badge-danger"
         : "badge";
 
-  return <span className={cls}>{p}</span>;
+  return <span className={cls}>{t(`common.admin.bookings.payment.${p}`)}</span>;
 }
 
 export function focusClearOrCancel(
