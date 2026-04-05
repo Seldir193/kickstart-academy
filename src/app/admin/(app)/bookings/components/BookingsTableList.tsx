@@ -43,7 +43,7 @@ export default function BookingsTableList(props: Props) {
   const busyDelete = props.busyBulkDelete === true;
   const busyRestore = props.busyBulkRestore === true;
   const busyAny = busyDelete || busyRestore;
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   useEffect(
     () =>
@@ -216,6 +216,7 @@ export default function BookingsTableList(props: Props) {
                   props.onOpen,
                   props.busyRowId ?? null,
                   t,
+                  i18n.language,
                 ),
               )}
             </ul>

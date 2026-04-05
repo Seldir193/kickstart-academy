@@ -43,6 +43,7 @@ export type Booking = {
   invoiceNumber?: string;
   invoiceNo?: string;
   invoiceDate?: string | null;
+  detail?: BookingDetail;
 
   paymentStatus?: "open" | "paid" | "returned";
   paidAt?: string | null;
@@ -57,6 +58,23 @@ export type Booking = {
     paymentApprovedEmailSentAt?: string | null;
   };
 };
+
+export type BookingDetail = {
+  child?: {
+    firstName?: string;
+    lastName?: string;
+    gender?: string;
+    birthDate?: string | null;
+  } | null;
+  parent?: {
+    salutation?: string;
+    firstName?: string;
+    lastName?: string;
+    phone?: string;
+  } | null;
+  contact?: string;
+  address?: string;
+} | null;
 
 export type ListResp = {
   ok?: boolean;

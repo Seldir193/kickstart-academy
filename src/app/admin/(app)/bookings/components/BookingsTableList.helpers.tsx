@@ -1,7 +1,7 @@
 "use client";
 
 import type { Booking } from "../types";
-import { asStatus, formatDateDe, programAbbr, safeText } from "../utils";
+import { asStatus, formatDateOnly, programAbbr, safeText } from "../utils";
 
 export function idOf(b: Booking) {
   return String(b?._id || "").trim();
@@ -21,6 +21,7 @@ export function renderRow(
   onOpen: (b: Booking) => void,
   busyRowId: string | null,
   t: (key: string) => string,
+  lang?: string,
 ) {
   const id = String(b?._id || "").trim();
   const checked = selected.has(id);
@@ -47,12 +48,11 @@ export function renderRow(
       </div>
 
       <div className="news-list__cell news-list__cell--email">
-        {/* {safeText(b.email) || "—"} */}
         {safeText(b.email) || t("common.admin.bookings.row.empty")}
       </div>
 
       <div className="news-list__cell news-list__cell--date bookings-mono">
-        {formatDateDe(b.date)}
+        {formatDateOnly(b.date, lang)}
       </div>
 
       <div className="news-list__cell news-list__cell--program bookings-mono">
@@ -68,7 +68,7 @@ export function renderRow(
       </div>
 
       <div className="news-list__cell news-list__cell--created">
-        {formatDateDe(b.createdAt)}
+        {formatDateOnly(b.createdAt, lang)}
       </div>
 
       {hideEdit ? (
@@ -86,7 +86,6 @@ export function renderRow(
             className="edit-trigger"
             role="button"
             tabIndex={0}
-            // aria-label="Open"
             aria-label={t("common.admin.bookings.row.openAction")}
             aria-disabled={rowBusy ? true : undefined}
           >
@@ -108,7 +107,6 @@ function renderPayment(b: Booking, t: (key: string) => string) {
     .trim()
     .toLowerCase();
 
-  // if (!p) return "—";
   if (!p) return t("common.admin.bookings.row.empty");
 
   const cls =
@@ -152,14 +150,6 @@ function labelSelect(b: Booking, t: (key: string) => string) {
 function labelOpen(b: Booking, t: (key: string) => string) {
   return `${t("common.admin.bookings.row.open")}: ${safeText(b.firstName)} ${safeText(b.lastName)}`;
 }
-
-// function labelSelect(b: Booking) {
-//   return `Select: ${safeText(b.firstName)} ${safeText(b.lastName)}`;
-// }
-
-// function labelOpen(b: Booking) {
-//   return `Open: ${safeText(b.firstName)} ${safeText(b.lastName)}`;
-// }
 
 function onKeyActivate(e: React.KeyboardEvent, run: () => void) {
   if (e.key !== "Enter" && e.key !== " ") return;

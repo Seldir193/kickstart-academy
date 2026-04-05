@@ -18,7 +18,13 @@ import {
   restoreBulk,
   setBookingStatus,
 } from "./api";
-import type { Booking, ProgramFilter, Status, StatusOrAll } from "./types";
+import type {
+  Booking,
+  BookingDetail,
+  ProgramFilter,
+  Status,
+  StatusOrAll,
+} from "./types";
 import { programLabel, statusLabel } from "./utils";
 import { sortBookings } from "./page.helpers";
 import { useDropdown } from "./components/useDropdown";
@@ -32,26 +38,26 @@ type Busy =
   | { kind: "bulk_restore" }
   | null;
 
-type BookingDialogDetail = {
-  child?: {
-    firstName?: string;
-    lastName?: string;
-    gender?: string;
-    birthDate?: string | null;
-  } | null;
-  parent?: {
-    salutation?: string;
-    firstName?: string;
-    lastName?: string;
-    phone?: string;
-  } | null;
-  contact?: string;
-  address?: string;
-} | null;
+// type BookingDialogDetail = {
+//   child?: {
+//     firstName?: string;
+//     lastName?: string;
+//     gender?: string;
+//     birthDate?: string | null;
+//   } | null;
+//   parent?: {
+//     salutation?: string;
+//     firstName?: string;
+//     lastName?: string;
+//     phone?: string;
+//   } | null;
+//   contact?: string;
+//   address?: string;
+// } | null;
 
-type DialogBooking = Booking & {
-  detail?: BookingDialogDetail;
-};
+// type DialogBooking = Booking & {
+//   detail?: BookingDialogDetail;
+// };
 
 // function sortLabel(sort: SortKey) {
 //   const map: Record<SortKey, string> = {
@@ -83,7 +89,8 @@ export default function AdminBookingsPage() {
   const [page, setPage] = useState(1);
   const [selectMode, setSelectMode] = useState(false);
   const toggleBtnRef = useRef<HTMLButtonElement | null>(null);
-  const [sel, setSel] = useState<DialogBooking | null>(null);
+  //const [sel, setSel] = useState<DialogBooking | null>(null);
+  const [sel, setSel] = useState<Booking | null>(null);
   const { notice, showOk, showError } = useNotice(5000);
 
   const list = useBookingsList({ status, program, q: qDebounced, page });
