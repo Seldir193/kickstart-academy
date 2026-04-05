@@ -67,7 +67,8 @@ export async function confirmBooking(
 
   const d = await readJson<any>(r);
   if (!r.ok || d?.ok === false) throw new Error(d?.error || r.statusText);
-  return resend ? "Confirmation resent." : "Booking confirmed.";
+
+  return d;
 }
 
 export async function setBookingStatus(id: string, next: Status) {
@@ -82,7 +83,8 @@ export async function setBookingStatus(id: string, next: Status) {
   );
   const d = await readJson<any>(r);
   if (!r.ok || d?.ok === false) throw new Error(d?.error || r.statusText);
-  return "Status updated.";
+
+  return d;
 }
 
 export async function deleteBooking(id: string) {
@@ -92,7 +94,8 @@ export async function deleteBooking(id: string) {
   });
   const d = await readJson<any>(r);
   if (!r.ok || d?.ok === false) throw new Error(d?.error || r.statusText);
-  return "Booking deleted.";
+
+  return d;
 }
 
 export async function restoreBooking(id: string) {
@@ -106,7 +109,8 @@ export async function restoreBooking(id: string) {
   );
   const d = await readJson<any>(r);
   if (!r.ok || d?.ok === false) throw new Error(d?.error || r.statusText);
-  return "Booking restored.";
+
+  return d;
 }
 
 export async function cancelConfirmedBooking(id: string) {
@@ -120,7 +124,8 @@ export async function cancelConfirmedBooking(id: string) {
   );
   const d = await readJson<any>(r);
   if (!r.ok || d?.ok === false) throw new Error(d?.error || r.statusText);
-  return "Confirmed booking cancelled.";
+
+  return d;
 }
 
 export async function deleteBulk(ids: string[]) {

@@ -252,5 +252,13 @@
   "common.admin.onlineBookings.notice.statusUpdated": "Durum güncellendi.",
   "common.admin.onlineBookings.notice.deleted": "Rezervasyon silindi.",
   "common.admin.onlineBookings.notice.cancelledConfirmed": "Randevu iptal edildi.",
-  "common.admin.onlineBookings.notice.paymentApproved": "Ödeme onaylandı."
+  "common.admin.onlineBookings.notice.paymentApproved": "Ödeme onaylandı.",
+
+  "common.admin.bookings.notice.confirmed": "Rezervasyon onaylandı.",
+  "common.admin.bookings.notice.confirmationResent": "Onay tekrar gönderildi.",
+  "common.admin.bookings.notice.statusUpdated": "Durum güncellendi.",
+
+  "common.admin.bookings.notice.cancelledConfirmed": "Onaylanmış rezervasyon iptal edildi.",
+  "common.admin.bookings.notice.subscriptionUpdated": "Abonelik onayı güncellendi.",
+  "common.admin.bookings.notice.paymentApproved": "Ödeme onaylandı."
 }

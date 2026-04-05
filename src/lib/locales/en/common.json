@@ -252,5 +252,13 @@
   "common.admin.onlineBookings.notice.statusUpdated": "Status updated.",
   "common.admin.onlineBookings.notice.deleted": "Booking deleted.",
   "common.admin.onlineBookings.notice.cancelledConfirmed": "Appointment cancelled.",
-  "common.admin.onlineBookings.notice.paymentApproved": "Payment approved."
+  "common.admin.onlineBookings.notice.paymentApproved": "Payment approved.",
+
+  "common.admin.bookings.notice.confirmed": "Booking confirmed.",
+  "common.admin.bookings.notice.confirmationResent": "Confirmation resent.",
+  "common.admin.bookings.notice.statusUpdated": "Status updated.",
+
+  "common.admin.bookings.notice.cancelledConfirmed": "Confirmed booking cancelled.",
+  "common.admin.bookings.notice.subscriptionUpdated": "Subscription approval updated.",
+  "common.admin.bookings.notice.paymentApproved": "Payment approved."
 }

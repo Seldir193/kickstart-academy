@@ -7,15 +7,17 @@ import { setSubscriptionEligible, weeklyApproveBooking } from "./api";
 import { useTranslation } from "react-i18next";
 import { formatDateOnly, formatDateTime } from "./utils";
 import type { Booking, BookingDetail, Status } from "./types";
+import { toastErrorMessage, toastText } from "@/lib/toast-messages";
 
 type Props = {
   booking: Booking;
   onClose: () => void;
-  onConfirm: () => Promise<string>;
-  onResend: () => Promise<string>;
-  onSetStatus: (s: Status) => Promise<string>;
-  onDelete: () => Promise<string>;
-  onCancelConfirmed: () => Promise<string>;
+
+  onConfirm: () => Promise<unknown>;
+  onResend: () => Promise<unknown>;
+  onSetStatus: (s: Status) => Promise<unknown>;
+  onDelete: () => Promise<unknown>;
+  onCancelConfirmed: () => Promise<unknown>;
   notify: (text: string) => void;
 
   onUpdateBooking: (patch: Partial<Booking>) => void;
@@ -209,6 +211,30 @@ function adminMessageLines(
   return lines;
 }
 
+function successMessageKey(action: string) {
+  switch (action) {
+    case "processing":
+    case "cancelled":
+      return "common.admin.bookings.notice.statusUpdated";
+    case "confirm":
+      return "common.admin.bookings.notice.confirmed";
+    case "resend":
+      return "common.admin.bookings.notice.confirmationResent";
+    case "cancelConfirmed":
+      return "common.admin.bookings.notice.cancelledConfirmed";
+    case "delete":
+      return "common.admin.bookings.notice.deleted";
+    case "restore":
+      return "common.admin.bookings.notice.restored";
+    case "eligible":
+      return "common.admin.bookings.notice.subscriptionUpdated";
+    case "approvePayment":
+      return "common.admin.bookings.notice.paymentApproved";
+    default:
+      return "common.admin.bookings.dialog.error.actionFailed";
+  }
+}
+
 export default function BookingDialog({
   booking,
   onClose,
@@ -269,16 +295,21 @@ export default function BookingDialog({
     });
   }, [booking, isAdminBooking, t, i18n.language]);
 
-  async function run(action: string, fn: () => Promise<string>) {
+  async function run(action: string, fn: () => Promise<unknown>) {
     if (busy) return;
     try {
       setBusy(action);
-      const text = await fn();
-      notify(text);
+
+      await fn();
+      notify(toastText(t, successMessageKey(action)));
       if (action === "delete") onClose();
     } catch (e: any) {
       notify(
-        e?.message || t("common.admin.bookings.dialog.error.actionFailed"),
+        toastErrorMessage(
+          e,
+          t,
+          "common.admin.bookings.dialog.error.actionFailed",
+        ),
       );
     } finally {
       setBusy("");
@@ -297,8 +328,6 @@ export default function BookingDialog({
             data?.subscriptionEligibleAt || new Date().toISOString(),
         },
       });
-
-      return t("common.admin.bookings.dialog.notice.subscriptionApproved");
     }
 
     const data = await setSubscriptionEligible({
@@ -313,8 +342,6 @@ export default function BookingDialog({
         subscriptionEligibleAt: data?.subscriptionEligibleAt || null,
       },
     });
-
-    return t("common.admin.bookings.dialog.notice.subscriptionApprovalRemoved");
   }
 
   async function approvePayment() {
@@ -344,8 +371,6 @@ export default function BookingDialog({
         paymentApprovedEmailSentAt: data?.paymentApprovedEmailSentAt || null,
       },
     });
-
-    return t("common.admin.bookings.dialog.notice.paymentApproved");
   }
 
   return (

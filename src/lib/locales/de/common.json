@@ -252,5 +252,13 @@
   "common.admin.onlineBookings.notice.statusUpdated": "Status aktualisiert.",
   "common.admin.onlineBookings.notice.deleted": "Buchung gelöscht.",
   "common.admin.onlineBookings.notice.cancelledConfirmed": "Termin abgesagt.",
-  "common.admin.onlineBookings.notice.paymentApproved": "Zahlung freigegeben."
+  "common.admin.onlineBookings.notice.paymentApproved": "Zahlung freigegeben.",
+
+  "common.admin.bookings.notice.confirmed": "Buchung bestätigt.",
+  "common.admin.bookings.notice.confirmationResent": "Bestätigung erneut gesendet.",
+  "common.admin.bookings.notice.statusUpdated": "Status aktualisiert.",
+
+  "common.admin.bookings.notice.cancelledConfirmed": "Bestätigte Buchung storniert.",
+  "common.admin.bookings.notice.subscriptionUpdated": "Abo-Freigabe aktualisiert.",
+  "common.admin.bookings.notice.paymentApproved": "Zahlung freigegeben."
 }
