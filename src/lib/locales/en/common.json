@@ -31,8 +31,8 @@
   "common.admin.bookings.sort.nameAsc": "Name A–Z",
   "common.admin.bookings.sort.nameDesc": "Name Z–A",
 
-  "common.admin.bookings.notice.deleted": "Deleted",
-  "common.admin.bookings.notice.restored": "Restored",
+  "common.admin.bookings.notice.deleted": "Booking deleted.",
+  "common.admin.bookings.notice.restored": "Booking restored.",
 
   "common.admin.bookings.error.detailsLoad": "Details could not be loaded.",
 

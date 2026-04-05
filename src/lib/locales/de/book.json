@@ -5,8 +5,8 @@
   "heading.request": "Anfrage senden",
 
   "offer.missing": "Offer fehlt.",
-  "offer.missingUrl": "Missing offerId in URL.",
-  "offer.unreachable": "Offer not found or API unreachable.",
+  "offer.missingUrl": "OfferId in der URL fehlt.",
+  "offer.unreachable": "Offer nicht gefunden oder API nicht erreichbar.",
 
   "validation.invalidEmail": "Ungültige E-Mail",
   "validation.birthdateComplete": "Bitte vollständiges Geburtsdatum wählen",
