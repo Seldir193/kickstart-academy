@@ -9,6 +9,12 @@ export function isoFromDate(d: Date) {
   return `${y}-${m}-${day}`;
 }
 
+function dateLocale(lang?: string) {
+  if (lang === "tr") return "tr-TR";
+  if (lang === "en") return "en-US";
+  return "de-DE";
+}
+
 export function dateFromIso(iso?: string) {
   if (!iso) return null;
   const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso);
@@ -54,18 +60,18 @@ export function addMonths(base: Date, delta: number) {
   return d;
 }
 
-export function monthLabel(d: Date) {
-  return new Intl.DateTimeFormat("de-DE", {
+export function monthLabel(d: Date, lang?: string) {
+  return new Intl.DateTimeFormat(dateLocale(lang), {
     month: "long",
     year: "numeric",
   }).format(d);
 }
 
-export function dateLabelFromIso(value: string) {
+export function dateLabelFromIso(value: string, lang?: string) {
   if (!value) return "";
   const d = dateFromIso(value);
   if (!d) return "";
-  return new Intl.DateTimeFormat("de-DE", {
+  return new Intl.DateTimeFormat(dateLocale(lang), {
     day: "2-digit",
     month: "2-digit",
     year: "numeric",

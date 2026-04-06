@@ -35,7 +35,7 @@ function dayCellKey(c: MonthCell, idx: number) {
 }
 
 export default function KsDatePicker(props: KsDatePickerProps) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const btnRef = useRef<HTMLButtonElement | null>(null);
   const panelRef = useRef<HTMLDivElement | null>(null);
 
@@ -47,7 +47,12 @@ export default function KsDatePicker(props: KsDatePickerProps) {
   const [viewMonth, setViewMonth] = useState(() => initViewMonth(selected));
 
   const { pos, computePos } = useDatePickerPosition();
-  const label = useMemo(() => dateLabelFromIso(props.value), [props.value]);
+  //const label = useMemo(() => dateLabelFromIso(props.value), [props.value]);
+
+  const label = useMemo(
+    () => dateLabelFromIso(props.value, i18n.language),
+    [props.value, i18n.language],
+  );
 
   useEffect(() => {
     if (!selected) return;
@@ -184,7 +189,7 @@ export default function KsDatePicker(props: KsDatePickerProps) {
               onClick={() => setYearOpen((v) => !v)}
               aria-label={t("common.datePicker.selectYear")}
             >
-              {monthLabel(viewMonth)}
+              {monthLabel(viewMonth, i18n.language)}
             </button>
 
             <button
