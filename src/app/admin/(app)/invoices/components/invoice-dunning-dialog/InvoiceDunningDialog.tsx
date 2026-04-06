@@ -2,6 +2,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import type { InvoiceRow } from "../../utils/invoiceList";
 import type { RowActionState } from "../../hooks/useInvoiceRowActions";
 import { dialogAriaLabel } from "./dialogLogic";
@@ -26,6 +27,7 @@ function isRefundMode(mode: any) {
 }
 
 export default function InvoiceDunningDialog(props: Props) {
+  const { t } = useTranslation();
   const [stageOpen, setStageOpen] = useState(false);
 
   useEffect(() => {
@@ -45,7 +47,7 @@ export default function InvoiceDunningDialog(props: Props) {
         onClick={(e) => e.stopPropagation()}
         role="dialog"
         aria-modal="true"
-        aria-label={dialogAriaLabel(props.state)}
+        aria-label={dialogAriaLabel(props.state, t)}
       >
         <DialogHeader state={props.state} row={row} onClose={props.onClose} />
 
@@ -64,7 +66,7 @@ export default function InvoiceDunningDialog(props: Props) {
             <>
               <label className="ks-inv-dialog__field">
                 <span className="ks-inv-dialog__label">
-                  Returned payment fee
+                  {t("common.admin.invoices.dialog.returned.bankFee")}
                 </span>
                 <input
                   className="input"
@@ -74,7 +76,9 @@ export default function InvoiceDunningDialog(props: Props) {
                   onChange={(e) =>
                     props.setState((p) => ({ ...p, bankFee: e.target.value }))
                   }
-                  placeholder="e.g. 16.76"
+                  placeholder={t(
+                    "common.admin.invoices.dialog.returned.bankFeePlaceholder",
+                  )}
                   disabled={inputsDisabled}
                 />
               </label>
@@ -92,14 +96,18 @@ export default function InvoiceDunningDialog(props: Props) {
             </>
           ) : (
             <label className="ks-inv-dialog__field">
-              <span className="ks-inv-dialog__label">Reason (optional)</span>
+              <span className="ks-inv-dialog__label">
+                {t("common.admin.invoices.dialog.reasonOptional")}
+              </span>
               <textarea
                 className="input"
                 value={props.state.reason || ""}
                 onChange={(e) =>
                   props.setState((p) => ({ ...p, reason: e.target.value }))
                 }
-                placeholder="e.g. Withdrawal within 14 days / refund at customer request"
+                placeholder={t(
+                  "common.admin.invoices.dialog.reasonPlaceholder",
+                )}
                 disabled={props.state.loading}
                 rows={3}
               />

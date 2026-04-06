@@ -499,5 +499,10 @@
   "common.admin.invoices.docs.label_other": "Documents: {{count}} on this page",
 
   "common.admin.invoices.dialog.returned.ariaLabel": "Mark as returned and add bank fee",
-  "common.admin.invoices.dialog.returned.title": "Mark as returned + bank fee"
+  "common.admin.invoices.dialog.returned.title": "Mark as returned + bank fee",
+
+  "common.admin.invoices.dialog.returned.bankFee": "Rücklastschriftgebühr",
+  "common.admin.invoices.dialog.returned.bankFeePlaceholder": "z. B. 16.76",
+  "common.admin.invoices.dialog.reasonOptional": "Grund (optional)",
+  "common.admin.invoices.dialog.reasonPlaceholder": "z. B. Widerruf innerhalb von 14 Tagen / Erstattung auf Kundenwunsch"
 }

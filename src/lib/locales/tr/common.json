@@ -496,5 +496,10 @@
   "common.admin.invoices.docs.label_other": "Bu sayfada {{count}} belge",
 
   "common.admin.invoices.dialog.returned.ariaLabel": "İade edildi olarak işaretle ve banka ücreti ekle",
-  "common.admin.invoices.dialog.returned.title": "İade edildi olarak işaretle + banka ücreti"
+  "common.admin.invoices.dialog.returned.title": "İade edildi olarak işaretle + banka ücreti",
+
+  "common.admin.invoices.dialog.returned.bankFee": "Returned payment fee",
+  "common.admin.invoices.dialog.returned.bankFeePlaceholder": "e.g. 16.76",
+  "common.admin.invoices.dialog.reasonOptional": "Reason (optional)",
+  "common.admin.invoices.dialog.reasonPlaceholder": "e.g. Withdrawal within 14 days / refund at customer request"
 }
