@@ -506,5 +506,7 @@
   "common.admin.invoices.dialog.reasonOptional": "Grund (optional)",
   "common.admin.invoices.dialog.reasonPlaceholder": "z. B. Widerruf innerhalb von 14 Tagen / Erstattung auf Kundenwunsch",
 
-  "common.actions.close": "Schließen"
+  "common.actions.close": "Schließen",
+
+  "common.admin.invoices.dialog.returnNote": "Return note"
 }

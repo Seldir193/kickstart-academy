@@ -503,5 +503,7 @@
   "common.admin.invoices.dialog.reasonOptional": "Reason (optional)",
   "common.admin.invoices.dialog.reasonPlaceholder": "e.g. Withdrawal within 14 days / refund at customer request",
 
-  "common.actions.close": "Close"
+  "common.actions.close": "Close",
+
+  "common.admin.invoices.dialog.returnNote": "İade notu"
 }
