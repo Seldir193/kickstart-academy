@@ -134,13 +134,6 @@ export function useOfferCreateDialog({
     [places, form.placeId],
   );
 
-  console.log("form.placeId", form.placeId);
-  console.log("places", places);
-  console.log(
-    "matchedPlace",
-    places.find((p) => p._id === form.placeId) || null,
-  );
-
   useEffect(() => {
     if (!open) return;
 
@@ -155,13 +148,10 @@ export function useOfferCreateDialog({
           return;
         }
 
-        const r = await fetch(
-          "/api/admin/places?page=1&pageSize=100&limit=100",
-          {
-            cache: "no-store",
-            signal: ctrl.signal,
-          },
-        );
+        const r = await fetch("/api/admin/places?page=1&pageSize=10&limit=10", {
+          cache: "no-store",
+          signal: ctrl.signal,
+        });
 
         const j = await r.json().catch(() => ({}));
         const arr: Place[] = Array.isArray(j?.items) ? j.items : [];
