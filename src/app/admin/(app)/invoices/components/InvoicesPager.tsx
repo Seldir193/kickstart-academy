@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 type Props = {
   page: number;
@@ -9,12 +10,14 @@ type Props = {
 };
 
 export default function InvoicesPager({ page, totalPages, setPage }: Props) {
+  const { t } = useTranslation();
+
   return (
     <div className="pager pager--arrows">
       <button
         type="button"
         className="btn"
-        aria-label="Previous page"
+        aria-label={t("common.pagination.previousPage")}
         disabled={page <= 1}
         onClick={() => setPage((p) => Math.max(1, p - 1))}
       >
@@ -33,7 +36,7 @@ export default function InvoicesPager({ page, totalPages, setPage }: Props) {
       <button
         type="button"
         className="btn"
-        aria-label="Next page"
+        aria-label={t("common.pagination.nextPage")}
         disabled={page >= totalPages}
         onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
       >

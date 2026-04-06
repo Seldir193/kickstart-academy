@@ -390,5 +390,8 @@
   "common.admin.invoices.download.zip": "Download ZIP",
   "common.admin.invoices.pagination.perPage": "Per page",
 
-  "common.admin.invoices.search.placeholder": "Search number, customer, email or offer"
+  "common.admin.invoices.search.placeholder": "Search number, customer, email or offer",
+
+  "common.pagination.previousPage": "Previous page",
+  "common.pagination.nextPage": "Next page"
 }
