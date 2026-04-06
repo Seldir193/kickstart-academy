@@ -450,5 +450,24 @@
   "common.admin.invoices.actions.handOverToCollection": "An Inkasso übergeben",
   "common.admin.invoices.actions.alreadyHandedOverToCollection": "Bereits an Inkasso übergeben",
   "common.admin.invoices.actions.notAvailableForCreditNotes": "Für Gutschriften nicht verfügbar",
-  "common.admin.invoices.actions.finalAlreadySent": "Letzte Mahnung bereits gesendet"
+  "common.admin.invoices.actions.finalAlreadySent": "Letzte Mahnung bereits gesendet",
+
+  "common.admin.invoices.logic.archivedDunningDocument": "Archiviertes Mahndokument",
+  "common.admin.invoices.logic.noBookingReference": "Keine Buchungsreferenz",
+  "common.admin.invoices.logic.alreadyPaid": "Bereits bezahlt",
+  "common.admin.invoices.logic.resendDunningByEmail": "Erneut per E-Mail senden (Mahnung/Zahlungserinnerung)",
+  "common.admin.invoices.logic.noDunningAvailableYet": "Noch keine Mahnung/Zahlungserinnerung verfügbar",
+  "common.admin.invoices.logic.sendParticipationByEmail": "Teilnahme per E-Mail senden",
+  "common.admin.invoices.logic.sendCancellationInvoiceByEmail": "Stornorechnung per E-Mail senden",
+  "common.admin.invoices.logic.sendContractCancellationByEmail": "Vertragskündigung per E-Mail senden",
+  "common.admin.invoices.logic.send": "Senden",
+  "common.admin.invoices.logic.creditNoteAlreadySent": "Gutschrift bereits gesendet",
+  "common.admin.invoices.logic.creditNoteNotSentYet": "Gutschrift noch nicht gesendet",
+  "common.admin.invoices.logic.notPaid": "Nicht bezahlt",
+  "common.admin.invoices.logic.missingPaymentIntent": "Payment Intent fehlt",
+  "common.admin.invoices.logic.refundStripeCreditNote": "Erstattung (Stripe + Gutschrift)",
+  "common.admin.invoices.logic.alreadyRefunded": "Bereits erstattet",
+  "common.admin.invoices.logic.notWithin14Days": "Nicht innerhalb von 14 Tagen",
+  "common.admin.invoices.logic.missingSubscription": "Subscription fehlt",
+  "common.admin.invoices.logic.withdrawRefundCreditNote": "Widerruf (≤14 Tage) + Erstattung + Gutschrift"
 }

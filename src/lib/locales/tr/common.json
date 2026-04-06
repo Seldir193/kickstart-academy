@@ -447,5 +447,24 @@
   "common.admin.invoices.actions.handOverToCollection": "Tahsilata devret",
   "common.admin.invoices.actions.alreadyHandedOverToCollection": "Zaten tahsilata devredildi",
   "common.admin.invoices.actions.notAvailableForCreditNotes": "Alacak dekontları için kullanılamaz",
-  "common.admin.invoices.actions.finalAlreadySent": "Son ihtar zaten gönderildi"
+  "common.admin.invoices.actions.finalAlreadySent": "Son ihtar zaten gönderildi",
+
+  "common.admin.invoices.logic.archivedDunningDocument": "Arşivlenmiş ihtar belgesi",
+  "common.admin.invoices.logic.noBookingReference": "Rezervasyon referansı yok",
+  "common.admin.invoices.logic.alreadyPaid": "Zaten ödendi",
+  "common.admin.invoices.logic.resendDunningByEmail": "E-postayla tekrar gönder (ihtar/ödeme hatırlatması)",
+  "common.admin.invoices.logic.noDunningAvailableYet": "Henüz ihtar/ödeme hatırlatması yok",
+  "common.admin.invoices.logic.sendParticipationByEmail": "Katılımı e-postayla gönder",
+  "common.admin.invoices.logic.sendCancellationInvoiceByEmail": "İptal faturasını e-postayla gönder",
+  "common.admin.invoices.logic.sendContractCancellationByEmail": "Sözleşme iptalini e-postayla gönder",
+  "common.admin.invoices.logic.send": "Gönder",
+  "common.admin.invoices.logic.creditNoteAlreadySent": "Alacak dekontu zaten gönderildi",
+  "common.admin.invoices.logic.creditNoteNotSentYet": "Alacak dekontu henüz gönderilmedi",
+  "common.admin.invoices.logic.notPaid": "Ödenmedi",
+  "common.admin.invoices.logic.missingPaymentIntent": "Payment Intent eksik",
+  "common.admin.invoices.logic.refundStripeCreditNote": "İade (Stripe + alacak dekontu)",
+  "common.admin.invoices.logic.alreadyRefunded": "Zaten iade edildi",
+  "common.admin.invoices.logic.notWithin14Days": "14 gün içinde değil",
+  "common.admin.invoices.logic.missingSubscription": "Subscription eksik",
+  "common.admin.invoices.logic.withdrawRefundCreditNote": "Cayma (≤14 gün) + iade + alacak dekontu"
 }

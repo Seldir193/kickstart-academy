@@ -450,5 +450,24 @@
   "common.admin.invoices.actions.handOverToCollection": "Hand over to collection",
   "common.admin.invoices.actions.alreadyHandedOverToCollection": "Already handed over to collection",
   "common.admin.invoices.actions.notAvailableForCreditNotes": "Not available for credit notes",
-  "common.admin.invoices.actions.finalAlreadySent": "Final already sent"
+  "common.admin.invoices.actions.finalAlreadySent": "Final already sent",
+
+  "common.admin.invoices.logic.archivedDunningDocument": "Archived dunning document",
+  "common.admin.invoices.logic.noBookingReference": "No booking reference",
+  "common.admin.invoices.logic.alreadyPaid": "Already paid",
+  "common.admin.invoices.logic.resendDunningByEmail": "Resend by email (dunning/payment reminder)",
+  "common.admin.invoices.logic.noDunningAvailableYet": "No dunning/payment reminder available yet",
+  "common.admin.invoices.logic.sendParticipationByEmail": "Send participation by email",
+  "common.admin.invoices.logic.sendCancellationInvoiceByEmail": "Send cancellation invoice by email",
+  "common.admin.invoices.logic.sendContractCancellationByEmail": "Send contract cancellation by email",
+  "common.admin.invoices.logic.send": "Send",
+  "common.admin.invoices.logic.creditNoteAlreadySent": "Credit note already sent",
+  "common.admin.invoices.logic.creditNoteNotSentYet": "Credit note not sent yet",
+  "common.admin.invoices.logic.notPaid": "Not paid",
+  "common.admin.invoices.logic.missingPaymentIntent": "Missing payment intent",
+  "common.admin.invoices.logic.refundStripeCreditNote": "Refund (Stripe + credit note)",
+  "common.admin.invoices.logic.alreadyRefunded": "Already refunded",
+  "common.admin.invoices.logic.notWithin14Days": "Not within 14 days",
+  "common.admin.invoices.logic.missingSubscription": "Missing subscription",
+  "common.admin.invoices.logic.withdrawRefundCreditNote": "Withdraw (≤14 days) + refund + credit note"
 }

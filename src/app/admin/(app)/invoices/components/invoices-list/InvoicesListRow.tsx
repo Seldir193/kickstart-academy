@@ -73,7 +73,7 @@ export default function InvoicesListRow(props: Props) {
     ? t("common.admin.invoices.actions.notAvailableForCreditNotes")
     : hasFinalDunning(row)
       ? t("common.admin.invoices.actions.finalAlreadySent")
-      : actionTitle(row, t("common.admin.invoices.actions.sendDunningStep"));
+      : actionTitle(row, t("common.admin.invoices.actions.sendDunningStep"), t);
 
   return (
     <li
@@ -138,7 +138,11 @@ export default function InvoicesListRow(props: Props) {
           title={
             isCreditNote
               ? t("common.admin.invoices.actions.notAvailableForCreditNotes")
-              : actionTitle(row, t("common.admin.invoices.actions.markAsPaid"))
+              : actionTitle(
+                  row,
+                  t("common.admin.invoices.actions.markAsPaid"),
+                  t,
+                )
           }
           onClick={(e) => {
             e.stopPropagation();
@@ -159,6 +163,7 @@ export default function InvoicesListRow(props: Props) {
               : actionTitle(
                   row,
                   t("common.admin.invoices.actions.markReturnedAndAddFee"),
+                  t,
                 )
           }
           onClick={(e) => {
