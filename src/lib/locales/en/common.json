@@ -508,5 +508,11 @@
 
   "common.actions.close": "Schließen",
 
-  "common.admin.invoices.dialog.returnNote": "Return note"
+  "common.admin.invoices.dialog.returnNote": "Return note",
+
+  "common.admin.invoices.dialog.dunningFee": "Dunning fee",
+  "common.admin.invoices.dialog.dunningFeePlaceholder": "e.g. 5.00",
+  "common.admin.invoices.dialog.processingFee": "Processing fee",
+  "common.admin.invoices.dialog.processingFeePlaceholder": "e.g. 0.00",
+  "common.admin.invoices.dialog.freeText": "Free text"
 }

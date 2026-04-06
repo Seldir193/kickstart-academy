@@ -508,5 +508,11 @@
 
   "common.actions.close": "Schließen",
 
-  "common.admin.invoices.dialog.returnNote": "Rücklastschrift-Hinweis"
+  "common.admin.invoices.dialog.returnNote": "Rücklastschrift-Hinweis",
+
+  "common.admin.invoices.dialog.dunningFee": "Mahngebühr",
+  "common.admin.invoices.dialog.dunningFeePlaceholder": "z. B. 5.00",
+  "common.admin.invoices.dialog.processingFee": "Bearbeitungsgebühr",
+  "common.admin.invoices.dialog.processingFeePlaceholder": "z. B. 0.00",
+  "common.admin.invoices.dialog.freeText": "Freitext"
 }
