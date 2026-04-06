@@ -378,5 +378,11 @@
   "common.admin.invoices.dunningFilter.reminder": "Erinnerung",
   "common.admin.invoices.dunningFilter.dunning1": "1. Mahnung",
   "common.admin.invoices.dunningFilter.dunning2": "2. Mahnung",
-  "common.admin.invoices.dunningFilter.final": "Letzte Mahnung"
+  "common.admin.invoices.dunningFilter.final": "Letzte Mahnung",
+
+  "common.admin.invoices.stage.reminder": "Zahlungserinnerung",
+  "common.admin.invoices.stage.dunning1": "1. Mahnung",
+  "common.admin.invoices.stage.dunning2": "2. Mahnung",
+  "common.admin.invoices.stage.final": "Letzte Mahnung",
+  "common.admin.invoices.stage.default": "Mahnung"
 }

@@ -378,5 +378,11 @@
   "common.admin.invoices.dunningFilter.reminder": "Reminder",
   "common.admin.invoices.dunningFilter.dunning1": "1st dunning",
   "common.admin.invoices.dunningFilter.dunning2": "2nd dunning",
-  "common.admin.invoices.dunningFilter.final": "Final dunning"
+  "common.admin.invoices.dunningFilter.final": "Final dunning",
+
+  "common.admin.invoices.stage.reminder": "Payment reminder",
+  "common.admin.invoices.stage.dunning1": "1st reminder",
+  "common.admin.invoices.stage.dunning2": "2nd reminder",
+  "common.admin.invoices.stage.final": "Final reminder",
+  "common.admin.invoices.stage.default": "Reminder"
 }

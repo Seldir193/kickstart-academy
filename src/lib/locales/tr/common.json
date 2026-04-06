@@ -375,5 +375,11 @@
   "common.admin.invoices.dunningFilter.reminder": "Hatırlatma",
   "common.admin.invoices.dunningFilter.dunning1": "1. ihtar",
   "common.admin.invoices.dunningFilter.dunning2": "2. ihtar",
-  "common.admin.invoices.dunningFilter.final": "Son ihtar"
+  "common.admin.invoices.dunningFilter.final": "Son ihtar",
+
+  "common.admin.invoices.stage.reminder": "Ödeme hatırlatması",
+  "common.admin.invoices.stage.dunning1": "1. ihtar",
+  "common.admin.invoices.stage.dunning2": "2. ihtar",
+  "common.admin.invoices.stage.final": "Son ihtar",
+  "common.admin.invoices.stage.default": "İhtar"
 }
