@@ -94,7 +94,10 @@ export default function OfferCreateDialog({
             placeDropdownRef={d.placeDropdownRef}
             placeOpen={d.placeOpen}
             setPlaceOpen={d.setPlaceOpen}
-            selectedPlaceLabel={t("common.offerDialog.place.select")}
+            //  selectedPlaceLabel={t("common.offerDialog.place.select")}
+            selectedPlaceLabel={
+              d.selectedPlaceLabel || t("common.offerDialog.place.select")
+            }
             selectedPlace={d.selectedPlace}
             places={d.places}
             onPick={d.onPlaceChange}

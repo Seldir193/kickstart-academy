@@ -134,6 +134,18 @@ export function useOfferCreateDialog({
     [places, form.placeId],
   );
 
+  const selectedPlaceLabel = useMemo(() => {
+    if (selectedPlace) {
+      return `${selectedPlace.name} • ${selectedPlace.city}`;
+    }
+
+    if (form.location.trim()) {
+      return form.location;
+    }
+
+    return null;
+  }, [selectedPlace, form.location]);
+
   useEffect(() => {
     if (!open) return;
 
@@ -167,35 +179,6 @@ export function useOfferCreateDialog({
 
     return () => ctrl.abort();
   }, [open]);
-
-  useEffect(() => {
-    if (!open) return;
-    if (!form.placeId) return;
-    if (selectedPlace) return;
-
-    const ctrl = new AbortController();
-
-    (async () => {
-      try {
-        const r = await fetch(`/api/admin/places/${form.placeId}`, {
-          cache: "no-store",
-          signal: ctrl.signal,
-        });
-
-        const j = await r.json().catch(() => ({}));
-        if (!r.ok || !j?._id) return;
-
-        if (ctrl.signal.aborted) return;
-
-        setPlaces((prev) => {
-          if (prev.some((p) => p._id === j._id)) return prev;
-          return [j, ...prev];
-        });
-      } catch {}
-    })();
-
-    return () => ctrl.abort();
-  }, [open, form.placeId, selectedPlace]);
 
   const initialKey = useMemo(() => JSON.stringify(initial), [initial]);
 
@@ -316,6 +299,7 @@ export function useOfferCreateDialog({
       ...f,
       placeId,
       location: p?.city ? p.city : "",
+      // location: p ? `${p.name} — ${p.address}, ${p.zip} ${p.city}` : "",
     }));
   }
 
@@ -451,6 +435,7 @@ export function useOfferCreateDialog({
 
     placeOpen,
     setPlaceOpen,
+    selectedPlaceLabel,
 
     holidayPreset,
     holidayCustom,
