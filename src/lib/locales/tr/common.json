@@ -469,5 +469,7 @@
   "common.admin.invoices.logic.withdrawRefundCreditNote": "Cayma (≤14 gün) + iade + alacak dekontu",
 
   "common.admin.invoices.list.empty": "Belge bulunamadı.",
-  "common.admin.invoices.list.loading": "Yükleniyor…"
+  "common.admin.invoices.list.loading": "Yükleniyor…",
+
+  "common.admin.invoices.error.loadFailed": "Yükleme başarısız oldu"
 }

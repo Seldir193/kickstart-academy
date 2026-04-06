@@ -472,5 +472,7 @@
   "common.admin.invoices.logic.withdrawRefundCreditNote": "Withdraw (≤14 days) + refund + credit note",
 
   "common.admin.invoices.list.empty": "No documents found.",
-  "common.admin.invoices.list.loading": "Loading…"
+  "common.admin.invoices.list.loading": "Loading…",
+
+  "common.admin.invoices.error.loadFailed": "Load failed"
 }

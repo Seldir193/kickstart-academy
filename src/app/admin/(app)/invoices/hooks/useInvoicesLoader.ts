@@ -1,6 +1,8 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { toastErrorMessage } from "@/lib/toast-messages";
 import type { DocItem } from "../utils/invoiceUi";
 import { runLoad, stableArgs } from "./invoicesLoader/loaderLogic";
 import type { LoaderArgs } from "./invoicesLoader/loaderApi";
@@ -27,6 +29,7 @@ function normalizeLoadResult(result: LoadResult) {
 }
 
 export function useInvoicesLoader(args: LoaderArgs) {
+  const { t } = useTranslation();
   const [items, setItems] = useState<DocItem[]>([]);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -71,7 +74,8 @@ export function useInvoicesLoader(args: LoaderArgs) {
     } catch (e: any) {
       if (reqId !== reqIdRef.current) return;
       if (e?.name === "AbortError") return;
-      setErr(e?.message || "Load failed");
+
+      setErr(toastErrorMessage(t, e, "common.admin.invoices.error.loadFailed"));
       setItems([]);
       setTotal(0);
     } finally {
