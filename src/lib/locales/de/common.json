@@ -388,5 +388,7 @@
 
   "common.admin.invoices.download.csv": "CSV herunterladen",
   "common.admin.invoices.download.zip": "ZIP herunterladen",
-  "common.admin.invoices.pagination.perPage": "Pro Seite"
+  "common.admin.invoices.pagination.perPage": "Pro Seite",
+
+  "common.admin.invoices.search.placeholder": "Nummer, Kunde, E-Mail oder Angebot suchen"
 }

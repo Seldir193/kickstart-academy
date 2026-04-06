@@ -4,6 +4,7 @@
 import React, { useMemo } from "react";
 import KsDatePicker from "@/app/admin/(app)/invoices/components/KsDatePicker";
 import TypeChips from "./TypeChips";
+import { useTranslation } from "react-i18next";
 
 type Props = {
   typeParticipation: boolean;
@@ -29,6 +30,7 @@ type Props = {
 };
 
 export default function InvoicesFilters(props: Props) {
+  const { t } = useTranslation();
   const toYear = useMemo(() => new Date().getFullYear() + 2, []);
 
   function onSearchChange(v: string) {
@@ -59,7 +61,7 @@ export default function InvoicesFilters(props: Props) {
             />
             <input
               className="input input-with-icon__input"
-              placeholder="Search number, customer, email or offer"
+              placeholder={t("common.admin.invoices.search.placeholder")}
               value={props.q}
               onChange={(e) => onSearchChange(e.target.value)}
             />

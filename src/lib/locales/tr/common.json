@@ -385,5 +385,7 @@
 
   "common.admin.invoices.download.csv": "CSV indir",
   "common.admin.invoices.download.zip": "ZIP indir",
-  "common.admin.invoices.pagination.perPage": "Sayfa başına"
+  "common.admin.invoices.pagination.perPage": "Sayfa başına",
+
+  "common.admin.invoices.search.placeholder": "Numara, müşteri, e-posta veya teklif ara"
 }
