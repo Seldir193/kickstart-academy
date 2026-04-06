@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { useTranslation } from "react-i18next";
 import type { SortOrder } from "../../utils/invoiceUi";
 import { sortLabel } from "../../utils/invoiceUi";
 import { cssVars } from "./topSelectsUi";
@@ -27,6 +28,7 @@ export default function SortOverlay({
   setSortOrder,
   resetPage,
 }: Props) {
+  const { t } = useTranslation();
   if (!sortSelect.open) return null;
 
   return (
@@ -58,7 +60,7 @@ export default function SortOverlay({
             sortSelect.setOpen(false);
           }}
         >
-          {sortLabel(v)}
+          {sortLabel(v, t)}
         </button>
       ))}
     </div>
