@@ -2,6 +2,7 @@
 "use client";
 
 import React from "react";
+import { useTranslation } from "react-i18next";
 import type { DocItem } from "../../utils/invoiceUi";
 import { docNoFrom, iconForType, metaLine } from "../../utils/invoiceUi";
 import { cssVars } from "./topSelectsUi";
@@ -28,6 +29,7 @@ export default function DocsOverlay({
   openPdf,
   docsSelect,
 }: Props) {
+  const { t } = useTranslation();
   if (!docsSelect.open || !items.length) return null;
 
   return (
@@ -63,7 +65,7 @@ export default function DocsOverlay({
 
                 <div className="ks-invoices__docTextCol">
                   <div className="ks-doc-select__bottom">
-                    {metaLine(d, fmtDate)}
+                    {metaLine(d, fmtDate, t)}
                   </div>
                 </div>
               </div>
