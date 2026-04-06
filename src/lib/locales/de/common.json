@@ -298,9 +298,7 @@
 
   "common.offerDialog.title.edit": "Angebot bearbeiten",
   "common.offerDialog.title.create": "Angebot erstellen",
-  "common.offerDialog.help.courseAutoFill.before": "Die Auswahl eines Kurses füllt ",
-  "common.offerDialog.help.courseAutoFill.middle": " automatisch aus; ",
-  "common.offerDialog.help.courseAutoFill.after": " ist optional.",
+
   "common.offerDialog.place.select": "— Ort auswählen —",
   "common.offerDialog.fields.price": "Preis (€)",
   "common.offerDialog.fields.holidayFrom": "Ferien: Von",
@@ -365,5 +363,7 @@
   "common.offerDialog.holidayPreset.pentecost": "Pfingstferien",
   "common.offerDialog.holidayPreset.summer": "Sommerferien",
   "common.offerDialog.holidayPreset.autumn": "Herbstferien",
-  "common.offerDialog.holidayPreset.christmas": "Weihnachtsferien"
+  "common.offerDialog.holidayPreset.christmas": "Weihnachtsferien",
+
+  "common.offerDialog.help.courseAutoFill": "Die Auswahl eines Kurses füllt die erforderlichen Felder automatisch aus; zusätzliche Angaben sind optional."
 }

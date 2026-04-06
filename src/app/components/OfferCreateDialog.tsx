@@ -86,11 +86,7 @@ export default function OfferCreateDialog({
         </div>
 
         <p className="help offer-create-dialog__help">
-          {t("common.offerDialog.help.courseAutoFill.before")}
-          <code>type</code>
-          {t("common.offerDialog.help.courseAutoFill.middle")}{" "}
-          <code>sub_type</code>
-          {t("common.offerDialog.help.courseAutoFill.after")}
+          {t("common.offerDialog.help.courseAutoFill")}
         </p>
 
         <div className="grid grid--2">

@@ -295,9 +295,7 @@
 
   "common.offerDialog.title.edit": "Teklifi düzenle",
   "common.offerDialog.title.create": "Teklif oluştur",
-  "common.offerDialog.help.courseAutoFill.before": "Bir kurs seçildiğinde ",
-  "common.offerDialog.help.courseAutoFill.middle": " otomatik olarak doldurulur; ",
-  "common.offerDialog.help.courseAutoFill.after": " isteğe bağlıdır.",
+
   "common.offerDialog.place.select": "— Yer seç —",
   "common.offerDialog.fields.price": "Fiyat (€)",
   "common.offerDialog.fields.holidayFrom": "Tatil: Başlangıç",
@@ -362,5 +360,7 @@
   "common.offerDialog.holidayPreset.pentecost": "Pentekost tatili",
   "common.offerDialog.holidayPreset.summer": "Yaz tatili",
   "common.offerDialog.holidayPreset.autumn": "Sonbahar tatili",
-  "common.offerDialog.holidayPreset.christmas": "Noel tatili"
+  "common.offerDialog.holidayPreset.christmas": "Noel tatili",
+
+  "common.offerDialog.help.courseAutoFill": "Bir kurs seçildiğinde gerekli alanlar otomatik olarak doldurulur; ek bilgiler isteğe bağlıdır."
 }
