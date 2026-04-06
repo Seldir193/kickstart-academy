@@ -39,14 +39,16 @@ export type DocItem = {
   fileName?: string;
 };
 
-export function typeLabel(t: string) {
+export function typeLabel(t: string, t: TFunction) {
   const x = String(t || "").toLowerCase();
-  if (x === "participation") return "Participation confirmation";
-  if (x === "cancellation") return "Cancellation confirmation";
-  if (x === "storno") return "Cancellation invoice";
-  if (x === "dunning") return "Dunning notice";
+  if (x === "participation")
+    return t("common.admin.invoices.docType.participation");
+  if (x === "cancellation")
+    return t("common.admin.invoices.docType.cancellation");
+  if (x === "storno") return t("common.admin.invoices.docType.storno");
+  if (x === "dunning") return t("common.admin.invoices.docType.dunning");
   if (x === "creditnote" || x === "credit_note" || x === "credit")
-    return "Credit note";
+    return t("common.admin.invoices.docType.creditNote");
   return t || "Document";
 }
 
@@ -125,23 +127,33 @@ export function stripAddressNoise(raw: string) {
   return s;
 }
 
-export function displayTitle(d: DocItem) {
+export function displayTitle(d: DocItem, t: TFunction) {
   const base = stripAddressNoise(stripDocTypeSuffix(d.title || ""));
-  return base || typeLabel(d.type);
+  return base || typeLabel(d.type, t);
 }
 
-export function metaLine(d: DocItem, fmtDate: (iso: string) => string) {
+export function metaLine(
+  d: DocItem,
+  fmtDate: (iso: string) => string,
+  t: TFunction,
+) {
   const customerNo = customerNoFrom(d);
   const parts = [
-    customerNo ? `Kdnr. ${customerNo}` : "",
+    customerNo
+      ? `{t("common.admin.invoices.meta.customerNo")} ${customerNo}`
+      : "",
     d.customerName ? d.customerName : "",
-    d.issuedAt ? `Ausgestellt ${fmtDate(d.issuedAt)}` : "",
+    d.issuedAt
+      ? `{t("common.admin.invoices.meta.issued")}  ${fmtDate(d.issuedAt)}`
+      : "",
   ].filter(Boolean);
   return parts.join(" · ");
 }
 
-export function sortLabel(order: SortOrder) {
-  return order === "oldest" ? "Oldest" : "Newest";
+export function sortLabel(order: SortOrder, t: TFunction) {
+  return order === "oldest"
+    ? t("common.admin.invoices.sort.oldest")
+    : t("common.admin.invoices.sort.newest");
 }
 
 export function sortParamFrom(order: SortOrder) {

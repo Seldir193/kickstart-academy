@@ -418,5 +418,16 @@
   "common.admin.invoices.error.markReturnedFailed": "İade edilen ödeme işaretlenemedi",
   "common.admin.invoices.error.sendDunningFailed": "İhtar gönderilemedi",
   "common.admin.invoices.error.refundFailed": "İade başarısız oldu",
-  "common.admin.invoices.error.withdrawFailed": "Ödeme başarısız oldu"
+  "common.admin.invoices.error.withdrawFailed": "Ödeme başarısız oldu",
+
+  "common.admin.invoices.docType.participation": "Katılım onayı",
+  "common.admin.invoices.docType.cancellation": "İptal onayı",
+  "common.admin.invoices.docType.storno": "İptal faturası",
+  "common.admin.invoices.docType.dunning": "İhtar",
+  "common.admin.invoices.docType.creditNote": "Alacak dekontu",
+  "common.admin.invoices.docType.document": "Belge",
+  "common.admin.invoices.meta.customerNo": "Müşteri no.",
+  "common.admin.invoices.meta.issued": "Düzenlenme",
+  "common.admin.invoices.sort.oldest": "En eski",
+  "common.admin.invoices.sort.newest": "En yeni"
 }

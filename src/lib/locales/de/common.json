@@ -421,5 +421,16 @@
   "common.admin.invoices.error.markReturnedFailed": "Rücklastschrift markieren fehlgeschlagen",
   "common.admin.invoices.error.sendDunningFailed": "Mahnung senden fehlgeschlagen",
   "common.admin.invoices.error.refundFailed": "Erstattung fehlgeschlagen",
-  "common.admin.invoices.error.withdrawFailed": "Auszahlung fehlgeschlagen"
+  "common.admin.invoices.error.withdrawFailed": "Auszahlung fehlgeschlagen",
+
+  "common.admin.invoices.docType.participation": "Teilnahmebestätigung",
+  "common.admin.invoices.docType.cancellation": "Stornobestätigung",
+  "common.admin.invoices.docType.storno": "Stornorechnung",
+  "common.admin.invoices.docType.dunning": "Mahnung",
+  "common.admin.invoices.docType.creditNote": "Gutschrift",
+  "common.admin.invoices.docType.document": "Dokument",
+  "common.admin.invoices.meta.customerNo": "Kdnr.",
+  "common.admin.invoices.meta.issued": "Ausgestellt",
+  "common.admin.invoices.sort.oldest": "Älteste",
+  "common.admin.invoices.sort.newest": "Neueste"
 }

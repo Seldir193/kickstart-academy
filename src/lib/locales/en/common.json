@@ -421,5 +421,16 @@
   "common.admin.invoices.error.markReturnedFailed": "Mark returned failed",
   "common.admin.invoices.error.sendDunningFailed": "Send dunning failed",
   "common.admin.invoices.error.refundFailed": "Refund failed",
-  "common.admin.invoices.error.withdrawFailed": "Withdraw failed"
+  "common.admin.invoices.error.withdrawFailed": "Withdraw failed",
+
+  "common.admin.invoices.docType.participation": "Participation confirmation",
+  "common.admin.invoices.docType.cancellation": "Cancellation confirmation",
+  "common.admin.invoices.docType.storno": "Cancellation invoice",
+  "common.admin.invoices.docType.dunning": "Dunning notice",
+  "common.admin.invoices.docType.creditNote": "Credit note",
+  "common.admin.invoices.docType.document": "Document",
+  "common.admin.invoices.meta.customerNo": "Cust. no.",
+  "common.admin.invoices.meta.issued": "Issued",
+  "common.admin.invoices.sort.oldest": "Oldest",
+  "common.admin.invoices.sort.newest": "Newest"
 }
