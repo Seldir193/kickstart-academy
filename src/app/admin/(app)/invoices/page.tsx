@@ -2,6 +2,7 @@
 "use client";
 
 import React, { useCallback, useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import { fmtDate } from "./utils/invoiceList";
 import { sortLabel } from "./utils/invoiceUi";
 import { useFixedSelectbox } from "@/app/admin/(app)/customers/hooks/useFixedSelectbox";
@@ -34,6 +35,7 @@ function qs(params: Record<string, string>) {
 }
 
 export default function AdminInvoicesPage() {
+  const { t } = useTranslation();
   const s = useInvoicesPageState();
 
   const docsSelect = useFixedSelectbox();
@@ -51,23 +53,6 @@ export default function AdminInvoicesPage() {
     dunningFilter: s.dunningFilter,
     sort: s.sort,
   });
-
-  // const derived = useInvoicesPageDerived({
-  //   items: loader.items,
-  //   paymentFilter: s.paymentFilter,
-  //   dunningFilter: s.dunningFilter,
-  //   types: {
-  //     typeParticipation: s.typeParticipation,
-  //     typeInvoice: s.typeInvoice,
-  //     typeCancellation: s.typeCancellation,
-  //     typeStorno: s.typeStorno,
-  //     typeDunning: s.typeDunning,
-  //     typeCreditNote: s.typeCreditNote,
-  //   },
-  //   page: s.page,
-  //   limit: s.limit,
-  //   setPage: s.setPage,
-  // });
 
   const derived = useInvoicesPageDerived({
     items: loader.items,
@@ -160,7 +145,7 @@ export default function AdminInvoicesPage() {
               aria-expanded={sortSelect.open}
             >
               <span className="ks-selectbox__label">
-                {sortLabel(s.sortOrder)}
+                {sortLabel(s.sortOrder, t)}
               </span>
               <span className="ks-selectbox__chevron" aria-hidden="true" />
             </button>
