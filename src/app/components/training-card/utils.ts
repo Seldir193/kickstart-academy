@@ -6,6 +6,31 @@ export function clsx(...xs: Array<string | false | undefined | null>) {
   return xs.filter(Boolean).join(" ");
 }
 
+function dateLocale(lang?: string) {
+  if (lang === "tr") return "tr-TR";
+  if (lang === "en") return "en-US";
+  return "de-DE";
+}
+
+export function formatTrainingDate(value?: string, lang?: string) {
+  if (!value) return "—";
+  const d = new Date(value);
+  if (Number.isNaN(d.getTime())) return "—";
+  return new Intl.DateTimeFormat(dateLocale(lang), {
+    dateStyle: "medium",
+  }).format(d);
+}
+
+export function formatTrainingDateTime(value?: string, lang?: string) {
+  if (!value) return "—";
+  const d = new Date(value);
+  if (Number.isNaN(d.getTime())) return "—";
+  return new Intl.DateTimeFormat(dateLocale(lang), {
+    dateStyle: "medium",
+    timeStyle: "short",
+  }).format(d);
+}
+
 function safeText(value: unknown) {
   return String(value ?? "").trim();
 }
@@ -24,13 +49,12 @@ function safeTime(item: Offer) {
   return timeFromObjectIdHex(item._id);
 }
 
-function trainingLabel(item: Offer, t?: (key: string) => string) {
+function trainingLabel(item: Offer) {
   const title = safeText(item.title);
   if (title) return title;
   const type = safeText(item.type);
   if (type) return type;
-
-  return t ? t("common.training.offerFallback") : "Offer";
+  return "Offer";
 }
 
 export function sortTrainingItems(items: Offer[], sort: TrainingSortKey) {
@@ -51,16 +75,6 @@ export function sortTrainingItems(items: Offer[], sort: TrainingSortKey) {
     (a, b) => dir * collator.compare(trainingLabel(a), trainingLabel(b)),
   );
 }
-
-// export function trainingSortLabel(
-//   sort: TrainingSortKey,
-//   t: (key: string) => string,
-// ) {
-//   if (sort === "newest") return "Newest";
-//   if (sort === "oldest") return "Oldest";
-//   if (sort === "training_asc") return "Training A–Z";
-//   return "Training Z–A";
-// }
 
 export function trainingSortLabel(
   sort: TrainingSortKey,
@@ -107,77 +121,3 @@ export function buildOffersQueryParams(args: {
 
   return params;
 }
-
-// import { ALL_COURSE_OPTIONS } from "@/app/lib/courseOptions";
-
-// export function clsx(...xs: Array<string | false | undefined | null>) {
-//   return xs.filter(Boolean).join(" ");
-// }
-
-// export function buildOffersQueryParams(args: {
-//   q: string;
-//   locationFilter: string;
-//   page: number;
-//   limit: number;
-//   courseValue: string;
-// }) {
-//   const { q, locationFilter, page, limit, courseValue } = args;
-
-//   const params = new URLSearchParams();
-
-//   if (q.trim().length >= 2) params.set("q", q.trim());
-//   if (locationFilter) {
-//     params.set("location", locationFilter);
-//     params.set("city", locationFilter);
-//   }
-
-//   params.set("page", String(page));
-//   params.set("limit", String(limit));
-
-//   const chosen = ALL_COURSE_OPTIONS.find((x) => x.value === courseValue);
-
-//   if (chosen) {
-//     if (chosen.mode === "type") {
-//       params.set("type", chosen.value);
-//     } else {
-//       params.set("category", chosen.category);
-//       params.set("sub_type", chosen.value);
-//     }
-//   }
-
-//   return params;
-// }
-
-// import { ALL_COURSE_OPTIONS } from "@/app/lib/courseOptions";
-
-// export function clsx(...xs: Array<string | false | undefined | null>) {
-//   return xs.filter(Boolean).join(" ");
-// }
-
-// export function buildOffersQueryParams(args: {
-//   q: string;
-//   locationFilter: string;
-//   page: number;
-//   limit: number;
-//   courseValue: string;
-// }) {
-//   const { q, locationFilter, page, limit, courseValue } = args;
-
-//   const params = new URLSearchParams();
-//   if (q.trim().length >= 2) params.set("q", q.trim());
-//   if (locationFilter) params.set("location", locationFilter);
-//   params.set("page", String(page));
-//   params.set("limit", String(limit));
-
-//   const chosen = ALL_COURSE_OPTIONS.find((x) => x.value === courseValue);
-//   if (chosen) {
-//     if (chosen.mode === "type") {
-//       params.set("type", chosen.value);
-//     } else {
-//       params.set("category", chosen.category);
-//       params.set("sub_type", chosen.value);
-//     }
-//   }
-
-//   return params;
-// }

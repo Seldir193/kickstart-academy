@@ -1,5 +1,7 @@
 "use client";
 
+import { useTranslation } from "react-i18next";
+
 type Props = {
   page: number;
   pageCount: number;
@@ -8,12 +10,13 @@ type Props = {
 };
 
 export default function TrainingPager(props: Props) {
+  const { t } = useTranslation();
   return (
     <>
       <button
         type="button"
         className="btn"
-        aria-label="Previous page"
+        aria-label={t("common.training.pager.previous")}
         disabled={props.page <= 1}
         onClick={props.onPrev}
       >
@@ -32,7 +35,7 @@ export default function TrainingPager(props: Props) {
       <button
         type="button"
         className="btn"
-        aria-label="Next page"
+        aria-label={t("common.training.pager.next")}
         disabled={props.page >= props.pageCount}
         onClick={props.onNext}
       >

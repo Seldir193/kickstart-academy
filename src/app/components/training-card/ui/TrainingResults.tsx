@@ -3,10 +3,13 @@
 
 import type { RefObject } from "react";
 import { useEffect, useMemo, useRef } from "react";
+import { useTranslation } from "react-i18next";
 //import BulkActions from "@/app/admin/(app)/news/components/BulkActions";
 import BulkActionsBar from "./BulkActionsBar";
 import { useSelection } from "@/app/admin/(app)/news/hooks/useSelection";
 import type { Offer } from "../types";
+
+import { formatTrainingDate } from "../utils";
 
 type Props = {
   loading: boolean;
@@ -33,12 +36,20 @@ function titleParts(raw: string) {
   return { left: safeText(parts[0]), right: safeText(parts[1]) };
 }
 
-function courseTitle(item: Offer) {
+// function courseTitle(item: Offer) {
+//   const raw = safeText(item.title);
+//   if (!raw) return safeText(item.type) || "Training";
+//   const { left } = titleParts(raw);
+//   const dot = safeText(left.split(" • ")[0]);
+//   return dot || safeText(item.type) || "Training";
+// }
+
+function courseTitle(item: Offer, fallback: string) {
   const raw = safeText(item.title);
-  if (!raw) return safeText(item.type) || "Training";
+  if (!raw) return safeText(item.type) || fallback;
   const { left } = titleParts(raw);
   const dot = safeText(left.split(" • ")[0]);
-  return dot || safeText(item.type) || "Training";
+  return dot || safeText(item.type) || fallback;
 }
 
 function courseMeta(item: Offer) {
@@ -63,16 +74,16 @@ function formatPrice(value?: number) {
   return `${value} €`;
 }
 
-function formatDateDe(value?: string) {
-  if (!value) return "—";
-  const d = new Date(value);
-  if (Number.isNaN(d.getTime())) return "—";
-  return d.toLocaleDateString("de-DE", {
-    day: "2-digit",
-    month: "2-digit",
-    year: "numeric",
-  });
-}
+// function formatDateDe(value?: string) {
+//   if (!value) return "—";
+//   const d = new Date(value);
+//   if (Number.isNaN(d.getTime())) return "—";
+//   return d.toLocaleDateString("de-DE", {
+//     day: "2-digit",
+//     month: "2-digit",
+//     year: "numeric",
+//   });
+// }
 
 function pickDate(item: Offer) {
   return (
@@ -86,7 +97,11 @@ export default function TrainingResults(props: Props) {
     [props.items],
   );
   const sel = useSelection(idsOnPage);
+  const { t, i18n } = useTranslation();
 
+  const trainingFallback = t("common.training.results.fallback.training");
+  const loadingLabel = t("common.training.results.loading");
+  const emptyLabel = t("common.training.results.empty");
   const toggleBtnRef = useRef<HTMLButtonElement | null>(null);
   const cancelBtnRef = useRef<HTMLButtonElement | null>(null);
   const clearBtnRef = useRef<HTMLButtonElement | null>(null);
@@ -198,7 +213,7 @@ export default function TrainingResults(props: Props) {
     return (
       <section className="card">
         <div className="card__empty">
-          {props.loading ? "Loading…" : "No entries."}
+          {props.loading ? loadingLabel : emptyLabel}
         </div>
       </section>
     );
@@ -227,12 +242,24 @@ export default function TrainingResults(props: Props) {
         <section className="card news-list">
           <div className="news-list__table">
             <div className="news-list__head" aria-hidden="true">
-              <div className="news-list__h">Coach</div>
-              <div className="news-list__h">Course</div>
-              <div className="news-list__h">Place</div>
-              <div className="news-list__h">Price</div>
-              <div className="news-list__h">Date</div>
-              <div className="news-list__h news-list__h--right">Action</div>
+              <div className="news-list__h">
+                {t("common.training.results.head.coach")}
+              </div>
+              <div className="news-list__h">
+                {t("common.training.results.head.course")}
+              </div>
+              <div className="news-list__h">
+                {t("common.training.results.head.place")}
+              </div>
+              <div className="news-list__h">
+                {t("common.training.results.head.price")}
+              </div>
+              <div className="news-list__h">
+                {t("common.training.results.head.date")}
+              </div>
+              <div className="news-list__h news-list__h--right">
+                {t("common.training.results.head.action")}
+              </div>
             </div>
 
             <ul className="list list--bleed">
@@ -256,19 +283,37 @@ export default function TrainingResults(props: Props) {
                     tabIndex={0}
                     role="button"
                     aria-pressed={props.selectMode ? checked : undefined}
+                    // aria-label={
+                    //   props.selectMode
+                    //     ? `Select: ${courseTitle(item)}`
+                    //     : `Open: ${courseTitle(item)}`
+                    // }
+
                     aria-label={
                       props.selectMode
-                        ? `Select: ${courseTitle(item)}`
-                        : `Open: ${courseTitle(item)}`
+                        ? t("common.training.results.aria.select", {
+                            title: courseTitle(item, trainingFallback),
+                          })
+                        : t("common.training.results.aria.open", {
+                            title: courseTitle(item, trainingFallback),
+                          })
                     }
                   >
                     <div className="news-list__cell">
                       <img
                         src={props.avatarSrc(item) || "/assets/img/avatar.png"}
+                        // alt={
+                        //   safeText(item.coachName)
+                        //     ? `Coach ${safeText(item.coachName)}`
+                        //     : "Coach"
+                        // }
+
                         alt={
                           safeText(item.coachName)
-                            ? `Coach ${safeText(item.coachName)}`
-                            : "Coach"
+                            ? t("common.training.results.avatar.named", {
+                                name: safeText(item.coachName),
+                              })
+                            : t("common.training.results.avatar.default")
                         }
                         className="list__avatar"
                         onError={(event) => {
@@ -279,7 +324,7 @@ export default function TrainingResults(props: Props) {
 
                     <div className="news-list__cell">
                       <div className="news-list__title">
-                        {courseTitle(item)}
+                        {courseTitle(item, trainingFallback)}
                       </div>
                       <div className="news-list__excerpt">
                         {courseMeta(item)}
@@ -304,7 +349,7 @@ export default function TrainingResults(props: Props) {
 
                     <div className="news-list__cell">
                       <div className="news-list__title">
-                        {formatDateDe(pickDate(item))}
+                        {formatTrainingDate(pickDate(item), i18n.language)}
                       </div>
                       <div className="news-list__excerpt is-empty">
                         {"\u00A0"}
@@ -324,7 +369,8 @@ export default function TrainingResults(props: Props) {
                           className="edit-trigger"
                           role="button"
                           tabIndex={0}
-                          aria-label="Edit"
+                          // aria-label="Edit"
+                          aria-label={t("common.training.results.action.edit")}
                         >
                           <img
                             src="/icons/edit.svg"

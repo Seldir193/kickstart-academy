@@ -266,5 +266,23 @@
   "common.training.filters.sort.oldest": "En eski",
   "common.training.filters.sort.trainingAsc": "Antrenman A–Z",
   "common.training.filters.sort.trainingDesc": "Antrenman Z–A",
-  "common.training.filters.create": "Yeni antrenman"
+  "common.training.filters.create": "Yeni antrenman",
+
+  "common.training.results.fallback.training": "Antrenman",
+  "common.training.results.loading": "Yükleniyor…",
+  "common.training.results.empty": "Kayıt yok.",
+  "common.training.results.head.coach": "Antrenör",
+  "common.training.results.head.course": "Kurs",
+  "common.training.results.head.place": "Yer",
+  "common.training.results.head.price": "Fiyat",
+  "common.training.results.head.date": "Tarih",
+  "common.training.results.head.action": "İşlem",
+  "common.training.results.aria.select": "Seç: {{title}}",
+  "common.training.results.aria.open": "Aç: {{title}}",
+  "common.training.results.avatar.named": "Antrenör {{name}}",
+  "common.training.results.avatar.default": "Antrenör",
+  "common.training.results.action.edit": "Düzenle",
+
+  "common.training.pager.previous": "Önceki sayfa",
+  "common.training.pager.next": "Sonraki sayfa"
 }

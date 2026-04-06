@@ -269,5 +269,23 @@
   "common.training.filters.sort.oldest": "Älteste",
   "common.training.filters.sort.trainingAsc": "Training A–Z",
   "common.training.filters.sort.trainingDesc": "Training Z–A",
-  "common.training.filters.create": "Neues Training"
+  "common.training.filters.create": "Neues Training",
+
+  "common.training.results.fallback.training": "Training",
+  "common.training.results.loading": "Lädt…",
+  "common.training.results.empty": "Keine Einträge.",
+  "common.training.results.head.coach": "Coach",
+  "common.training.results.head.course": "Kurs",
+  "common.training.results.head.place": "Ort",
+  "common.training.results.head.price": "Preis",
+  "common.training.results.head.date": "Datum",
+  "common.training.results.head.action": "Aktion",
+  "common.training.results.aria.select": "Auswählen: {{title}}",
+  "common.training.results.aria.open": "Öffnen: {{title}}",
+  "common.training.results.avatar.named": "Coach {{name}}",
+  "common.training.results.avatar.default": "Coach",
+  "common.training.results.action.edit": "Bearbeiten",
+
+  "common.training.pager.previous": "Vorherige Seite",
+  "common.training.pager.next": "Nächste Seite"
 }
