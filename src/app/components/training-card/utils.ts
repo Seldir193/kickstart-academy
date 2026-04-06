@@ -24,12 +24,13 @@ function safeTime(item: Offer) {
   return timeFromObjectIdHex(item._id);
 }
 
-function trainingLabel(item: Offer) {
+function trainingLabel(item: Offer, t?: (key: string) => string) {
   const title = safeText(item.title);
   if (title) return title;
   const type = safeText(item.type);
   if (type) return type;
-  return "Offer";
+
+  return t ? t("common.training.offerFallback") : "Offer";
 }
 
 export function sortTrainingItems(items: Offer[], sort: TrainingSortKey) {
@@ -51,14 +52,26 @@ export function sortTrainingItems(items: Offer[], sort: TrainingSortKey) {
   );
 }
 
+// export function trainingSortLabel(
+//   sort: TrainingSortKey,
+//   t: (key: string) => string,
+// ) {
+//   if (sort === "newest") return "Newest";
+//   if (sort === "oldest") return "Oldest";
+//   if (sort === "training_asc") return "Training A–Z";
+//   return "Training Z–A";
+// }
+
 export function trainingSortLabel(
   sort: TrainingSortKey,
   t: (key: string) => string,
 ) {
-  if (sort === "newest") return "Newest";
-  if (sort === "oldest") return "Oldest";
-  if (sort === "training_asc") return "Training A–Z";
-  return "Training Z–A";
+  if (sort === "newest") return t("common.training.filters.sort.newest");
+  if (sort === "oldest") return t("common.training.filters.sort.oldest");
+  if (sort === "training_asc") {
+    return t("common.training.filters.sort.trainingAsc");
+  }
+  return t("common.training.filters.sort.trainingDesc");
 }
 
 export function buildOffersQueryParams(args: {

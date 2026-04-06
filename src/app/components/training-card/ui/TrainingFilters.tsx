@@ -46,17 +46,6 @@ function courseLabel(courseValue: string, fallback: string) {
   return found?.label || fallback;
 }
 
-function sortLabel(sort: TrainingSortKey, t: (key: string) => string) {
-  if (sort === "oldest") return t("common.training.filters.sort.oldest");
-  if (sort === "training_asc") {
-    return t("common.training.filters.sort.trainingAsc");
-  }
-  if (sort === "training_desc") {
-    return t("common.training.filters.sort.trainingDesc");
-  }
-  return t("common.training.filters.sort.newest");
-}
-
 export default function TrainingFilters(props: Props) {
   const { t } = useTranslation();
   const allLocationsLabel = t("common.training.filters.locations.all");
