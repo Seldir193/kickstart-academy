@@ -51,7 +51,10 @@ export function sortTrainingItems(items: Offer[], sort: TrainingSortKey) {
   );
 }
 
-export function trainingSortLabel(sort: TrainingSortKey) {
+export function trainingSortLabel(
+  sort: TrainingSortKey,
+  t: (key: string) => string,
+) {
   if (sort === "newest") return "Newest";
   if (sort === "oldest") return "Oldest";
   if (sort === "training_asc") return "Training A–Z";

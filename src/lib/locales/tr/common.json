@@ -257,5 +257,14 @@
 
   "common.admin.bookings.notice.cancelledConfirmed": "Onaylanmış rezervasyon iptal edildi.",
   "common.admin.bookings.notice.subscriptionUpdated": "Abonelik onayı güncellendi.",
-  "common.admin.bookings.notice.paymentApproved": "Ödeme onaylandı."
+  "common.admin.bookings.notice.paymentApproved": "Ödeme onaylandı.",
+
+  "common.training.filters.search.placeholder": "örn. Summer Camp veya sokak/şehir/posta kodu",
+  "common.training.filters.locations.all": "Tüm konumlar",
+  "common.training.filters.courses.all": "Tüm kurslar",
+  "common.training.filters.sort.newest": "En yeni",
+  "common.training.filters.sort.oldest": "En eski",
+  "common.training.filters.sort.trainingAsc": "Antrenman A–Z",
+  "common.training.filters.sort.trainingDesc": "Antrenman Z–A",
+  "common.training.filters.create": "Yeni antrenman"
 }

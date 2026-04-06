@@ -260,5 +260,14 @@
 
   "common.admin.bookings.notice.cancelledConfirmed": "Bestätigte Buchung storniert.",
   "common.admin.bookings.notice.subscriptionUpdated": "Abo-Freigabe aktualisiert.",
-  "common.admin.bookings.notice.paymentApproved": "Zahlung freigegeben."
+  "common.admin.bookings.notice.paymentApproved": "Zahlung freigegeben.",
+
+  "common.training.filters.search.placeholder": "z. B. Summer Camp oder Straße/Stadt/PLZ",
+  "common.training.filters.locations.all": "Alle Standorte",
+  "common.training.filters.courses.all": "Alle Kurse",
+  "common.training.filters.sort.newest": "Neueste",
+  "common.training.filters.sort.oldest": "Älteste",
+  "common.training.filters.sort.trainingAsc": "Training A–Z",
+  "common.training.filters.sort.trainingDesc": "Training Z–A",
+  "common.training.filters.create": "Neues Training"
 }

@@ -8,6 +8,7 @@ import {
 } from "@/app/lib/courseOptions";
 import type { TrainingSortKey } from "../types";
 import { clsx, trainingSortLabel } from "../utils";
+import { useTranslation } from "react-i18next";
 
 type Props = {
   q: string;
@@ -33,14 +34,35 @@ type Props = {
   createDisabled: boolean;
 };
 
-function courseLabel(courseValue: string) {
-  if (!courseValue) return "All courses";
+// function courseLabel(courseValue: string) {
+//   if (!courseValue) return "All courses";
+//   const found = ALL_COURSE_OPTIONS.find((item) => item.value === courseValue);
+//   return found?.label || "All courses";
+// }
+
+function courseLabel(courseValue: string, fallback: string) {
+  if (!courseValue) return fallback;
   const found = ALL_COURSE_OPTIONS.find((item) => item.value === courseValue);
-  return found?.label || "All courses";
+  return found?.label || fallback;
+}
+
+function sortLabel(sort: TrainingSortKey, t: (key: string) => string) {
+  if (sort === "oldest") return t("common.training.filters.sort.oldest");
+  if (sort === "training_asc") {
+    return t("common.training.filters.sort.trainingAsc");
+  }
+  if (sort === "training_desc") {
+    return t("common.training.filters.sort.trainingDesc");
+  }
+  return t("common.training.filters.sort.newest");
 }
 
 export default function TrainingFilters(props: Props) {
-  const locationLabel = props.locationFilter || "All locations";
+  const { t } = useTranslation();
+  const allLocationsLabel = t("common.training.filters.locations.all");
+  const allCoursesLabel = t("common.training.filters.courses.all");
+  const locationLabel = props.locationFilter || allLocationsLabel;
+  // const locationLabel = props.locationFilter || "All locations";
 
   return (
     <div className="news-admin__filters">
@@ -59,7 +81,8 @@ export default function TrainingFilters(props: Props) {
               props.setPage(1);
             }}
             className="input input-with-icon__input"
-            placeholder="e.g., Summer Camp or street/city/zip"
+            //  placeholder="e.g., Summer Camp or street/city/zip"
+            placeholder={t("common.training.filters.search.placeholder")}
           />
         </div>
       </div>
@@ -82,6 +105,7 @@ export default function TrainingFilters(props: Props) {
             }}
           >
             <span className="ks-training-select__label">{locationLabel}</span>
+
             <span className="ks-training-select__chevron" aria-hidden="true" />
           </button>
 
@@ -100,7 +124,7 @@ export default function TrainingFilters(props: Props) {
                     props.setLocationOpen(false);
                   }}
                 >
-                  All locations
+                  {allLocationsLabel}
                 </button>
               </li>
 
@@ -145,7 +169,7 @@ export default function TrainingFilters(props: Props) {
             }}
           >
             <span className="ks-training-select__label">
-              {trainingSortLabel(props.sort)}
+              {trainingSortLabel(props.sort, t)}
             </span>
             <span className="ks-training-select__chevron" aria-hidden="true" />
           </button>
@@ -165,7 +189,7 @@ export default function TrainingFilters(props: Props) {
                     props.setSortOpen(false);
                   }}
                 >
-                  Newest
+                  {t("common.training.filters.sort.newest")}
                 </button>
               </li>
               <li>
@@ -181,7 +205,7 @@ export default function TrainingFilters(props: Props) {
                     props.setSortOpen(false);
                   }}
                 >
-                  Oldest
+                  {t("common.training.filters.sort.oldest")}
                 </button>
               </li>
               <li>
@@ -197,7 +221,7 @@ export default function TrainingFilters(props: Props) {
                     props.setSortOpen(false);
                   }}
                 >
-                  Training A–Z
+                  {t("common.training.filters.sort.trainingAsc")}
                 </button>
               </li>
               <li>
@@ -213,7 +237,7 @@ export default function TrainingFilters(props: Props) {
                     props.setSortOpen(false);
                   }}
                 >
-                  Training Z–A
+                  {t("common.training.filters.sort.trainingDesc")}
                 </button>
               </li>
             </ul>
@@ -239,7 +263,7 @@ export default function TrainingFilters(props: Props) {
             }}
           >
             <span className="ks-training-select__label">
-              {courseLabel(props.courseValue)}
+              {courseLabel(props.courseValue, allCoursesLabel)}
             </span>
             <span className="ks-training-select__chevron" aria-hidden="true" />
           </button>
@@ -258,7 +282,7 @@ export default function TrainingFilters(props: Props) {
                   props.setCourseOpen(false);
                 }}
               >
-                All courses
+                {allCoursesLabel}
               </button>
 
               {GROUPED_COURSE_OPTIONS.map((group) => (
@@ -304,7 +328,8 @@ export default function TrainingFilters(props: Props) {
             aria-hidden="true"
             className="btn__icon"
           />
-          New training
+
+          {t("common.training.filters.create")}
         </button>
       </div>
     </div>

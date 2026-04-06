@@ -260,5 +260,14 @@
 
   "common.admin.bookings.notice.cancelledConfirmed": "Confirmed booking cancelled.",
   "common.admin.bookings.notice.subscriptionUpdated": "Subscription approval updated.",
-  "common.admin.bookings.notice.paymentApproved": "Payment approved."
+  "common.admin.bookings.notice.paymentApproved": "Payment approved.",
+
+  "common.training.filters.search.placeholder": "e.g. Summer Camp or street/city/zip",
+  "common.training.filters.locations.all": "All locations",
+  "common.training.filters.courses.all": "All courses",
+  "common.training.filters.sort.newest": "Newest",
+  "common.training.filters.sort.oldest": "Oldest",
+  "common.training.filters.sort.trainingAsc": "Training A–Z",
+  "common.training.filters.sort.trainingDesc": "Training Z–A",
+  "common.training.filters.create": "New training"
 }
