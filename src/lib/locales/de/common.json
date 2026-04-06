@@ -287,5 +287,12 @@
   "common.training.results.action.edit": "Bearbeiten",
 
   "common.training.pager.previous": "Vorherige Seite",
-  "common.training.pager.next": "Nächste Seite"
+  "common.training.pager.next": "Nächste Seite",
+
+  "common.training.bulk.selectTrainings": "Trainings auswählen",
+  "common.training.bulk.selected": "ausgewählt",
+  "common.training.bulk.clearAll": "Alle abwählen",
+  "common.training.bulk.selectAll": "Alle auswählen",
+  "common.training.bulk.delete": "Löschen ({{count}})",
+  "common.training.bulk.cancel": "Abbrechen"
 }

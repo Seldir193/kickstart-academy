@@ -2,6 +2,7 @@
 "use client";
 
 import type { RefObject } from "react";
+import { useTranslation } from "react-i18next";
 
 type Props = {
   toggleRef: RefObject<HTMLButtonElement | null>;
@@ -32,6 +33,7 @@ export default function BulkActionsBar({
   onClear,
   onBulkDelete,
 }: Props) {
+  const { t } = useTranslation();
   const showClear = selectMode && selectedCount >= 2;
 
   function guard(cb: () => void) {
@@ -50,7 +52,7 @@ export default function BulkActionsBar({
             onClick={() => guard(onToggleSelectMode)}
             disabled={isEmpty}
           >
-            Select trainings
+            {t("common.training.bulk.selectTrainings")}
           </button>
         </div>
       </div>
@@ -64,7 +66,8 @@ export default function BulkActionsBar({
     <div className="news-admin__top-actions">
       <div className="bulkbar">
         <div className="bulkbar__left">
-          <strong>{selectedCount}</strong>&nbsp;selected
+          <strong>{selectedCount}</strong>&nbsp;
+          {t("common.training.bulk.selected")}
         </div>
 
         <div className="bulkbar__right">
@@ -76,7 +79,7 @@ export default function BulkActionsBar({
               onClick={() => guard(onClear)}
               disabled={allDisabled}
             >
-              Clear all
+              {t("common.training.bulk.clearAll")}
             </button>
           ) : (
             <button
@@ -85,7 +88,9 @@ export default function BulkActionsBar({
               onClick={() => guard(onToggleAll)}
               disabled={allDisabled}
             >
-              {allSelected ? "Clear all" : "Select all"}
+              {allSelected
+                ? t("common.training.bulk.clearAll")
+                : t("common.training.bulk.selectAll")}
             </button>
           )}
 
@@ -95,7 +100,7 @@ export default function BulkActionsBar({
             onClick={() => guard(onBulkDelete)}
             disabled={deleteDisabled}
           >
-            Delete ({selectedCount})
+            {t("common.training.bulk.delete", { count: selectedCount })}
           </button>
 
           <button
@@ -104,7 +109,7 @@ export default function BulkActionsBar({
             className="btn"
             onClick={() => guard(onToggleSelectMode)}
           >
-            Cancel
+            {t("common.training.bulk.cancel")}
           </button>
         </div>
       </div>
