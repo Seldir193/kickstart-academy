@@ -17,6 +17,10 @@ import { COURSES, HOLIDAY_WEEK_PRESETS, CATEGORY_ORDER } from "./constants";
 import { normalizeCoachSrc } from "./utils";
 import { useOnClickOutside } from "./useOnClickOutside";
 
+let placesCache: Place[] | null = null;
+let placesCacheAt = 0;
+
+const PLACES_TTL_MS = 5 * 60 * 1000;
 type HookArgs = {
   open: boolean;
   mode: OfferDialogMode;
@@ -130,11 +134,12 @@ export function useOfferCreateDialog({
     [places, form.placeId],
   );
 
-  let PLACES_CACHE: Place[] | null = null;
-  let PLACES_CACHE_AT = 0;
-  let PLACES_INFLIGHT: Promise<Place[]> | null = null;
-
-  const PLACES_TTL_MS = 5 * 60 * 1000;
+  console.log("form.placeId", form.placeId);
+  console.log("places", places);
+  console.log(
+    "matchedPlace",
+    places.find((p) => p._id === form.placeId) || null,
+  );
 
   useEffect(() => {
     if (!open) return;
@@ -145,42 +150,62 @@ export function useOfferCreateDialog({
       try {
         const now = Date.now();
 
-        if (PLACES_CACHE && now - PLACES_CACHE_AT < PLACES_TTL_MS) {
-          setPlaces(PLACES_CACHE);
+        if (placesCache && now - placesCacheAt < PLACES_TTL_MS) {
+          setPlaces(placesCache);
           return;
         }
 
-        if (PLACES_INFLIGHT) {
-          const cached = await PLACES_INFLIGHT;
-          if (!ctrl.signal.aborted) setPlaces(cached);
-          return;
-        }
-
-        PLACES_INFLIGHT = (async () => {
-          const r = await fetch("/api/admin/places?page=1&pageSize=50", {
+        const r = await fetch(
+          "/api/admin/places?page=1&pageSize=100&limit=100",
+          {
             cache: "no-store",
             signal: ctrl.signal,
-          });
-          const j = await r.json().catch(() => ({}));
-          const arr: Place[] = Array.isArray(j?.items) ? j.items : [];
-          return arr;
-        })();
+          },
+        );
 
-        const arr = await PLACES_INFLIGHT;
+        const j = await r.json().catch(() => ({}));
+        const arr: Place[] = Array.isArray(j?.items) ? j.items : [];
 
-        PLACES_CACHE = arr;
-        PLACES_CACHE_AT = Date.now();
-        PLACES_INFLIGHT = null;
+        placesCache = arr;
+        placesCacheAt = Date.now();
 
         if (!ctrl.signal.aborted) setPlaces(arr);
       } catch {
-        PLACES_INFLIGHT = null;
         if (!ctrl.signal.aborted) setPlaces([]);
       }
     })();
 
     return () => ctrl.abort();
   }, [open]);
+
+  useEffect(() => {
+    if (!open) return;
+    if (!form.placeId) return;
+    if (selectedPlace) return;
+
+    const ctrl = new AbortController();
+
+    (async () => {
+      try {
+        const r = await fetch(`/api/admin/places/${form.placeId}`, {
+          cache: "no-store",
+          signal: ctrl.signal,
+        });
+
+        const j = await r.json().catch(() => ({}));
+        if (!r.ok || !j?._id) return;
+
+        if (ctrl.signal.aborted) return;
+
+        setPlaces((prev) => {
+          if (prev.some((p) => p._id === j._id)) return prev;
+          return [j, ...prev];
+        });
+      } catch {}
+    })();
+
+    return () => ctrl.abort();
+  }, [open, form.placeId, selectedPlace]);
 
   const initialKey = useMemo(() => JSON.stringify(initial), [initial]);
 
