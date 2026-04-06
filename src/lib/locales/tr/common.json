@@ -490,5 +490,8 @@
   "common.datePicker.weekday.thu": "Per",
   "common.datePicker.weekday.fri": "Cum",
   "common.datePicker.weekday.sat": "Cmt",
-  "common.datePicker.weekday.sun": "Paz"
+  "common.datePicker.weekday.sun": "Paz",
+
+  "common.admin.invoices.docs.label_one": "Bu sayfada {{count}} belge",
+  "common.admin.invoices.docs.label_other": "Bu sayfada {{count}} belge"
 }

@@ -493,5 +493,8 @@
   "common.datePicker.weekday.thu": "Thu",
   "common.datePicker.weekday.fri": "Fri",
   "common.datePicker.weekday.sat": "Sat",
-  "common.datePicker.weekday.sun": "Sun"
+  "common.datePicker.weekday.sun": "Sun",
+
+  "common.admin.invoices.docs.label_one": "Document: {{count}} on this page",
+  "common.admin.invoices.docs.label_other": "Documents: {{count}} on this page"
 }
