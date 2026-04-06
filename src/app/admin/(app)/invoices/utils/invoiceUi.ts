@@ -39,7 +39,7 @@ export type DocItem = {
   fileName?: string;
 };
 
-export function typeLabel(type: string, t: TFunction) {
+export function typeLabel(type: string, t: TFunction): string {
   const x = String(type || "").toLowerCase();
   if (x === "participation")
     return t("common.admin.invoices.docType.participation");
@@ -127,7 +127,7 @@ export function stripAddressNoise(raw: string) {
   return s;
 }
 
-export function displayTitle(d: DocItem, t: TFunction) {
+export function displayTitle(d: DocItem, t: TFunction): string {
   const base = stripAddressNoise(stripDocTypeSuffix(d.title || ""));
   return base || typeLabel(d.type, t);
 }
@@ -140,11 +140,11 @@ export function metaLine(
   const customerNo = customerNoFrom(d);
   const parts = [
     customerNo
-      ? `{t("common.admin.invoices.meta.customerNo")} ${customerNo}`
+      ? `${t("common.admin.invoices.meta.customerNo")} ${customerNo}`
       : "",
     d.customerName ? d.customerName : "",
     d.issuedAt
-      ? `{t("common.admin.invoices.meta.issued")}  ${fmtDate(d.issuedAt)}`
+      ? `${t("common.admin.invoices.meta.issued")}  ${fmtDate(d.issuedAt)}`
       : "",
   ].filter(Boolean);
   return parts.join(" · ");
