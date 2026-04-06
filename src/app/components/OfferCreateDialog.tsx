@@ -49,9 +49,8 @@ export default function OfferCreateDialog({
 
   const { t } = useTranslation();
   const coachFileInputId = React.useId();
-  const [coachFileName, setCoachFileName] = React.useState(
-    t("common.offerDialog.file.noneSelected"),
-  );
+  const emptyFileLabel = t("common.offerDialog.file.noneSelected");
+  const [coachFileName, setCoachFileName] = React.useState(emptyFileLabel);
 
   if (!open) return null;
 
@@ -141,7 +140,6 @@ export default function OfferCreateDialog({
             <div className="grid grid--2 offer-create-dialog">
               <div className="form__group">
                 <label className="label">
-                  {" "}
                   {t("common.offerDialog.fields.holidayFrom")}
                 </label>
                 <KsDatePicker
@@ -192,7 +190,6 @@ export default function OfferCreateDialog({
 
           <div className="form__group">
             <label className="label">
-              {" "}
               {t("common.offerDialog.fields.timeTo")}
             </label>
             <KsTimeSelect
@@ -257,7 +254,6 @@ export default function OfferCreateDialog({
         <div className="grid grid--2">
           <div className="form__group">
             <label className="label">
-              {" "}
               {t("common.offerDialog.fields.coachName")}
             </label>
             <input
@@ -288,7 +284,6 @@ export default function OfferCreateDialog({
 
         <div className="form__group">
           <label className="label">
-            {" "}
             {t("common.offerDialog.fields.coachImage")}
           </label>
 
@@ -301,10 +296,7 @@ export default function OfferCreateDialog({
                 accept="image/*"
                 onChange={(e) => {
                   const file = e.target.files?.[0];
-
-                  setCoachFileName(
-                    file?.name || t("common.offerDialog.file.noneSelected"),
-                  );
+                  setCoachFileName(file?.name || emptyFileLabel);
                   d.handleCoachFileChange(e);
                 }}
               />
@@ -316,9 +308,7 @@ export default function OfferCreateDialog({
               <span
                 className={
                   "ks-file__name" +
-                  (coachFileName === t("common.offerDialog.file.noneSelected")
-                    ? " is-empty"
-                    : "")
+                  (coachFileName === emptyFileLabel ? " is-empty" : "")
                 }
                 aria-live="polite"
               >
