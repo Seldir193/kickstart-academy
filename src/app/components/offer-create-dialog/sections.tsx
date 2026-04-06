@@ -2,6 +2,7 @@
 "use client";
 
 import React from "react";
+import { useTranslation } from "react-i18next";
 import type { Place } from "@/types/place";
 import type { CategoryKey } from "./types";
 import {
@@ -10,6 +11,75 @@ import {
   HOLIDAY_WEEK_PRESETS,
 } from "./constants";
 import { clsx } from "./utils";
+
+function categoryLabel(key: CategoryKey, t: (key: string) => string) {
+  if (key === "Holiday") return t("common.offerDialog.category.holiday");
+  if (key === "Weekly") return t("common.offerDialog.category.weekly");
+  if (key === "Individual") return t("common.offerDialog.category.individual");
+  if (key === "ClubPrograms") {
+    return t("common.offerDialog.category.clubPrograms");
+  }
+  return t("common.offerDialog.category.rentACoach");
+}
+
+function courseLabel(label: string, t: (key: string) => string) {
+  if (label === "Camps (Indoor/Outdoor)") {
+    return t("common.offerDialog.course.camps");
+  }
+  if (label === "Power Training") {
+    return t("common.offerDialog.course.powerTraining");
+  }
+  if (label === "Foerdertraining") {
+    return t("common.offerDialog.course.foerdertraining");
+  }
+  if (label === "Soccer Kindergarten") {
+    return t("common.offerDialog.course.soccerKindergarten");
+  }
+  if (label === "Goalkeeper Training") {
+    return t("common.offerDialog.course.goalkeeperTraining");
+  }
+  if (label === "Development Training · Athletik") {
+    return t("common.offerDialog.course.developmentAthletik");
+  }
+  if (label === "1:1 Training") {
+    return t("common.offerDialog.course.personalTraining");
+  }
+  if (label === "1:1 Training Athletik") {
+    return t("common.offerDialog.course.personalTrainingAthletik");
+  }
+  if (label === "1:1 Training Torwart") {
+    return t("common.offerDialog.course.personalTrainingGoalkeeper");
+  }
+  if (label === "Training Camps") {
+    return t("common.offerDialog.course.trainingCamps");
+  }
+  if (label === "Coach Education") {
+    return t("common.offerDialog.course.coachEducation");
+  }
+  if (label === "Rent-a-Coach") {
+    return t("common.offerDialog.course.rentACoach");
+  }
+  return label;
+}
+
+function holidayPresetLabel(name: string, t: (key: string) => string) {
+  if (name === "Osterferien") {
+    return t("common.offerDialog.holidayPreset.easter");
+  }
+  if (name === "Pfingstferien") {
+    return t("common.offerDialog.holidayPreset.pentecost");
+  }
+  if (name === "Sommerferien") {
+    return t("common.offerDialog.holidayPreset.summer");
+  }
+  if (name === "Herbstferien") {
+    return t("common.offerDialog.holidayPreset.autumn");
+  }
+  if (name === "Weihnachtsferien") {
+    return t("common.offerDialog.holidayPreset.christmas");
+  }
+  return name;
+}
 
 export function DialogShell({
   panelRef,
@@ -22,6 +92,7 @@ export function DialogShell({
   onClose: () => void;
   children: React.ReactNode;
 }) {
+  const { t } = useTranslation();
   return (
     <div
       className="dialog-backdrop offer-create-dialog-shell"
@@ -32,7 +103,7 @@ export function DialogShell({
       <button
         type="button"
         className="dialog-backdrop-hit"
-        aria-label="Close"
+        aria-label={t("common.offerDialog.actions.close")}
         onClick={onClose}
       />
 
@@ -49,7 +120,7 @@ export function DialogShell({
               type="button"
               onClick={onClose}
               className="dialog-close"
-              aria-label="Close"
+              aria-label={t("common.offerDialog.actions.close")}
             >
               <img
                 src="/icons/close.svg"
@@ -120,15 +191,22 @@ export function CategoryField({
   categoryUI: CategoryKey | "";
   onPick: (next: CategoryKey | "") => void;
 }) {
+  const { t } = useTranslation();
   return (
     <div className="form__group">
-      <label className="label">Category</label>
+      <label className="label">{t("common.offerDialog.fields.category")}</label>
 
       <KsSelectbox
         rootRef={categoryDropdownRef}
         open={categoryOpen}
         onToggle={() => setCategoryOpen((o) => !o)}
-        label={categoryUI ? CATEGORY_LABEL[categoryUI] : "— Select category —"}
+        // label={categoryUI ? CATEGORY_LABEL[categoryUI] : "— Select category —"}
+
+        label={
+          categoryUI
+            ? categoryLabel(categoryUI, t)
+            : t("common.offerDialog.category.select")
+        }
       >
         <button
           type="button"
@@ -141,7 +219,7 @@ export function CategoryField({
             setCategoryOpen(false);
           }}
         >
-          — All categories —
+          {t("common.offerDialog.category.all")}
         </button>
 
         {CATEGORY_ORDER.map((k) => (
@@ -157,7 +235,7 @@ export function CategoryField({
               setCategoryOpen(false);
             }}
           >
-            {CATEGORY_LABEL[k]}
+            {categoryLabel(k, t)}
           </button>
         ))}
       </KsSelectbox>
@@ -185,15 +263,20 @@ export function CourseField({
   }>;
   onPick: (value: string) => void;
 }) {
+  const { t } = useTranslation();
   return (
     <div className="form__group">
-      <label className="label">Course</label>
+      <label className="label">{t("common.offerDialog.fields.course")}</label>
 
       <KsSelectbox
         rootRef={courseDropdownRef}
         open={courseOpen}
         onToggle={() => setCourseOpen((o) => !o)}
-        label={selectedCourseLabel ? selectedCourseLabel : "— Select course —"}
+        label={
+          selectedCourseLabel
+            ? courseLabel(selectedCourseLabel, t)
+            : t("common.offerDialog.course.select")
+        }
       >
         <button
           type="button"
@@ -206,7 +289,7 @@ export function CourseField({
             setCourseOpen(false);
           }}
         >
-          — No course selected —
+          {t("common.offerDialog.course.noneSelected")}
         </button>
 
         {groupedCourses.map(({ cat, items }) => (
@@ -227,7 +310,7 @@ export function CourseField({
                   setCourseOpen(false);
                 }}
               >
-                {c.label}
+                {courseLabel(c.label, t)}
               </button>
             ))}
           </div>
@@ -254,9 +337,10 @@ export function PlaceField({
   places: Place[];
   onPick: (placeId: string) => void;
 }) {
+  const { t } = useTranslation();
   return (
     <div className="form__group">
-      <label className="label">Place</label>
+      <label className="label">{t("common.offerDialog.fields.place")}</label>
 
       <KsSelectbox
         rootRef={placeDropdownRef}
@@ -279,7 +363,7 @@ export function PlaceField({
             setPlaceOpen(false);
           }}
         >
-          — Select place —
+          {t("common.offerDialog.place.select")}
         </button>
 
         {places.map((p) => (
@@ -320,9 +404,10 @@ export function HolidayWeekField({
   onPickPreset: (next: string) => void;
   onChangeCustom: (val: string) => void;
 }) {
+  const { t } = useTranslation();
   return (
     <div className="form__group">
-      <label className="label">Holiday week</label>
+      {t("common.offerDialog.fields.holidayWeek")}
 
       <div className="grid grid--2">
         <KsSelectbox
@@ -331,10 +416,10 @@ export function HolidayWeekField({
           onToggle={() => setHolidayOpen((o) => !o)}
           label={
             !holidayPreset
-              ? "— Please select —"
+              ? t("common.offerDialog.holiday.select")
               : holidayPreset === "__custom__"
-                ? "Other holiday week…"
-                : holidayPreset
+                ? t("common.offerDialog.holiday.other")
+                : holidayPresetLabel(holidayPreset, t)
           }
         >
           <button
@@ -348,7 +433,7 @@ export function HolidayWeekField({
               setHolidayOpen(false);
             }}
           >
-            — Please select —
+            {t("common.offerDialog.holiday.select")}
           </button>
 
           {HOLIDAY_WEEK_PRESETS.map((name) => (
@@ -364,7 +449,7 @@ export function HolidayWeekField({
                 setHolidayOpen(false);
               }}
             >
-              {name}
+              {holidayPresetLabel(name, t)}
             </button>
           ))}
 
@@ -379,14 +464,14 @@ export function HolidayWeekField({
               setHolidayOpen(false);
             }}
           >
-            Other holiday week…
+            {t("common.offerDialog.holiday.other")}
           </button>
         </KsSelectbox>
 
         {holidayPreset === "__custom__" ? (
           <input
             className="input"
-            placeholder="e.g. Easter holiday intensive camp"
+            placeholder={t("common.offerDialog.holiday.customPlaceholder")}
             value={holidayCustom}
             onChange={(e) => onChangeCustom(e.target.value)}
           />
