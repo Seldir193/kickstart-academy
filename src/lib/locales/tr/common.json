@@ -501,5 +501,7 @@
   "common.admin.invoices.dialog.returned.bankFee": "Returned payment fee",
   "common.admin.invoices.dialog.returned.bankFeePlaceholder": "e.g. 16.76",
   "common.admin.invoices.dialog.reasonOptional": "Reason (optional)",
-  "common.admin.invoices.dialog.reasonPlaceholder": "e.g. Withdrawal within 14 days / refund at customer request"
+  "common.admin.invoices.dialog.reasonPlaceholder": "e.g. Withdrawal within 14 days / refund at customer request",
+
+  "common.actions.close": "Close"
 }
