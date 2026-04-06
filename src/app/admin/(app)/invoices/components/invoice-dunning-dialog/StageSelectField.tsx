@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useRef } from "react";
+import { useTranslation } from "react-i18next";
 import type { DunningStage, InvoiceRow } from "../../utils/invoiceList";
 import {
   applyStagePatch,
@@ -32,6 +33,7 @@ function closeOpen(
 }
 
 export default function StageSelectField(props: Props) {
+  const { t } = useTranslation();
   const triggerRef = useRef<HTMLButtonElement | null>(null);
   const menuRef = useRef<HTMLUListElement | null>(null);
 
@@ -49,7 +51,9 @@ export default function StageSelectField(props: Props) {
 
   return (
     <label className="ks-inv-dialog__field">
-      <span className="ks-inv-dialog__label">Stage</span>
+      <span className="ks-inv-dialog__label">
+        {t("common.admin.invoices.stageSelect.label")}
+      </span>
 
       <div
         className={
@@ -65,7 +69,7 @@ export default function StageSelectField(props: Props) {
           disabled={props.state.loading}
         >
           <span className="ks-training-select__label">
-            {stageLabel(props.state.resolvedStage)}
+            {stageLabel(props.state.resolvedStage, t)}
           </span>
           <span className="ks-training-select__chevron" aria-hidden="true" />
         </button>
@@ -75,7 +79,7 @@ export default function StageSelectField(props: Props) {
             ref={menuRef}
             className="ks-training-select__menu"
             role="listbox"
-            aria-label="Stage"
+            aria-label={t("common.admin.invoices.stageSelect.label")}
           >
             {visibleStagesForRow(props.row).map((st) => {
               const enabled = canPickStage(props.row, st);
@@ -90,7 +94,7 @@ export default function StageSelectField(props: Props) {
                     onClick={() => applyStage(st)}
                     disabled={!enabled}
                   >
-                    {stageLabel(st)}
+                    {stageLabel(st, t)}
                   </button>
                 </li>
               );

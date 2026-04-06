@@ -496,5 +496,8 @@
   "common.datePicker.weekday.sun": "Sun",
 
   "common.admin.invoices.docs.label_one": "Document: {{count}} on this page",
-  "common.admin.invoices.docs.label_other": "Documents: {{count}} on this page"
+  "common.admin.invoices.docs.label_other": "Documents: {{count}} on this page",
+
+  "common.admin.invoices.dialog.returned.ariaLabel": "Mark as returned and add bank fee",
+  "common.admin.invoices.dialog.returned.title": "Mark as returned + bank fee"
 }

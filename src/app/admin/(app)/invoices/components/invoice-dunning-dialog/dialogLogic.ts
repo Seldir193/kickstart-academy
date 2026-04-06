@@ -1,11 +1,25 @@
+import type { TFunction } from "i18next";
 import type { DunningStage, InvoiceRow } from "../../utils/invoiceList";
 import type { RowActionState } from "../../hooks/useInvoiceRowActions";
 
-export function stageLabel(value: DunningStage) {
-  if (value === "reminder") return "Payment reminder";
-  if (value === "dunning1") return "1st dunning notice";
-  if (value === "dunning2") return "2nd dunning notice";
-  return "Final dunning notice";
+// export function stageLabel(value: DunningStage) {
+//   if (value === "reminder") return "Payment reminder";
+//   if (value === "dunning1") return "1st dunning notice";
+//   if (value === "dunning2") return "2nd dunning notice";
+//   return "Final dunning notice";
+// }
+
+export function stageLabel(value: DunningStage, t: TFunction): string {
+  if (value === "reminder") {
+    return t("common.admin.invoices.stage.reminder");
+  }
+  if (value === "dunning1") {
+    return t("common.admin.invoices.stage.dunning1");
+  }
+  if (value === "dunning2") {
+    return t("common.admin.invoices.stage.dunning2");
+  }
+  return t("common.admin.invoices.stage.final");
 }
 
 export function orderedStages(): DunningStage[] {
@@ -54,17 +68,22 @@ export function applyStagePatch(row: InvoiceRow, next: DunningStage) {
   };
 }
 
-export function dialogAriaLabel(state: RowActionState) {
+export function dialogAriaLabel(state: RowActionState, t: TFunction) {
   return state.mode === "returned"
-    ? "Mark as returned and add bank fee"
-    : "Send dunning step";
+    ? t("common.admin.invoices.dialog.returned.ariaLabel")
+    : t("common.admin.invoices.actions.sendDunningStep");
 }
 
-export function dialogTitle(state: RowActionState) {
+export function dialogTitle(state: RowActionState, t: TFunction): string {
   return state.mode === "returned"
-    ? "Mark as returned + bank fee"
-    : "Send dunning step";
+    ? t("common.admin.invoices.dialog.returned.title")
+    : t("common.admin.invoices.actions.sendDunningStep");
 }
+// export function dialogTitle(state: RowActionState) {
+//   return state.mode === "returned"
+//     ? "Mark as returned + bank fee"
+//     : "Send dunning step";
+// }
 
 // import type { DunningStage, InvoiceRow } from "../../utils/invoiceList";
 // import type { RowActionState } from "../../hooks/useInvoiceRowActions";

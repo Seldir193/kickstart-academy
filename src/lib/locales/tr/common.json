@@ -493,5 +493,8 @@
   "common.datePicker.weekday.sun": "Paz",
 
   "common.admin.invoices.docs.label_one": "Bu sayfada {{count}} belge",
-  "common.admin.invoices.docs.label_other": "Bu sayfada {{count}} belge"
+  "common.admin.invoices.docs.label_other": "Bu sayfada {{count}} belge",
+
+  "common.admin.invoices.dialog.returned.ariaLabel": "İade edildi olarak işaretle ve banka ücreti ekle",
+  "common.admin.invoices.dialog.returned.title": "İade edildi olarak işaretle + banka ücreti"
 }

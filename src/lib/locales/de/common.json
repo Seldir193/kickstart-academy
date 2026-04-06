@@ -496,5 +496,8 @@
   "common.datePicker.weekday.sun": "So",
 
   "common.admin.invoices.docs.label_one": "Dokument: {{count}} auf dieser Seite",
-  "common.admin.invoices.docs.label_other": "Dokumente: {{count}} auf dieser Seite"
+  "common.admin.invoices.docs.label_other": "Dokumente: {{count}} auf dieser Seite",
+
+  "common.admin.invoices.dialog.returned.ariaLabel": "Rücklastschrift markieren und Bankgebühr hinzufügen",
+  "common.admin.invoices.dialog.returned.title": "Rücklastschrift markieren + Bankgebühr"
 }
