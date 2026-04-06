@@ -469,5 +469,8 @@
   "common.admin.invoices.logic.alreadyRefunded": "Bereits erstattet",
   "common.admin.invoices.logic.notWithin14Days": "Nicht innerhalb von 14 Tagen",
   "common.admin.invoices.logic.missingSubscription": "Subscription fehlt",
-  "common.admin.invoices.logic.withdrawRefundCreditNote": "Widerruf (≤14 Tage) + Erstattung + Gutschrift"
+  "common.admin.invoices.logic.withdrawRefundCreditNote": "Widerruf (≤14 Tage) + Erstattung + Gutschrift",
+
+  "common.admin.invoices.list.empty": "Keine Dokumente gefunden.",
+  "common.admin.invoices.list.loading": "Lädt…"
 }

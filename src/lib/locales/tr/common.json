@@ -466,5 +466,8 @@
   "common.admin.invoices.logic.alreadyRefunded": "Zaten iade edildi",
   "common.admin.invoices.logic.notWithin14Days": "14 gün içinde değil",
   "common.admin.invoices.logic.missingSubscription": "Subscription eksik",
-  "common.admin.invoices.logic.withdrawRefundCreditNote": "Cayma (≤14 gün) + iade + alacak dekontu"
+  "common.admin.invoices.logic.withdrawRefundCreditNote": "Cayma (≤14 gün) + iade + alacak dekontu",
+
+  "common.admin.invoices.list.empty": "Belge bulunamadı.",
+  "common.admin.invoices.list.loading": "Yükleniyor…"
 }

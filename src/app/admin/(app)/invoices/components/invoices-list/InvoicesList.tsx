@@ -2,6 +2,7 @@
 "use client";
 
 import React, { useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import type { DocItem } from "../../utils/invoiceUi";
 import type { InvoiceRow } from "../../utils/invoiceList";
 import InvoicesListRow from "./InvoicesListRow";
@@ -30,6 +31,7 @@ function listMinHeight(loading: boolean, itemsLen: number) {
 }
 
 export default function InvoicesList(props: Props) {
+  const { t } = useTranslation();
   const showEmpty = !props.loading && props.items.length === 0;
   const showList = props.items.length > 0;
 
@@ -41,7 +43,9 @@ export default function InvoicesList(props: Props) {
   return (
     <div className="ks-invoices__listWrap" style={minHeightVars(minHeight)}>
       {showEmpty ? (
-        <div className="card__empty">No documents found.</div>
+        <div className="card__empty">
+          {t("common.admin.invoices.list.empty")}
+        </div>
       ) : showList ? (
         <ul className="list list--bleed">
           {props.items.map((d, idx) => (
@@ -65,7 +69,10 @@ export default function InvoicesList(props: Props) {
           ))}
         </ul>
       ) : (
-        <div className="card__empty">Loading…</div>
+        <div className="card__empty">
+          {" "}
+          {t("common.admin.invoices.list.loading")}
+        </div>
       )}
 
       {props.loading && showList ? (
