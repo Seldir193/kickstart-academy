@@ -3,25 +3,34 @@ import type {
   InvoicePaymentStatus,
   InvoiceRow,
 } from "./invoiceList";
+import type { TFunction } from "i18next";
 
 export type PaymentFilter = "all" | InvoicePaymentStatus;
 
 export type DunningFilter = "all" | "none" | DunningStage;
 
-export function paymentFilterLabel(value: PaymentFilter) {
-  if (value === "all") return "All payment";
-  if (value === "open") return "Open";
-  if (value === "paid") return "Paid";
-  return "Returned";
+export function paymentFilterLabel(value: PaymentFilter, t: TFunction) {
+  if (value === "open") return t("common.admin.invoices.paymentFilter.open");
+  if (value === "paid") return t("common.admin.invoices.paymentFilter.paid");
+  if (value === "returned") {
+    return t("common.admin.invoices.paymentFilter.returned");
+  }
+  return t("common.admin.invoices.paymentFilter.all");
 }
 
-export function dunningFilterLabel(value: DunningFilter) {
-  if (value === "all") return "All dunning";
-  if (value === "none") return "No dunning";
-  if (value === "reminder") return "Reminder";
-  if (value === "dunning1") return "Dunning 1";
-  if (value === "dunning2") return "Dunning 2";
-  return "Final";
+export function dunningFilterLabel(value: DunningFilter, t: TFunction) {
+  if (value === "none") return t("common.admin.invoices.dunningFilter.none");
+  if (value === "reminder") {
+    return t("common.admin.invoices.dunningFilter.reminder");
+  }
+  if (value === "dunning1") {
+    return t("common.admin.invoices.dunningFilter.dunning1");
+  }
+  if (value === "dunning2") {
+    return t("common.admin.invoices.dunningFilter.dunning2");
+  }
+  if (value === "final") return t("common.admin.invoices.dunningFilter.final");
+  return t("common.admin.invoices.dunningFilter.all");
 }
 
 function isCreditNoteType(row: InvoiceRow) {

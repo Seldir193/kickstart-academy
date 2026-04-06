@@ -365,5 +365,18 @@
   "common.offerDialog.holidayPreset.autumn": "Autumn holidays",
   "common.offerDialog.holidayPreset.christmas": "Christmas holidays",
 
-  "common.offerDialog.help.courseAutoFill": "Selecting a course automatically fills the required fields; additional details are optional."
+  "common.offerDialog.help.courseAutoFill": "Selecting a course automatically fills the required fields; additional details are optional.",
+
+  "common.admin.invoices.filters.payment": "Payment",
+  "common.admin.invoices.filters.dunning": "Dunning",
+  "common.admin.invoices.paymentFilter.all": "All payments",
+  "common.admin.invoices.paymentFilter.open": "Open",
+  "common.admin.invoices.paymentFilter.paid": "Paid",
+  "common.admin.invoices.paymentFilter.returned": "Returned",
+  "common.admin.invoices.dunningFilter.all": "All dunning levels",
+  "common.admin.invoices.dunningFilter.none": "No dunning",
+  "common.admin.invoices.dunningFilter.reminder": "Reminder",
+  "common.admin.invoices.dunningFilter.dunning1": "1st dunning",
+  "common.admin.invoices.dunningFilter.dunning2": "2nd dunning",
+  "common.admin.invoices.dunningFilter.final": "Final dunning"
 }

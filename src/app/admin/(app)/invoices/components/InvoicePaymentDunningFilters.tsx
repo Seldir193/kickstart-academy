@@ -9,6 +9,7 @@ import {
   dunningFilterLabel,
   paymentFilterLabel,
 } from "../utils/invoiceFilters";
+import { useTranslation } from "react-i18next";
 
 type Props = {
   payment: PaymentFilter;
@@ -25,33 +26,34 @@ export default function InvoicePaymentDunningFilters({
   onDunningChange,
   disabled,
 }: Props) {
+  const { t } = useTranslation();
   return (
     <>
       <InvoiceFilterDropdown
-        label="Payment"
+        label={t("common.admin.invoices.filters.payment")}
         value={payment}
         onChange={onPaymentChange}
         disabled={disabled}
         options={[
-          { value: "all", label: paymentFilterLabel("all") },
-          { value: "open", label: paymentFilterLabel("open") },
-          { value: "paid", label: paymentFilterLabel("paid") },
-          { value: "returned", label: paymentFilterLabel("returned") },
+          { value: "all", label: paymentFilterLabel("all", t) },
+          { value: "open", label: paymentFilterLabel("open", t) },
+          { value: "paid", label: paymentFilterLabel("paid", t) },
+          { value: "returned", label: paymentFilterLabel("returned", t) },
         ]}
       />
 
       <InvoiceFilterDropdown
-        label="Dunning"
+        label={t("common.admin.invoices.filters.dunning")}
         value={dunning}
         onChange={onDunningChange}
         disabled={disabled}
         options={[
-          { value: "all", label: dunningFilterLabel("all") },
-          { value: "none", label: dunningFilterLabel("none") },
-          { value: "reminder", label: dunningFilterLabel("reminder") },
-          { value: "dunning1", label: dunningFilterLabel("dunning1") },
-          { value: "dunning2", label: dunningFilterLabel("dunning2") },
-          { value: "final", label: dunningFilterLabel("final") },
+          { value: "all", label: dunningFilterLabel("all", t) },
+          { value: "none", label: dunningFilterLabel("none", t) },
+          { value: "reminder", label: dunningFilterLabel("reminder", t) },
+          { value: "dunning1", label: dunningFilterLabel("dunning1", t) },
+          { value: "dunning2", label: dunningFilterLabel("dunning2", t) },
+          { value: "final", label: dunningFilterLabel("final", t) },
         ]}
       />
     </>

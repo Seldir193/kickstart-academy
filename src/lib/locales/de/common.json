@@ -365,5 +365,18 @@
   "common.offerDialog.holidayPreset.autumn": "Herbstferien",
   "common.offerDialog.holidayPreset.christmas": "Weihnachtsferien",
 
-  "common.offerDialog.help.courseAutoFill": "Die Auswahl eines Kurses füllt die erforderlichen Felder automatisch aus; zusätzliche Angaben sind optional."
+  "common.offerDialog.help.courseAutoFill": "Die Auswahl eines Kurses füllt die erforderlichen Felder automatisch aus; zusätzliche Angaben sind optional.",
+
+  "common.admin.invoices.filters.payment": "Zahlung",
+  "common.admin.invoices.filters.dunning": "Mahnung",
+  "common.admin.invoices.paymentFilter.all": "Alle Zahlungen",
+  "common.admin.invoices.paymentFilter.open": "Offen",
+  "common.admin.invoices.paymentFilter.paid": "Bezahlt",
+  "common.admin.invoices.paymentFilter.returned": "Rücklastschrift",
+  "common.admin.invoices.dunningFilter.all": "Alle Mahnstufen",
+  "common.admin.invoices.dunningFilter.none": "Keine Mahnung",
+  "common.admin.invoices.dunningFilter.reminder": "Erinnerung",
+  "common.admin.invoices.dunningFilter.dunning1": "1. Mahnung",
+  "common.admin.invoices.dunningFilter.dunning2": "2. Mahnung",
+  "common.admin.invoices.dunningFilter.final": "Letzte Mahnung"
 }

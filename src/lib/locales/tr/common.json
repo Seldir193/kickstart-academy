@@ -362,5 +362,18 @@
   "common.offerDialog.holidayPreset.autumn": "Sonbahar tatili",
   "common.offerDialog.holidayPreset.christmas": "Noel tatili",
 
-  "common.offerDialog.help.courseAutoFill": "Bir kurs seçildiğinde gerekli alanlar otomatik olarak doldurulur; ek bilgiler isteğe bağlıdır."
+  "common.offerDialog.help.courseAutoFill": "Bir kurs seçildiğinde gerekli alanlar otomatik olarak doldurulur; ek bilgiler isteğe bağlıdır.",
+
+  "common.admin.invoices.filters.payment": "Ödeme",
+  "common.admin.invoices.filters.dunning": "İhtar",
+  "common.admin.invoices.paymentFilter.all": "Tüm ödemeler",
+  "common.admin.invoices.paymentFilter.open": "Açık",
+  "common.admin.invoices.paymentFilter.paid": "Ödendi",
+  "common.admin.invoices.paymentFilter.returned": "Geri döndü",
+  "common.admin.invoices.dunningFilter.all": "Tüm ihtar seviyeleri",
+  "common.admin.invoices.dunningFilter.none": "İhtar yok",
+  "common.admin.invoices.dunningFilter.reminder": "Hatırlatma",
+  "common.admin.invoices.dunningFilter.dunning1": "1. ihtar",
+  "common.admin.invoices.dunningFilter.dunning2": "2. ihtar",
+  "common.admin.invoices.dunningFilter.final": "Son ihtar"
 }
