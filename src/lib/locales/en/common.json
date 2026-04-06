@@ -405,5 +405,21 @@
   "common.admin.invoices.notice.notSentYet": "Not sent yet",
   "common.admin.invoices.notice.alreadySent": "Already sent",
   "common.admin.invoices.notice.notExecutedYet": "Not executed yet",
-  "common.admin.invoices.void.reasonObsolete": "Obsolete"
+  "common.admin.invoices.void.reasonObsolete": "Obsolete",
+
+  "common.admin.invoices.status.saving": "Saving...",
+  "common.admin.invoices.status.saved": "Saved",
+  "common.admin.invoices.status.saveFailed": "Save failed",
+  "common.admin.invoices.status.sending": "Sending...",
+  "common.admin.invoices.status.sent": "Sent",
+  "common.admin.invoices.status.sendFailed": "Send failed",
+  "common.admin.invoices.status.processing": "Processing...",
+  "common.admin.invoices.status.refunded": "Refunded",
+  "common.admin.invoices.status.refundFailed": "Refund failed",
+  "common.admin.invoices.status.withdrawn": "Withdrawn",
+  "common.admin.invoices.status.withdrawFailed": "Withdraw failed",
+  "common.admin.invoices.error.markReturnedFailed": "Mark returned failed",
+  "common.admin.invoices.error.sendDunningFailed": "Send dunning failed",
+  "common.admin.invoices.error.refundFailed": "Refund failed",
+  "common.admin.invoices.error.withdrawFailed": "Withdraw failed"
 }

@@ -405,5 +405,21 @@
   "common.admin.invoices.notice.notSentYet": "Noch nicht gesendet",
   "common.admin.invoices.notice.alreadySent": "Bereits gesendet",
   "common.admin.invoices.notice.notExecutedYet": "Noch nicht ausgeführt",
-  "common.admin.invoices.void.reasonObsolete": "Gegenstandslos"
+  "common.admin.invoices.void.reasonObsolete": "Gegenstandslos",
+
+  "common.admin.invoices.status.saving": "Speichern...",
+  "common.admin.invoices.status.saved": "Gespeichert",
+  "common.admin.invoices.status.saveFailed": "Speichern fehlgeschlagen",
+  "common.admin.invoices.status.sending": "Senden...",
+  "common.admin.invoices.status.sent": "Gesendet",
+  "common.admin.invoices.status.sendFailed": "Senden fehlgeschlagen",
+  "common.admin.invoices.status.processing": "Verarbeiten...",
+  "common.admin.invoices.status.refunded": "Erstattet",
+  "common.admin.invoices.status.refundFailed": "Erstattung fehlgeschlagen",
+  "common.admin.invoices.status.withdrawn": "Ausgezahlt",
+  "common.admin.invoices.status.withdrawFailed": "Auszahlung fehlgeschlagen",
+  "common.admin.invoices.error.markReturnedFailed": "Rücklastschrift markieren fehlgeschlagen",
+  "common.admin.invoices.error.sendDunningFailed": "Mahnung senden fehlgeschlagen",
+  "common.admin.invoices.error.refundFailed": "Erstattung fehlgeschlagen",
+  "common.admin.invoices.error.withdrawFailed": "Auszahlung fehlgeschlagen"
 }
