@@ -471,5 +471,24 @@
   "common.admin.invoices.list.empty": "Belge bulunamadı.",
   "common.admin.invoices.list.loading": "Yükleniyor…",
 
-  "common.admin.invoices.error.loadFailed": "Yükleme başarısız oldu"
+  "common.admin.invoices.error.loadFailed": "Yükleme başarısız oldu",
+
+  "common.datePicker.placeholder": "gg.aa.yyyy",
+  "common.datePicker.selectDate": "Tarih seç",
+  "common.datePicker.previousMonth": "Önceki ay",
+  "common.datePicker.selectYear": "Yıl seç",
+  "common.datePicker.nextMonth": "Sonraki ay",
+  "common.datePicker.searchYear": "Yıl ara…",
+  "common.datePicker.years": "Yıllar",
+  "common.datePicker.back": "Geri",
+  "common.datePicker.today": "Bugün",
+  "common.datePicker.calendar": "Takvim",
+  "common.datePicker.clear": "Sil",
+  "common.datePicker.weekday.mon": "Pzt",
+  "common.datePicker.weekday.tue": "Sal",
+  "common.datePicker.weekday.wed": "Çar",
+  "common.datePicker.weekday.thu": "Per",
+  "common.datePicker.weekday.fri": "Cum",
+  "common.datePicker.weekday.sat": "Cmt",
+  "common.datePicker.weekday.sun": "Paz"
 }

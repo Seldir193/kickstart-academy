@@ -474,5 +474,24 @@
   "common.admin.invoices.list.empty": "No documents found.",
   "common.admin.invoices.list.loading": "Loading…",
 
-  "common.admin.invoices.error.loadFailed": "Load failed"
+  "common.admin.invoices.error.loadFailed": "Load failed",
+
+  "common.datePicker.placeholder": "dd.mm.yyyy",
+  "common.datePicker.selectDate": "Select date",
+  "common.datePicker.previousMonth": "Previous month",
+  "common.datePicker.selectYear": "Select year",
+  "common.datePicker.nextMonth": "Next month",
+  "common.datePicker.searchYear": "Search year…",
+  "common.datePicker.years": "Years",
+  "common.datePicker.back": "Back",
+  "common.datePicker.today": "Today",
+  "common.datePicker.calendar": "Calendar",
+  "common.datePicker.clear": "Delete",
+  "common.datePicker.weekday.mon": "Mon",
+  "common.datePicker.weekday.tue": "Tue",
+  "common.datePicker.weekday.wed": "Wed",
+  "common.datePicker.weekday.thu": "Thu",
+  "common.datePicker.weekday.fri": "Fri",
+  "common.datePicker.weekday.sat": "Sat",
+  "common.datePicker.weekday.sun": "Sun"
 }

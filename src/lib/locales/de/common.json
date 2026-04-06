@@ -472,5 +472,26 @@
   "common.admin.invoices.logic.withdrawRefundCreditNote": "Widerruf (≤14 Tage) + Erstattung + Gutschrift",
 
   "common.admin.invoices.list.empty": "Keine Dokumente gefunden.",
-  "common.admin.invoices.list.loading": "Lädt…"
+  "common.admin.invoices.list.loading": "Lädt…",
+
+  "common.admin.invoices.error.loadFailed": "Laden fehlgeschlagen",
+
+  "common.datePicker.placeholder": "tt.mm.jjjj",
+  "common.datePicker.selectDate": "Datum auswählen",
+  "common.datePicker.previousMonth": "Vorheriger Monat",
+  "common.datePicker.selectYear": "Jahr auswählen",
+  "common.datePicker.nextMonth": "Nächster Monat",
+  "common.datePicker.searchYear": "Jahr suchen…",
+  "common.datePicker.years": "Jahre",
+  "common.datePicker.back": "Zurück",
+  "common.datePicker.today": "Heute",
+  "common.datePicker.calendar": "Kalender",
+  "common.datePicker.clear": "Löschen",
+  "common.datePicker.weekday.mon": "Mo",
+  "common.datePicker.weekday.tue": "Di",
+  "common.datePicker.weekday.wed": "Mi",
+  "common.datePicker.weekday.thu": "Do",
+  "common.datePicker.weekday.fri": "Fr",
+  "common.datePicker.weekday.sat": "Sa",
+  "common.datePicker.weekday.sun": "So"
 }

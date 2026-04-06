@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useMemo, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
   addMonths,
   buildMonthGrid,
@@ -34,6 +35,7 @@ function dayCellKey(c: MonthCell, idx: number) {
 }
 
 export default function KsDatePicker(props: KsDatePickerProps) {
+  const { t } = useTranslation();
   const btnRef = useRef<HTMLButtonElement | null>(null);
   const panelRef = useRef<HTMLDivElement | null>(null);
 
@@ -143,7 +145,7 @@ export default function KsDatePicker(props: KsDatePickerProps) {
         <span
           className={"ks-datepicker__value" + (label ? "" : " is-placeholder")}
         >
-          {label || props.placeholder || "tt.mm.jjjj"}
+          {label || props.placeholder || t("common.datePicker.placeholder")}
         </span>
         <span className="ks-datepicker__icon" aria-hidden="true">
           <img src="/icons/calender.svg" alt="" />
@@ -155,7 +157,7 @@ export default function KsDatePicker(props: KsDatePickerProps) {
           ref={panelRef}
           className="ks-datepicker__panel ks-scroll-thin"
           role="dialog"
-          aria-label="Datum auswählen"
+          aria-label={t("common.datePicker.selectDate")}
           style={{
             position: "fixed",
             left: pos.left,
@@ -171,7 +173,7 @@ export default function KsDatePicker(props: KsDatePickerProps) {
               type="button"
               className="ks-datepicker__nav ks-datepicker__nav--prev"
               onClick={() => setViewMonth(addMonths(viewMonth, -1))}
-              aria-label="Vorheriger Monat"
+              aria-label={t("common.datePicker.previousMonth")}
             >
               <img src="/icons/arrow_right_alt.svg" alt="" />
             </button>
@@ -180,7 +182,7 @@ export default function KsDatePicker(props: KsDatePickerProps) {
               type="button"
               className="ks-datepicker__title"
               onClick={() => setYearOpen((v) => !v)}
-              aria-label="Jahr auswählen"
+              aria-label={t("common.datePicker.selectYear")}
             >
               {monthLabel(viewMonth)}
             </button>
@@ -189,7 +191,7 @@ export default function KsDatePicker(props: KsDatePickerProps) {
               type="button"
               className="ks-datepicker__nav ks-datepicker__nav--next"
               onClick={() => setViewMonth(addMonths(viewMonth, 1))}
-              aria-label="Nächster Monat"
+              aria-label={t("common.datePicker.nextMonth")}
             >
               <img src="/icons/arrow_right_alt.svg" alt="" />
             </button>
@@ -201,14 +203,14 @@ export default function KsDatePicker(props: KsDatePickerProps) {
                 className="input ks-datepicker__yearinput"
                 value={yearQuery}
                 onChange={(e) => setYearQuery(e.target.value)}
-                placeholder="Jahr suchen…"
+                placeholder={t("common.datePicker.searchYear")}
                 inputMode="numeric"
               />
 
               <div
                 className="ks-datepicker__yearlist ks-scroll-thin"
                 role="listbox"
-                aria-label="Jahre"
+                aria-label={t("common.datePicker.years")}
                 style={{ scrollbarWidth: "thin" }}
               >
                 {filteredYears.map((y) => (
@@ -234,43 +236,47 @@ export default function KsDatePicker(props: KsDatePickerProps) {
                   className="ks-datepicker__link"
                   onClick={() => setYearOpen(false)}
                 >
-                  Back
+                  {t("common.datePicker.back")}
                 </button>
                 <button
                   type="button"
                   className="ks-datepicker__link"
                   onClick={goToday}
                 >
-                  Today
+                  {t("common.datePicker.today")}
                 </button>
               </div>
             </div>
           ) : (
             <>
-              {/* <div className="ks-datepicker__weekdays">
-                <div className="ks-datepicker__weekday">Mo</div>
-                <div className="ks-datepicker__weekday">Di</div>
-                <div className="ks-datepicker__weekday">Mi</div>
-                <div className="ks-datepicker__weekday">Do</div>
-                <div className="ks-datepicker__weekday">Fr</div>
-                <div className="ks-datepicker__weekday">Sa</div>
-                <div className="ks-datepicker__weekday">So</div>
-              </div> */}
-
               <div className="ks-datepicker__weekdays">
-                <div className="ks-datepicker__weekday">Mon</div>
-                <div className="ks-datepicker__weekday">Tue</div>
-                <div className="ks-datepicker__weekday">Wed</div>
-                <div className="ks-datepicker__weekday">Thu</div>
-                <div className="ks-datepicker__weekday">Fri</div>
-                <div className="ks-datepicker__weekday">Sat</div>
-                <div className="ks-datepicker__weekday">Sun</div>
+                <div className="ks-datepicker__weekday">
+                  {t("common.datePicker.weekday.mon")}
+                </div>
+                <div className="ks-datepicker__weekday">
+                  {t("common.datePicker.weekday.tue")}
+                </div>
+                <div className="ks-datepicker__weekday">
+                  {t("common.datePicker.weekday.wed")}
+                </div>
+                <div className="ks-datepicker__weekday">
+                  {t("common.datePicker.weekday.thu")}
+                </div>
+                <div className="ks-datepicker__weekday">
+                  {t("common.datePicker.weekday.fri")}
+                </div>
+                <div className="ks-datepicker__weekday">
+                  {t("common.datePicker.weekday.sat")}
+                </div>
+                <div className="ks-datepicker__weekday">
+                  {t("common.datePicker.weekday.sun")}
+                </div>
               </div>
 
               <div
                 className="ks-datepicker__grid"
                 role="grid"
-                aria-label="Kalender"
+                aria-label={t("common.datePicker.calendar")}
               >
                 {cells.map((c, idx) => {
                   if (c.kind === "empty")
@@ -304,14 +310,14 @@ export default function KsDatePicker(props: KsDatePickerProps) {
                   className="ks-datepicker__link"
                   onClick={clear}
                 >
-                  Delete
+                  {t("common.datePicker.clear")}
                 </button>
                 <button
                   type="button"
                   className="ks-datepicker__link"
                   onClick={goToday}
                 >
-                  Today
+                  {t("common.datePicker.today")}
                 </button>
               </div>
             </>
