@@ -49,7 +49,7 @@ export function typeLabel(type: string, t: TFunction) {
   if (x === "dunning") return t("common.admin.invoices.docType.dunning");
   if (x === "creditnote" || x === "credit_note" || x === "credit")
     return t("common.admin.invoices.docType.creditNote");
-  return t || "Document";
+  return type || t("common.admin.invoices.docType.document");
 }
 
 export function iconForType(t: string) {
