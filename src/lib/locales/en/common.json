@@ -327,5 +327,8 @@
   "common.offerDialog.file.uploading": "Uploading…",
   "common.offerDialog.file.previewAlt": "Coach preview",
   "common.offerDialog.actions.save": "Save changes",
-  "common.offerDialog.actions.create": "Create offer"
+  "common.offerDialog.actions.create": "Create offer",
+
+  "common.offerDialog.file.uploadFailed": "Upload failed ({{status}})",
+  "common.offerDialog.file.uploadError": "Upload error"
 }

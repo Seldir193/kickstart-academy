@@ -327,5 +327,8 @@
   "common.offerDialog.file.uploading": "Wird hochgeladen…",
   "common.offerDialog.file.previewAlt": "Coach-Vorschau",
   "common.offerDialog.actions.save": "Änderungen speichern",
-  "common.offerDialog.actions.create": "Angebot erstellen"
+  "common.offerDialog.actions.create": "Angebot erstellen",
+
+  "common.offerDialog.file.uploadFailed": "Upload fehlgeschlagen ({{status}})",
+  "common.offerDialog.file.uploadError": "Upload-Fehler"
 }

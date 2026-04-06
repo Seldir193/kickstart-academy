@@ -324,5 +324,8 @@
   "common.offerDialog.file.uploading": "Yükleniyor…",
   "common.offerDialog.file.previewAlt": "Antrenör önizlemesi",
   "common.offerDialog.actions.save": "Değişiklikleri kaydet",
-  "common.offerDialog.actions.create": "Teklif oluştur"
+  "common.offerDialog.actions.create": "Teklif oluştur",
+
+  "common.offerDialog.file.uploadFailed": "Yükleme başarısız oldu ({{status}})",
+  "common.offerDialog.file.uploadError": "Yükleme hatası"
 }
