@@ -4,6 +4,7 @@
 
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { toastErrorMessage, toastText } from "@/lib/toast-messages";
 import type { InvoiceRow } from "../utils/invoiceList";
 import { bankFeeFromRow } from "./invoiceRowActions/rowLogic";
 import {
@@ -97,78 +98,97 @@ export function useInvoiceRowActions(onDone: () => Promise<void>) {
 
   async function submitReturnedDialog() {
     try {
-      setBusy(setActionState, t("common.admin.invoices.status.saving"));
+      setBusy(
+        setActionState,
+        toastText(t, "common.admin.invoices.status.saving"),
+      );
       await submitReturned(actionState);
-      setSuccess(setActionState, t("common.admin.invoices.status.saved"));
+      setSuccess(
+        setActionState,
+        toastText(t, "common.admin.invoices.status.saved"),
+      );
       await onDone();
       scheduleClose("returned", 700, setActionState);
     } catch (e: any) {
       setError(
         setActionState,
-        e?.message || t("common.admin.invoices.error.markReturnedFailed"),
-        t("common.admin.invoices.status.saveFailed"),
+        toastErrorMessage(
+          t,
+          e,
+          "common.admin.invoices.error.markReturnedFailed",
+        ),
+        toastText(t, "common.admin.invoices.status.saveFailed"),
       );
     }
   }
 
   async function submitDunningDialog() {
     try {
-      setBusy(setActionState, t("common.admin.invoices.status.sending"));
+      setBusy(
+        setActionState,
+        toastText(t, "common.admin.invoices.status.sending"),
+      );
       await submitDunning(actionState);
-      setSuccess(setActionState, t("common.admin.invoices.status.sent"));
+      setSuccess(
+        setActionState,
+        toastText(t, "common.admin.invoices.status.sent"),
+      );
       await onDone();
       scheduleClose("dunning", 900, setActionState);
     } catch (e: any) {
       setError(
         setActionState,
-        e?.message || t("common.admin.invoices.error.sendDunningFailed"),
+        toastErrorMessage(
+          t,
+          e,
+          "common.admin.invoices.error.sendDunningFailed",
+        ),
 
-        t("common.admin.invoices.status.sendFailed"),
+        toastText(t, "common.admin.invoices.status.sendFailed"),
       );
     }
   }
 
-  // async function submitRefundDialog() {
-  //   try {
-  //     setBusy(setActionState, t("common.admin.invoices.status.processing"));
-  //     await submitRefund(actionState);
-  //     setSuccess(setActionState, t("common.admin.invoices.status.refunded"));
-  //     await onDone();
-  //     scheduleClose("refund", 900, setActionState);
-  //   } catch (e: any) {
-  //     setError(setActionState, e?.message || t("common.admin.invoices.error.refundFailed"),
-  //       t("common.admin.invoices.status.refundFailed"),
-  //     );
-  // }
-
   async function submitRefundDialog() {
     try {
-      setBusy(setActionState, t("common.admin.invoices.status.processing"));
+      setBusy(
+        setActionState,
+        toastText(t, "common.admin.invoices.status.processing"),
+      );
       await submitRefund(actionState);
-      setSuccess(setActionState, t("common.admin.invoices.status.refunded"));
+      setSuccess(
+        setActionState,
+        toastText(t, "common.admin.invoices.status.refunded"),
+      );
       await onDone();
       scheduleClose("refund", 900, setActionState);
     } catch (e: any) {
       setError(
         setActionState,
-        e?.message || t("common.admin.invoices.error.refundFailed"),
-        t("common.admin.invoices.status.refundFailed"),
+        toastErrorMessage(t, e, "common.admin.invoices.error.refundFailed"),
+        toastText(t, "common.admin.invoices.status.refundFailed"),
       );
     }
   }
 
   async function submitWithdrawDialog() {
     try {
-      setBusy(setActionState, t("common.admin.invoices.status.processing"));
+      setBusy(
+        setActionState,
+        toastText(t, "common.admin.invoices.status.processing"),
+      );
       await submitWithdraw(actionState);
-      setSuccess(setActionState, t("common.admin.invoices.status.withdrawn"));
+      setSuccess(
+        setActionState,
+        toastText(t, "common.admin.invoices.status.withdrawn"),
+      );
       await onDone();
       scheduleClose("withdraw", 900, setActionState);
     } catch (e: any) {
       setError(
         setActionState,
-        e?.message || t("common.admin.invoices.error.withdrawFailed"),
-        t("common.admin.invoices.status.withdrawFailed"),
+        toastErrorMessage(t, e, "common.admin.invoices.error.withdrawFailed"),
+        toastText(t, "common.admin.invoices.status.withdrawFailed"),
       );
     }
   }
