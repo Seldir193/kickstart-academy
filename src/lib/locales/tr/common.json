@@ -397,5 +397,10 @@
   "common.admin.invoices.types.cancellation": "İptal",
   "common.admin.invoices.types.storno": "Storno",
   "common.admin.invoices.types.dunning": "İhtar",
-  "common.admin.invoices.types.creditNote": "Alacak dekontu"
+  "common.admin.invoices.types.creditNote": "Alacak dekontu",
+
+  "common.admin.invoices.notice.notSentYet": "Henüz gönderilmedi",
+  "common.admin.invoices.notice.alreadySent": "Zaten gönderildi",
+  "common.admin.invoices.notice.notExecutedYet": "Henüz uygulanmadı",
+  "common.admin.invoices.void.reasonObsolete": "Geçersiz hale geldi"
 }

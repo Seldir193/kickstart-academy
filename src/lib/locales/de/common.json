@@ -400,5 +400,10 @@
   "common.admin.invoices.types.cancellation": "Stornierung",
   "common.admin.invoices.types.storno": "Storno",
   "common.admin.invoices.types.dunning": "Mahnung",
-  "common.admin.invoices.types.creditNote": "Gutschrift"
+  "common.admin.invoices.types.creditNote": "Gutschrift",
+
+  "common.admin.invoices.notice.notSentYet": "Noch nicht gesendet",
+  "common.admin.invoices.notice.alreadySent": "Bereits gesendet",
+  "common.admin.invoices.notice.notExecutedYet": "Noch nicht ausgeführt",
+  "common.admin.invoices.void.reasonObsolete": "Gegenstandslos"
 }

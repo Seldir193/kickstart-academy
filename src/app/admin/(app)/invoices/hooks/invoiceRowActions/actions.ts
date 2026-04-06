@@ -1,6 +1,6 @@
 //src\app\admin\(app)\invoices\hooks\invoiceRowActions\actions.ts
 "use client";
-
+import type { TFunction } from "i18next";
 import type { InvoiceRow } from "../../utils/invoiceList";
 import { moneyInputToNumber } from "../../utils/dunningUi";
 import { postInvoiceAction, postJson } from "./api";
@@ -21,6 +21,7 @@ export function openReturnedState(
   row: InvoiceRow,
   bankFee: string,
   note: string,
+  t: TFunction,
 ): RowActionState {
   return {
     ...createInitialActionState(),
@@ -29,7 +30,8 @@ export function openReturnedState(
     row,
     bankFee,
     returnNote: note,
-    notice: "Not sent yet",
+    notice: t("common.admin.invoices.notice.notSentYet"),
+
     noticeTone: "idle",
   };
 }
@@ -37,6 +39,7 @@ export function openReturnedState(
 export function openDunningState(
   row: InvoiceRow,
   bankFee: string,
+  t: TFunction,
 ): RowActionState {
   const st = nextStageFromRow(row);
   const exists = stageExists(row, st);
@@ -50,31 +53,39 @@ export function openDunningState(
     resolvedStage: st,
     canSend: !exists,
     inputsDisabled: exists,
-    notice: exists ? "Already sent" : "Not sent yet",
+    notice: exists
+      ? t("common.admin.invoices.notice.alreadySent")
+      : t("common.admin.invoices.notice.notSentYet"),
+
     noticeTone: "idle",
   };
 }
 
-export function openRefundState(row: InvoiceRow): RowActionState {
+export function openRefundState(row: InvoiceRow, t: TFunction): RowActionState {
   return {
     ...createInitialActionState(),
     open: true,
     mode: "refund",
     row,
     reason: "",
-    notice: "Not executed yet",
+    notice: t("common.admin.invoices.notice.notExecutedYet"),
+
     noticeTone: "idle",
   };
 }
 
-export function openWithdrawState(row: InvoiceRow): RowActionState {
+export function openWithdrawState(
+  row: InvoiceRow,
+  t: TFunction,
+): RowActionState {
   return {
     ...createInitialActionState(),
     open: true,
     mode: "withdraw",
     row,
     reason: "",
-    notice: "Not executed yet",
+    notice: t("common.admin.invoices.notice.notExecutedYet"),
+
     noticeTone: "idle",
   };
 }
@@ -100,14 +111,15 @@ export async function quickSend(row: InvoiceRow) {
   }
 }
 
-export async function voidDunning(row: InvoiceRow) {
+export async function voidDunning(row: InvoiceRow, t: TFunction) {
   if ((row as any)?.voidedAt) return;
   const docId = dunningDocIdFromRow(row);
   if (!docId) return;
   await postJson(
     `/api/admin/invoices/dunning-documents/${encodeURIComponent(docId)}/void`,
     {
-      reason: "Gegenstandslos",
+      reason: t("common.admin.invoices.void.reasonObsolete"),
+
       sendEmail: true,
     },
   );
