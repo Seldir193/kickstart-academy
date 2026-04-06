@@ -43,7 +43,6 @@ export function useBootstrapFromURL(args: {
     if (openId) pendingOpenIdRef.current = openId;
 
     setBootstrappedFromURL(true);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams, bootstrappedFromURL]);
 
   return { bootstrappedFromURL, pendingOpenIdRef };

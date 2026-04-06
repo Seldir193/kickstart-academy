@@ -79,6 +79,5 @@ export function useOffers(args: {
       clearTimeout(t);
       ctrl.abort();
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [q, courseValue, locationFilter, page, limit, refreshTick]);
 }
