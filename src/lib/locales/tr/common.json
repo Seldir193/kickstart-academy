@@ -381,5 +381,9 @@
   "common.admin.invoices.stage.dunning1": "1. ihtar",
   "common.admin.invoices.stage.dunning2": "2. ihtar",
   "common.admin.invoices.stage.final": "Son ihtar",
-  "common.admin.invoices.stage.default": "İhtar"
+  "common.admin.invoices.stage.default": "İhtar",
+
+  "common.admin.invoices.download.csv": "CSV indir",
+  "common.admin.invoices.download.zip": "ZIP indir",
+  "common.admin.invoices.pagination.perPage": "Sayfa başına"
 }

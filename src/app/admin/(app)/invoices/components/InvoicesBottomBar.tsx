@@ -2,6 +2,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 type FixedSelect = {
   open: boolean;
@@ -204,18 +205,28 @@ export default function InvoicesBottomBar({
   perPageSelect,
   err,
 }: Props) {
+  const { t } = useTranslation();
   useOverlayPosition(perPageSelect);
 
   return (
     <>
       <div className="mt-3 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <DownloadButton href={csvHref} label="Download CSV" />
-          <DownloadButton href={zipHref} label="Download ZIP" />
+          <DownloadButton
+            href={csvHref}
+            label={t("common.admin.invoices.download.csv")}
+          />
+          <DownloadButton
+            href={zipHref}
+            label={t("common.admin.invoices.download.zip")}
+          />
         </div>
 
         <div className="flex items-center gap-2">
-          <span className="text-gray-600">Per page</span>
+          <span className="text-gray-600">
+            {t("common.admin.invoices.pagination.perPage")}
+          </span>
+
           <PerPageTrigger limit={limit} perPageSelect={perPageSelect} />
           <PerPageOverlay
             limit={limit}

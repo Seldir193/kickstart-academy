@@ -384,5 +384,9 @@
   "common.admin.invoices.stage.dunning1": "1. Mahnung",
   "common.admin.invoices.stage.dunning2": "2. Mahnung",
   "common.admin.invoices.stage.final": "Letzte Mahnung",
-  "common.admin.invoices.stage.default": "Mahnung"
+  "common.admin.invoices.stage.default": "Mahnung",
+
+  "common.admin.invoices.download.csv": "CSV herunterladen",
+  "common.admin.invoices.download.zip": "ZIP herunterladen",
+  "common.admin.invoices.pagination.perPage": "Pro Seite"
 }

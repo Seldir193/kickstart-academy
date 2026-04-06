@@ -384,5 +384,9 @@
   "common.admin.invoices.stage.dunning1": "1st reminder",
   "common.admin.invoices.stage.dunning2": "2nd reminder",
   "common.admin.invoices.stage.final": "Final reminder",
-  "common.admin.invoices.stage.default": "Reminder"
+  "common.admin.invoices.stage.default": "Reminder",
+
+  "common.admin.invoices.download.csv": "Download CSV",
+  "common.admin.invoices.download.zip": "Download ZIP",
+  "common.admin.invoices.pagination.perPage": "Per page"
 }
