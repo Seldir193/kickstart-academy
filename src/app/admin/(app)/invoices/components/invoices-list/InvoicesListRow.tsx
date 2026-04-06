@@ -2,6 +2,7 @@
 "use client";
 
 import React from "react";
+import { useTranslation } from "react-i18next";
 import type { DocItem } from "../../utils/invoiceUi";
 import type { InvoiceRow } from "../../utils/invoiceList";
 import {
@@ -53,6 +54,7 @@ function onRowKeyDown(e: React.KeyboardEvent, open: () => void) {
 }
 
 export default function InvoicesListRow(props: Props) {
+  const { t } = useTranslation();
   const row = props.d as InvoiceRow;
   const isCreditNote = row.type === "creditnote";
   const busy = props.rowBusyId === row.id;
@@ -68,10 +70,10 @@ export default function InvoicesListRow(props: Props) {
   const sendDisabled = paymentDisabled || hasFinalDunning(row);
 
   const sendTitle = isCreditNote
-    ? "Not available for credit notes"
+    ? t("common.admin.invoices.actions.notAvailableForCreditNotes")
     : hasFinalDunning(row)
-      ? "Final already sent"
-      : actionTitle(row, "Send dunning step");
+      ? t("common.admin.invoices.actions.finalAlreadySent")
+      : actionTitle(row, t("common.admin.invoices.actions.sendDunningStep"));
 
   return (
     <li
@@ -88,23 +90,25 @@ export default function InvoicesListRow(props: Props) {
 
         <div className="ks-invoices__rowMain">
           <div className="ks-invoices__rowLeft">
-            <div className="list__title">{displayTitle(props.d)}</div>
+            <div className="list__title">{displayTitle(props.d, t)}</div>
 
             <div
               className="list__meta"
               data-ks-tip={
                 props.d.customerChildName
-                  ? `Child: ${props.d.customerChildName}`
+                  ? `${t("common.admin.invoices.meta.child")}: ${props.d.customerChildName}`
                   : undefined
               }
             >
-              {metaLine(props.d, props.fmtDate)}
+              {metaLine(props.d, props.fmtDate, t)}
             </div>
           </div>
 
           <div className="ks-doc-select__badgeCol" aria-hidden>
             {isHandedOver(row) ? (
-              <span className="ks-doc-select__badge">Collection</span>
+              <span className="ks-doc-select__badge">
+                {t("common.admin.invoices.badge.collection")}
+              </span>
             ) : null}
             <span className="ks-doc-select__badge">
               {(docNoFrom(props.d) || "").replaceAll("/", "-")}
@@ -117,8 +121,8 @@ export default function InvoicesListRow(props: Props) {
         <button
           type="button"
           className="ks-doc-open"
-          aria-label="Open PDF"
-          title="Open PDF"
+          aria-label={t("common.admin.invoices.actions.openPdf")}
+          title={t("common.admin.invoices.actions.openPdf")}
           onClick={(e) => {
             e.stopPropagation();
             props.openPdf(props.d);
@@ -130,11 +134,11 @@ export default function InvoicesListRow(props: Props) {
         <button
           type="button"
           className="ks-doc-open"
-          aria-label="Mark as paid"
+          aria-label={t("common.admin.invoices.actions.markAsPaid")}
           title={
             isCreditNote
-              ? "Not available for credit notes"
-              : actionTitle(row, "Mark as paid")
+              ? t("common.admin.invoices.actions.notAvailableForCreditNotes")
+              : actionTitle(row, t("common.admin.invoices.actions.markAsPaid"))
           }
           onClick={(e) => {
             e.stopPropagation();
@@ -148,11 +152,14 @@ export default function InvoicesListRow(props: Props) {
         <button
           type="button"
           className="ks-doc-open"
-          aria-label="Mark returned and add fee"
+          aria-label={t("common.admin.invoices.actions.markReturnedAndAddFee")}
           title={
             isCreditNote
-              ? "Not available for credit notes"
-              : actionTitle(row, "Mark returned + fee")
+              ? t("common.admin.invoices.actions.notAvailableForCreditNotes")
+              : actionTitle(
+                  row,
+                  t("common.admin.invoices.actions.markReturnedAndAddFee"),
+                )
           }
           onClick={(e) => {
             e.stopPropagation();
@@ -166,8 +173,8 @@ export default function InvoicesListRow(props: Props) {
         <button
           type="button"
           className="ks-doc-open"
-          aria-label="Refund"
-          title={refundTitle(row)}
+          aria-label={t("common.admin.invoices.actions.refund")}
+          title={refundTitle(row, t)}
           onClick={(e) => {
             e.stopPropagation();
             if (!refundAllowed) return;
@@ -186,8 +193,8 @@ export default function InvoicesListRow(props: Props) {
         <button
           type="button"
           className="ks-doc-open"
-          aria-label="Withdraw (14 days)"
-          title={withdrawTitle(row)}
+          aria-label={t("common.admin.invoices.actions.withdraw14Days")}
+          title={withdrawTitle(row, t)}
           onClick={(e) => {
             e.stopPropagation();
             if (!withdrawAllowed) return;
@@ -206,7 +213,7 @@ export default function InvoicesListRow(props: Props) {
         <button
           type="button"
           className="ks-doc-open"
-          aria-label="Send dunning step"
+          aria-label={t("common.admin.invoices.actions.sendDunningStep")}
           title={sendTitle}
           onClick={(e) => {
             e.stopPropagation();
@@ -220,8 +227,8 @@ export default function InvoicesListRow(props: Props) {
         <button
           type="button"
           className="ks-doc-open"
-          aria-label="Send this document by email"
-          title={quickSendTitle(row)}
+          aria-label={t("common.admin.invoices.actions.sendDocumentByEmail")}
+          title={quickSendTitle(row, t)}
           onClick={(e) => {
             e.stopPropagation();
             props.onQuickSendDoc?.(row);
@@ -234,13 +241,13 @@ export default function InvoicesListRow(props: Props) {
         <button
           type="button"
           className="ks-doc-open"
-          aria-label="Void dunning (obsolete)"
+          aria-label={t("common.admin.invoices.actions.voidDunningObsolete")}
           title={
             !isDunningRow(row)
-              ? "Dunning only"
+              ? t("common.admin.invoices.actions.dunningOnly")
               : isVoidedDunningRow(row)
-                ? "Already voided"
-                : "Void dunning (payment reminder/dunning)"
+                ? t("common.admin.invoices.actions.alreadyVoided")
+                : t("common.admin.invoices.actions.voidDunningPaymentReminder")
           }
           onClick={(e) => {
             e.stopPropagation();
@@ -254,11 +261,11 @@ export default function InvoicesListRow(props: Props) {
         <button
           type="button"
           className="ks-doc-open"
-          aria-label="Hand over to collection"
+          aria-label={t("common.admin.invoices.actions.handOverToCollection")}
           title={
             isHandedOver(row)
-              ? "Already handed over to collection"
-              : "Hand over to collection"
+              ? t("common.admin.invoices.actions.alreadyHandedOverToCollection")
+              : t("common.admin.invoices.actions.handOverToCollection")
           }
           onClick={(e) => {
             e.stopPropagation();

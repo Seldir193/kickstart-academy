@@ -39,8 +39,8 @@ export type DocItem = {
   fileName?: string;
 };
 
-export function typeLabel(t: string, t: TFunction) {
-  const x = String(t || "").toLowerCase();
+export function typeLabel(type: string, t: TFunction) {
+  const x = String(type || "").toLowerCase();
   if (x === "participation")
     return t("common.admin.invoices.docType.participation");
   if (x === "cancellation")

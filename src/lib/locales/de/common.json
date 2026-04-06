@@ -432,5 +432,23 @@
   "common.admin.invoices.meta.customerNo": "Kdnr.",
   "common.admin.invoices.meta.issued": "Ausgestellt",
   "common.admin.invoices.sort.oldest": "Älteste",
-  "common.admin.invoices.sort.newest": "Neueste"
+  "common.admin.invoices.sort.newest": "Neueste",
+
+  "common.admin.invoices.meta.child": "Kind",
+  "common.admin.invoices.badge.collection": "Inkasso",
+  "common.admin.invoices.actions.openPdf": "PDF öffnen",
+  "common.admin.invoices.actions.markAsPaid": "Als bezahlt markieren",
+  "common.admin.invoices.actions.markReturnedAndAddFee": "Rücklastschrift markieren + Gebühr",
+  "common.admin.invoices.actions.refund": "Erstatten",
+  "common.admin.invoices.actions.withdraw14Days": "Widerruf (14 Tage)",
+  "common.admin.invoices.actions.sendDunningStep": "Mahnstufe senden",
+  "common.admin.invoices.actions.sendDocumentByEmail": "Dieses Dokument per E-Mail senden",
+  "common.admin.invoices.actions.voidDunningObsolete": "Mahnung gegenstandslos machen",
+  "common.admin.invoices.actions.dunningOnly": "Nur für Mahnungen",
+  "common.admin.invoices.actions.alreadyVoided": "Bereits gegenstandslos",
+  "common.admin.invoices.actions.voidDunningPaymentReminder": "Mahnung gegenstandslos machen (Zahlungserinnerung/Mahnung)",
+  "common.admin.invoices.actions.handOverToCollection": "An Inkasso übergeben",
+  "common.admin.invoices.actions.alreadyHandedOverToCollection": "Bereits an Inkasso übergeben",
+  "common.admin.invoices.actions.notAvailableForCreditNotes": "Für Gutschriften nicht verfügbar",
+  "common.admin.invoices.actions.finalAlreadySent": "Letzte Mahnung bereits gesendet"
 }

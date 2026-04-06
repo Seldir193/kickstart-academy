@@ -432,5 +432,23 @@
   "common.admin.invoices.meta.customerNo": "Cust. no.",
   "common.admin.invoices.meta.issued": "Issued",
   "common.admin.invoices.sort.oldest": "Oldest",
-  "common.admin.invoices.sort.newest": "Newest"
+  "common.admin.invoices.sort.newest": "Newest",
+
+  "common.admin.invoices.meta.child": "Child",
+  "common.admin.invoices.badge.collection": "Collection",
+  "common.admin.invoices.actions.openPdf": "Open PDF",
+  "common.admin.invoices.actions.markAsPaid": "Mark as paid",
+  "common.admin.invoices.actions.markReturnedAndAddFee": "Mark returned + fee",
+  "common.admin.invoices.actions.refund": "Refund",
+  "common.admin.invoices.actions.withdraw14Days": "Withdraw (14 days)",
+  "common.admin.invoices.actions.sendDunningStep": "Send dunning step",
+  "common.admin.invoices.actions.sendDocumentByEmail": "Send this document by email",
+  "common.admin.invoices.actions.voidDunningObsolete": "Void dunning (obsolete)",
+  "common.admin.invoices.actions.dunningOnly": "Dunning only",
+  "common.admin.invoices.actions.alreadyVoided": "Already voided",
+  "common.admin.invoices.actions.voidDunningPaymentReminder": "Void dunning (payment reminder/dunning)",
+  "common.admin.invoices.actions.handOverToCollection": "Hand over to collection",
+  "common.admin.invoices.actions.alreadyHandedOverToCollection": "Already handed over to collection",
+  "common.admin.invoices.actions.notAvailableForCreditNotes": "Not available for credit notes",
+  "common.admin.invoices.actions.finalAlreadySent": "Final already sent"
 }

@@ -429,5 +429,23 @@
   "common.admin.invoices.meta.customerNo": "Müşteri no.",
   "common.admin.invoices.meta.issued": "Düzenlenme",
   "common.admin.invoices.sort.oldest": "En eski",
-  "common.admin.invoices.sort.newest": "En yeni"
+  "common.admin.invoices.sort.newest": "En yeni",
+
+  "common.admin.invoices.meta.child": "Çocuk",
+  "common.admin.invoices.badge.collection": "Tahsilat",
+  "common.admin.invoices.actions.openPdf": "PDF aç",
+  "common.admin.invoices.actions.markAsPaid": "Ödendi olarak işaretle",
+  "common.admin.invoices.actions.markReturnedAndAddFee": "İade edildi olarak işaretle + ücret",
+  "common.admin.invoices.actions.refund": "İade et",
+  "common.admin.invoices.actions.withdraw14Days": "Cayma (14 gün)",
+  "common.admin.invoices.actions.sendDunningStep": "İhtar adımını gönder",
+  "common.admin.invoices.actions.sendDocumentByEmail": "Bu belgeyi e-postayla gönder",
+  "common.admin.invoices.actions.voidDunningObsolete": "İhtarı geçersiz say",
+  "common.admin.invoices.actions.dunningOnly": "Sadece ihtarlar için",
+  "common.admin.invoices.actions.alreadyVoided": "Zaten geçersiz sayıldı",
+  "common.admin.invoices.actions.voidDunningPaymentReminder": "İhtarı geçersiz say (ödeme hatırlatması/ihtar)",
+  "common.admin.invoices.actions.handOverToCollection": "Tahsilata devret",
+  "common.admin.invoices.actions.alreadyHandedOverToCollection": "Zaten tahsilata devredildi",
+  "common.admin.invoices.actions.notAvailableForCreditNotes": "Alacak dekontları için kullanılamaz",
+  "common.admin.invoices.actions.finalAlreadySent": "Son ihtar zaten gönderildi"
 }
