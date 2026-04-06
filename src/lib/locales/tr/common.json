@@ -390,5 +390,12 @@
   "common.admin.invoices.search.placeholder": "Numara, müşteri, e-posta veya teklif ara",
 
   "common.pagination.previousPage": "Önceki sayfa",
-  "common.pagination.nextPage": "Sonraki sayfa"
+  "common.pagination.nextPage": "Sonraki sayfa",
+
+  "common.admin.invoices.types.participation": "Katılım",
+  "common.admin.invoices.types.invoice": "Fatura",
+  "common.admin.invoices.types.cancellation": "İptal",
+  "common.admin.invoices.types.storno": "Storno",
+  "common.admin.invoices.types.dunning": "İhtar",
+  "common.admin.invoices.types.creditNote": "Alacak dekontu"
 }

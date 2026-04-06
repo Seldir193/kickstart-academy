@@ -2,6 +2,7 @@
 "use client";
 
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 type Props = {
   participation: boolean;
@@ -58,11 +59,12 @@ export default function TypeChips({
   setCreditNote,
   onAnyChange,
 }: Props) {
+  const { t } = useTranslation();
   return (
     <div className="ks-filter-chips">
       <Chip
         active={participation}
-        label="Participation"
+        label={t("common.admin.invoices.types.participation")}
         onClick={() => {
           setParticipation(!participation);
           onAnyChange();
@@ -70,7 +72,7 @@ export default function TypeChips({
       />
       <Chip
         active={invoice}
-        label="Invoice"
+        label={t("common.admin.invoices.types.invoice")}
         onClick={() => {
           setInvoice(!invoice);
           onAnyChange();
@@ -78,7 +80,7 @@ export default function TypeChips({
       />
       <Chip
         active={cancellation}
-        label="Cancellation"
+        label={t("common.admin.invoices.types.cancellation")}
         onClick={() => {
           setCancellation(!cancellation);
           onAnyChange();
@@ -86,7 +88,7 @@ export default function TypeChips({
       />
       <Chip
         active={storno}
-        label="Storno"
+        label={t("common.admin.invoices.types.storno")}
         onClick={() => {
           setStorno(!storno);
           onAnyChange();
@@ -94,7 +96,7 @@ export default function TypeChips({
       />
       <Chip
         active={dunning}
-        label="Dunning"
+        label={t("common.admin.invoices.types.dunning")}
         onClick={() => {
           setDunning(!dunning);
           onAnyChange();
@@ -102,7 +104,7 @@ export default function TypeChips({
       />
       <Chip
         active={creditNote}
-        label="Credit note"
+        label={t("common.admin.invoices.types.creditNote")}
         onClick={() => {
           setCreditNote(!creditNote);
           onAnyChange();

@@ -393,5 +393,12 @@
   "common.admin.invoices.search.placeholder": "Nummer, Kunde, E-Mail oder Angebot suchen",
 
   "common.pagination.previousPage": "Vorherige Seite",
-  "common.pagination.nextPage": "Nächste Seite"
+  "common.pagination.nextPage": "Nächste Seite",
+
+  "common.admin.invoices.types.participation": "Teilnahme",
+  "common.admin.invoices.types.invoice": "Rechnung",
+  "common.admin.invoices.types.cancellation": "Stornierung",
+  "common.admin.invoices.types.storno": "Storno",
+  "common.admin.invoices.types.dunning": "Mahnung",
+  "common.admin.invoices.types.creditNote": "Gutschrift"
 }
