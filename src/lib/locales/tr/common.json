@@ -511,5 +511,8 @@
   "common.admin.invoices.dialog.dunningFeePlaceholder": "e.g. 5.00",
   "common.admin.invoices.dialog.processingFee": "Processing fee",
   "common.admin.invoices.dialog.processingFeePlaceholder": "e.g. 0.00",
-  "common.admin.invoices.dialog.freeText": "Free text"
+  "common.admin.invoices.dialog.freeText": "Free text",
+
+  "common.admin.invoices.dialog.footer.saveReturned": "İade edilen ödemeyi kaydet",
+  "common.admin.invoices.actions.send": "Gönder"
 }

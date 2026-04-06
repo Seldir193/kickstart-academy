@@ -514,5 +514,8 @@
   "common.admin.invoices.dialog.dunningFeePlaceholder": "z. B. 5.00",
   "common.admin.invoices.dialog.processingFee": "Bearbeitungsgebühr",
   "common.admin.invoices.dialog.processingFeePlaceholder": "z. B. 0.00",
-  "common.admin.invoices.dialog.freeText": "Freitext"
+  "common.admin.invoices.dialog.freeText": "Freitext",
+
+  "common.admin.invoices.dialog.footer.saveReturned": "Rücklastschrift speichern",
+  "common.admin.invoices.actions.send": "Senden"
 }
