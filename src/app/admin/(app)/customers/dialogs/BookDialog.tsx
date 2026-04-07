@@ -228,18 +228,27 @@ function resolveHolidayLabel(offer: Offer | null) {
   );
 }
 
-function formatDateOnlyDe(value?: string | null) {
-  if (!value) return "";
-  const iso = /T/.test(value) ? value : `${value}T00:00:00`;
-  const d = new Date(iso);
-  if (Number.isNaN(d.getTime())) return value;
+// function formatDateOnlyDe(value?: string | null) {
+//   if (!value) return "";
+//   const iso = /T/.test(value) ? value : `${value}T00:00:00`;
+//   const d = new Date(iso);
+//   if (Number.isNaN(d.getTime())) return value;
 
-  return new Intl.DateTimeFormat("de-DE", {
-    day: "2-digit",
-    month: "2-digit",
-    year: "numeric",
-  }).format(d);
-}
+//   return new Intl.DateTimeFormat("de-DE", {
+//     day: "2-digit",
+//     month: "2-digit",
+//     year: "numeric",
+//   }).format(d);
+// }
+
+// function formatRangeDe(from?: string, to?: string) {
+//   const a = formatDateOnlyDe(from || "");
+//   const b = formatDateOnlyDe(to || "");
+
+//   if (!a && !b) return "";
+//   if (a && b) return `${a} – ${b}`;
+//   return a || b;
+// }
 
 function holidayFromOf(offer: Offer | null) {
   return (
@@ -267,15 +276,6 @@ function holidayToOf(offer: Offer | null) {
   );
 }
 
-function formatRangeDe(from?: string, to?: string) {
-  const a = formatDateOnlyDe(from || "");
-  const b = formatDateOnlyDe(to || "");
-
-  if (!a && !b) return "";
-  if (a && b) return `${a} – ${b}`;
-  return a || b;
-}
-
 function normalizeGender(raw: unknown) {
   const g = safeText(raw).toLowerCase();
   if (g === "male" || g === "m" || g === "männlich") return "männlich";
@@ -289,11 +289,17 @@ function normalizeGender(raw: unknown) {
 //   return [full || "Kind", birth].filter(Boolean).join(" - ");
 // }
 
-function childLabel(child: FamilyChild) {
-  return `${child.firstName} ${child.lastName}`.trim() || "Kind";
+function childLabel(child: FamilyChild, t: (key: string) => string) {
+  return (
+    `${child.firstName} ${child.lastName}`.trim() ||
+    t("common.admin.customers.bookDialog.child")
+  );
 }
 
-function buildChildOptions(family: FamilyMember[] | null) {
+function buildChildOptions(
+  family: FamilyMember[] | null,
+  t: (key: string) => string,
+) {
   const members = Array.isArray(family) ? family : [];
 
   return members.flatMap((member) => {
@@ -326,7 +332,7 @@ function buildChildOptions(family: FamilyMember[] | null) {
       })
       .map((child) => ({
         uid: safeText(child.uid),
-        label: childLabel(child),
+        label: childLabel(child, t),
         parentId: member._id,
         child,
       }));
@@ -353,7 +359,10 @@ function parentOptionId(memberId: string, idx: number) {
   return `${memberId}::parent::${idx}`;
 }
 
-function buildParentOptions(family: FamilyMember[] | null) {
+function buildParentOptions(
+  family: FamilyMember[] | null,
+  t: (key: string) => string,
+) {
   const members = Array.isArray(family) ? family : [];
 
   return members.flatMap((member) => {
@@ -366,7 +375,7 @@ function buildParentOptions(family: FamilyMember[] | null) {
       id: parentOptionId(member._id, idx),
       label:
         `${safeText(parent?.firstName)} ${safeText(parent?.lastName)}`.trim() ||
-        "Elternteil",
+        t("common.admin.customers.bookDialog.parent"),
     }));
   });
 }
@@ -399,6 +408,7 @@ export default function BookDialog({
   onClose,
   onBooked,
 }: Props) {
+  const { t, i18n } = useTranslation();
   const { offers, loadingOffers, err, setErr } = useBookDialogOffers();
   const { family, familyLoading, familyError, baseSelectedId } =
     useBookDialogFamily(customerId);
@@ -445,8 +455,11 @@ export default function BookDialog({
     { ref: offerDropdownRef, close: () => setIsOfferDropdownOpen(false) },
   ]);
 
-  const childOptions = useMemo(() => buildChildOptions(family), [family]);
-  const parentOptions = useMemo(() => buildParentOptions(family), [family]);
+  const childOptions = useMemo(() => buildChildOptions(family, t), [family, t]);
+  const parentOptions = useMemo(
+    () => buildParentOptions(family, t),
+    [family, t],
+  );
 
   const selfMemberId = useMemo(() => {
     if (selectedParentId) return selectedParentId;
@@ -511,12 +524,13 @@ export default function BookDialog({
   }, [family, selfMemberId]);
 
   const selectedParentLabel = useMemo(() => {
-    if (!selectedParent) return "Elternteil wählen …";
+    if (!selectedParent)
+      return t("common.admin.customers.bookDialog.selectParent");
     return (
       `${selectedParent.parent.firstName} ${selectedParent.parent.lastName}`.trim() ||
-      "Elternteil"
+      t("common.admin.customers.bookDialog.parent")
     );
-  }, [selectedParent]);
+  }, [selectedParent, t]);
 
   const activeChild: FamilyChild | null = useMemo(() => {
     if (bookingTarget !== "child") return null;
@@ -560,12 +574,25 @@ export default function BookDialog({
     return resolveHolidayLabel(selectedOffer);
   }, [selectedOffer]);
 
+  // const holidayRange = useMemo(() => {
+  //   return formatRangeDe(
+  //     holidayFromOf(selectedOffer),
+  //     holidayToOf(selectedOffer),
+  //   );
+  // }, [selectedOffer]);
+
+  // rein
+  // rein
   const holidayRange = useMemo(() => {
-    return formatRangeDe(
-      holidayFromOf(selectedOffer),
-      holidayToOf(selectedOffer),
-    );
-  }, [selectedOffer]);
+    const fromRaw = safeText(holidayFromOf(selectedOffer));
+    const toRaw = safeText(holidayToOf(selectedOffer));
+    const from = fromRaw ? fmtDE(fromRaw, i18n.language) : "";
+    const to = toRaw ? fmtDE(toRaw, i18n.language) : "";
+
+    if (!from && !to) return "";
+    if (from && to) return `${from} – ${to}`;
+    return from || to;
+  }, [selectedOffer, i18n.language]);
 
   const childGender = useMemo(() => {
     return normalizeGender((activeChild as any)?.gender);
@@ -578,16 +605,17 @@ export default function BookDialog({
   }, [isWeekly, selectedDate, selectedOffer?.price]);
 
   const selectedCourseLabel = useMemo(() => {
-    if (!courseValue) return "All courses";
+    if (!courseValue) return t("common.admin.customers.bookDialog.allCourses");
     for (const group of GROUPED_COURSE_OPTIONS) {
       const found = group.items.find((opt) => opt.value === courseValue);
       if (found) return found.label;
     }
-    return "All courses";
-  }, [courseValue]);
+    return t("common.admin.customers.bookDialog.allCourses");
+  }, [courseValue, t]);
 
   const selectedOfferLabel = useMemo(() => {
-    if (!filteredOffers.length) return "No offers in this selection.";
+    if (!filteredOffers.length)
+      return t("common.admin.customers.bookDialog.noOffersInSelection");
 
     const found =
       filteredOffers.find((o) => o._id === selectedOfferId) ||
@@ -595,11 +623,11 @@ export default function BookDialog({
 
     const parts = [
       found.title || "—",
-      isNum(found.price) ? fmtEUR(found.price) : undefined,
+      isNum(found.price) ? fmtEUR(found.price, i18n.language) : undefined,
     ].filter(Boolean);
 
     return parts.join(" — ");
-  }, [filteredOffers, selectedOfferId]);
+  }, [filteredOffers, selectedOfferId, i18n.language, t]);
 
   async function submit() {
     if (!selectedOfferId || !selectedDate) return;
@@ -619,7 +647,12 @@ export default function BookDialog({
           };
 
     if (bookingTarget === "child" && !uid) {
-      setErr("Bitte Kind auswählen (UID fehlt).");
+      setErr(
+        toastText(
+          t,
+          "common.admin.customers.bookDialog.errors.selectChildMissingUid",
+        ),
+      );
       return;
     }
 
@@ -671,8 +704,14 @@ export default function BookDialog({
 
       if (fresh) onBooked(fresh);
       onClose();
-    } catch (e: any) {
-      setErr(e?.message || "Booking failed");
+    } catch (e: unknown) {
+      setErr(
+        toastErrorMessage(
+          t,
+          e,
+          "common.admin.customers.bookDialog.errors.bookingFailed",
+        ),
+      );
     } finally {
       setSaving(false);
     }
@@ -688,7 +727,7 @@ export default function BookDialog({
       <button
         type="button"
         className="dialog-backdrop-hit"
-        aria-label="Close"
+        aria-label={t("common.actions.close")}
         onClick={onClose}
       />
 
@@ -699,10 +738,10 @@ export default function BookDialog({
         <div className="dialog-head book-dialog__head">
           <div className="book-dialog__head-main">
             <h3 id="book-dialog-title" className="dialog-title">
-              Book offer
+              {t("common.admin.customers.bookDialog.title")}
             </h3>
             <p className="dialog-subtitle">
-              Select scope, course, offer, and booking details.
+              {t("common.admin.customers.bookDialog.subtitle")}
             </p>
           </div>
 
@@ -710,7 +749,7 @@ export default function BookDialog({
             <button
               type="button"
               className="dialog-close"
-              aria-label="Close"
+              aria-label={t("common.actions.close")}
               onClick={onClose}
             >
               <img
@@ -729,7 +768,9 @@ export default function BookDialog({
               <div className="dialog-section__body">
                 {err && <div className="book-dialog__error">{err}</div>}
                 {loadingOffers && (
-                  <div className="book-dialog__note">Loading offers…</div>
+                  <div className="book-dialog__note">
+                    {t("common.admin.customers.bookDialog.loadingOffers")}
+                  </div>
                 )}
               </div>
             </section>
@@ -737,7 +778,9 @@ export default function BookDialog({
 
           <section className="dialog-section book-dialog__familySection">
             <div className="dialog-section__head">
-              <h4 className="dialog-section__title">Booking scope</h4>
+              <h4 className="dialog-section__title">
+                {t("common.admin.customers.bookDialog.bookingScope")}
+              </h4>
             </div>
 
             <div className="dialog-section__body">
@@ -768,12 +811,16 @@ export default function BookDialog({
 
           <section className="dialog-section book-dialog__selectionSection">
             <div className="dialog-section__head">
-              <h4 className="dialog-section__title">Offer selection</h4>
+              <h4 className="dialog-section__title">
+                {t("common.admin.customers.bookDialog.offerSelection")}
+              </h4>
             </div>
 
             <div className="dialog-section__body book-dialog__selectionBody">
               <div className="book-dialog__field">
-                <label className="dialog-label">Courses</label>
+                <label className="dialog-label">
+                  {t("common.admin.customers.bookDialog.courses")}
+                </label>
                 <BookDialogCourseSelect
                   courseValue={courseValue}
                   setCourseValue={setCourseValue}
@@ -785,7 +832,9 @@ export default function BookDialog({
               </div>
 
               <div className="book-dialog__field">
-                <label className="dialog-label">Offer</label>
+                <label className="dialog-label">
+                  {t("common.admin.customers.bookDialog.offer")}
+                </label>
                 <BookDialogOfferSelect
                   filteredOffers={filteredOffers}
                   selectedOfferId={selectedOfferId}
@@ -797,17 +846,19 @@ export default function BookDialog({
                 />
                 {!filteredOffers.length && (
                   <div className="book-dialog__note mt-1">
-                    No offers in this selection.
+                    {t("common.admin.customers.bookDialog.noOffersInSelection")}
                   </div>
                 )}
               </div>
 
               <div className="book-dialog__field">
-                <label className="dialog-label">Start date</label>
+                <label className="dialog-label">
+                  {t("common.admin.customers.bookDialog.startDate")}
+                </label>
                 <KsDatePicker
                   value={selectedDate}
                   onChange={(nextIso) => setSelectedDate(nextIso)}
-                  placeholder="dd.mm.yyyy"
+                  placeholder={t("common.placeholders.date")}
                   disabled={false}
                 />
               </div>
@@ -817,7 +868,9 @@ export default function BookDialog({
           {isCamp && (
             <section className="dialog-section book-dialog__detailsSection">
               <div className="dialog-section__head">
-                <h4 className="dialog-section__title">Camp details</h4>
+                <h4 className="dialog-section__title">
+                  {t("common.admin.customers.bookDialog.campDetails")}
+                </h4>
               </div>
 
               <div className="dialog-section__body">
@@ -826,16 +879,20 @@ export default function BookDialog({
                     <div className="camp-card__head">
                       <div>
                         <div className="camp-card__eyebrow">
-                          Holiday program
+                          {t(
+                            "common.admin.customers.bookDialog.holidayProgram",
+                          )}
                         </div>
-                        <div className="camp-card__title">Camp details</div>
+                        <div className="camp-card__title">
+                          {t("common.admin.customers.bookDialog.campDetails")}
+                        </div>
                       </div>
                     </div>
 
                     <div className="camp-summary-grid">
                       <div className="camp-summary-item">
                         <span className="camp-summary-item__label">
-                          Holiday
+                          {t("common.admin.customers.bookDialog.holiday")}
                         </span>
                         <span className="camp-summary-item__value">
                           {holidayLabel || "-"}
@@ -843,7 +900,10 @@ export default function BookDialog({
                       </div>
 
                       <div className="camp-summary-item">
-                        <span className="camp-summary-item__label">Period</span>
+                        <span className="camp-summary-item__label">
+                          {" "}
+                          {t("common.admin.customers.bookDialog.period")}
+                        </span>
                         <span className="camp-summary-item__value">
                           {holidayRange || "-"}
                         </span>
@@ -851,17 +911,26 @@ export default function BookDialog({
                     </div>
 
                     <div className="camp-block">
-                      <div className="camp-block__title">Main child</div>
+                      <div className="camp-block__title">
+                        {" "}
+                        {t("common.admin.customers.bookDialog.mainChild")}
+                      </div>
 
                       <div className="camp-grid">
                         <div className="field">
-                          <label className="dialog-label">T-shirt size</label>
+                          <label className="dialog-label">
+                            {t("common.admin.customers.bookDialog.tShirtSize")}
+                          </label>
                           <select
                             className="input"
                             value={mainTShirtSize}
                             onChange={(e) => setMainTShirtSize(e.target.value)}
                           >
-                            <option value="">Please select</option>
+                            <option value="">
+                              {t(
+                                "common.admin.customers.bookDialog.pleaseSelect",
+                              )}
+                            </option>
                             {T_SHIRT_OPTIONS.map((item) => (
                               <option key={item} value={item}>
                                 {item}
@@ -872,7 +941,9 @@ export default function BookDialog({
 
                         <div className="field">
                           <label className="dialog-label">
-                            Goalkeeper school
+                            {t(
+                              "common.admin.customers.bookDialog.goalkeeperSchool",
+                            )}
                           </label>
                           <div className="camp-toggle-row camp-toggle-row--full">
                             <button
@@ -882,7 +953,7 @@ export default function BookDialog({
                               }`}
                               onClick={() => setMainGoalkeeperSchool(false)}
                             >
-                              No
+                              {t("common.admin.customers.bookDialog.no")}
                             </button>
 
                             <button
@@ -892,7 +963,7 @@ export default function BookDialog({
                               }`}
                               onClick={() => setMainGoalkeeperSchool(true)}
                             >
-                              Yes (+40€)
+                              {t("common.admin.customers.bookDialog.yesPlus40")}
                             </button>
                           </div>
                         </div>
@@ -902,9 +973,13 @@ export default function BookDialog({
                     <div className="camp-block camp-block--sibling">
                       <div className="sibling-head">
                         <div>
-                          <div className="camp-block__title">Add sibling</div>
+                          <div className="camp-block__title">
+                            {t("common.admin.customers.bookDialog.addSibling")}
+                          </div>
                           <div className="sibling-head__subline">
-                            Optional add-on with 14 euro discount
+                            {t(
+                              "common.admin.customers.bookDialog.optionalSiblingDiscount",
+                            )}
                           </div>
                         </div>
 
@@ -915,7 +990,9 @@ export default function BookDialog({
                             onChange={(e) => setHasSibling(e.target.checked)}
                           />
                           <span className="sibling-switch__text">
-                            Yes (get 14 euro discount)
+                            {t(
+                              "common.admin.customers.bookDialog.yesGet14Discount",
+                            )}
                           </span>
                         </label>
                       </div>
@@ -924,7 +1001,9 @@ export default function BookDialog({
                         <div className="sibling-fields is-open">
                           <div className="camp-grid">
                             <div className="field">
-                              <label className="dialog-label">Gender</label>
+                              <label className="dialog-label">
+                                {t("common.admin.customers.bookDialog.gender")}
+                              </label>
                               <div className="camp-toggle-row camp-toggle-row--full">
                                 <button
                                   type="button"
@@ -935,7 +1014,9 @@ export default function BookDialog({
                                   }`}
                                   onClick={() => setSiblingGender("weiblich")}
                                 >
-                                  Female
+                                  {t(
+                                    "common.admin.customers.bookDialog.female",
+                                  )}
                                 </button>
 
                                 <button
@@ -947,19 +1028,24 @@ export default function BookDialog({
                                   }`}
                                   onClick={() => setSiblingGender("männlich")}
                                 >
-                                  Male
+                                  {t("common.admin.customers.bookDialog.male")}
                                 </button>
                               </div>
                             </div>
 
                             <div className="field">
-                              <label className="dialog-label">Birth date</label>
+                              <label className="dialog-label">
+                                {" "}
+                                {t(
+                                  "common.admin.customers.bookDialog.birthDate",
+                                )}
+                              </label>
                               <KsDatePicker
                                 value={siblingBirthDate}
                                 onChange={(nextIso) =>
                                   setSiblingBirthDate(nextIso)
                                 }
-                                placeholder="dd.mm.yyyy"
+                                placeholder={t("common.placeholders.date")}
                                 disabled={false}
                               />
                             </div>
@@ -967,7 +1053,12 @@ export default function BookDialog({
 
                           <div className="camp-grid">
                             <div className="field">
-                              <label className="dialog-label">First name</label>
+                              <label className="dialog-label">
+                                {" "}
+                                {t(
+                                  "common.admin.customers.bookDialog.firstName",
+                                )}
+                              </label>
                               <input
                                 className="input"
                                 value={siblingFirstName}
@@ -978,7 +1069,11 @@ export default function BookDialog({
                             </div>
 
                             <div className="field">
-                              <label className="dialog-label">Last name</label>
+                              <label className="dialog-label">
+                                {t(
+                                  "common.admin.customers.bookDialog.lastName",
+                                )}
+                              </label>
                               <input
                                 className="input"
                                 value={siblingLastName}
@@ -992,7 +1087,9 @@ export default function BookDialog({
                           <div className="camp-grid">
                             <div className="field">
                               <label className="dialog-label">
-                                T-shirt size
+                                {t(
+                                  "common.admin.customers.bookDialog.tShirtSize",
+                                )}
                               </label>
                               <select
                                 className="input"
@@ -1001,7 +1098,11 @@ export default function BookDialog({
                                   setSiblingTShirtSize(e.target.value)
                                 }
                               >
-                                <option value="">Please select</option>
+                                <option value="">
+                                  {t(
+                                    "common.admin.customers.bookDialog.pleaseSelect",
+                                  )}
+                                </option>
                                 {T_SHIRT_OPTIONS.map((item) => (
                                   <option key={item} value={item}>
                                     {item}
@@ -1012,7 +1113,9 @@ export default function BookDialog({
 
                             <div className="field">
                               <label className="dialog-label">
-                                Goalkeeper school
+                                {t(
+                                  "common.admin.customers.bookDialog.goalkeeperSchool",
+                                )}
                               </label>
                               <div className="camp-toggle-row camp-toggle-row--full">
                                 <button
@@ -1024,7 +1127,7 @@ export default function BookDialog({
                                     setSiblingGoalkeeperSchool(false)
                                   }
                                 >
-                                  No
+                                  {t("common.admin.customers.bookDialog.no")}
                                 </button>
 
                                 <button
@@ -1036,7 +1139,9 @@ export default function BookDialog({
                                     setSiblingGoalkeeperSchool(true)
                                   }
                                 >
-                                  Yes (+40€)
+                                  {t(
+                                    "common.admin.customers.bookDialog.yesPlus40",
+                                  )}
                                 </button>
                               </div>
                             </div>
@@ -1046,11 +1151,15 @@ export default function BookDialog({
                     </div>
 
                     <div className="camp-block camp-block--footer">
-                      <div className="camp-block__title">Booking details</div>
+                      <div className="camp-block__title">
+                        {t("common.admin.customers.bookDialog.bookingDetails")}
+                      </div>
 
                       <div className="camp-grid camp-grid--top">
                         <div className="field">
-                          <label className="dialog-label">Voucher</label>
+                          <label className="dialog-label">
+                            {t("common.admin.customers.bookDialog.voucher")}
+                          </label>
                           <input
                             className="input"
                             value={voucher}
@@ -1059,7 +1168,9 @@ export default function BookDialog({
                         </div>
 
                         <div className="field">
-                          <label className="dialog-label">Source</label>
+                          <label className="dialog-label">
+                            {t("common.admin.customers.bookDialog.source")}
+                          </label>
                           <input
                             className="input"
                             value={source}
@@ -1077,7 +1188,9 @@ export default function BookDialog({
           {isPowertraining && (
             <section className="dialog-section book-dialog__detailsSection">
               <div className="dialog-section__head">
-                <h4 className="dialog-section__title">Powertraining details</h4>
+                <h4 className="dialog-section__title">
+                  {t("common.admin.customers.bookDialog.powertrainingDetails")}
+                </h4>
               </div>
 
               <div className="dialog-section__body">
@@ -1086,10 +1199,14 @@ export default function BookDialog({
                     <div className="camp-card__head">
                       <div>
                         <div className="camp-card__eyebrow">
-                          Holiday program
+                          {t(
+                            "common.admin.customers.bookDialog.holidayProgram",
+                          )}
                         </div>
                         <div className="camp-card__title">
-                          Powertraining details
+                          {t(
+                            "common.admin.customers.bookDialog.powertrainingDetails",
+                          )}
                         </div>
                       </div>
                     </div>
@@ -1097,7 +1214,7 @@ export default function BookDialog({
                     <div className="camp-summary-grid">
                       <div className="camp-summary-item">
                         <span className="camp-summary-item__label">
-                          Holiday
+                          {t("common.admin.customers.bookDialog.holiday")}
                         </span>
                         <span className="camp-summary-item__value">
                           {holidayLabel || "—"}
@@ -1105,7 +1222,9 @@ export default function BookDialog({
                       </div>
 
                       <div className="camp-summary-item">
-                        <span className="camp-summary-item__label">Period</span>
+                        <span className="camp-summary-item__label">
+                          {t("common.admin.customers.bookDialog.period")}
+                        </span>
                         <span className="camp-summary-item__value">
                           {holidayRange || "—"}
                         </span>
@@ -1113,11 +1232,15 @@ export default function BookDialog({
                     </div>
 
                     <div className="camp-block camp-block--footer">
-                      <div className="camp-block__title">Booking details</div>
+                      <div className="camp-block__title">
+                        {t("common.admin.customers.bookDialog.bookingDetails")}
+                      </div>
 
                       <div className="camp-grid camp-grid--top">
                         <div className="field">
-                          <label className="dialog-label">Voucher</label>
+                          <label className="dialog-label">
+                            {t("common.admin.customers.bookDialog.voucher")}
+                          </label>
                           <input
                             className="input"
                             value={voucher}
@@ -1126,7 +1249,9 @@ export default function BookDialog({
                         </div>
 
                         <div className="field">
-                          <label className="dialog-label">Source</label>
+                          <label className="dialog-label">
+                            {t("common.admin.customers.bookDialog.source")}
+                          </label>
                           <input
                             className="input"
                             value={source}
@@ -1144,7 +1269,9 @@ export default function BookDialog({
           {isOneTimeVoucherOffer && (
             <section className="dialog-section book-dialog__detailsSection">
               <div className="dialog-section__head">
-                <h4 className="dialog-section__title">Booking details</h4>
+                <h4 className="dialog-section__title">
+                  {t("common.admin.customers.bookDialog.bookingDetails")}
+                </h4>
               </div>
 
               <div className="dialog-section__body">
@@ -1153,18 +1280,28 @@ export default function BookDialog({
                     <div className="camp-card__head">
                       <div>
                         <div className="camp-card__eyebrow">
-                          One-time booking
+                          {t(
+                            "common.admin.customers.bookDialog.oneTimeBooking",
+                          )}
                         </div>
-                        <div className="camp-card__title">Booking details</div>
+                        <div className="camp-card__title">
+                          {t(
+                            "common.admin.customers.bookDialog.bookingDetails",
+                          )}
+                        </div>
                       </div>
                     </div>
 
                     <div className="camp-block camp-block--footer">
-                      <div className="camp-block__title">Booking details</div>
+                      <div className="camp-block__title">
+                        {t("common.admin.customers.bookDialog.bookingDetails")}
+                      </div>
 
                       <div className="camp-grid camp-grid--top">
                         <div className="field">
-                          <label className="dialog-label">Voucher</label>
+                          <label className="dialog-label">
+                            {t("common.admin.customers.bookDialog.voucher")}
+                          </label>
                           <input
                             className="input"
                             value={voucher}
@@ -1173,7 +1310,9 @@ export default function BookDialog({
                         </div>
 
                         <div className="field">
-                          <label className="dialog-label">Source</label>
+                          <label className="dialog-label">
+                            {t("common.admin.customers.bookDialog.source")}
+                          </label>
                           <input
                             className="input"
                             value={source}
@@ -1191,7 +1330,9 @@ export default function BookDialog({
           {isWeekly && (
             <section className="dialog-section book-dialog__detailsSection">
               <div className="dialog-section__head">
-                <h4 className="dialog-section__title">Subscription details</h4>
+                <h4 className="dialog-section__title">
+                  {t("common.admin.customers.bookDialog.subscriptionDetails")}
+                </h4>
               </div>
 
               <div className="dialog-section__body">
@@ -1200,18 +1341,28 @@ export default function BookDialog({
                     <div className="camp-card__head">
                       <div>
                         <div className="camp-card__eyebrow">
-                          Subscription booking
+                          {t(
+                            "common.admin.customers.bookDialog.subscriptionBooking",
+                          )}
                         </div>
-                        <div className="camp-card__title">Booking details</div>
+                        <div className="camp-card__title">
+                          {t(
+                            "common.admin.customers.bookDialog.bookingDetails",
+                          )}
+                        </div>
                       </div>
                     </div>
 
                     <div className="camp-block camp-block--footer">
-                      <div className="camp-block__title">Booking details</div>
+                      <div className="camp-block__title">
+                        {t("common.admin.customers.bookDialog.bookingDetails")}
+                      </div>
 
                       <div className="camp-grid camp-grid--top">
                         <div className="field">
-                          <label className="dialog-label">Voucher</label>
+                          <label className="dialog-label">
+                            {t("common.admin.customers.bookDialog.voucher")}
+                          </label>
                           <input
                             className="input"
                             value={voucher}
@@ -1220,7 +1371,9 @@ export default function BookDialog({
                         </div>
 
                         <div className="field">
-                          <label className="dialog-label">Source</label>
+                          <label className="dialog-label">
+                            {t("common.admin.customers.bookDialog.source")}
+                          </label>
                           <input
                             className="input"
                             value={source}
@@ -1238,7 +1391,9 @@ export default function BookDialog({
           {isNum(selectedOffer?.price) && (
             <section className="dialog-section book-dialog__priceSection">
               <div className="dialog-section__head">
-                <h4 className="dialog-section__title">Price overview</h4>
+                <h4 className="dialog-section__title">
+                  {t("common.admin.customers.bookDialog.priceOverview")}
+                </h4>
               </div>
 
               <div className="dialog-section__body">
@@ -1246,27 +1401,41 @@ export default function BookDialog({
                   <div className="book-dialog__priceCard">
                     <ul className="book-dialog__priceList">
                       <li>
-                        Monthly price: <b>{fmtEUR(selectedOffer.price!)}</b>
+                        {t("common.admin.customers.bookDialog.monthlyPrice")}:{" "}
+                        <b>{fmtEUR(selectedOffer.price!, i18n.language)}</b>
                       </li>
                       {pro ? (
                         <li>
-                          First month (pro-rata from{" "}
-                          <b>{fmtDE(selectedDate)}</b>:{" "}
-                          <b>{fmtEUR(pro.firstMonthPrice)}</b>{" "}
+                          {t(
+                            "common.admin.customers.bookDialog.firstMonthProRata",
+                            {
+                              date: fmtDE(selectedDate, i18n.language),
+                            },
+                          )}{" "}
+                          <b>{fmtEUR(pro.firstMonthPrice, i18n.language)}</b>{" "}
                           <span className="book-dialog__muted">
-                            ({pro.daysRemaining}/{pro.daysInMonth} days)
+                            {t(
+                              "common.admin.customers.bookDialog.remainingDays",
+                              {
+                                daysRemaining: pro.daysRemaining,
+                                daysInMonth: pro.daysInMonth,
+                              },
+                            )}
                           </span>
                         </li>
                       ) : (
                         <li className="book-dialog__muted">
-                          Select a valid date to see pro-rata.
+                          {t(
+                            "common.admin.customers.bookDialog.selectValidDate",
+                          )}
                         </li>
                       )}
                     </ul>
                   </div>
                 ) : (
                   <div className="book-dialog__priceInline">
-                    Price: <b>{fmtEUR(selectedOffer.price!)}</b>
+                    {t("common.admin.customers.bookDialog.price")}:{" "}
+                    <b>{fmtEUR(selectedOffer.price!, i18n.language)}</b>
                   </div>
                 )}
               </div>
@@ -1281,7 +1450,9 @@ export default function BookDialog({
               disabled={saving || !selectedOfferId || !selectedDate}
               onClick={submit}
             >
-              {saving ? "Booking…" : "Confirm booking"}
+              {saving
+                ? t("common.admin.customers.bookDialog.booking")
+                : t("common.admin.customers.bookDialog.confirmBooking")}
             </button>
           </div>
         </div>
