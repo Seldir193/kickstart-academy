@@ -599,5 +599,7 @@
   "admin.customers.documents.pagination.perPage": "Pro Seite",
   "admin.customers.documents.download.csv": "CSV herunterladen",
   "admin.customers.documents.download.zip": "ZIP herunterladen",
-  "admin.customers.documents.error.loadFailed": "Laden fehlgeschlagen"
+  "admin.customers.documents.error.loadFailed": "Laden fehlgeschlagen",
+
+  "common.admin.customers.bookDialog.childWithoutName": "Kind ohne Namen"
 }

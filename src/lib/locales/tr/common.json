@@ -596,5 +596,7 @@
   "admin.customers.documents.pagination.perPage": "Sayfa başına",
   "admin.customers.documents.download.csv": "CSV indir",
   "admin.customers.documents.download.zip": "ZIP indir",
-  "admin.customers.documents.error.loadFailed": "Yükleme başarısız oldu"
+  "admin.customers.documents.error.loadFailed": "Yükleme başarısız oldu",
+
+  "common.admin.customers.bookDialog.childWithoutName": "İsimsiz çocuk"
 }

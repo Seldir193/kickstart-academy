@@ -13,24 +13,26 @@ export function isNum(v: any): v is number {
   return typeof v === "number" && isFinite(v);
 }
 
-export function fmtEUR(n: number) {
+// export function fmtEUR(n: number) {
+//   try {
+//     return new Intl.NumberFormat("de-DE", {
+//       style: "currency",
+//       currency: "EUR",
+//     }).format(n);
+//   } catch {
+//     return `${n.toFixed(2)} €`;
+//   }
+// }
+
+// rein
+export function fmtEUR(n: number, lang?: string) {
   try {
-    return new Intl.NumberFormat("de-DE", {
+    return new Intl.NumberFormat(dateLocale(lang), {
       style: "currency",
       currency: "EUR",
     }).format(n);
   } catch {
     return `${n.toFixed(2)} €`;
-  }
-}
-
-export function fmtDE(dateISO: string) {
-  if (!dateISO) return "—";
-  try {
-    const [y, m, d] = dateISO.split("-").map(Number);
-    return `${String(d).padStart(2, "0")}.${String(m).padStart(2, "0")}.${y}`;
-  } catch {
-    return dateISO;
   }
 }
 
@@ -57,25 +59,80 @@ export function firstChildOf(
   return null;
 }
 
-export function formatMemberChildLabel(m: FamilyMember): string {
-  const kid = firstChildOf(m);
-  const idPart =
-    m.userId != null ? `#${m.userId}` : `#${m._id.slice(-4) || "????"}`;
-  if (!kid) return `${idPart} - (Kind ohne Namen)`;
-  const name =
-    `${kid.firstName || ""} ${kid.lastName || ""}`.trim() ||
-    "(Kind ohne Namen)";
-  const birth = formatBirth(kid.birthDate);
-  return birth ? `${idPart} - ${name} - ${birth}` : `${idPart} - ${name}`;
+// rein
+function dateLocale(lang?: string) {
+  if (lang === "tr") return "tr-TR";
+  if (lang === "en") return "en-US";
+  return "de-DE";
 }
 
-function formatBirth(birthDate: string | null) {
-  if (!birthDate) return "";
-  const d = new Date(birthDate);
-  if (isNaN(d.getTime())) return "";
-  return new Intl.DateTimeFormat("de-DE", {
+export function fmtDE(dateISO: string, lang?: string) {
+  if (!dateISO) return "—";
+  const d = new Date(`${dateISO}T00:00:00`);
+  if (Number.isNaN(d.getTime())) return dateISO;
+  return new Intl.DateTimeFormat(dateLocale(lang), {
     day: "2-digit",
     month: "2-digit",
     year: "numeric",
   }).format(d);
 }
+
+export function formatMemberChildLabel(
+  m: FamilyMember,
+  t: (key: string) => string,
+  lang?: string,
+): string {
+  const kid = firstChildOf(m);
+  const missingName = t("common.admin.customers.bookDialog.childWithoutName");
+  const idPart =
+    m.userId != null ? `#${m.userId}` : `#${m._id.slice(-4) || "????"}`;
+  if (!kid) return `${idPart} - ${missingName}`;
+  const name =
+    `${kid.firstName || ""} ${kid.lastName || ""}`.trim() || missingName;
+  const birth = formatBirth(kid.birthDate, lang);
+  return birth ? `${idPart} - ${name} - ${birth}` : `${idPart} - ${name}`;
+}
+
+function formatBirth(birthDate: string | null, lang?: string) {
+  if (!birthDate) return "";
+  const d = new Date(birthDate);
+  if (isNaN(d.getTime())) return "";
+  return new Intl.DateTimeFormat(dateLocale(lang), {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+  }).format(d);
+}
+
+// export function fmtDE(dateISO: string) {
+//   if (!dateISO) return "—";
+//   try {
+//     const [y, m, d] = dateISO.split("-").map(Number);
+//     return `${String(d).padStart(2, "0")}.${String(m).padStart(2, "0")}.${y}`;
+//   } catch {
+//     return dateISO;
+//   }
+// }
+
+// export function formatMemberChildLabel(m: FamilyMember): string {
+//   const kid = firstChildOf(m);
+//   const idPart =
+//     m.userId != null ? `#${m.userId}` : `#${m._id.slice(-4) || "????"}`;
+//   if (!kid) return `${idPart} - (Kind ohne Namen)`;
+//   const name =
+//     `${kid.firstName || ""} ${kid.lastName || ""}`.trim() ||
+//     "(Kind ohne Namen)";
+//   const birth = formatBirth(kid.birthDate);
+//   return birth ? `${idPart} - ${name} - ${birth}` : `${idPart} - ${name}`;
+// }
+
+// function formatBirth(birthDate: string | null) {
+//   if (!birthDate) return "";
+//   const d = new Date(birthDate);
+//   if (isNaN(d.getTime())) return "";
+//   return new Intl.DateTimeFormat("de-DE", {
+//     day: "2-digit",
+//     month: "2-digit",
+//     year: "numeric",
+//   }).format(d);
+// }

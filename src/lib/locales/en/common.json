@@ -599,5 +599,7 @@
   "admin.customers.documents.pagination.perPage": "Per page",
   "admin.customers.documents.download.csv": "Download CSV",
   "admin.customers.documents.download.zip": "Download ZIP",
-  "admin.customers.documents.error.loadFailed": "Load failed"
+  "admin.customers.documents.error.loadFailed": "Load failed",
+
+  "common.admin.customers.bookDialog.childWithoutName": "Child without name"
 }
