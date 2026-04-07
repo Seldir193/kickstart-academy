@@ -552,5 +552,7 @@
   "admin.customers.newsletterSelect.all": "Tümü",
   "admin.customers.newsletterSelect.yes": "Evet",
   "admin.customers.newsletterSelect.no": "Hayır",
-  "admin.customers.newsletterSelect.ariaLabel": "Bülten filtresi"
+  "admin.customers.newsletterSelect.ariaLabel": "Bülten filtresi",
+
+  "admin.customers.list.error.loadFailed": "Yükleme başarısız oldu"
 }

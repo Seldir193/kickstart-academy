@@ -555,5 +555,7 @@
   "admin.customers.newsletterSelect.all": "All",
   "admin.customers.newsletterSelect.yes": "Yes",
   "admin.customers.newsletterSelect.no": "No",
-  "admin.customers.newsletterSelect.ariaLabel": "Newsletter filter"
+  "admin.customers.newsletterSelect.ariaLabel": "Newsletter filter",
+
+  "admin.customers.list.error.loadFailed": "Load failed"
 }

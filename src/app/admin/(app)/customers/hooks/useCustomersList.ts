@@ -1,6 +1,9 @@
+//src\app\admin\(app)\customers\hooks\useCustomersList.ts
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { toastErrorMessage } from "@/lib/toast-messages";
 import type { MutableRefObject } from "react";
 import type { Customer, ListResponse } from "../types";
 
@@ -65,6 +68,7 @@ async function fetchList(qs: string, signal: AbortSignal) {
 }
 
 export function useCustomersList(args: Args): State {
+  const { t } = useTranslation();
   const [items, setItems] = useState<Customer[]>([]);
   const [total, setTotal] = useState(0);
   const [listLoading, setListLoading] = useState(true);
@@ -100,7 +104,7 @@ export function useCustomersList(args: Args): State {
       if (e?.name === "AbortError") return;
       if (reqIdRef.current !== id) return;
 
-      setErr(e?.message || "Load failed");
+      setErr(toastErrorMessage(t, e, "admin.customers.list.error.loadFailed"));
     } finally {
       if (reqIdRef.current !== id) return;
 
