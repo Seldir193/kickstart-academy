@@ -495,8 +495,8 @@
   "common.datePicker.weekday.sat": "Sa",
   "common.datePicker.weekday.sun": "So",
 
-  "common.admin.invoices.docs.label_one": "Dokument: {{count}} auf dieser Seite",
-  "common.admin.invoices.docs.label_other": "Dokumente: {{count}} auf dieser Seite",
+  "common.admin.invoices.docs.label_one": "{{count}} Dokument auf dieser Seite",
+  "common.admin.invoices.docs.label_other": "{{count}} Dokumente auf dieser Seite",
 
   "common.admin.invoices.dialog.returned.ariaLabel": "Rücklastschrift markieren und Bankgebühr hinzufügen",
   "common.admin.invoices.dialog.returned.title": "Rücklastschrift markieren + Bankgebühr",
@@ -517,5 +517,15 @@
   "common.admin.invoices.dialog.freeText": "Freitext",
 
   "common.admin.invoices.dialog.footer.saveReturned": "Rücklastschrift speichern",
-  "common.admin.invoices.actions.send": "Senden"
+  "common.admin.invoices.actions.send": "Senden",
+
+  "admin.customers.page.tabs.customers": "Kunden",
+  "admin.customers.page.tabs.newsletterLeads": "Newsletter-Leads",
+  "admin.customers.page.tabs.all": "Alle",
+  "admin.customers.page.search.placeholder": "Name, E-Mail, Stadt, userId… (Kind & Eltern)",
+  "admin.customers.page.search.ariaLabel": "Kunden suchen",
+  "admin.customers.page.actions.newCustomer": "Neuer Kunde",
+  "admin.customers.page.error.ariaLabel": "Kundenfehler",
+  "admin.customers.page.pagination.previous": "Vorherige Seite",
+  "admin.customers.page.pagination.next": "Nächste Seite"
 }

@@ -514,5 +514,15 @@
   "common.admin.invoices.dialog.freeText": "Free text",
 
   "common.admin.invoices.dialog.footer.saveReturned": "İade edilen ödemeyi kaydet",
-  "common.admin.invoices.actions.send": "Gönder"
+  "common.admin.invoices.actions.send": "Gönder",
+
+  "admin.customers.page.tabs.customers": "Müşteriler",
+  "admin.customers.page.tabs.newsletterLeads": "Bülten adayları",
+  "admin.customers.page.tabs.all": "Tümü",
+  "admin.customers.page.search.placeholder": "Ad, e-posta, şehir, userId… (çocuk ve ebeveyn)",
+  "admin.customers.page.search.ariaLabel": "Müşterileri ara",
+  "admin.customers.page.actions.newCustomer": "Yeni müşteri",
+  "admin.customers.page.error.ariaLabel": "Müşteri hatası",
+  "admin.customers.page.pagination.previous": "Önceki sayfa",
+  "admin.customers.page.pagination.next": "Sonraki sayfa"
 }

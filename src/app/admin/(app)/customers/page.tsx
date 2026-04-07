@@ -2,6 +2,7 @@
 "use client";
 
 import React, { useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import CustomerDialog from "./dialogs/CustomerDialog";
 import CustomersTable from "./components/CustomersTable";
 import NewsletterSelect from "./components/NewsletterSelect";
@@ -22,6 +23,7 @@ async function fetchCustomer(id: string) {
 }
 
 export default function CustomersPage() {
+  const { t } = useTranslation();
   const [limit] = useState(10);
   const [q, setQ] = useState("");
   const [newsletter, setNewsletter] = useState<NewsletterFilter>("all");
@@ -88,21 +90,21 @@ export default function CustomersPage() {
             className={`btn ${tab === "customers" ? "btn--tab-active" : ""}`}
             onClick={() => switchTab("customers")}
           >
-            Customers
+            {t("admin.customers.page.tabs.customers")}
           </button>
 
           <button
             className={`btn ${tab === "newsletter" ? "btn--tab-active" : ""}`}
             onClick={() => switchTab("newsletter")}
           >
-            Newsletter-Leads
+            {t("admin.customers.page.tabs.newsletterLeads")}
           </button>
 
           <button
             className={`btn ${tab === "all" ? "btn--tab-active" : ""}`}
             onClick={() => switchTab("all")}
           >
-            All
+            {t("admin.customers.page.tabs.all")}
           </button>
         </div>
 
@@ -116,7 +118,8 @@ export default function CustomersPage() {
             />
             <input
               className="input input-with-icon__input"
-              placeholder="Name, email, city, userId… (child & parent)"
+              placeholder={t("admin.customers.page.search.placeholder")}
+              aria-label={t("admin.customers.page.search.ariaLabel")}
               value={q}
               onChange={(e) => onQueryChange(e.target.value)}
               onKeyDown={(e) => {
@@ -142,12 +145,20 @@ export default function CustomersPage() {
               aria-hidden="true"
               className="btn__icon"
             />
-            New customer
+            {t("admin.customers.page.actions.newCustomer")}
           </button>
         </div>
       </div>
 
-      {list.err && <div className="card text-red-600">{list.err}</div>}
+      {list.err && (
+        <div
+          className="card text-red-600"
+          role="alert"
+          aria-label={t("admin.customers.page.error.ariaLabel")}
+        >
+          {list.err}
+        </div>
+      )}
 
       <CustomersTable
         items={list.items}
@@ -161,7 +172,8 @@ export default function CustomersPage() {
         <button
           type="button"
           className="btn"
-          aria-label="Previous page"
+          aria-label={t("admin.customers.page.pagination.previous")}
+          title={t("admin.customers.page.pagination.previous")}
           disabled={page <= 1}
           onClick={goPrev}
         >
@@ -180,7 +192,8 @@ export default function CustomersPage() {
         <button
           type="button"
           className="btn"
-          aria-label="Next page"
+          aria-label={t("admin.customers.page.pagination.next")}
+          title={t("admin.customers.page.pagination.next")}
           disabled={page >= pages}
           onClick={goNext}
         >

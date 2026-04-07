@@ -2,6 +2,7 @@
 "use client";
 
 import React from "react";
+import { useTranslation } from "react-i18next";
 import type { DocItem, SortOrder } from "../../utils/invoiceUi";
 import DocsOverlay from "./DocsOverlay";
 import { docsLabel, toggleOpen } from "./topSelectsUi";
@@ -28,6 +29,8 @@ type Props = {
 };
 
 export default function InvoicesTopSelects(props: Props) {
+  const { t } = useTranslation();
+
   return (
     <>
       <div
@@ -52,7 +55,7 @@ export default function InvoicesTopSelects(props: Props) {
           aria-expanded={props.docsSelect.open}
         >
           <span className="ks-selectbox__label">
-            {docsLabel(props.loading, props.items.length)}
+            {docsLabel(props.loading, props.items.length, t)}
           </span>
           <span className="ks-selectbox__chevron" aria-hidden="true" />
         </button>

@@ -7,9 +7,24 @@ export function cssVars(left: number, top: number, width: number) {
   };
 }
 
-export function docsLabel(loading: boolean, count: number) {
-  if (count) return `Documents: ${count} on this page`;
-  return loading ? "Loading..." : "Documents: 0 on this page";
+import type { TFunction } from "i18next";
+
+// export function docsLabel(loading: boolean, count: number) {
+//   if (count) return `Documents: ${count} on this page`;
+//   return loading ? "Loading..." : "Documents: 0 on this page";
+// }
+
+export function docsLabel(
+  loading: boolean,
+  count: number,
+  t: TFunction,
+): string {
+  if (count) {
+    return t("common.admin.invoices.docs.label", { count });
+  }
+  return loading
+    ? t("common.admin.invoices.list.loading")
+    : t("common.admin.invoices.docs.label", { count: 0 });
 }
 
 export function toggleOpen(
