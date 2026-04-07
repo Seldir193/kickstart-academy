@@ -554,5 +554,7 @@
   "admin.customers.newsletterSelect.no": "Hayır",
   "admin.customers.newsletterSelect.ariaLabel": "Bülten filtresi",
 
-  "admin.customers.list.error.loadFailed": "Yükleme başarısız oldu"
+  "admin.customers.list.error.loadFailed": "Yükleme başarısız oldu",
+
+  "admin.customers.documents.invoice.noInvoiceYet": "Henüz fatura yok"
 }

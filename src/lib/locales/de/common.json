@@ -555,5 +555,9 @@
   "admin.customers.newsletterSelect.all": "Alle",
   "admin.customers.newsletterSelect.yes": "Ja",
   "admin.customers.newsletterSelect.no": "Nein",
-  "admin.customers.newsletterSelect.ariaLabel": "Newsletter-Filter"
+  "admin.customers.newsletterSelect.ariaLabel": "Newsletter-Filter",
+
+  "admin.customers.list.error.loadFailed": "Laden fehlgeschlagen",
+
+  "admin.customers.documents.invoice.noInvoiceYet": "Noch keine Rechnungsnummer"
 }

@@ -557,5 +557,7 @@
   "admin.customers.newsletterSelect.no": "No",
   "admin.customers.newsletterSelect.ariaLabel": "Newsletter filter",
 
-  "admin.customers.list.error.loadFailed": "Load failed"
+  "admin.customers.list.error.loadFailed": "Load failed",
+
+  "admin.customers.documents.invoice.noInvoiceYet": "No invoice yet"
 }

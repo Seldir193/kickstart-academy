@@ -1,4 +1,5 @@
 //src\app\admin\(app)\customers\dialogs\documentsDialog\helpers.ts
+import type { TFunction } from "i18next";
 import type { DocItem, SortOrder } from "./types";
 
 export function qs(params: Record<string, any>) {
@@ -57,9 +58,9 @@ export function sortParamFrom(order: SortOrder) {
 //   return raw || "No invoice yet";
 // }
 
-export function invoiceLabelFrom(item: DocItem) {
+export function invoiceLabelFrom(item: DocItem, t: TFunction) {
   const raw = docNoFrom(item);
-  return raw || "No invoice yet";
+  return raw || t("admin.customers.documents.invoice.noInvoiceYet");
 }
 
 export function customerNoFrom(item: DocItem) {
@@ -100,9 +101,10 @@ export function docNoFrom(item: DocItem) {
   return invoiceNo;
 }
 
-export function issuedLabelFrom(issuedAt?: string) {
+export function issuedLabelFrom(issuedAt?: string, language: string) {
   if (!issuedAt) return "-";
-  const t = new Date(issuedAt);
-  if (Number.isNaN(t.getTime())) return "-";
-  return t.toLocaleDateString("de-DE");
+  const date = new Date(issuedAt);
+  if (Number.isNaN(date.getTime())) return "-";
+  //return t.toLocaleDateString("de-DE");
+  return date.toLocaleDateString(language);
 }
