@@ -177,7 +177,7 @@ export default function CustomersTable({
 
           <div className="ks-customers-list__body">
             {items.map((c) => {
-              const t = rowType(c);
+              const row = rowType(c);
 
               return (
                 <div
@@ -215,7 +215,7 @@ export default function CustomersTable({
 
                   <div className="ks-customers-list__cell">
                     <span className="ks-customers-list__badge">
-                      {t.isCustomer
+                      {row.isCustomer
                         ? t("admin.customers.table.type.customer")
                         : t("admin.customers.table.type.lead")}
                     </span>
@@ -225,10 +225,10 @@ export default function CustomersTable({
                     <span
                       className={
                         "ks-customers-list__badge " +
-                        (t.hasActive ? "is-active" : "is-inactive")
+                        (row.hasActive ? "is-active" : "is-inactive")
                       }
                     >
-                      {t.hasActive
+                      {row.hasActive
                         ? t("admin.customers.table.status.active")
                         : t("admin.customers.table.status.noActive")}
                     </span>
