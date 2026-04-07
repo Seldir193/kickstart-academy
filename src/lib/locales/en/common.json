@@ -550,5 +550,10 @@
   "admin.customers.table.status.active": "Active",
   "admin.customers.table.status.noActive": "No active",
   "admin.customers.table.actions.edit": "Edit",
-  "admin.customers.table.empty": "No customers found."
+  "admin.customers.table.empty": "No customers found.",
+
+  "admin.customers.newsletterSelect.all": "All",
+  "admin.customers.newsletterSelect.yes": "Yes",
+  "admin.customers.newsletterSelect.no": "No",
+  "admin.customers.newsletterSelect.ariaLabel": "Newsletter filter"
 }

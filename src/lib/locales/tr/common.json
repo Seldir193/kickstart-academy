@@ -547,5 +547,10 @@
   "admin.customers.table.status.active": "Aktif",
   "admin.customers.table.status.noActive": "Aktif değil",
   "admin.customers.table.actions.edit": "Düzenle",
-  "admin.customers.table.empty": "Müşteri bulunamadı."
+  "admin.customers.table.empty": "Müşteri bulunamadı.",
+
+  "admin.customers.newsletterSelect.all": "Tümü",
+  "admin.customers.newsletterSelect.yes": "Evet",
+  "admin.customers.newsletterSelect.no": "Hayır",
+  "admin.customers.newsletterSelect.ariaLabel": "Bülten filtresi"
 }

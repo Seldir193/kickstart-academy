@@ -1,13 +1,14 @@
 "use client";
 
 import React, { useMemo, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import type { NewsletterFilter } from "../hooks/useCustomersList";
 import { useOutsideClick } from "../hooks/useOutsideClick";
 
-const options: { value: NewsletterFilter; label: string }[] = [
-  { value: "all", label: "All" },
-  { value: "true", label: "Yes" },
-  { value: "false", label: "No" },
+const options: { value: NewsletterFilter; labelKey: string }[] = [
+  { value: "all", labelKey: "admin.customers.newsletterSelect.all" },
+  { value: "true", labelKey: "admin.customers.newsletterSelect.yes" },
+  { value: "false", labelKey: "admin.customers.newsletterSelect.no" },
 ];
 
 type Props = {
@@ -21,14 +22,19 @@ export default function NewsletterSelect({
   onChange,
   onAnyChange,
 }: Props) {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement | null>(null);
 
   const label = useMemo(() => {
-    if (value === "true") return "Yes";
-    if (value === "false") return "No";
-    return "All";
-  }, [value]);
+    if (value === "true") {
+      return t("admin.customers.newsletterSelect.yes");
+    }
+    if (value === "false") {
+      return t("admin.customers.newsletterSelect.no");
+    }
+    return t("admin.customers.newsletterSelect.all");
+  }, [t, value]);
 
   useOutsideClick(open, ref, () => setOpen(false));
 
@@ -48,7 +54,8 @@ export default function NewsletterSelect({
           type="button"
           className="ks-filter-select__trigger"
           onClick={() => setOpen((o) => !o)}
-          aria-label="Newsletter filter"
+          aria-label={t("admin.customers.newsletterSelect.ariaLabel")}
+          title={t("admin.customers.newsletterSelect.ariaLabel")}
         >
           <span className="ks-filter-select__label">{label}</span>
           <span className="ks-filter-select__chevron" aria-hidden="true" />
@@ -57,7 +64,7 @@ export default function NewsletterSelect({
         {open && (
           <ul className="ks-filter-select__menu">
             {options.map((opt) => (
-              <li key={`${opt.value}-${opt.label}`}>
+              <li key={`${opt.value}-${opt.labelKey}`}>
                 <button
                   type="button"
                   className={
@@ -66,7 +73,7 @@ export default function NewsletterSelect({
                   }
                   onClick={() => pick(opt.value)}
                 >
-                  {opt.label}
+                  {t(opt.labelKey)}
                 </button>
               </li>
             ))}
