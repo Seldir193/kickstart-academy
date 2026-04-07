@@ -1,6 +1,8 @@
 "use client";
 
 import React from "react";
+import { useTranslation } from "react-i18next";
+import type { TFunction } from "i18next";
 import type { Customer } from "../types";
 
 type Props = {
@@ -50,18 +52,30 @@ function childEntries(c: Customer): string[] {
   return legacy ? [legacy] : [];
 }
 
-function childCell(c: Customer, disableTooltips: boolean): React.ReactNode {
+function childCell(
+  c: Customer,
+  disableTooltips: boolean,
+  t: TFunction,
+): React.ReactNode {
   const names = childEntries(c);
 
-  if (names.length === 0) return "—";
+  if (names.length === 0) t("admin.customers.table.common.empty");
   if (names.length === 1) return names[0];
 
-  const label = `${names.length} Children`;
+  //const label = `${names.length} Children`;
+  const label = t("admin.customers.table.children.count", {
+    count: names.length,
+  });
   const previewCount = 8;
   const preview = names.slice(0, previewCount).join("\n");
   const hiddenCount = names.length - previewCount;
   const tip =
-    hiddenCount > 0 ? `${preview}\n… and ${hiddenCount} more` : preview;
+    hiddenCount > 0
+      ? `${preview}\n${t("admin.customers.table.children.more", {
+          count: hiddenCount,
+        })}`
+      : preview;
+  // hiddenCount > 0 ? `${preview}\n… and ${hiddenCount} more` : preview;
 
   if (disableTooltips) {
     return (
@@ -78,33 +92,40 @@ function childCell(c: Customer, disableTooltips: boolean): React.ReactNode {
   );
 }
 
-function parentName(c: Customer) {
+function parentName(c: Customer, t: TFunction) {
   return (
-    [c.parent?.firstName, c.parent?.lastName].filter(Boolean).join(" ") || "—"
+    [c.parent?.firstName, c.parent?.lastName].filter(Boolean).join(" ") ||
+    t("admin.customers.table.common.empty")
   );
 }
 
-function addressText(c: Customer) {
+function addressText(c: Customer, t: TFunction) {
   const street = c.address?.street
     ? `${c.address.street} ${c.address.houseNo || ""}`
     : "";
   return (
-    [street, c.address?.zip, c.address?.city].filter(Boolean).join(", ") || "—"
+    [street, c.address?.zip, c.address?.city].filter(Boolean).join(", ") ||
+    t("admin.customers.table.common.empty")
   );
 }
 
-function emailText(c: Customer) {
+function emailText(c: Customer, t: TFunction) {
   const anyC = c as any;
-  return c.parent?.email || anyC?.email || anyC?.emailLower || "—";
+  return (
+    c.parent?.email ||
+    anyC?.email ||
+    anyC?.emailLower ||
+    t("admin.customers.table.common.empty")
+  );
 }
 
-function newsletterLabel(c: Customer) {
+function newsletterLabel(c: Customer, t: TFunction) {
   const anyC = c as any;
-  if (c.newsletter) return "Yes";
+  if (c.newsletter) t("admin.customers.table.newsletter.yes");
   if (anyC?.marketingStatus === "pending" || !!anyC?.confirmToken) {
-    return "Pending";
+    return t("admin.customers.table.newsletter.pending");
   }
-  return "No";
+  return t("admin.customers.table.newsletter.no");
 }
 
 export default function CustomersTable({
@@ -114,6 +135,7 @@ export default function CustomersTable({
   onOpenEdit,
   disableTooltips,
 }: Props) {
+  const { t } = useTranslation();
   return (
     <div className="ks-customers-table-scroll">
       <section
@@ -124,16 +146,32 @@ export default function CustomersTable({
       >
         <div className="ks-customers-list__table">
           <div className="ks-customers-list__head" aria-hidden="true">
-            <div className="ks-customers-list__h">ID</div>
-            <div className="ks-customers-list__h">Child</div>
-            <div className="ks-customers-list__h">Parent</div>
-            <div className="ks-customers-list__h">Email</div>
-            <div className="ks-customers-list__h">Address</div>
-            <div className="ks-customers-list__h">Newsletter</div>
-            <div className="ks-customers-list__h">Type</div>
-            <div className="ks-customers-list__h">Status</div>
+            <div className="ks-customers-list__h">
+              {t("admin.customers.table.head.id")}
+            </div>
+            <div className="ks-customers-list__h">
+              {t("admin.customers.table.head.child")}
+            </div>
+            <div className="ks-customers-list__h">
+              {t("admin.customers.table.head.parent")}
+            </div>
+            <div className="ks-customers-list__h">
+              {t("admin.customers.table.head.email")}
+            </div>
+            <div className="ks-customers-list__h">
+              {t("admin.customers.table.head.address")}
+            </div>
+            <div className="ks-customers-list__h">
+              {t("admin.customers.table.head.newsletter")}
+            </div>
+            <div className="ks-customers-list__h">
+              {t("admin.customers.table.head.type")}
+            </div>
+            <div className="ks-customers-list__h">
+              {t("admin.customers.table.head.status")}
+            </div>
             <div className="ks-customers-list__h ks-customers-list__h--right">
-              Edit
+              {t("admin.customers.table.head.edit")}
             </div>
           </div>
 
@@ -155,25 +193,31 @@ export default function CustomersTable({
                   }}
                 >
                   <div className="ks-customers-list__cell ks-customers-list__cell--mono">
-                    {c.userId ?? "—"}
+                    {c.userId ?? t("admin.customers.table.common.empty")}
                   </div>
 
                   <div className="ks-customers-list__cell ks-customers-list__cell--children">
-                    {childCell(c, disableTooltips)}
+                    {childCell(c, disableTooltips, t)}
                   </div>
 
-                  <div className="ks-customers-list__cell">{parentName(c)}</div>
-                  <div className="ks-customers-list__cell">{emailText(c)}</div>
                   <div className="ks-customers-list__cell">
-                    {addressText(c)}
+                    {parentName(c, t)}
                   </div>
                   <div className="ks-customers-list__cell">
-                    {newsletterLabel(c)}
+                    {emailText(c, t)}
+                  </div>
+                  <div className="ks-customers-list__cell">
+                    {addressText(c, t)}
+                  </div>
+                  <div className="ks-customers-list__cell">
+                    {newsletterLabel(c, t)}
                   </div>
 
                   <div className="ks-customers-list__cell">
                     <span className="ks-customers-list__badge">
-                      {t.isCustomer ? "Customer" : "Lead"}
+                      {t.isCustomer
+                        ? t("admin.customers.table.type.customer")
+                        : t("admin.customers.table.type.lead")}
                     </span>
                   </div>
 
@@ -184,7 +228,9 @@ export default function CustomersTable({
                         (t.hasActive ? "is-active" : "is-inactive")
                       }
                     >
-                      {t.hasActive ? "Active" : "No active"}
+                      {t.hasActive
+                        ? t("admin.customers.table.status.active")
+                        : t("admin.customers.table.status.noActive")}
                     </span>
                   </div>
 
@@ -196,8 +242,8 @@ export default function CustomersTable({
                       className="edit-trigger"
                       role="button"
                       tabIndex={0}
-                      title="Edit"
-                      aria-label="Edit"
+                      title={t("admin.customers.table.actions.edit")}
+                      aria-label={t("admin.customers.table.actions.edit")}
                       onClick={() => onOpenEdit(c)}
                       onKeyDown={(e) => {
                         if (e.key !== "Enter" && e.key !== " ") return;
@@ -220,7 +266,7 @@ export default function CustomersTable({
 
             {!items.length && !listLoading && (
               <div className="ks-customers-list__empty">
-                No customers found.
+                {t("admin.customers.table.empty")}
               </div>
             )}
           </div>
