@@ -559,5 +559,13 @@
 
   "admin.customers.list.error.loadFailed": "Load failed",
 
-  "admin.customers.documents.invoice.noInvoiceYet": "No invoice yet"
+  "admin.customers.documents.invoice.noInvoiceYet": "No invoice yet",
+
+  "admin.customers.documents.typeChips.participation": "Participation",
+  "admin.customers.documents.typeChips.invoice": "Invoice",
+  "admin.customers.documents.typeChips.cancellation": "Cancellation",
+  "admin.customers.documents.typeChips.storno": "Storno",
+  "admin.customers.documents.typeChips.dunning": "Dunning",
+  "admin.customers.documents.typeChips.creditNote": "Credit note",
+  "admin.customers.documents.typeChips.contract": "Contract"
 }

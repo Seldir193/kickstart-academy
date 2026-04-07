@@ -556,5 +556,13 @@
 
   "admin.customers.list.error.loadFailed": "Yükleme başarısız oldu",
 
-  "admin.customers.documents.invoice.noInvoiceYet": "Henüz fatura yok"
+  "admin.customers.documents.invoice.noInvoiceYet": "Henüz fatura yok",
+
+  "admin.customers.documents.typeChips.participation": "Katılım",
+  "admin.customers.documents.typeChips.invoice": "Fatura",
+  "admin.customers.documents.typeChips.cancellation": "İptal",
+  "admin.customers.documents.typeChips.storno": "Storno",
+  "admin.customers.documents.typeChips.dunning": "İhtar",
+  "admin.customers.documents.typeChips.creditNote": "Alacak dekontu",
+  "admin.customers.documents.typeChips.contract": "Sözleşme"
 }

@@ -43,33 +43,3 @@ export type ListResponse = {
   page: number;
   limit: number;
 };
-
-// export type DocType = "participation" | "cancellation" | "storno" | string;
-
-// export type SortOrder = "newest" | "oldest";
-
-// export type DocItem = {
-//   id: string;
-//   bookingId: string;
-//   type: DocType;
-//   title: string;
-//   issuedAt?: string;
-//   href: string;
-//   status?: string;
-//   offerTitle?: string;
-//   offerType?: string;
-//   invoiceNumber?: string;
-//   invoiceNo?: string;
-//   cancellationNo?: string;
-//   stornoNo?: string;
-//   stornoNumber?: string;
-//   customerNumber?: number | string;
-// };
-
-// export type ListResponse = {
-//   ok: boolean;
-//   items: DocItem[];
-//   total: number;
-//   page: number;
-//   limit: number;
-// };

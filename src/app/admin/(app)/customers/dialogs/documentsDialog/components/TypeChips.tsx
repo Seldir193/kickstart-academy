@@ -2,6 +2,7 @@
 "use client";
 
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 type Props = {
   participation: boolean;
@@ -59,11 +60,12 @@ export function TypeChips({
   setCreditNote,
   onAnyChange,
 }: Props) {
+  const { t } = useTranslation();
   return (
     <div className="ks-filter-chips">
       <Chip
         active={participation}
-        label="Participation"
+        label={t("admin.customers.documents.typeChips.participation")}
         onClick={() => {
           setParticipation(!participation);
           onAnyChange();
@@ -71,7 +73,7 @@ export function TypeChips({
       />
       <Chip
         active={invoice}
-        label="Invoice"
+        label={t("admin.customers.documents.typeChips.invoice")}
         onClick={() => {
           setInvoice(!invoice);
           onAnyChange();
@@ -79,7 +81,7 @@ export function TypeChips({
       />
       <Chip
         active={cancellation}
-        label="Cancellation"
+        label={t("admin.customers.documents.typeChips.cancellation")}
         onClick={() => {
           setCancellation(!cancellation);
           onAnyChange();
@@ -87,7 +89,7 @@ export function TypeChips({
       />
       <Chip
         active={storno}
-        label="Storno"
+        label={t("admin.customers.documents.typeChips.storno")}
         onClick={() => {
           setStorno(!storno);
           onAnyChange();
@@ -95,7 +97,7 @@ export function TypeChips({
       />
       <Chip
         active={dunning}
-        label="Dunning"
+        label={t("admin.customers.documents.typeChips.dunning")}
         onClick={() => {
           setDunning(!dunning);
           onAnyChange();
@@ -103,7 +105,7 @@ export function TypeChips({
       />
       <Chip
         active={creditNote}
-        label="Credit Note"
+        label={t("admin.customers.documents.typeChips.creditNote")}
         onClick={() => {
           setCreditNote(!creditNote);
           onAnyChange();
@@ -111,7 +113,7 @@ export function TypeChips({
       />
       <Chip
         active={contract}
-        label="Contract"
+        label={t("admin.customers.documents.typeChips.contract")}
         onClick={() => {
           setContract(!contract);
           onAnyChange();
@@ -120,122 +122,3 @@ export function TypeChips({
     </div>
   );
 }
-
-// // src/app/admin/(app)/customers/dialogs/documentsDialog/components/TypeChips.tsx
-// "use client";
-
-// import React from "react";
-
-// type Props = {
-//   participation: boolean;
-//   cancellation: boolean;
-//   storno: boolean;
-//   dunning: boolean;
-//   contract: boolean;
-//   creditNote: boolean;
-//   setParticipation: (v: boolean) => void;
-//   setCancellation: (v: boolean) => void;
-//   setStorno: (v: boolean) => void;
-//   setDunning: (v: boolean) => void;
-//   setContract: (v: boolean) => void;
-//   setCreditNote: (v: boolean) => void;
-//   onAnyChange: () => void;
-// };
-
-// function Chip({
-//   active,
-//   label,
-//   onClick,
-// }: {
-//   active: boolean;
-//   label: string;
-//   onClick: () => void;
-// }) {
-//   return (
-//     <button
-//       type="button"
-//       className={"ks-filter-chip" + (active ? " ks-filter-chip--active" : "")}
-//       aria-pressed={active}
-//       onClick={onClick}
-//     >
-//       {label}
-//     </button>
-//   );
-// }
-
-// export function TypeChips({
-//   participation,
-//   cancellation,
-//   storno,
-//   dunning,
-//   contract,
-//   creditNote,
-//   setParticipation,
-//   setCancellation,
-//   setStorno,
-//   setDunning,
-//   setContract,
-//   setCreditNote,
-//   onAnyChange,
-// }: Props) {
-//   return (
-//     <div className="ks-filter-chips">
-//       <Chip
-//         active={participation}
-//         label="Participation"
-//         onClick={() => {
-//           setParticipation(!participation);
-//           onAnyChange();
-//         }}
-//       />
-//       <Chip
-//         active={invoice}
-//         label="Invoice"
-//         onClick={() => {
-//           setInvoice(!invoice);
-//           onAnyChange();
-//         }}
-//       />
-//       <Chip
-//         active={cancellation}
-//         label="Cancellation"
-//         onClick={() => {
-//           setCancellation(!cancellation);
-//           onAnyChange();
-//         }}
-//       />
-//       <Chip
-//         active={storno}
-//         label="Storno"
-//         onClick={() => {
-//           setStorno(!storno);
-//           onAnyChange();
-//         }}
-//       />
-//       <Chip
-//         active={dunning}
-//         label="Dunning"
-//         onClick={() => {
-//           setDunning(!dunning);
-//           onAnyChange();
-//         }}
-//       />
-//       <Chip
-//         active={creditNote}
-//         label="Credit Note"
-//         onClick={() => {
-//           setCreditNote(!creditNote);
-//           onAnyChange();
-//         }}
-//       />
-//       <Chip
-//         active={contract}
-//         label="Contract"
-//         onClick={() => {
-//           if (typeof setContract === "function") setContract(!contract);
-//           onAnyChange();
-//         }}
-//       />
-//     </div>
-//   );
-// }

@@ -101,7 +101,7 @@ export function docNoFrom(item: DocItem) {
   return invoiceNo;
 }
 
-export function issuedLabelFrom(issuedAt?: string, language: string) {
+export function issuedLabelFrom(issuedAt?: string, language = "de") {
   if (!issuedAt) return "-";
   const date = new Date(issuedAt);
   if (Number.isNaN(date.getTime())) return "-";

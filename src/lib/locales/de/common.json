@@ -559,5 +559,13 @@
 
   "admin.customers.list.error.loadFailed": "Laden fehlgeschlagen",
 
-  "admin.customers.documents.invoice.noInvoiceYet": "Noch keine Rechnungsnummer"
+  "admin.customers.documents.invoice.noInvoiceYet": "Noch keine Rechnungsnummer",
+
+  "admin.customers.documents.typeChips.participation": "Teilnahme",
+  "admin.customers.documents.typeChips.invoice": "Rechnung",
+  "admin.customers.documents.typeChips.cancellation": "Stornierung",
+  "admin.customers.documents.typeChips.storno": "Storno",
+  "admin.customers.documents.typeChips.dunning": "Mahnung",
+  "admin.customers.documents.typeChips.creditNote": "Gutschrift",
+  "admin.customers.documents.typeChips.contract": "Vertrag"
 }
