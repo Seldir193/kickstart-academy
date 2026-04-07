@@ -1,7 +1,9 @@
 "use client";
 
 import React, { useEffect, useMemo, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import KsDatePicker from "@/app/admin/(app)/invoices/components/KsDatePicker";
+import { toastErrorMessage } from "@/lib/toast-messages";
 import { useFixedSelectbox } from "../hooks/useFixedSelectbox";
 import type { DocItem, ListResponse, SortOrder } from "./documentsDialog/types";
 import {
@@ -24,17 +26,17 @@ type Props = {
 
 type BookingTarget = "self" | "child";
 
-type ChildOption = {
-  uid: string;
-  label: string;
-  parentId: string;
-  child: FamilyChild;
-};
+// type ChildOption = {
+//   uid: string;
+//   label: string;
+//   parentId: string;
+//   child: FamilyChild;
+// };
 
-type ParentOption = {
-  id: string;
-  label: string;
-};
+// type ParentOption = {
+//   id: string;
+//   label: string;
+// };
 
 type DownloadButtonProps = {
   href: string;
@@ -45,30 +47,30 @@ function safeText(v: unknown) {
   return String(v ?? "").trim();
 }
 
-function formatDateOnlyDe(value?: string | null) {
-  if (!value) return "";
-  const iso = /T/.test(value) ? value : `${value}T00:00:00`;
-  const d = new Date(iso);
-  if (Number.isNaN(d.getTime())) return value;
+// function formatDateOnlyDe(value?: string | null) {
+//   if (!value) return "";
+//   const iso = /T/.test(value) ? value : `${value}T00:00:00`;
+//   const d = new Date(iso);
+//   if (Number.isNaN(d.getTime())) return value;
 
-  return new Intl.DateTimeFormat("de-DE", {
-    day: "2-digit",
-    month: "2-digit",
-    year: "numeric",
-  }).format(d);
-}
-
-// // function childLabel(child: FamilyChild) {
-// //   const full = `${child.firstName} ${child.lastName}`.trim();
-// //   const birth = formatDateOnlyDe(child.birthDate);
-// //   return [full || "Child", birth].filter(Boolean).join(" - ");
+//   return new Intl.DateTimeFormat("de-DE", {
+//     day: "2-digit",
+//     month: "2-digit",
+//     year: "numeric",
+//   }).format(d);
 // }
 
-function childLabel(child: FamilyChild) {
-  return `${child.firstName} ${child.lastName}`.trim() || "Kind";
+function childLabel(child: FamilyChild, t: (key: string) => string) {
+  return (
+    `${child.firstName} ${child.lastName}`.trim() ||
+    t("admin.customers.documents.child.fallback")
+  );
 }
 
-function buildChildOptions(family: FamilyMember[] | null) {
+function buildChildOptions(
+  family: FamilyMember[] | null,
+  t: (key: string) => string,
+) {
   const members = Array.isArray(family) ? family : [];
 
   return members.flatMap((member) => {
@@ -101,7 +103,7 @@ function buildChildOptions(family: FamilyMember[] | null) {
       })
       .map((child) => ({
         uid: safeText(child.uid),
-        label: childLabel(child),
+        label: childLabel(child, t),
         parentId: member._id,
         child,
       }));
@@ -128,7 +130,10 @@ function parentOptionId(memberId: string, idx: number) {
   return `${memberId}::parent::${idx}`;
 }
 
-function buildParentOptions(family: FamilyMember[] | null) {
+function buildParentOptions(
+  family: FamilyMember[] | null,
+  t: (key: string) => string,
+) {
   const members = Array.isArray(family) ? family : [];
 
   return members.flatMap((member) => {
@@ -141,7 +146,7 @@ function buildParentOptions(family: FamilyMember[] | null) {
       id: parentOptionId(member._id, idx),
       label:
         `${safeText(parent?.firstName)} ${safeText(parent?.lastName)}`.trim() ||
-        "Parent",
+        t("admin.customers.documents.parent.fallback"),
     }));
   });
 }
@@ -151,8 +156,10 @@ function openPdf(item: DocItem) {
   window.open(url, "_blank", "noopener,noreferrer");
 }
 
-function sortLabel(order: SortOrder) {
-  return order === "oldest" ? "Oldest" : "Newest";
+function sortLabel(order: SortOrder, t: (key: string) => string) {
+  return order === "oldest"
+    ? t("admin.customers.documents.sort.oldest")
+    : t("admin.customers.documents.sort.newest");
 }
 
 function nextPage(p: number, totalPages: number) {
@@ -249,6 +256,8 @@ function DownloadButton({ href, label }: DownloadButtonProps) {
     <a
       href={href}
       className="btn documents-dialog__downloadBtn"
+      title={label}
+      aria-label={label}
       onMouseEnter={() => setIsActive(true)}
       onMouseLeave={() => setIsActive(false)}
       onFocus={() => setIsActive(true)}
@@ -266,6 +275,7 @@ function DownloadButton({ href, label }: DownloadButtonProps) {
 }
 
 export default function DocumentsDialog({ customerId, onClose }: Props) {
+  const { t } = useTranslation();
   const [typeParticipation, setTypeParticipation] = useState(true);
   const [typeInvoice, setTypeInvoice] = useState(true);
   const [typeCancellation, setTypeCancellation] = useState(true);
@@ -308,8 +318,11 @@ export default function DocumentsDialog({ customerId, onClose }: Props) {
     { ref: childDropdownRef, close: () => setIsChildDropdownOpen(false) },
   ]);
 
-  const childOptions = useMemo(() => buildChildOptions(family), [family]);
-  const parentOptions = useMemo(() => buildParentOptions(family), [family]);
+  const childOptions = useMemo(() => buildChildOptions(family, t), [family, t]);
+  const parentOptions = useMemo(
+    () => buildParentOptions(family, t),
+    [family, t],
+  );
 
   useEffect(() => {
     if (selectedParentId) return;
@@ -368,12 +381,12 @@ export default function DocumentsDialog({ customerId, onClose }: Props) {
   }, [family, selfMemberId]);
 
   const selectedParentLabel = useMemo(() => {
-    if (!selectedParent) return "Select parent …";
+    if (!selectedParent) return t("admin.customers.documents.parent.select");
     return (
       `${selectedParent.parent.firstName} ${selectedParent.parent.lastName}`.trim() ||
-      "Parent"
+      t("admin.customers.documents.parent.fallback")
     );
-  }, [selectedParent]);
+  }, [selectedParent, t]);
 
   const selectedChildOption = useMemo(() => {
     if (!childOptions.length) return null;
@@ -554,8 +567,9 @@ export default function DocumentsDialog({ customerId, onClose }: Props) {
       } catch (e: any) {
         if (cancelled) return;
         if (e?.name === "AbortError") return;
-        setErr(e?.message || "Load failed");
-        setItems([]);
+        setErr(
+          toastErrorMessage(t, e, "admin.customers.documents.error.loadFailed"),
+        );
       } finally {
         if (!cancelled) setLoading(false);
       }
@@ -583,7 +597,7 @@ export default function DocumentsDialog({ customerId, onClose }: Props) {
       <button
         type="button"
         className="dialog-backdrop-hit"
-        aria-label="Close"
+        aria-label={t("common.actions.close")}
         onClick={onClose}
       />
 
@@ -594,11 +608,11 @@ export default function DocumentsDialog({ customerId, onClose }: Props) {
         <div className="dialog-head documents-dialog__head">
           <div className="documents-dialog__head-main">
             <h3 id="documents-dialog-title" className="dialog-title">
-              Documents
+              {t("admin.customers.documents.title")}
             </h3>
 
             <p className="dialog-subtitle">
-              Browse, filter, and download customer documents.
+              {t("admin.customers.documents.subtitle")}
             </p>
           </div>
 
@@ -606,7 +620,8 @@ export default function DocumentsDialog({ customerId, onClose }: Props) {
             <button
               type="button"
               className="dialog-close"
-              aria-label="Close"
+              aria-label={t("common.actions.close")}
+              title={t("common.actions.close")}
               onClick={onClose}
             >
               <img
@@ -622,24 +637,30 @@ export default function DocumentsDialog({ customerId, onClose }: Props) {
         <div className="dialog-body documents-dialog__body">
           <section className="dialog-section documents-dialog__scopeSection">
             <div className="dialog-section__head">
-              <h4 className="dialog-section__title">Document scope</h4>
+              <h4 className="dialog-section__title">
+                {t("admin.customers.documents.scope.title")}
+              </h4>
             </div>
 
             <div className="dialog-section__body documents-dialog__scopeBody">
               {familyLoading && (
-                <div className="documents-dialog__note">Loading family…</div>
+                <div className="documents-dialog__note">
+                  {t("admin.customers.documents.family.loading")}
+                </div>
               )}
 
               {familyError && (
                 <div className="documents-dialog__error">
-                  Family could not be loaded – documents are still visible.
+                  {t("admin.customers.documents.family.error")}
                 </div>
               )}
 
               {family && family.length > 0 ? (
                 <>
                   <div className="documents-dialog__field">
-                    <label className="dialog-label">Parent</label>
+                    <label className="dialog-label">
+                      {t("admin.customers.documents.parent.label")}
+                    </label>
 
                     <div
                       className={
@@ -654,7 +675,8 @@ export default function DocumentsDialog({ customerId, onClose }: Props) {
                         onClick={() => setIsParentDropdownOpen((o) => !o)}
                       >
                         <span className="ks-selectbox__label">
-                          {selectedParentLabel || "Select parent …"}
+                          {selectedParentLabel ||
+                            t("admin.customers.documents.parent.select")}
                         </span>
                         <span
                           className="ks-selectbox__chevron"
@@ -701,7 +723,7 @@ export default function DocumentsDialog({ customerId, onClose }: Props) {
                         toggleButtonFocus(e, () => setBookingTarget("self"))
                       }
                     >
-                      Customer self
+                      {t("admin.customers.documents.scope.customerSelf")}
                     </button>
 
                     <button
@@ -717,13 +739,15 @@ export default function DocumentsDialog({ customerId, onClose }: Props) {
                         toggleButtonFocus(e, () => setBookingTarget("child"))
                       }
                     >
-                      Child
+                      {t("admin.customers.documents.child.label")}
                     </button>
                   </div>
 
                   {bookingTarget === "child" && (
                     <div className="documents-dialog__field">
-                      <label className="dialog-label">Child</label>
+                      <label className="dialog-label">
+                        {t("admin.customers.documents.child.label")}
+                      </label>
 
                       <div
                         className={
@@ -740,7 +764,7 @@ export default function DocumentsDialog({ customerId, onClose }: Props) {
                           <span className="ks-selectbox__label">
                             {activeChild
                               ? `${activeChild.firstName} ${activeChild.lastName}`.trim()
-                              : "Select child …"}
+                              : t("admin.customers.documents.child.select")}
                           </span>
                           <span
                             className="ks-selectbox__chevron"
@@ -776,20 +800,24 @@ export default function DocumentsDialog({ customerId, onClose }: Props) {
 
                   <div className="documents-dialog__summary">
                     <div className="documents-dialog__summaryItem">
-                      <span className="dialog-label">Parent</span>
+                      <span className="dialog-label">
+                        {t("admin.customers.documents.parent.label")}
+                      </span>
                       <span className="dialog-value">
                         {selectedParent
                           ? `${selectedParent.parent.firstName} ${selectedParent.parent.lastName}`.trim()
-                          : "—"}
+                          : t("admin.customers.documents.common.empty")}
                       </span>
                     </div>
 
                     <div className="documents-dialog__summaryItem">
-                      <span className="dialog-label">Child</span>
+                      <span className="dialog-label">
+                        {t("admin.customers.documents.child.label")}
+                      </span>
                       <span className="dialog-value">
                         {bookingTarget === "child" && activeChild
                           ? `${activeChild.firstName} ${activeChild.lastName}`.trim()
-                          : "—"}
+                          : t("admin.customers.documents.common.empty")}
                       </span>
                     </div>
                   </div>
@@ -797,7 +825,7 @@ export default function DocumentsDialog({ customerId, onClose }: Props) {
               ) : (
                 !familyLoading && (
                   <div className="dialog-value">
-                    Documents are shown for the current customer.
+                    {t("admin.customers.documents.scope.currentCustomer")}
                   </div>
                 )
               )}
@@ -806,7 +834,9 @@ export default function DocumentsDialog({ customerId, onClose }: Props) {
 
           <section className="dialog-section documents-dialog__filtersSection">
             <div className="dialog-section__head">
-              <h4 className="dialog-section__title">Filters</h4>
+              <h4 className="dialog-section__title">
+                {t("admin.customers.documents.filters.title")}
+              </h4>
             </div>
 
             <div className="dialog-section__body">
@@ -822,7 +852,12 @@ export default function DocumentsDialog({ customerId, onClose }: Props) {
                       />
                       <input
                         className="input input-with-icon__input"
-                        placeholder="Search..."
+                        placeholder={t(
+                          "admin.customers.documents.search.placeholder",
+                        )}
+                        aria-label={t(
+                          "admin.customers.documents.search.ariaLabel",
+                        )}
                         value={q}
                         onChange={(e) => {
                           setQ(e.target.value);
@@ -839,7 +874,9 @@ export default function DocumentsDialog({ customerId, onClose }: Props) {
                         setFrom(nextIso);
                         setPage(1);
                       }}
-                      placeholder="dd.mm.yyyy"
+                      placeholder={t(
+                        "admin.customers.documents.date.placeholder",
+                      )}
                       disabled={false}
                     />
                   </div>
@@ -851,7 +888,9 @@ export default function DocumentsDialog({ customerId, onClose }: Props) {
                         setTo(nextIso);
                         setPage(1);
                       }}
-                      placeholder="dd.mm.yyyy"
+                      placeholder={t(
+                        "admin.customers.documents.date.placeholder",
+                      )}
                       disabled={false}
                     />
                   </div>
@@ -876,7 +915,7 @@ export default function DocumentsDialog({ customerId, onClose }: Props) {
                         aria-expanded={sortSelect.open}
                       >
                         <span className="ks-selectbox__label">
-                          {sortLabel(sortOrder)}
+                          {sortLabel(sortOrder, t)}
                         </span>
                         <span
                           className="ks-selectbox__chevron"
@@ -910,7 +949,7 @@ export default function DocumentsDialog({ customerId, onClose }: Props) {
                                 sortSelect.setOpen(false);
                               }}
                             >
-                              {sortLabel(v)}
+                              {sortLabel(v, t)}
                             </button>
                           ))}
                         </div>
@@ -942,7 +981,9 @@ export default function DocumentsDialog({ customerId, onClose }: Props) {
 
               <div className="documents-dialog__controls">
                 <div className="documents-dialog__field">
-                  <label className="dialog-label">Documents</label>
+                  <label className="dialog-label">
+                    {t("admin.customers.documents.list.label")}
+                  </label>
 
                   <div
                     className={
@@ -965,8 +1006,10 @@ export default function DocumentsDialog({ customerId, onClose }: Props) {
                     >
                       <span className="ks-selectbox__label">
                         {!hasLoadedOnce && loading
-                          ? "Loading…"
-                          : `${pagedItems.length} item(s) on this page`}
+                          ? t("admin.customers.documents.loading")
+                          : t("admin.customers.documents.list.itemsOnPage", {
+                              count: pagedItems.length,
+                            })}
                       </span>
                       <span
                         className="ks-selectbox__chevron"
@@ -1006,7 +1049,10 @@ export default function DocumentsDialog({ customerId, onClose }: Props) {
                     <button
                       type="button"
                       className="btn"
-                      aria-label="Previous page"
+                      aria-label={t(
+                        "admin.customers.documents.pagination.previous",
+                      )}
+                      title={t("admin.customers.documents.pagination.previous")}
                       onClick={() => setPage((p) => prevPage(p))}
                       disabled={page <= 1}
                     >
@@ -1023,13 +1069,19 @@ export default function DocumentsDialog({ customerId, onClose }: Props) {
                       aria-live="polite"
                       aria-atomic="true"
                     >
-                      Page {page} / {totalPages}
+                      {t("admin.customers.documents.pagination.page", {
+                        page,
+                        totalPages,
+                      })}
                     </div>
 
                     <button
                       type="button"
                       className="btn"
-                      aria-label="Next page"
+                      aria-label={t(
+                        "admin.customers.documents.pagination.next",
+                      )}
+                      title={t("admin.customers.documents.pagination.next")}
                       onClick={() => setPage((p) => nextPage(p, totalPages))}
                       disabled={page >= totalPages}
                     >
@@ -1044,7 +1096,7 @@ export default function DocumentsDialog({ customerId, onClose }: Props) {
 
                   <div className="documents-dialog__perPage">
                     <span className="documents-dialog__perPageLabel">
-                      Per page
+                      {t("admin.customers.documents.pagination.perPage")}
                     </span>
 
                     <div
@@ -1119,8 +1171,14 @@ export default function DocumentsDialog({ customerId, onClose }: Props) {
 
         <div className="dialog-footer documents-dialog__footer">
           <div className="documents-dialog__footerActions">
-            <DownloadButton href={csvHref} label="Download CSV" />
-            <DownloadButton href={zipHref} label="Download ZIP" />
+            <DownloadButton
+              href={csvHref}
+              label={t("admin.customers.documents.download.csv")}
+            />
+            <DownloadButton
+              href={zipHref}
+              label={t("admin.customers.documents.download.zip")}
+            />
           </div>
         </div>
       </div>
