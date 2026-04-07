@@ -2,10 +2,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import type { FamilyMember } from "../types";
+import { toastErrorMessage } from "@/lib/toast-messages";
 import { fetchFamily } from "../bookDialogApi";
 
 export function useBookDialogFamily(customerId: string) {
+  const { t } = useTranslation();
   const [family, setFamily] = useState<FamilyMember[] | null>(null);
   const [familyLoading, setFamilyLoading] = useState(false);
   const [familyError, setFamilyError] = useState<string | null>(null);
@@ -19,8 +22,9 @@ export function useBookDialogFamily(customerId: string) {
       setFamilyLoading,
       setFamilyError,
       setBaseSelectedId,
+      t,
     );
-  }, [customerId]);
+  }, [customerId, t]);
 
   return { family, familyLoading, familyError, baseSelectedId };
 }
@@ -31,6 +35,7 @@ async function loadFamily(
   setLoading: (v: boolean) => void,
   setErr: (v: string | null) => void,
   setBase: (v: string) => void,
+  t: (key: string) => string,
 ) {
   try {
     setLoading(true);
@@ -39,10 +44,16 @@ async function loadFamily(
     const members = Array.isArray(data.members) ? data.members : [];
     setFamily(members);
     setBase(pickInitialMemberId(data.baseCustomerId, members));
-  } catch (e: any) {
-    console.warn("[BookDialog] load family failed:", e?.message || e);
+  } catch (e: unknown) {
+    console.warn("[BookDialog] load family failed:", e);
     setFamily(null);
-    setErr(e?.message || "Failed to load family");
+    setErr(
+      toastErrorMessage(
+        t,
+        e,
+        "common.admin.customers.bookDialog.errors.loadFamily",
+      ),
+    );
   } finally {
     setLoading(false);
   }

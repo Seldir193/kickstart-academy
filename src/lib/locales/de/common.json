@@ -603,5 +603,7 @@
 
   "common.admin.customers.bookDialog.childWithoutName": "Kind ohne Namen",
 
-  "common.admin.customers.bookDialog.errors.loadOffers": "Angebote konnten nicht geladen werden"
+  "common.admin.customers.bookDialog.errors.loadOffers": "Angebote konnten nicht geladen werden",
+
+  "common.admin.customers.bookDialog.errors.loadFamily": "Familie konnte nicht geladen werden"
 }

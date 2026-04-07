@@ -600,5 +600,7 @@
 
   "common.admin.customers.bookDialog.childWithoutName": "İsimsiz çocuk",
 
-  "common.admin.customers.bookDialog.errors.loadOffers": "Teklifler yüklenemedi"
+  "common.admin.customers.bookDialog.errors.loadOffers": "Teklifler yüklenemedi",
+
+  "common.admin.customers.bookDialog.errors.loadFamily": "Aile yüklenemedi"
 }
