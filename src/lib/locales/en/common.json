@@ -601,5 +601,7 @@
   "admin.customers.documents.download.zip": "Download ZIP",
   "admin.customers.documents.error.loadFailed": "Load failed",
 
-  "common.admin.customers.bookDialog.childWithoutName": "Child without name"
+  "common.admin.customers.bookDialog.childWithoutName": "Child without name",
+
+  "common.admin.customers.bookDialog.errors.loadOffers": "Failed to load offers"
 }

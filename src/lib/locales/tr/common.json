@@ -598,5 +598,7 @@
   "admin.customers.documents.download.zip": "ZIP indir",
   "admin.customers.documents.error.loadFailed": "Yükleme başarısız oldu",
 
-  "common.admin.customers.bookDialog.childWithoutName": "İsimsiz çocuk"
+  "common.admin.customers.bookDialog.childWithoutName": "İsimsiz çocuk",
+
+  "common.admin.customers.bookDialog.errors.loadOffers": "Teklifler yüklenemedi"
 }
