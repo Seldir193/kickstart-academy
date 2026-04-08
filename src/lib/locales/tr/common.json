@@ -748,5 +748,8 @@
 
   "common.admin.customers.stornoDialog.statusCancelled": "İptal edildi",
 
-  "common.admin.customers.stornoDialog.sinceDate": "{{date}} tarihinden beri"
+  "common.admin.customers.stornoDialog.sinceDate": "{{date}} tarihinden beri",
+
+  "common.admin.customers.stornoDialog.statusAll": "Tümü",
+  "common.admin.customers.stornoDialog.sortOldest": "En eski"
 }

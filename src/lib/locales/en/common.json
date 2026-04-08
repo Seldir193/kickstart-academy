@@ -751,5 +751,8 @@
 
   "common.admin.customers.stornoDialog.statusCancelled": "Cancelled",
 
-  "common.admin.customers.stornoDialog.sinceDate": "since {{date}}"
+  "common.admin.customers.stornoDialog.sinceDate": "since {{date}}",
+
+  "common.admin.customers.stornoDialog.statusAll": "All",
+  "common.admin.customers.stornoDialog.sortOldest": "Oldest"
 }

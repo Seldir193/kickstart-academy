@@ -485,21 +485,39 @@ export default function StornoDialog({
     [courseValue, t],
   );
 
+  // const statusLabel = useMemo(
+  //   () =>
+  //     STATUS_OPTIONS.find((o) => o.value === statusFilter)?.label ||
+  //     toastText(
+  //       t,
+  //       "common.admin.customers.stornoDialog.statusActive",
+  //       "Active",
+  //     ),
+  //   [statusFilter, t],
+  // );
+
+  // const sortLabel = useMemo(
+  //   () =>
+  //     SORT_OPTIONS.find((o) => o.value === sortOrder)?.label ||
+  //     toastText(t, "common.admin.customers.stornoDialog.sortNewest", "Newest"),
+  //   [sortOrder, t],
+  // );
+
   const statusLabel = useMemo(
     () =>
-      STATUS_OPTIONS.find((o) => o.value === statusFilter)?.label ||
-      toastText(
-        t,
-        "common.admin.customers.stornoDialog.statusActive",
-        "Active",
+      t(
+        STATUS_OPTIONS.find((o) => o.value === statusFilter)?.labelKey ||
+          "common.admin.customers.stornoDialog.statusActive",
       ),
     [statusFilter, t],
   );
 
   const sortLabel = useMemo(
     () =>
-      SORT_OPTIONS.find((o) => o.value === sortOrder)?.label ||
-      toastText(t, "common.admin.customers.stornoDialog.sortNewest", "Newest"),
+      t(
+        SORT_OPTIONS.find((o) => o.value === sortOrder)?.labelKey ||
+          "common.admin.customers.stornoDialog.sortNewest",
+      ),
     [sortOrder, t],
   );
 
@@ -904,7 +922,12 @@ export default function StornoDialog({
                     label={t("common.admin.customers.stornoDialog.status")}
                     value={statusFilter}
                     displayLabel={statusLabel}
-                    options={STATUS_OPTIONS}
+                    // options={STATUS_OPTIONS}
+
+                    options={STATUS_OPTIONS.map((opt) => ({
+                      ...opt,
+                      label: t(opt.labelKey),
+                    }))}
                     rootRef={statusDropdownRef}
                     open={isStatusOpen}
                     setOpen={setIsStatusOpen}
@@ -917,7 +940,12 @@ export default function StornoDialog({
                     label={t("common.admin.customers.stornoDialog.sort")}
                     value={sortOrder}
                     displayLabel={sortLabel}
-                    options={SORT_OPTIONS}
+                    // options={SORT_OPTIONS}
+
+                    options={SORT_OPTIONS.map((opt) => ({
+                      ...opt,
+                      label: t(opt.labelKey),
+                    }))}
                     rootRef={sortDropdownRef}
                     open={isSortOpen}
                     setOpen={setIsSortOpen}
