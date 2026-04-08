@@ -2,6 +2,7 @@
 "use client";
 
 import React from "react";
+import { useTranslation } from "react-i18next";
 import type { News } from "../types";
 import {
   blurTarget,
@@ -34,10 +35,13 @@ export default function RejectedNewsList({
   onInfo,
   onOpen,
 }: Props) {
+  const { t } = useTranslation();
   if (!items.length) {
     return (
       <section className="card">
-        <div className="card__empty">No rejected posts.</div>
+        <div className="card__empty">
+          {t("common.admin.news.rejectedList.empty")}
+        </div>
       </section>
     );
   }
@@ -52,15 +56,18 @@ export default function RejectedNewsList({
           return (
             <div key={String((n as any)._id)} className="pending-news__row">
               <div className="pending-news__meta">
-                <div className="pending-news__title">{n.title || "—"}</div>
+                <div className="pending-news__title">
+                  {n.title || t("common.emptyDash")}
+                </div>
 
                 <div className="pending-news__sub">
                   <span className="pending-news__by">
-                    By: {providerLabel(n)}
+                    {t("common.admin.news.rejectedList.by")}: {providerLabel(n)}
                   </span>
                   <span className="pending-news__sep">•</span>
                   <span className="pending-news__status">
-                    Status: <b>Rejected</b>
+                    {t("common.status")}:{" "}
+                    <b>{t("common.admin.news.rejectedList.rejected")}</b>
                   </span>
                 </div>
               </div>
@@ -70,8 +77,8 @@ export default function RejectedNewsList({
                   className={`edit-trigger ${loading ? "is-disabled" : ""}`}
                   role="button"
                   tabIndex={loading ? -1 : 0}
-                  title="Show reason"
-                  aria-label="Show reason"
+                  title={t("common.admin.news.rejectedList.showReason")}
+                  aria-label={t("common.admin.news.rejectedList.showReason")}
                   aria-disabled={loading ? true : undefined}
                   onClick={(e) => {
                     stop(e);
@@ -95,11 +102,17 @@ export default function RejectedNewsList({
                   className={`edit-trigger ${disabled ? "is-disabled" : ""}`}
                   role="button"
                   tabIndex={disabled ? -1 : 0}
-                  {...(!disabled ? { title: "Resubmit" } : {})}
-                  aria-label="Resubmit"
+                  {...(!disabled
+                    ? { title: t("common.admin.news.rejectedList.resubmit") }
+                    : {})}
+                  aria-label={t("common.admin.news.rejectedList.resubmit")}
                   aria-disabled={disabled ? true : undefined}
                   {...(disabled
-                    ? { "data-ks-tip": "Please update first" }
+                    ? {
+                        "data-ks-tip": t(
+                          "common.admin.news.rejectedList.updateFirst",
+                        ),
+                      }
                     : {})}
                   onClick={(e) => {
                     stop(e);

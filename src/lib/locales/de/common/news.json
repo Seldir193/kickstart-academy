@@ -41,5 +41,14 @@
   "common.admin.news.deleteDialog.title": "Beitrag löschen",
   "common.admin.news.deleteDialog.text": "Möchtest du den Beitrag „{{title}}“ wirklich löschen?",
   "common.confirm": "Bestätigen",
-  "common.cancel": "Abbrechen"
+  "common.cancel": "Abbrechen",
+
+  "common.admin.news.rejectedList.empty": "Keine abgelehnten Beiträge.",
+  "common.admin.news.rejectedList.by": "Von",
+  "common.admin.news.rejectedList.rejected": "Abgelehnt",
+  "common.admin.news.rejectedList.showReason": "Grund anzeigen",
+  "common.admin.news.rejectedList.resubmit": "Erneut einreichen",
+  "common.admin.news.rejectedList.updateFirst": "Bitte zuerst aktualisieren",
+  "common.emptyDash": "—",
+  "common.status": "Status"
 }

@@ -41,5 +41,14 @@
   "common.admin.news.deleteDialog.title": "Delete post",
   "common.admin.news.deleteDialog.text": "Do you really want to delete post \"{{title}}\"?",
   "common.confirm": "Confirm",
-  "common.cancel": "Cancel"
+  "common.cancel": "Cancel",
+
+  "common.admin.news.rejectedList.empty": "No rejected posts.",
+  "common.admin.news.rejectedList.by": "By",
+  "common.admin.news.rejectedList.rejected": "Rejected",
+  "common.admin.news.rejectedList.showReason": "Show reason",
+  "common.admin.news.rejectedList.resubmit": "Resubmit",
+  "common.admin.news.rejectedList.updateFirst": "Please update first",
+  "common.emptyDash": "—",
+  "common.status": "Status"
 }

@@ -41,5 +41,14 @@
   "common.admin.news.deleteDialog.title": "Gönderiyi sil",
   "common.admin.news.deleteDialog.text": "\"{{title}}\" gönderisini gerçekten silmek istiyor musunuz?",
   "common.confirm": "Onayla",
-  "common.cancel": "İptal"
+  "common.cancel": "İptal",
+
+  "common.admin.news.rejectedList.empty": "Reddedilmiş gönderi yok.",
+  "common.admin.news.rejectedList.by": "Ekleyen",
+  "common.admin.news.rejectedList.rejected": "Reddedildi",
+  "common.admin.news.rejectedList.showReason": "Gerekçeyi göster",
+  "common.admin.news.rejectedList.resubmit": "Yeniden gönder",
+  "common.admin.news.rejectedList.updateFirst": "Lütfen önce güncelleyin",
+  "common.emptyDash": "—",
+  "common.status": "Durum"
 }
