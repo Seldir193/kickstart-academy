@@ -766,5 +766,9 @@
   "common.admin.customers.customerDialog.statusError": "Error",
   "common.admin.customers.customerDialog.noChild": "(No child)",
   "common.admin.customers.customerDialog.childNumber": "Child {{number}}",
-  "common.admin.customers.customerDialog.childWithoutName": "(Child without name)"
+  "common.admin.customers.customerDialog.childWithoutName": "(Child without name)",
+
+  "common.admin.customers.customerDialog.errors.createFailed": "Create failed",
+  "common.admin.customers.customerDialog.errors.saveFailed": "Save failed",
+  "common.admin.customers.customerDialog.errors.newsletterSyncFailed": "Newsletter sync failed after create"
 }

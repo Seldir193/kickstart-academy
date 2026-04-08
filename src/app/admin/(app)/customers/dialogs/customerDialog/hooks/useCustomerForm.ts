@@ -2,6 +2,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { toastErrorMessage, toastText } from "@/lib/toast-messages";
 import type { Customer } from "../../../types";
 import { createCustomer, toggleNewsletter, updateCustomer } from "../api";
 import { fmtDE } from "../formatters";
@@ -11,6 +13,7 @@ export function useCustomerForm(
   mode: "create" | "edit",
   customer?: Customer | null,
 ) {
+  const { t, i18n } = useTranslation();
   const blank = useRef<Customer>(makeBlank());
   const [form, setForm] = useState<Customer>(() =>
     initForm(mode, customer, blank.current),
@@ -44,10 +47,16 @@ export function useCustomerForm(
     setErr(null);
     try {
       const created = await createCustomer(buildBody(form));
-      await syncNewsletterAfterCreate(created, setForm);
+      await syncNewsletterAfterCreate(created, setForm, t);
       onCreated?.();
     } catch (e: any) {
-      setErr(e?.message || "Create failed");
+      setErr(
+        toastErrorMessage(
+          t,
+          e,
+          "common.admin.customers.customerDialog.errors.createFailed",
+        ),
+      );
     } finally {
       setSaving(false);
     }
@@ -71,7 +80,13 @@ export function useCustomerForm(
       onSaved?.();
     } catch (e: any) {
       console.error("Customer save error", e);
-      setErr(e?.message || "Save failed");
+      setErr(
+        toastErrorMessage(
+          t,
+          e,
+          "common.admin.customers.customerDialog.errors.saveFailed",
+        ),
+      );
     } finally {
       setSaving(false);
     }
@@ -102,7 +117,7 @@ export function useCustomerForm(
     setGenderOpen,
     salutationDropdownRef,
     genderDropdownRef,
-    fmtDE,
+    fmtDE: (value: any) => fmtDE(value, i18n.language),
   };
 }
 
@@ -308,14 +323,21 @@ function buildBody(form: Customer) {
 async function syncNewsletterAfterCreate(
   created: any,
   setForm: (u: any) => void,
+  t: (key: string) => string,
 ) {
   if (!created?._id || created?.newsletter !== true) return;
   try {
     const updated = await toggleNewsletter(created._id, true);
     setForm(updated);
   } catch (e: any) {
-    console.warn("Newsletter sync after create failed:", e?.message || e);
-    alert(e?.message || "Newsletter sync failed after create");
+    console.warn(
+      "Newsletter sync after create failed:",
+      toastErrorMessage(
+        t,
+        e,
+        "common.admin.customers.customerDialog.errors.newsletterSyncFailed",
+      ),
+    );
   }
 }
 
