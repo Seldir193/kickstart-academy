@@ -36,5 +36,10 @@
   "common.admin.news.infoDialog.statusRejected": "Abgelehnt",
   "common.admin.news.infoDialog.statusPending": "Wartet (zu prüfen)",
   "common.admin.news.infoDialog.statusPublished": "Freigegeben",
-  "common.admin.news.infoDialog.statusOffline": "Offline"
+  "common.admin.news.infoDialog.statusOffline": "Offline",
+
+  "common.admin.news.deleteDialog.title": "Beitrag löschen",
+  "common.admin.news.deleteDialog.text": "Möchtest du den Beitrag „{{title}}“ wirklich löschen?",
+  "common.confirm": "Bestätigen",
+  "common.cancel": "Abbrechen"
 }

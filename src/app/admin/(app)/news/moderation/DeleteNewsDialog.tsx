@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslation } from "react-i18next";
 import ConfirmDialog from "../../coaches/moderation/ConfirmDialog";
 
 type Props = {
@@ -15,13 +16,14 @@ export default function DeleteNewsDialog({
   onClose,
   onConfirm,
 }: Props) {
+  const { t } = useTranslation();
   return (
     <ConfirmDialog
       open={open}
-      title="Delete post"
-      text={`Do you really want to delete post "${newsTitle}"?`}
-      confirmText="Confirm"
-      cancelText="Cancel"
+      title={t("common.admin.news.deleteDialog.title")}
+      text={t("common.admin.news.deleteDialog.text", { title: newsTitle })}
+      confirmText={t("common.confirm")}
+      cancelText={t("common.cancel")}
       danger={false}
       onClose={onClose}
       onConfirm={onConfirm}

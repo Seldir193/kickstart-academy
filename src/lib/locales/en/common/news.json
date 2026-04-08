@@ -36,5 +36,10 @@
   "common.admin.news.infoDialog.statusRejected": "Rejected",
   "common.admin.news.infoDialog.statusPending": "Pending review",
   "common.admin.news.infoDialog.statusPublished": "Published",
-  "common.admin.news.infoDialog.statusOffline": "Offline"
+  "common.admin.news.infoDialog.statusOffline": "Offline",
+
+  "common.admin.news.deleteDialog.title": "Delete post",
+  "common.admin.news.deleteDialog.text": "Do you really want to delete post \"{{title}}\"?",
+  "common.confirm": "Confirm",
+  "common.cancel": "Cancel"
 }

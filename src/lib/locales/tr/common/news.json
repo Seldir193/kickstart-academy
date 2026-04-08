@@ -36,5 +36,10 @@
   "common.admin.news.infoDialog.statusRejected": "Reddedildi",
   "common.admin.news.infoDialog.statusPending": "Bekliyor (incelenecek)",
   "common.admin.news.infoDialog.statusPublished": "Yayınlandı",
-  "common.admin.news.infoDialog.statusOffline": "Çevrimdışı"
+  "common.admin.news.infoDialog.statusOffline": "Çevrimdışı",
+
+  "common.admin.news.deleteDialog.title": "Gönderiyi sil",
+  "common.admin.news.deleteDialog.text": "\"{{title}}\" gönderisini gerçekten silmek istiyor musunuz?",
+  "common.confirm": "Onayla",
+  "common.cancel": "İptal"
 }
