@@ -786,5 +786,7 @@
   "common.admin.customers.customerDialog.provider": "Sağlayıcı",
   "common.admin.customers.customerDialog.consent": "Onay",
   "common.admin.customers.customerDialog.synced": "Senkronize edildi",
-  "common.admin.customers.customerDialog.errors.newsletterUpdateFailed": "Bülten güncellemesi başarısız oldu"
+  "common.admin.customers.customerDialog.errors.newsletterUpdateFailed": "Bülten güncellemesi başarısız oldu",
+
+  "common.admin.customers.customerDialog.notes": "Notlar"
 }

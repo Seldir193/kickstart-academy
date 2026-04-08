@@ -789,5 +789,7 @@
   "common.admin.customers.customerDialog.provider": "Provider",
   "common.admin.customers.customerDialog.consent": "Consent",
   "common.admin.customers.customerDialog.synced": "Synced",
-  "common.admin.customers.customerDialog.errors.newsletterUpdateFailed": "Newsletter update failed"
+  "common.admin.customers.customerDialog.errors.newsletterUpdateFailed": "Newsletter update failed",
+
+  "common.admin.customers.customerDialog.notes": "Notes"
 }

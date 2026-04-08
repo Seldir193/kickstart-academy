@@ -789,5 +789,7 @@
   "common.admin.customers.customerDialog.provider": "Provider",
   "common.admin.customers.customerDialog.consent": "Einwilligung",
   "common.admin.customers.customerDialog.synced": "Synchronisiert",
-  "common.admin.customers.customerDialog.errors.newsletterUpdateFailed": "Newsletter-Aktualisierung fehlgeschlagen"
+  "common.admin.customers.customerDialog.errors.newsletterUpdateFailed": "Newsletter-Aktualisierung fehlgeschlagen",
+
+  "common.admin.customers.customerDialog.notes": "Notizen"
 }
