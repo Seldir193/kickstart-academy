@@ -703,5 +703,9 @@
   "common.admin.customers.cancelDialog.statusActive": "Aktif",
   "common.admin.customers.cancelDialog.sortNewest": "En yeni",
   "common.admin.customers.cancelDialog.errors.cancelFailed": "İptal başarısız oldu",
-  "common.admin.customers.cancelDialog.errors.loadOffers": "Teklifler yüklenemedi"
+  "common.admin.customers.cancelDialog.errors.loadOffers": "Teklifler yüklenemedi",
+
+  "common.admin.customers.cancelDialog.statusCancelled": "İptal edildi",
+  "common.admin.customers.cancelDialog.statusAll": "Tümü",
+  "common.admin.customers.cancelDialog.sortOldest": "En eski"
 }

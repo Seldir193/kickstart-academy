@@ -467,19 +467,49 @@ export default function CancelDialog({
     return t("common.admin.customers.cancelDialog.allCourses");
   }, [courseValue, t]);
 
+  // const statusLabel = useMemo(() => {
+  //   return (
+  //     STATUS_OPTIONS.find((o) => o.value === statusFilter)?.labelKey ||
+  //     t("common.admin.customers.cancelDialog.statusActive")
+  //   );
+  // }, [statusFilter, t]);
+
+  // rein
+  const statusItems = useMemo(() => {
+    return STATUS_OPTIONS.map((o) => ({
+      value: o.value,
+      label: t(o.labelKey),
+    }));
+  }, [t]);
+
   const statusLabel = useMemo(() => {
     return (
-      STATUS_OPTIONS.find((o) => o.value === statusFilter)?.label ||
+      statusItems.find((o) => o.value === statusFilter)?.label ||
       t("common.admin.customers.cancelDialog.statusActive")
     );
-  }, [statusFilter, t]);
+  }, [statusFilter, statusItems, t]);
+
+  // const sortLabel = useMemo(() => {
+  //   return (
+  //     SORT_OPTIONS.find((o) => o.value === sortOrder)?.labelKey ||
+  //     t("common.admin.customers.cancelDialog.sortNewest")
+  //   );
+  // }, [sortOrder, t]);
+
+  // rein
+  const sortItems = useMemo(() => {
+    return SORT_OPTIONS.map((o) => ({
+      value: o.value,
+      label: t(o.labelKey),
+    }));
+  }, [t]);
 
   const sortLabel = useMemo(() => {
     return (
-      SORT_OPTIONS.find((o) => o.value === sortOrder)?.label ||
+      sortItems.find((o) => o.value === sortOrder)?.label ||
       t("common.admin.customers.cancelDialog.sortNewest")
     );
-  }, [sortOrder, t]);
+  }, [sortOrder, sortItems, t]);
 
   const bookingTrigger = useMemo(() => {
     if (courseValueIsNonCancelable)
@@ -887,7 +917,8 @@ export default function CancelDialog({
                     open={isStatusOpen}
                     setOpen={setIsStatusOpen}
                     rootRef={statusDropdownRef}
-                    items={STATUS_OPTIONS}
+                    // items={STATUS_OPTIONS}
+                    items={statusItems}
                     activeValue={statusFilter}
                     onSelect={(v) => setStatusFilter(v as StatusFilter)}
                   />
@@ -900,7 +931,8 @@ export default function CancelDialog({
                     open={isSortOpen}
                     setOpen={setIsSortOpen}
                     rootRef={sortDropdownRef}
-                    items={SORT_OPTIONS}
+                    // items={SORT_OPTIONS}
+                    items={sortItems}
                     activeValue={sortOrder}
                     onSelect={(v) => setSortOrder(v as SortOrder)}
                   />

@@ -706,5 +706,9 @@
   "common.admin.customers.cancelDialog.statusActive": "Aktiv",
   "common.admin.customers.cancelDialog.sortNewest": "Neueste",
   "common.admin.customers.cancelDialog.errors.cancelFailed": "Stornierung fehlgeschlagen",
-  "common.admin.customers.cancelDialog.errors.loadOffers": "Angebote konnten nicht geladen werden"
+  "common.admin.customers.cancelDialog.errors.loadOffers": "Angebote konnten nicht geladen werden",
+
+  "common.admin.customers.cancelDialog.statusCancelled": "Storniert",
+  "common.admin.customers.cancelDialog.statusAll": "Alle",
+  "common.admin.customers.cancelDialog.sortOldest": "Älteste"
 }
