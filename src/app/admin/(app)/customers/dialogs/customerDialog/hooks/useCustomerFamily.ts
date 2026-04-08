@@ -2,6 +2,8 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { toastErrorMessage } from "@/lib/toast-messages";
 import type { Customer } from "../../../types";
 import { fetchCustomerById, fetchFamily } from "../api";
 import { formatChildLabel } from "../formatters";
@@ -241,6 +243,7 @@ async function reloadFamily(
   setMembers: (v: FamilyMember[]) => void,
   setLoading: (v: boolean) => void,
   setErr: (v: string | null) => void,
+  t: (key: string) => string,
 ) {
   const id = baseId || baseCustomerId || formId;
   if (!id) return;
@@ -253,7 +256,13 @@ async function reloadFamily(
     setMembers(expandMembersForDropdown(raw));
   } catch (e: any) {
     console.error("reloadFamily failed", e);
-    setErr(e?.message || "Failed to load family");
+    setErr(
+      toastErrorMessage(
+        t,
+        e,
+        "common.admin.customers.customerDialog.errors.familyLoadFailed",
+      ),
+    );
     setMembers([]);
   } finally {
     setLoading(false);
@@ -337,6 +346,7 @@ export function useCustomerFamily(
   form: Customer,
   setForm: (v: any) => void,
 ) {
+  const { t } = useTranslation();
   const [familyMembers, setFamilyMembers] = useState<FamilyMember[]>([]);
   const [familyLoading, setFamilyLoading] = useState(false);
   const [familyError, setFamilyError] = useState<string | null>(null);
@@ -380,6 +390,7 @@ export function useCustomerFamily(
       setFamilyMembers,
       setFamilyLoading,
       setFamilyError,
+      t,
     );
   }, [mode, customer && customer._id]);
 
@@ -403,8 +414,8 @@ export function useCustomerFamily(
 
   const selectedChildLabel = useMemo(() => {
     const hit = childFamilyMembers.find((m) => m._id === activeFamilyId);
-    return hit ? formatChildLabel(hit) : "";
-  }, [childFamilyMembers, activeFamilyId]);
+    return hit ? formatChildLabel(hit, t) : "";
+  }, [childFamilyMembers, activeFamilyId, t]);
 
   function selfLabelFromMember(member: FamilyMember) {
     const first = safeText(member?.parent?.firstName);
@@ -517,6 +528,7 @@ export function useCustomerFamily(
         setFamilyMembers,
         setFamilyLoading,
         setFamilyError,
+        t,
       );
     } catch (e: any) {
       console.error("loadCustomerById failed", e);
@@ -623,6 +635,7 @@ export function useCustomerFamily(
       setFamilyMembers,
       setFamilyLoading,
       setFamilyError,
+      t,
     );
   }
 

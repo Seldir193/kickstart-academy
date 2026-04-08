@@ -767,5 +767,7 @@
 
   "common.admin.customers.customerDialog.errors.createFailed": "Oluşturma başarısız oldu",
   "common.admin.customers.customerDialog.errors.saveFailed": "Kaydetme başarısız oldu",
-  "common.admin.customers.customerDialog.errors.newsletterSyncFailed": "Oluşturma sonrası bülten senkronizasyonu başarısız oldu"
+  "common.admin.customers.customerDialog.errors.newsletterSyncFailed": "Oluşturma sonrası bülten senkronizasyonu başarısız oldu",
+
+  "common.admin.customers.customerDialog.errors.familyLoadFailed": "Aile yüklenemedi"
 }

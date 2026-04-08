@@ -770,5 +770,7 @@
 
   "common.admin.customers.customerDialog.errors.createFailed": "Erstellen fehlgeschlagen",
   "common.admin.customers.customerDialog.errors.saveFailed": "Speichern fehlgeschlagen",
-  "common.admin.customers.customerDialog.errors.newsletterSyncFailed": "Newsletter-Synchronisierung nach dem Erstellen fehlgeschlagen"
+  "common.admin.customers.customerDialog.errors.newsletterSyncFailed": "Newsletter-Synchronisierung nach dem Erstellen fehlgeschlagen",
+
+  "common.admin.customers.customerDialog.errors.familyLoadFailed": "Familie konnte nicht geladen werden"
 }

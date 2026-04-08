@@ -770,5 +770,7 @@
 
   "common.admin.customers.customerDialog.errors.createFailed": "Create failed",
   "common.admin.customers.customerDialog.errors.saveFailed": "Save failed",
-  "common.admin.customers.customerDialog.errors.newsletterSyncFailed": "Newsletter sync failed after create"
+  "common.admin.customers.customerDialog.errors.newsletterSyncFailed": "Newsletter sync failed after create",
+
+  "common.admin.customers.customerDialog.errors.familyLoadFailed": "Failed to load family"
 }
