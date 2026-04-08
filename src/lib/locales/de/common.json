@@ -756,5 +756,7 @@
   "common.admin.customers.stornoDialog.statusAll": "Alle",
   "common.admin.customers.stornoDialog.sortOldest": "Älteste",
 
-  "common.admin.customers.stornoDialog.noInvoiceYet": "Noch keine Rechnung"
+  "common.admin.customers.stornoDialog.noInvoiceYet": "Noch keine Rechnung",
+
+  "common.close": "Schließen"
 }

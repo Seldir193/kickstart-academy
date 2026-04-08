@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import type { Customer } from "../types";
 import { statusLabel } from "./customerDialog/formatters";
 import { useCustomerForm } from "./customerDialog/hooks/useCustomerForm";
@@ -25,6 +26,7 @@ type Props = {
 };
 
 export default function CustomerDialog(p: Props) {
+  const { t } = useTranslation();
   void p.onDeleted;
 
   const f = useCustomerForm(p.mode, p.customer);
@@ -59,7 +61,7 @@ export default function CustomerDialog(p: Props) {
       <button
         type="button"
         className="dialog-backdrop-hit ks-customer-dialog__backdrop-hit"
-        aria-label="Close"
+        aria-label={t("common.close")}
         onClick={p.onClose}
       />
 
