@@ -772,5 +772,22 @@
   "common.admin.customers.customerDialog.errors.saveFailed": "Speichern fehlgeschlagen",
   "common.admin.customers.customerDialog.errors.newsletterSyncFailed": "Newsletter-Synchronisierung nach dem Erstellen fehlgeschlagen",
 
-  "common.admin.customers.customerDialog.errors.familyLoadFailed": "Familie konnte nicht geladen werden"
+  "common.admin.customers.customerDialog.errors.familyLoadFailed": "Familie konnte nicht geladen werden",
+
+  "common.admin.customers.customerDialog.parent": "Elternteil",
+  "common.admin.customers.customerDialog.salutation": "Anrede",
+  "common.admin.customers.customerDialog.salutationMs": "Ms.",
+  "common.admin.customers.customerDialog.salutationMr": "Mr.",
+  "common.admin.customers.customerDialog.firstName": "Vorname",
+  "common.admin.customers.customerDialog.lastName": "Nachname",
+  "common.admin.customers.customerDialog.email": "E-Mail",
+  "common.admin.customers.customerDialog.phone": "Telefon",
+  "common.admin.customers.customerDialog.phone2": "Telefon 2",
+  "common.admin.customers.customerDialog.newsletter": "Newsletter",
+  "common.admin.customers.customerDialog.saving": "Speichern…",
+  "common.admin.customers.customerDialog.status": "Status",
+  "common.admin.customers.customerDialog.provider": "Provider",
+  "common.admin.customers.customerDialog.consent": "Einwilligung",
+  "common.admin.customers.customerDialog.synced": "Synchronisiert",
+  "common.admin.customers.customerDialog.errors.newsletterUpdateFailed": "Newsletter-Aktualisierung fehlgeschlagen"
 }

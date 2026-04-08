@@ -772,5 +772,22 @@
   "common.admin.customers.customerDialog.errors.saveFailed": "Save failed",
   "common.admin.customers.customerDialog.errors.newsletterSyncFailed": "Newsletter sync failed after create",
 
-  "common.admin.customers.customerDialog.errors.familyLoadFailed": "Failed to load family"
+  "common.admin.customers.customerDialog.errors.familyLoadFailed": "Failed to load family",
+
+  "common.admin.customers.customerDialog.parent": "Parent",
+  "common.admin.customers.customerDialog.salutation": "Salutation",
+  "common.admin.customers.customerDialog.salutationMs": "Ms.",
+  "common.admin.customers.customerDialog.salutationMr": "Mr.",
+  "common.admin.customers.customerDialog.firstName": "First name",
+  "common.admin.customers.customerDialog.lastName": "Last name",
+  "common.admin.customers.customerDialog.email": "Email",
+  "common.admin.customers.customerDialog.phone": "Phone",
+  "common.admin.customers.customerDialog.phone2": "Phone 2",
+  "common.admin.customers.customerDialog.newsletter": "Newsletter",
+  "common.admin.customers.customerDialog.saving": "Saving…",
+  "common.admin.customers.customerDialog.status": "Status",
+  "common.admin.customers.customerDialog.provider": "Provider",
+  "common.admin.customers.customerDialog.consent": "Consent",
+  "common.admin.customers.customerDialog.synced": "Synced",
+  "common.admin.customers.customerDialog.errors.newsletterUpdateFailed": "Newsletter update failed"
 }

@@ -769,5 +769,22 @@
   "common.admin.customers.customerDialog.errors.saveFailed": "Kaydetme başarısız oldu",
   "common.admin.customers.customerDialog.errors.newsletterSyncFailed": "Oluşturma sonrası bülten senkronizasyonu başarısız oldu",
 
-  "common.admin.customers.customerDialog.errors.familyLoadFailed": "Aile yüklenemedi"
+  "common.admin.customers.customerDialog.errors.familyLoadFailed": "Aile yüklenemedi",
+
+  "common.admin.customers.customerDialog.parent": "Veli",
+  "common.admin.customers.customerDialog.salutation": "Hitap",
+  "common.admin.customers.customerDialog.salutationMs": "Ms.",
+  "common.admin.customers.customerDialog.salutationMr": "Mr.",
+  "common.admin.customers.customerDialog.firstName": "Ad",
+  "common.admin.customers.customerDialog.lastName": "Soyad",
+  "common.admin.customers.customerDialog.email": "E-posta",
+  "common.admin.customers.customerDialog.phone": "Telefon",
+  "common.admin.customers.customerDialog.phone2": "Telefon 2",
+  "common.admin.customers.customerDialog.newsletter": "Bülten",
+  "common.admin.customers.customerDialog.saving": "Kaydediliyor…",
+  "common.admin.customers.customerDialog.status": "Durum",
+  "common.admin.customers.customerDialog.provider": "Sağlayıcı",
+  "common.admin.customers.customerDialog.consent": "Onay",
+  "common.admin.customers.customerDialog.synced": "Senkronize edildi",
+  "common.admin.customers.customerDialog.errors.newsletterUpdateFailed": "Bülten güncellemesi başarısız oldu"
 }
