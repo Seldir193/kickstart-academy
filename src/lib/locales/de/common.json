@@ -712,5 +712,9 @@
   "common.admin.customers.cancelDialog.statusAll": "Alle",
   "common.admin.customers.cancelDialog.sortOldest": "Älteste",
 
-  "common.admin.customers.cancelDialog.sinceDate": "seit {{date}}"
+  "common.admin.customers.cancelDialog.sinceDate": "seit {{date}}",
+
+  "common.admin.customers.cancelDialog.noCancellableBookings": "Keine stornierbaren Buchungen",
+  "common.admin.customers.cancelDialog.select": "Auswählen…",
+  "common.admin.customers.cancelDialog.noInvoiceYet": "Noch keine Rechnung"
 }

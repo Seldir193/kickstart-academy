@@ -709,5 +709,9 @@
   "common.admin.customers.cancelDialog.statusAll": "Tümü",
   "common.admin.customers.cancelDialog.sortOldest": "En eski",
 
-  "common.admin.customers.cancelDialog.sinceDate": "since {{date}}"
+  "common.admin.customers.cancelDialog.sinceDate": "since {{date}}",
+
+  "common.admin.customers.cancelDialog.noCancellableBookings": "İptal edilebilir rezervasyon yok",
+  "common.admin.customers.cancelDialog.select": "Seç…",
+  "common.admin.customers.cancelDialog.noInvoiceYet": "Henüz fatura yok"
 }

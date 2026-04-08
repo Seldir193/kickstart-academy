@@ -712,5 +712,9 @@
   "common.admin.customers.cancelDialog.statusAll": "All",
   "common.admin.customers.cancelDialog.sortOldest": "Oldest",
 
-  "common.admin.customers.cancelDialog.sinceDate": "since {{date}}"
+  "common.admin.customers.cancelDialog.sinceDate": "since {{date}}",
+
+  "common.admin.customers.cancelDialog.noCancellableBookings": "No cancellable bookings",
+  "common.admin.customers.cancelDialog.select": "Select…",
+  "common.admin.customers.cancelDialog.noInvoiceYet": "No invoice yet"
 }

@@ -513,12 +513,12 @@ export default function CancelDialog({
 
   const bookingTrigger = useMemo(() => {
     if (courseValueIsNonCancelable)
-      return bookingDisplay(null, true, statusFilter);
-    if (selected) return bookingDisplay(selected, false, statusFilter);
+      return bookingDisplay(null, true, statusFilter, t);
+    if (selected) return bookingDisplay(selected, false, statusFilter, t);
     if (filteredBookings.length)
-      return bookingDisplay("select", false, statusFilter);
-    return bookingDisplay(null, false, statusFilter);
-  }, [courseValueIsNonCancelable, selected, filteredBookings, statusFilter]);
+      return bookingDisplay("select", false, statusFilter, t);
+    return bookingDisplay(null, false, statusFilter, t);
+  }, [courseValueIsNonCancelable, selected, filteredBookings, statusFilter, t]);
 
   const courseDropdownRef = useRef<HTMLDivElement | null>(null);
   const bookingDropdownRef = useRef<HTMLDivElement | null>(null);
