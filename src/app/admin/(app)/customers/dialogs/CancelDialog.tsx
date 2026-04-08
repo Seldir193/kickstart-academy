@@ -2,6 +2,8 @@
 "use client";
 
 import React, { useEffect, useMemo, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { toastErrorMessage, toastText } from "@/lib/toast-messages";
 import type { Customer } from "../types";
 import {
   GROUPED_COURSE_OPTIONS,
@@ -34,50 +36,49 @@ import type { FamilyChild, FamilyMember } from "./bookDialog/types";
 
 type Props = {
   customer: Customer;
-  // childFirst?: string;
-  // childLast?: string;
+
   onClose: () => void;
   onChanged: (freshCustomer: Customer) => void;
 };
 
 type BookingTarget = "self" | "child";
 
-type ChildOption = {
-  uid: string;
-  label: string;
-  parentId: string;
-  child: FamilyChild;
-};
+// type ChildOption = {
+//   uid: string;
+//   label: string;
+//   parentId: string;
+//   child: FamilyChild;
+// };
 
-type ParentOption = {
-  id: string;
-  label: string;
-};
+// type ParentOption = {
+//   id: string;
+//   label: string;
+// };
 
-function formatDateOnlyDe(value?: string | null) {
-  if (!value) return "";
-  const iso = /T/.test(value) ? value : `${value}T00:00:00`;
-  const d = new Date(iso);
-  if (Number.isNaN(d.getTime())) return value;
+// function formatDateOnlyDe(value?: string | null) {
+//   if (!value) return "";
+//   const iso = /T/.test(value) ? value : `${value}T00:00:00`;
+//   const d = new Date(iso);
+//   if (Number.isNaN(d.getTime())) return value;
 
-  return new Intl.DateTimeFormat("de-DE", {
-    day: "2-digit",
-    month: "2-digit",
-    year: "numeric",
-  }).format(d);
-}
-
-// function childLabel(child: FamilyChild) {
-//   const full = `${child.firstName} ${child.lastName}`.trim();
-//   const birth = formatDateOnlyDe(child.birthDate);
-//   return [full || "Kind", birth].filter(Boolean).join(" - ");
+//   return new Intl.DateTimeFormat("de-DE", {
+//     day: "2-digit",
+//     month: "2-digit",
+//     year: "numeric",
+//   }).format(d);
 // }
 
-function childLabel(child: FamilyChild) {
-  return `${child.firstName} ${child.lastName}`.trim() || "Kind";
+function childLabel(child: FamilyChild, t: (key: string) => string) {
+  return (
+    `${child.firstName} ${child.lastName}`.trim() ||
+    t("common.admin.customers.cancelDialog.child")
+  );
 }
 
-function buildChildOptions(family: FamilyMember[] | null) {
+function buildChildOptions(
+  family: FamilyMember[] | null,
+  t: (key: string) => string,
+) {
   const members = Array.isArray(family) ? family : [];
 
   return members.flatMap((member) => {
@@ -110,7 +111,7 @@ function buildChildOptions(family: FamilyMember[] | null) {
       })
       .map((child) => ({
         uid: safeText(child.uid),
-        label: childLabel(child),
+        label: childLabel(child, t),
         parentId: member._id,
         child,
       }));
@@ -137,7 +138,10 @@ function parentOptionId(memberId: string, idx: number) {
   return `${memberId}::parent::${idx}`;
 }
 
-function buildParentOptions(family: FamilyMember[] | null) {
+function buildParentOptions(
+  family: FamilyMember[] | null,
+  t: (key: string) => string,
+) {
   const members = Array.isArray(family) ? family : [];
 
   return members.flatMap((member) => {
@@ -150,7 +154,7 @@ function buildParentOptions(family: FamilyMember[] | null) {
       id: parentOptionId(member._id, idx),
       label:
         `${safeText(parent?.firstName)} ${safeText(parent?.lastName)}`.trim() ||
-        "Elternteil",
+        t("common.admin.customers.cancelDialog.parent"),
     }));
   });
 }
@@ -236,6 +240,7 @@ export default function CancelDialog({
   onClose,
   onChanged,
 }: Props) {
+  const { t } = useTranslation();
   const [offers, setOffers] = useState<any[]>([]);
   const [loadingOffers, setLoadingOffers] = useState(false);
   const [err, setErr] = useState<string | null>(null);
@@ -261,8 +266,11 @@ export default function CancelDialog({
     { ref: childDropdownRef, close: () => setIsChildDropdownOpen(false) },
   ]);
 
-  const childOptions = useMemo(() => buildChildOptions(family), [family]);
-  const parentOptions = useMemo(() => buildParentOptions(family), [family]);
+  const childOptions = useMemo(() => buildChildOptions(family, t), [family, t]);
+  const parentOptions = useMemo(
+    () => buildParentOptions(family, t),
+    [family, t],
+  );
 
   useEffect(() => {
     if (selectedParentId) return;
@@ -321,12 +329,13 @@ export default function CancelDialog({
   }, [family, selfMemberId]);
 
   const selectedParentLabel = useMemo(() => {
-    if (!selectedParent) return "Elternteil wählen …";
+    if (!selectedParent)
+      return t("common.admin.customers.cancelDialog.selectParent");
     return (
       `${selectedParent.parent.firstName} ${selectedParent.parent.lastName}`.trim() ||
-      "Elternteil"
+      t("common.admin.customers.cancelDialog.parent")
     );
-  }, [selectedParent]);
+  }, [selectedParent, t]);
 
   const selectedChildOption = useMemo(() => {
     if (!childOptions.length) return null;
@@ -356,40 +365,6 @@ export default function CancelDialog({
     for (const o of offers) if (o?._id) m.set(String(o._id), o);
     return m;
   }, [offers]);
-
-  // const filteredBookings = useMemo(() => {
-  //   const base = (customer.bookings || []).filter((b: any) => {
-  //     if (!childMatches(b, childFirst, childLast)) return false;
-  //     return isBookingCancellable(b, offersById);
-  //   });
-
-  //   if (courseValueIsNonCancelable) return [];
-  //   // const byCourse = courseValue
-  //   //   ? base.filter(
-  //   //       (b: any) => courseValueFromBooking(b, offersById) === courseValue,
-  //   //     )
-  //   //   : base;
-
-  //   // return applyStatusAndSort(byCourse, statusFilter, sortOrder);
-
-  //   const byCourse = courseValue
-  //     ? base.filter(
-  //         (b: any) => courseValueFromBooking(b, offersById) === courseValue,
-  //       )
-  //     : base;
-
-  //   const deduped = dedupeBookings(byCourse);
-  //   return applyStatusAndSort(deduped, statusFilter, sortOrder);
-  // }, [
-  //   customer.bookings,
-  //   offersById,
-  //   courseValue,
-  //   courseValueIsNonCancelable,
-  //   statusFilter,
-  //   sortOrder,
-  //   childFirst,
-  //   childLast,
-  // ]);
 
   const filteredBookings = useMemo(() => {
     const base = (customer.bookings || []).filter((b: any) => {
@@ -440,58 +415,6 @@ export default function CancelDialog({
     activeParentEmail,
   ]);
 
-  // const filteredBookings = useMemo(() => {
-  //   const base = (customer.bookings || []).filter((b: any) => {
-  //     if (!isBookingCancellable(b, offersById)) return false;
-
-  //     if (bookingTarget === "child") {
-  //       if (safeText(b?.childUid) !== safeText(activeChild?.uid)) return false;
-
-  //       //   const bookingParentEmail = safeText(
-  //       //     (b as any)?.parentEmail,
-  //       //   ).toLowerCase();
-  //       //   if (activeParentEmail && bookingParentEmail) {
-  //       //     return bookingParentEmail === activeParentEmail;
-  //       //   }
-
-  //       //   return true;
-  //       // }
-
-  //       const bookingParentEmail = safeText(
-  //         (b as any)?.parentEmail,
-  //       ).toLowerCase();
-  //       if (activeParentEmail) {
-  //         return bookingParentEmail === activeParentEmail;
-  //       }
-
-  //       return true;
-  //     }
-
-  //     return !safeText((b as any)?.childUid);
-  //   });
-
-  //   if (courseValueIsNonCancelable) return [];
-
-  //   const byCourse = courseValue
-  //     ? base.filter(
-  //         (b: any) => courseValueFromBooking(b, offersById) === courseValue,
-  //       )
-  //     : base;
-
-  //   const deduped = dedupeBookings(byCourse);
-  //   return applyStatusAndSort(deduped, statusFilter, sortOrder);
-  // }, [
-  //   customer.bookings,
-  //   offersById,
-  //   courseValue,
-  //   courseValueIsNonCancelable,
-  //   statusFilter,
-  //   sortOrder,
-  //   bookingTarget,
-  //   activeChild,
-  //   activeParentEmail,
-  // ]);
-
   const [selectedId, setSelectedId] = useState("");
   const selected = useMemo(() => {
     return (
@@ -500,16 +423,8 @@ export default function CancelDialog({
   }, [filteredBookings, selectedId]);
 
   useEffect(() => {
-    void loadOffers(setOffers, setLoadingOffers, setErr);
+    void loadOffers(setOffers, setLoadingOffers, setErr, t);
   }, []);
-
-  // useEffect(() => {
-  //   setCourseValue("");
-  //   setStatusFilter("active");
-  //   setSortOrder("newest");
-  //   setSelectedId("");
-  //   setErr(null);
-  // }, [customer?._id, childFirst, childLast]);
 
   useEffect(() => {
     setCourseValue("");
@@ -543,23 +458,28 @@ export default function CancelDialog({
     disabledByNonCancelableCourse;
 
   const selectedCourseLabel = useMemo(() => {
-    if (!courseValue) return "All courses";
+    if (!courseValue)
+      return t("common.admin.customers.cancelDialog.allCourses");
     for (const group of GROUPED_COURSE_OPTIONS) {
       const found = group.items.find((opt) => opt.value === courseValue);
       if (found) return found.label;
     }
-    return "All courses";
-  }, [courseValue]);
+    return t("common.admin.customers.cancelDialog.allCourses");
+  }, [courseValue, t]);
 
   const statusLabel = useMemo(() => {
     return (
-      STATUS_OPTIONS.find((o) => o.value === statusFilter)?.label || "Active"
+      STATUS_OPTIONS.find((o) => o.value === statusFilter)?.label ||
+      t("common.admin.customers.cancelDialog.statusActive")
     );
-  }, [statusFilter]);
+  }, [statusFilter, t]);
 
   const sortLabel = useMemo(() => {
-    return SORT_OPTIONS.find((o) => o.value === sortOrder)?.label || "Newest";
-  }, [sortOrder]);
+    return (
+      SORT_OPTIONS.find((o) => o.value === sortOrder)?.label ||
+      t("common.admin.customers.cancelDialog.sortNewest")
+    );
+  }, [sortOrder, t]);
 
   const bookingTrigger = useMemo(() => {
     if (courseValueIsNonCancelable)
@@ -600,8 +520,14 @@ export default function CancelDialog({
       const fresh = await fetchCustomer(customer._id);
       if (fresh) onChanged(fresh);
       onClose();
-    } catch (e: any) {
-      setErr(e?.message || "Cancel failed");
+    } catch (e: unknown) {
+      setErr(
+        toastErrorMessage(
+          t,
+          e,
+          "common.admin.customers.cancelDialog.errors.cancelFailed",
+        ),
+      );
     } finally {
       setSaving(false);
     }
@@ -616,7 +542,7 @@ export default function CancelDialog({
       <button
         type="button"
         className="dialog-backdrop-hit"
-        aria-label="Close"
+        aria-label={t("common.actions.close")}
         onClick={onClose}
       />
 
@@ -627,10 +553,10 @@ export default function CancelDialog({
         <div className="dialog-head cancel-dialog__head">
           <div className="cancel-dialog__head-main">
             <h3 id="cancel-dialog-title" className="dialog-title">
-              Confirm cancellation
+              {t("common.admin.customers.cancelDialog.title")}
             </h3>
             <p className="dialog-subtitle">
-              Select scope, booking, and cancellation dates.
+              {t("common.admin.customers.cancelDialog.subtitle")}
             </p>
           </div>
 
@@ -638,7 +564,7 @@ export default function CancelDialog({
             <button
               type="button"
               className="dialog-close"
-              aria-label="Close"
+              aria-label={t("common.actions.close")}
               onClick={onClose}
             >
               <img
@@ -654,25 +580,30 @@ export default function CancelDialog({
         <div className="dialog-body cancel-dialog__body">
           <section className="dialog-section cancel-dialog__scopeSection">
             <div className="dialog-section__head">
-              <h4 className="dialog-section__title">Cancellation scope</h4>
+              <h4 className="dialog-section__title">
+                {t("common.admin.customers.cancelDialog.scopeTitle")}
+              </h4>
             </div>
 
             <div className="dialog-section__body cancel-dialog__scopeBody">
               {familyLoading && (
-                <div className="cancel-dialog__note">Loading family…</div>
+                <div className="cancel-dialog__note">
+                  {t("common.admin.customers.cancelDialog.loadingFamily")}
+                </div>
               )}
 
               {familyError && (
                 <div className="cancel-dialog__error">
-                  Family could not be loaded – cancellation list may be
-                  incomplete.
+                  {t("common.admin.customers.cancelDialog.familyError")}
                 </div>
               )}
 
               {family && family.length > 0 ? (
                 <>
                   <div className="cancel-dialog__field">
-                    <label className="dialog-label">Parent</label>
+                    <label className="dialog-label">
+                      {t("common.admin.customers.cancelDialog.parent")}
+                    </label>
 
                     <div
                       className={
@@ -687,7 +618,10 @@ export default function CancelDialog({
                         onClick={() => setIsParentDropdownOpen((o) => !o)}
                       >
                         <span className="ks-selectbox__label">
-                          {selectedParentLabel || "Select parent …"}
+                          {selectedParentLabel ||
+                            t(
+                              "common.admin.customers.cancelDialog.selectParent",
+                            )}
                         </span>
                         <span
                           className="ks-selectbox__chevron"
@@ -734,7 +668,7 @@ export default function CancelDialog({
                         toggleButtonFocus(e, () => setBookingTarget("self"))
                       }
                     >
-                      Customer self
+                      {t("common.admin.customers.cancelDialog.customerSelf")}
                     </button>
 
                     <button
@@ -750,13 +684,15 @@ export default function CancelDialog({
                         toggleButtonFocus(e, () => setBookingTarget("child"))
                       }
                     >
-                      Child
+                      {t("common.admin.customers.cancelDialog.child")}
                     </button>
                   </div>
 
                   {bookingTarget === "child" && (
                     <div className="cancel-dialog__field">
-                      <label className="dialog-label">Child</label>
+                      <label className="dialog-label">
+                        {t("common.admin.customers.cancelDialog.child")}
+                      </label>
 
                       <div
                         className={
@@ -773,7 +709,9 @@ export default function CancelDialog({
                           <span className="ks-selectbox__label">
                             {activeChild
                               ? `${activeChild.firstName} ${activeChild.lastName}`.trim()
-                              : "Select child …"}
+                              : t(
+                                  "common.admin.customers.cancelDialog.selectChild",
+                                )}
                           </span>
                           <span
                             className="ks-selectbox__chevron"
@@ -809,20 +747,24 @@ export default function CancelDialog({
 
                   <div className="cancel-dialog__summary">
                     <div className="cancel-dialog__summaryItem">
-                      <span className="dialog-label">Parent</span>
+                      <span className="dialog-label">
+                        {t("common.admin.customers.cancelDialog.parent")}
+                      </span>
                       <span className="dialog-value">
                         {selectedParent
                           ? `${selectedParent.parent.firstName} ${selectedParent.parent.lastName}`.trim()
-                          : "—"}
+                          : t("common.admin.customers.cancelDialog.empty")}
                       </span>
                     </div>
 
                     <div className="cancel-dialog__summaryItem">
-                      <span className="dialog-label">Child</span>
+                      <span className="dialog-label">
+                        {t("common.admin.customers.cancelDialog.child")}
+                      </span>
                       <span className="dialog-value">
                         {bookingTarget === "child" && activeChild
                           ? `${activeChild.firstName} ${activeChild.lastName}`.trim()
-                          : "—"}
+                          : t("common.admin.customers.cancelDialog.empty")}
                       </span>
                     </div>
                   </div>
@@ -830,7 +772,7 @@ export default function CancelDialog({
               ) : (
                 !familyLoading && (
                   <div className="dialog-value">
-                    Cancellations are shown for the current customer.
+                    {t("common.admin.customers.cancelDialog.currentCustomer")}
                   </div>
                 )
               )}
@@ -842,7 +784,9 @@ export default function CancelDialog({
               <div className="dialog-section__body">
                 {err && <div className="cancel-dialog__error">{err}</div>}
                 {loadingOffers && (
-                  <div className="cancel-dialog__note">Loading courses…</div>
+                  <div className="cancel-dialog__note">
+                    {t("common.admin.customers.cancelDialog.loadingCourses")}
+                  </div>
                 )}
               </div>
             </section>
@@ -850,13 +794,17 @@ export default function CancelDialog({
 
           <section className="dialog-section cancel-dialog__filtersSection">
             <div className="dialog-section__head">
-              <h4 className="dialog-section__title">Filters</h4>
+              <h4 className="dialog-section__title">
+                {t("common.admin.customers.cancelDialog.filters")}
+              </h4>
             </div>
 
             <div className="dialog-section__body">
               <div className="ks-storno__filters mb-2">
                 <div className="ks-storno__filter">
-                  <label className="dialog-label">Courses</label>
+                  <label className="dialog-label">
+                    {t("common.admin.customers.cancelDialog.courses")}
+                  </label>
 
                   <div
                     className={
@@ -899,7 +847,7 @@ export default function CancelDialog({
                             setIsCourseDropdownOpen(false);
                           }}
                         >
-                          All courses
+                          {t("common.admin.customers.cancelDialog.allCourses")}
                         </button>
 
                         {GROUPED_COURSE_OPTIONS.map((g) => (
@@ -934,7 +882,7 @@ export default function CancelDialog({
 
                 <div className="ks-storno__filter">
                   <InlineSelect
-                    label="Status"
+                    label={t("common.admin.customers.cancelDialog.status")}
                     valueLabel={statusLabel}
                     open={isStatusOpen}
                     setOpen={setIsStatusOpen}
@@ -947,7 +895,7 @@ export default function CancelDialog({
 
                 <div className="ks-storno__filter">
                   <InlineSelect
-                    label="Sort"
+                    label={t("common.admin.customers.cancelDialog.sort")}
                     valueLabel={sortLabel}
                     open={isSortOpen}
                     setOpen={setIsSortOpen}
@@ -961,14 +909,14 @@ export default function CancelDialog({
 
               <div className="ks-storno__section mb-2">
                 <BookingSelect
-                  label="Booking"
+                  label={t("common.admin.customers.cancelDialog.booking")}
                   open={isBookingDropdownOpen}
                   setOpen={setIsBookingDropdownOpen}
                   rootRef={bookingDropdownRef}
                   disabled={!filteredBookings.length}
                   title={
                     courseValueIsNonCancelable
-                      ? "This course is not cancellable"
+                      ? t("common.admin.customers.cancelDialog.notCancellable")
                       : undefined
                   }
                   trigger={bookingTrigger}
@@ -983,13 +931,15 @@ export default function CancelDialog({
 
           <section className="dialog-section cancel-dialog__detailsSection">
             <div className="dialog-section__head">
-              <h4 className="dialog-section__title">Cancellation details</h4>
+              <h4 className="dialog-section__title">
+                {t("common.admin.customers.cancelDialog.detailsTitle")}
+              </h4>
             </div>
 
             <div className="dialog-section__body ks-storno__section">
               <div>
                 <label className="dialog-label">
-                  Receipt date (from) — required
+                  {t("common.admin.customers.cancelDialog.receiptDateRequired")}
                 </label>
                 <KsDatePicker
                   value={cancelDate}
@@ -998,7 +948,7 @@ export default function CancelDialog({
                     if (nextIso && nextIso < minIso) return;
                     setCancelDate(nextIso);
                   }}
-                  placeholder="dd.mm.yyyy"
+                  placeholder={t("common.placeholders.date")}
                   disabled={
                     !selected ||
                     selectedIsCancelled ||
@@ -1008,7 +958,9 @@ export default function CancelDialog({
               </div>
 
               <div>
-                <label className="dialog-label">End date (to) — required</label>
+                <label className="dialog-label">
+                  {t("common.admin.customers.cancelDialog.endDateRequired")}
+                </label>
                 <KsDatePicker
                   value={endDate}
                   onChange={(nextIso) => {
@@ -1016,7 +968,7 @@ export default function CancelDialog({
                     if (nextIso && nextIso < minIso) return;
                     setEndDate(nextIso);
                   }}
-                  placeholder="dd.mm.yyyy"
+                  placeholder={t("common.placeholders.date")}
                   disabled={
                     !selected ||
                     selectedIsCancelled ||
@@ -1025,19 +977,25 @@ export default function CancelDialog({
                 />
                 {endBeforeStart && (
                   <div className="cancel-dialog__error mt-1">
-                    End date must be on or after the receipt date.
+                    {t(
+                      "common.admin.customers.cancelDialog.endDateAfterReceipt",
+                    )}
                   </div>
                 )}
               </div>
 
               <div>
-                <label className="dialog-label">Reason (optional)</label>
+                <label className="dialog-label">
+                  {t("common.admin.customers.cancelDialog.reasonOptional")}
+                </label>
                 <textarea
                   className="input"
                   rows={3}
                   value={reason}
                   onChange={(e) => setReason(e.target.value)}
-                  placeholder="e.g., moved away, club change"
+                  placeholder={t(
+                    "common.admin.customers.cancelDialog.reasonPlaceholder",
+                  )}
                   disabled={
                     !selected ||
                     selectedIsCancelled ||
@@ -1048,13 +1006,15 @@ export default function CancelDialog({
 
               {selected && selectedIsCancelled && (
                 <div className="cancel-dialog__note">
-                  This booking is already cancelled.
+                  {t("common.admin.customers.cancelDialog.alreadyCancelled")}
                 </div>
               )}
 
               {disabledByNonCancelableCourse && (
                 <div className="cancel-dialog__note">
-                  Cancellations are not allowed for this course type.
+                  {t(
+                    "common.admin.customers.cancelDialog.cancellationsNotAllowed",
+                  )}
                 </div>
               )}
             </div>
@@ -1068,7 +1028,9 @@ export default function CancelDialog({
               disabled={disabled}
               onClick={submit}
             >
-              {saving ? "Cancelling…" : "Confirm cancellation"}
+              {saving
+                ? t("common.admin.customers.cancelDialog.cancelling")
+                : t("common.admin.customers.cancelDialog.confirmCancellation")}
             </button>
           </div>
         </div>
@@ -1081,13 +1043,20 @@ async function loadOffers(
   setOffers: (v: any[]) => void,
   setLoading: (v: boolean) => void,
   setErr: (v: string | null) => void,
+  t: (key: string) => string,
 ) {
   try {
     setLoading(true);
     setErr(null);
     setOffers(await fetchOffers(500));
-  } catch (e: any) {
-    setErr(e?.message || "Failed to load offers");
+  } catch (e: unknown) {
+    setErr(
+      toastErrorMessage(
+        t,
+        e,
+        "common.admin.customers.cancelDialog.errors.loadOffers",
+      ),
+    );
   } finally {
     setLoading(false);
   }
@@ -1106,1019 +1075,3 @@ function syncSelected(
   const next = (firstActive || filtered[0])?._id || "";
   setSelectedId(String(next));
 }
-
-// // src/app/admin/(app)/customers/dialogs/CancelDialog.tsx
-// "use client";
-
-// import React, { useEffect, useMemo, useRef, useState } from "react";
-// import type { Customer } from "../types";
-// import {
-//   GROUPED_COURSE_OPTIONS,
-//   courseValueFromBooking,
-// } from "src/app/lib/courseOptions";
-// import KsDatePicker from "@/app/admin/(app)/invoices/components/KsDatePicker";
-// import { fetchOffers, fetchCustomer, postCancel } from "./cancelDialog/api";
-// import { todayISO } from "./cancelDialog/formatters";
-// import {
-//   buildCourseMeta,
-//   isNonCancelableCourseValue,
-// } from "./cancelDialog/courseMeta";
-// import { isBookingCancellable } from "./cancelDialog/bookingRules";
-// import { useCancelDropdowns } from "./cancelDialog/hooks/useCancelDropdowns";
-// import {
-//   SORT_OPTIONS,
-//   STATUS_OPTIONS,
-//   type SortOrder,
-//   type StatusFilter,
-// } from "./cancelDialog/constants";
-// import { bookingDisplay } from "./cancelDialog/bookingDisplay";
-// import { applyStatusAndSort } from "./cancelDialog/filtering";
-// import { useOutsideClose } from "./cancelDialog/hooks/useOutsideClose";
-// import { InlineSelect } from "./cancelDialog/components/InlineSelect";
-// import { BookingSelect } from "./cancelDialog/components/BookingSelect";
-
-// import { useBookDialogFamily } from "./bookDialog/hooks/useBookDialogFamily";
-// import { useDropdownOutsideClose } from "./bookDialog/hooks/useDropdownOutsideClose";
-// import type { FamilyChild, FamilyMember } from "./bookDialog/types";
-
-// type Props = {
-//   customer: Customer;
-//   // childFirst?: string;
-//   // childLast?: string;
-//   onClose: () => void;
-//   onChanged: (freshCustomer: Customer) => void;
-// };
-
-// type BookingTarget = "self" | "child";
-
-// type ChildOption = {
-//   uid: string;
-//   label: string;
-//   parentId: string;
-//   child: FamilyChild;
-// };
-
-// type ParentOption = {
-//   id: string;
-//   label: string;
-// };
-
-// function formatDateOnlyDe(value?: string | null) {
-//   if (!value) return "";
-//   const iso = /T/.test(value) ? value : `${value}T00:00:00`;
-//   const d = new Date(iso);
-//   if (Number.isNaN(d.getTime())) return value;
-
-//   return new Intl.DateTimeFormat("de-DE", {
-//     day: "2-digit",
-//     month: "2-digit",
-//     year: "numeric",
-//   }).format(d);
-// }
-
-// function childLabel(child: FamilyChild) {
-//   const full = `${child.firstName} ${child.lastName}`.trim();
-//   const birth = formatDateOnlyDe(child.birthDate);
-//   return [full || "Kind", birth].filter(Boolean).join(" - ");
-// }
-
-// function buildChildOptions(family: FamilyMember[] | null) {
-//   const members = Array.isArray(family) ? family : [];
-
-//   return members.flatMap((member) => {
-//     const children = Array.isArray(member.children) ? member.children : [];
-//     const parentFirst = safeText(member.parent.firstName).toLowerCase();
-//     const parentLast = safeText(member.parent.lastName).toLowerCase();
-//     const parentFull = `${parentFirst} ${parentLast}`.trim();
-
-//     return children
-//       .filter((child) => {
-//         const uid = safeText(child?.uid);
-//         const first = safeText(child?.firstName);
-//         const last = safeText(child?.lastName);
-//         const firstLower = first.toLowerCase();
-//         const lastLower = last.toLowerCase();
-//         const fullLower = `${firstLower} ${lastLower}`.trim();
-
-//         if (!uid) return false;
-//         if (!first && !last) return false;
-//         if (fullLower === "kunde selbst") return false;
-//         if (fullLower.includes("kunde selbst")) return false;
-//         if (fullLower.includes("eltern")) return false;
-//         if (fullLower.includes("parent")) return false;
-//         if (firstLower === parentFirst && lastLower === parentLast) {
-//           return false;
-//         }
-//         if (fullLower === parentFull) return false;
-
-//         return true;
-//       })
-//       .map((child) => ({
-//         uid: safeText(child.uid),
-//         label: childLabel(child),
-//         parentId: member._id,
-//         child,
-//       }));
-//   });
-// }
-
-// function parentIndexFromMemberId(id: string) {
-//   const value = safeText(id);
-//   const marker = "::parent::";
-//   const idx = value.indexOf(marker);
-//   if (idx < 0) return -1;
-//   const n = Number(value.slice(idx + marker.length));
-//   return Number.isFinite(n) ? n : -1;
-// }
-
-// function baseMemberId(id: string) {
-//   const value = safeText(id);
-//   const marker = "::parent::";
-//   const idx = value.indexOf(marker);
-//   return idx >= 0 ? value.slice(0, idx) : value;
-// }
-
-// function parentOptionId(memberId: string, idx: number) {
-//   return `${memberId}::parent::${idx}`;
-// }
-
-// function buildParentOptions(family: FamilyMember[] | null) {
-//   const members = Array.isArray(family) ? family : [];
-
-//   return members.flatMap((member) => {
-//     const rawParents =
-//       Array.isArray(member.parents) && member.parents.length
-//         ? member.parents
-//         : [member.parent];
-
-//     return rawParents.map((parent, idx) => ({
-//       id: parentOptionId(member._id, idx),
-//       label:
-//         `${safeText(parent?.firstName)} ${safeText(parent?.lastName)}`.trim() ||
-//         "Elternteil",
-//     }));
-//   });
-// }
-
-// function safeText(v: unknown) {
-//   return String(v ?? "").trim();
-// }
-
-// function childMatches(b: any, childFirst?: string, childLast?: string) {
-//   const cf = safeText(childFirst).toLowerCase();
-//   const cl = safeText(childLast).toLowerCase();
-//   if (!cf && !cl) return true;
-
-//   const bf = safeText((b as any).childFirstName).toLowerCase();
-//   const bl = safeText((b as any).childLastName).toLowerCase();
-
-//   if (cf && bf !== cf) return false;
-//   if (cl && bl !== cl) return false;
-//   return true;
-// }
-
-// function bookingIdentityKey(b: any) {
-//   return String(b?._id || b?.bookingId || "").trim();
-// }
-
-// function bookingRank(b: any) {
-//   let rank = 0;
-//   if (safeText(b?.invoiceNumber || b?.invoiceNo)) rank += 100;
-//   if (b?.invoiceDate) rank += 20;
-//   if (b?.cancelDate || b?.cancellationDate) rank += 10;
-//   if (b?.endDate) rank += 5;
-//   if (b?.createdAt) rank += 2;
-//   return rank;
-// }
-
-// function dedupeBookings(items: any[]) {
-//   const map = new Map<string, any>();
-
-//   for (const item of items || []) {
-//     const key = bookingIdentityKey(item);
-//     if (!key) continue;
-
-//     const current = map.get(key);
-//     if (!current) {
-//       map.set(key, item);
-//       continue;
-//     }
-
-//     if (bookingRank(item) > bookingRank(current)) {
-//       map.set(key, item);
-//     }
-//   }
-
-//   return Array.from(map.values());
-// }
-
-// export default function CancelDialog({
-//   customer,
-//   // childFirst,
-//   // childLast,
-//   onClose,
-//   onChanged,
-// }: Props) {
-//   const [offers, setOffers] = useState<any[]>([]);
-//   const [loadingOffers, setLoadingOffers] = useState(false);
-//   const [err, setErr] = useState<string | null>(null);
-
-//   const [courseValue, setCourseValue] = useState("");
-//   const [statusFilter, setStatusFilter] = useState<StatusFilter>("active");
-//   const [sortOrder, setSortOrder] = useState<SortOrder>("newest");
-
-//   const { family, familyLoading, familyError, baseSelectedId } =
-//     useBookDialogFamily(customer._id);
-
-//   const [selectedParentId, setSelectedParentId] = useState("");
-//   const [selectedChildUid, setSelectedChildUid] = useState("");
-//   const [bookingTarget, setBookingTarget] = useState<BookingTarget>("self");
-//   const [isParentDropdownOpen, setIsParentDropdownOpen] = useState(false);
-//   const [isChildDropdownOpen, setIsChildDropdownOpen] = useState(false);
-
-//   const parentDropdownRef = useRef<HTMLDivElement | null>(null);
-//   const childDropdownRef = useRef<HTMLDivElement | null>(null);
-
-//   useDropdownOutsideClose([
-//     { ref: parentDropdownRef, close: () => setIsParentDropdownOpen(false) },
-//     { ref: childDropdownRef, close: () => setIsChildDropdownOpen(false) },
-//   ]);
-
-//   const childOptions = useMemo(() => buildChildOptions(family), [family]);
-//   const parentOptions = useMemo(() => buildParentOptions(family), [family]);
-
-//   useEffect(() => {
-//     if (selectedParentId) return;
-//     if (!parentOptions.length) return;
-//     const firstId = baseSelectedId
-//       ? `${baseSelectedId}::parent::0`
-//       : parentOptions[0].id;
-//     setSelectedParentId(firstId);
-//   }, [selectedParentId, parentOptions, baseSelectedId]);
-
-//   useEffect(() => {
-//     if (bookingTarget !== "child") return;
-//     if (selectedChildUid) return;
-//     const firstUid = childOptions[0]?.uid || "";
-//     if (firstUid) setSelectedChildUid(firstUid);
-//   }, [bookingTarget, selectedChildUid, childOptions]);
-
-//   const selfMemberId = useMemo(() => {
-//     if (selectedParentId) return selectedParentId;
-//     if (baseSelectedId) return `${baseSelectedId}::parent::0`;
-//     const first = family?.[0];
-//     return first ? `${first._id}::parent::0` : "";
-//   }, [selectedParentId, baseSelectedId, family]);
-
-//   const selectedParent = useMemo(() => {
-//     if (!family?.length) return null;
-
-//     const baseId = baseMemberId(selfMemberId);
-//     const parentIdx = parentIndexFromMemberId(selfMemberId);
-
-//     const rawMember =
-//       family.find((member) => member._id === baseId) ||
-//       family.find((member) => member._id === selfMemberId) ||
-//       family[0];
-
-//     if (!rawMember) return null;
-
-//     const parentList =
-//       Array.isArray(rawMember.parents) && rawMember.parents.length
-//         ? rawMember.parents
-//         : [rawMember.parent];
-
-//     const selected = parentList[parentIdx] || rawMember.parent;
-
-//     return {
-//       ...rawMember,
-//       parent: {
-//         salutation: safeText(selected?.salutation),
-//         firstName: safeText(selected?.firstName),
-//         lastName: safeText(selected?.lastName),
-//         email: safeText(selected?.email),
-//         phone: safeText((selected as any)?.phone),
-//         phone2: safeText((selected as any)?.phone2),
-//       },
-//     };
-//   }, [family, selfMemberId]);
-
-//   const selectedParentLabel = useMemo(() => {
-//     if (!selectedParent) return "Elternteil wählen …";
-//     return (
-//       `${selectedParent.parent.firstName} ${selectedParent.parent.lastName}`.trim() ||
-//       "Elternteil"
-//     );
-//   }, [selectedParent]);
-
-//   const selectedChildOption = useMemo(() => {
-//     if (!childOptions.length) return null;
-//     return childOptions.find((item) => item.uid === selectedChildUid) || null;
-//   }, [childOptions, selectedChildUid]);
-
-//   const activeChild: FamilyChild | null = useMemo(() => {
-//     if (bookingTarget !== "child") return null;
-//     return selectedChildOption?.child || null;
-//   }, [bookingTarget, selectedChildOption]);
-
-//   const activeParentEmail = safeText(
-//     selectedParent?.parent?.email,
-//   ).toLowerCase();
-
-//   const courseMetaByValue = useMemo(
-//     () => buildCourseMeta(GROUPED_COURSE_OPTIONS),
-//     [],
-//   );
-
-//   const courseValueIsNonCancelable = useMemo(() => {
-//     return isNonCancelableCourseValue(courseValue, courseMetaByValue);
-//   }, [courseValue, courseMetaByValue]);
-
-//   const offersById = useMemo(() => {
-//     const m = new Map<string, any>();
-//     for (const o of offers) if (o?._id) m.set(String(o._id), o);
-//     return m;
-//   }, [offers]);
-
-//   // const filteredBookings = useMemo(() => {
-//   //   const base = (customer.bookings || []).filter((b: any) => {
-//   //     if (!childMatches(b, childFirst, childLast)) return false;
-//   //     return isBookingCancellable(b, offersById);
-//   //   });
-
-//   //   if (courseValueIsNonCancelable) return [];
-//   //   // const byCourse = courseValue
-//   //   //   ? base.filter(
-//   //   //       (b: any) => courseValueFromBooking(b, offersById) === courseValue,
-//   //   //     )
-//   //   //   : base;
-
-//   //   // return applyStatusAndSort(byCourse, statusFilter, sortOrder);
-
-//   //   const byCourse = courseValue
-//   //     ? base.filter(
-//   //         (b: any) => courseValueFromBooking(b, offersById) === courseValue,
-//   //       )
-//   //     : base;
-
-//   //   const deduped = dedupeBookings(byCourse);
-//   //   return applyStatusAndSort(deduped, statusFilter, sortOrder);
-//   // }, [
-//   //   customer.bookings,
-//   //   offersById,
-//   //   courseValue,
-//   //   courseValueIsNonCancelable,
-//   //   statusFilter,
-//   //   sortOrder,
-//   //   childFirst,
-//   //   childLast,
-//   // ]);
-
-//   const filteredBookings = useMemo(() => {
-//     const base = (customer.bookings || []).filter((b: any) => {
-//       if (!isBookingCancellable(b, offersById)) return false;
-
-//       const bookingParentEmail = safeText(
-//         (b as any)?.parentEmail,
-//       ).toLowerCase();
-
-//       if (bookingTarget === "child") {
-//         if (safeText(b?.childUid) !== safeText(activeChild?.uid)) return false;
-
-//         if (activeParentEmail) {
-//           return bookingParentEmail === activeParentEmail;
-//         }
-
-//         return true;
-//       }
-
-//       if (safeText((b as any)?.childUid)) return false;
-
-//       if (activeParentEmail) {
-//         return bookingParentEmail === activeParentEmail;
-//       }
-
-//       return true;
-//     });
-
-//     if (courseValueIsNonCancelable) return [];
-
-//     const byCourse = courseValue
-//       ? base.filter(
-//           (b: any) => courseValueFromBooking(b, offersById) === courseValue,
-//         )
-//       : base;
-
-//     const deduped = dedupeBookings(byCourse);
-//     return applyStatusAndSort(deduped, statusFilter, sortOrder);
-//   }, [
-//     customer.bookings,
-//     offersById,
-//     courseValue,
-//     courseValueIsNonCancelable,
-//     statusFilter,
-//     sortOrder,
-//     bookingTarget,
-//     activeChild,
-//     activeParentEmail,
-//   ]);
-
-//   // const filteredBookings = useMemo(() => {
-//   //   const base = (customer.bookings || []).filter((b: any) => {
-//   //     if (!isBookingCancellable(b, offersById)) return false;
-
-//   //     if (bookingTarget === "child") {
-//   //       if (safeText(b?.childUid) !== safeText(activeChild?.uid)) return false;
-
-//   //       //   const bookingParentEmail = safeText(
-//   //       //     (b as any)?.parentEmail,
-//   //       //   ).toLowerCase();
-//   //       //   if (activeParentEmail && bookingParentEmail) {
-//   //       //     return bookingParentEmail === activeParentEmail;
-//   //       //   }
-
-//   //       //   return true;
-//   //       // }
-
-//   //       const bookingParentEmail = safeText(
-//   //         (b as any)?.parentEmail,
-//   //       ).toLowerCase();
-//   //       if (activeParentEmail) {
-//   //         return bookingParentEmail === activeParentEmail;
-//   //       }
-
-//   //       return true;
-//   //     }
-
-//   //     return !safeText((b as any)?.childUid);
-//   //   });
-
-//   //   if (courseValueIsNonCancelable) return [];
-
-//   //   const byCourse = courseValue
-//   //     ? base.filter(
-//   //         (b: any) => courseValueFromBooking(b, offersById) === courseValue,
-//   //       )
-//   //     : base;
-
-//   //   const deduped = dedupeBookings(byCourse);
-//   //   return applyStatusAndSort(deduped, statusFilter, sortOrder);
-//   // }, [
-//   //   customer.bookings,
-//   //   offersById,
-//   //   courseValue,
-//   //   courseValueIsNonCancelable,
-//   //   statusFilter,
-//   //   sortOrder,
-//   //   bookingTarget,
-//   //   activeChild,
-//   //   activeParentEmail,
-//   // ]);
-
-//   const [selectedId, setSelectedId] = useState("");
-//   const selected = useMemo(() => {
-//     return (
-//       filteredBookings.find((b: any) => String(b._id) === selectedId) || null
-//     );
-//   }, [filteredBookings, selectedId]);
-
-//   useEffect(() => {
-//     void loadOffers(setOffers, setLoadingOffers, setErr);
-//   }, []);
-
-//   // useEffect(() => {
-//   //   setCourseValue("");
-//   //   setStatusFilter("active");
-//   //   setSortOrder("newest");
-//   //   setSelectedId("");
-//   //   setErr(null);
-//   // }, [customer?._id, childFirst, childLast]);
-
-//   useEffect(() => {
-//     setCourseValue("");
-//     setStatusFilter("active");
-//     setSortOrder("newest");
-//     setSelectedId("");
-//     setErr(null);
-//   }, [customer?._id, bookingTarget, selectedChildUid, selectedParentId]);
-
-//   useEffect(() => {
-//     syncSelected(filteredBookings, selectedId, setSelectedId);
-//   }, [filteredBookings, selectedId]);
-
-//   const selectedIsCancelled = String(selected?.status || "") === "cancelled";
-
-//   const [cancelDate, setCancelDate] = useState(todayISO());
-//   const [endDate, setEndDate] = useState("");
-//   const [reason, setReason] = useState("");
-//   const [saving, setSaving] = useState(false);
-
-//   const endBeforeStart = Boolean(endDate && cancelDate && endDate < cancelDate);
-//   const disabledByNonCancelableCourse = courseValueIsNonCancelable;
-
-//   const disabled =
-//     saving ||
-//     !selected ||
-//     !cancelDate ||
-//     !endDate ||
-//     selectedIsCancelled ||
-//     endBeforeStart ||
-//     disabledByNonCancelableCourse;
-
-//   const selectedCourseLabel = useMemo(() => {
-//     if (!courseValue) return "All courses";
-//     for (const group of GROUPED_COURSE_OPTIONS) {
-//       const found = group.items.find((opt) => opt.value === courseValue);
-//       if (found) return found.label;
-//     }
-//     return "All courses";
-//   }, [courseValue]);
-
-//   const statusLabel = useMemo(() => {
-//     return (
-//       STATUS_OPTIONS.find((o) => o.value === statusFilter)?.label || "Active"
-//     );
-//   }, [statusFilter]);
-
-//   const sortLabel = useMemo(() => {
-//     return SORT_OPTIONS.find((o) => o.value === sortOrder)?.label || "Newest";
-//   }, [sortOrder]);
-
-//   const bookingTrigger = useMemo(() => {
-//     if (courseValueIsNonCancelable)
-//       return bookingDisplay(null, true, statusFilter);
-//     if (selected) return bookingDisplay(selected, false, statusFilter);
-//     if (filteredBookings.length)
-//       return bookingDisplay("select", false, statusFilter);
-//     return bookingDisplay(null, false, statusFilter);
-//   }, [courseValueIsNonCancelable, selected, filteredBookings, statusFilter]);
-
-//   const courseDropdownRef = useRef<HTMLDivElement | null>(null);
-//   const bookingDropdownRef = useRef<HTMLDivElement | null>(null);
-//   const statusDropdownRef = useRef<HTMLDivElement | null>(null);
-//   const sortDropdownRef = useRef<HTMLDivElement | null>(null);
-
-//   const {
-//     isCourseDropdownOpen,
-//     setIsCourseDropdownOpen,
-//     isBookingDropdownOpen,
-//     setIsBookingDropdownOpen,
-//   } = useCancelDropdowns(courseDropdownRef, bookingDropdownRef);
-
-//   const [isStatusOpen, setIsStatusOpen] = useState(false);
-//   const [isSortOpen, setIsSortOpen] = useState(false);
-
-//   useOutsideClose(statusDropdownRef, isStatusOpen, setIsStatusOpen);
-//   useOutsideClose(sortDropdownRef, isSortOpen, setIsSortOpen);
-
-//   async function submit() {
-//     if (!customer._id || !selected?._id || !cancelDate || !endDate) return;
-//     if (disabledByNonCancelableCourse) return;
-
-//     setSaving(true);
-//     setErr(null);
-
-//     try {
-//       await postCancel(customer._id, selected._id, cancelDate, endDate, reason);
-//       const fresh = await fetchCustomer(customer._id);
-//       if (fresh) onChanged(fresh);
-//       onClose();
-//     } catch (e: any) {
-//       setErr(e?.message || "Cancel failed");
-//     } finally {
-//       setSaving(false);
-//     }
-//   }
-
-//   return (
-//     <div className="ks-modal-root ks-modal-root--top ks ks-cancel">
-//       <div className="ks-backdrop" onClick={onClose} />
-//       <div
-//         className="ks-panel card ks-panel--md"
-//         onClick={(e) => e.stopPropagation()}
-//       >
-//         <div className="dialog-subhead">
-//           <h3 className="text-lg font-bold">Confirm cancellation</h3>
-//         </div>
-
-//         <div className="mb-3 p-3 rounded border bg-gray-50 text-sm">
-//           <div className="font-semibold mb-1">Cancellation for</div>
-
-//           {familyLoading && (
-//             <div className="text-gray-600">Loading family…</div>
-//           )}
-
-//           {familyError && (
-//             <div className="text-red-600">
-//               Family could not be loaded – cancellation list may be incomplete.
-//             </div>
-//           )}
-
-//           {family && family.length > 0 ? (
-//             <>
-//               <div className="mb-2">
-//                 <label className="lbl">Elternteil</label>
-//                 <div
-//                   className={
-//                     "ks-selectbox" +
-//                     (isParentDropdownOpen ? " ks-selectbox--open" : "")
-//                   }
-//                   ref={parentDropdownRef}
-//                 >
-//                   <button
-//                     type="button"
-//                     className="ks-selectbox__trigger"
-//                     onClick={() => setIsParentDropdownOpen((o) => !o)}
-//                   >
-//                     <span className="ks-selectbox__label">
-//                       {selectedParentLabel || "Elternteil wählen …"}
-//                     </span>
-//                     <span
-//                       className="ks-selectbox__chevron"
-//                       aria-hidden="true"
-//                     />
-//                   </button>
-
-//                   {isParentDropdownOpen && (
-//                     <div className="ks-selectbox__panel" role="listbox">
-//                       {parentOptions.map((item) => (
-//                         <button
-//                           type="button"
-//                           key={item.id}
-//                           className={
-//                             "ks-selectbox__option" +
-//                             (item.id === selfMemberId
-//                               ? " ks-selectbox__option--active"
-//                               : "")
-//                           }
-//                           onClick={() => {
-//                             setSelectedParentId(item.id);
-//                             setIsParentDropdownOpen(false);
-//                           }}
-//                         >
-//                           {item.label}
-//                         </button>
-//                       ))}
-//                     </div>
-//                   )}
-//                 </div>
-//               </div>
-
-//               <div className="flex gap-2 mb-2">
-//                 <button
-//                   type="button"
-//                   className={`btn btn-sm ${
-//                     bookingTarget === "self" ? "btn--tab-active" : "btn-outline"
-//                   }`}
-//                   onClick={() => setBookingTarget("self")}
-//                 >
-//                   Kunde selbst
-//                 </button>
-
-//                 <button
-//                   type="button"
-//                   className={`btn btn-sm ${
-//                     bookingTarget === "child"
-//                       ? "btn--tab-active"
-//                       : "btn-outline"
-//                   }`}
-//                   onClick={() => setBookingTarget("child")}
-//                 >
-//                   Kind
-//                 </button>
-//               </div>
-
-//               {bookingTarget === "child" && (
-//                 <div className="mb-2">
-//                   <label className="lbl">Kind</label>
-//                   <div
-//                     className={
-//                       "ks-selectbox" +
-//                       (isChildDropdownOpen ? " ks-selectbox--open" : "")
-//                     }
-//                     ref={childDropdownRef}
-//                   >
-//                     <button
-//                       type="button"
-//                       className="ks-selectbox__trigger"
-//                       onClick={() => setIsChildDropdownOpen((o) => !o)}
-//                     >
-//                       <span className="ks-selectbox__label">
-//                         {activeChild
-//                           ? `${activeChild.firstName} ${activeChild.lastName}`.trim()
-//                           : "Kind wählen …"}
-//                       </span>
-//                       <span
-//                         className="ks-selectbox__chevron"
-//                         aria-hidden="true"
-//                       />
-//                     </button>
-
-//                     {isChildDropdownOpen && (
-//                       <div className="ks-selectbox__panel" role="listbox">
-//                         {childOptions.map((item) => (
-//                           <button
-//                             type="button"
-//                             key={item.uid}
-//                             className={
-//                               "ks-selectbox__option" +
-//                               (item.uid === selectedChildUid
-//                                 ? " ks-selectbox__option--active"
-//                                 : "")
-//                             }
-//                             onClick={() => {
-//                               setSelectedChildUid(item.uid);
-//                               setIsChildDropdownOpen(false);
-//                             }}
-//                           >
-//                             {item.label}
-//                           </button>
-//                         ))}
-//                       </div>
-//                     )}
-//                   </div>
-//                 </div>
-//               )}
-
-//               <div className="text-gray-700 mt-2">
-//                 <div>
-//                   <span className="font-medium">Parent:</span>{" "}
-//                   {selectedParent
-//                     ? `${selectedParent.parent.firstName} ${selectedParent.parent.lastName}`.trim()
-//                     : "—"}
-//                 </div>
-
-//                 <div>
-//                   <span className="font-medium">Child:</span>{" "}
-//                   {bookingTarget === "child" && activeChild
-//                     ? `${activeChild.firstName} ${activeChild.lastName}`.trim()
-//                     : "—"}
-//                 </div>
-//               </div>
-//             </>
-//           ) : (
-//             !familyLoading && (
-//               <div className="text-gray-700">
-//                 Cancellations are shown for the current customer.
-//               </div>
-//             )
-//           )}
-//         </div>
-
-//         {err && <div className="mb-2 text-red-600">{err}</div>}
-//         {loadingOffers && (
-//           <div className="mb-2 text-gray-600">Loading courses…</div>
-//         )}
-
-//         <div className="ks-storno__filters mb-2">
-//           <div className="ks-storno__filter">
-//             <label className="lbl">Courses</label>
-
-//             <div
-//               className={
-//                 "ks-selectbox" +
-//                 (isCourseDropdownOpen ? " ks-selectbox--open" : "")
-//               }
-//               ref={courseDropdownRef}
-//             >
-//               <button
-//                 type="button"
-//                 className="ks-selectbox__trigger"
-//                 onClick={() => setIsCourseDropdownOpen((o) => !o)}
-//                 aria-haspopup="listbox"
-//                 aria-expanded={isCourseDropdownOpen}
-//               >
-//                 <span className="ks-selectbox__label">
-//                   {selectedCourseLabel}
-//                 </span>
-//                 <span className="ks-selectbox__chevron" aria-hidden="true" />
-//               </button>
-
-//               {isCourseDropdownOpen && (
-//                 <div
-//                   className="ks-selectbox__panel ks-storno__menu"
-//                   role="listbox"
-//                 >
-//                   <button
-//                     type="button"
-//                     className={
-//                       "ks-selectbox__option" +
-//                       (courseValue === ""
-//                         ? " ks-selectbox__option--active"
-//                         : "")
-//                     }
-//                     onClick={() => {
-//                       setCourseValue("");
-//                       setIsCourseDropdownOpen(false);
-//                     }}
-//                   >
-//                     All courses
-//                   </button>
-
-//                   {GROUPED_COURSE_OPTIONS.map((g) => (
-//                     <div key={g.label} className="ks-selectbox__group">
-//                       <div className="ks-selectbox__group-label">{g.label}</div>
-//                       {g.items.map((opt) => (
-//                         <button
-//                           key={opt.value}
-//                           type="button"
-//                           className={
-//                             "ks-selectbox__option" +
-//                             (courseValue === opt.value
-//                               ? " ks-selectbox__option--active"
-//                               : "")
-//                           }
-//                           onClick={() => {
-//                             setCourseValue(opt.value);
-//                             setIsCourseDropdownOpen(false);
-//                           }}
-//                         >
-//                           {opt.label}
-//                         </button>
-//                       ))}
-//                     </div>
-//                   ))}
-//                 </div>
-//               )}
-//             </div>
-
-//             {/* {!filteredBookings.length && (
-//               <div className="text-sm text-gray-600 mt-1">
-//                 {courseValueIsNonCancelable
-//                   ? "This course type is not cancellable (e.g., Rent a Coach / Coach Education)."
-//                   : "No cancellable bookings for this filter. Powertraining and certain one-off programs are not cancellable."}
-//               </div>
-//             )} */}
-//           </div>
-
-//           <div className="ks-storno__filter">
-//             <InlineSelect
-//               label="Status"
-//               valueLabel={statusLabel}
-//               open={isStatusOpen}
-//               setOpen={setIsStatusOpen}
-//               rootRef={statusDropdownRef}
-//               items={STATUS_OPTIONS}
-//               activeValue={statusFilter}
-//               onSelect={(v) => setStatusFilter(v as StatusFilter)}
-//             />
-//           </div>
-
-//           <div className="ks-storno__filter">
-//             <InlineSelect
-//               label="Sort"
-//               valueLabel={sortLabel}
-//               open={isSortOpen}
-//               setOpen={setIsSortOpen}
-//               rootRef={sortDropdownRef}
-//               items={SORT_OPTIONS}
-//               activeValue={sortOrder}
-//               onSelect={(v) => setSortOrder(v as SortOrder)}
-//             />
-//           </div>
-//         </div>
-
-//         <div className="ks-storno__section mb-2">
-//           <BookingSelect
-//             label="Booking"
-//             open={isBookingDropdownOpen}
-//             setOpen={setIsBookingDropdownOpen}
-//             rootRef={bookingDropdownRef}
-//             disabled={!filteredBookings.length}
-//             title={
-//               courseValueIsNonCancelable
-//                 ? "This course is not cancellable"
-//                 : undefined
-//             }
-//             trigger={bookingTrigger}
-//             items={filteredBookings}
-//             selectedId={selectedId}
-//             onSelect={(id: string) => setSelectedId(id)}
-//             statusFilter={statusFilter}
-//           />
-//         </div>
-
-//         <div className="ks-storno__section">
-//           <div>
-//             <label className="lbl">Receipt date (vom) — required</label>
-//             <KsDatePicker
-//               value={cancelDate}
-//               onChange={(nextIso) => {
-//                 const minIso = todayISO();
-//                 if (nextIso && nextIso < minIso) return;
-//                 setCancelDate(nextIso);
-//               }}
-//               placeholder="tt.mm.jjjj"
-//               disabled={
-//                 !selected ||
-//                 selectedIsCancelled ||
-//                 disabledByNonCancelableCourse
-//               }
-//             />
-//           </div>
-
-//           <div>
-//             <label className="lbl">End date (zum) — required</label>
-//             <KsDatePicker
-//               value={endDate}
-//               onChange={(nextIso) => {
-//                 const minIso = cancelDate || todayISO();
-//                 if (nextIso && nextIso < minIso) return;
-//                 setEndDate(nextIso);
-//               }}
-//               placeholder="tt.mm.jjjj"
-//               disabled={
-//                 !selected ||
-//                 selectedIsCancelled ||
-//                 disabledByNonCancelableCourse
-//               }
-//             />
-//             {endBeforeStart && (
-//               <div className="text-sm text-red-600 mt-1">
-//                 End date must be on or after the receipt date.
-//               </div>
-//             )}
-//           </div>
-
-//           <div>
-//             <label className="lbl">Reason (optional)</label>
-//             <textarea
-//               className="input"
-//               rows={3}
-//               value={reason}
-//               onChange={(e) => setReason(e.target.value)}
-//               placeholder="e.g., moved away, club change"
-//               disabled={
-//                 !selected ||
-//                 selectedIsCancelled ||
-//                 disabledByNonCancelableCourse
-//               }
-//             />
-//           </div>
-
-//           {selected && selectedIsCancelled && (
-//             <div className="text-gray-600">
-//               This booking is already cancelled.
-//             </div>
-//           )}
-
-//           {disabledByNonCancelableCourse && (
-//             <div className="text-gray-600">
-//               Cancellations are not allowed for this course type.
-//             </div>
-//           )}
-//         </div>
-
-//         <div className="flex justify-end gap-2 mt-3">
-//           <button
-//             type="button"
-//             className="modal__close"
-//             aria-label="Close"
-//             onClick={onClose}
-//           >
-//             <img
-//               src="/icons/close.svg"
-//               alt=""
-//               aria-hidden="true"
-//               className="icon-img"
-//             />
-//           </button>
-
-//           <button className="btn" disabled={disabled} onClick={submit}>
-//             {saving ? "Cancelling…" : "Confirm cancellation"}
-//           </button>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// }
-
-// async function loadOffers(
-//   setOffers: (v: any[]) => void,
-//   setLoading: (v: boolean) => void,
-//   setErr: (v: string | null) => void,
-// ) {
-//   try {
-//     setLoading(true);
-//     setErr(null);
-//     setOffers(await fetchOffers(500));
-//   } catch (e: any) {
-//     setErr(e?.message || "Failed to load offers");
-//   } finally {
-//     setLoading(false);
-//   }
-// }
-
-// function syncSelected(
-//   filtered: any[],
-//   selectedId: string,
-//   setSelectedId: (v: string) => void,
-// ) {
-//   if (!filtered.length) return void setSelectedId("");
-//   if (filtered.some((b: any) => String(b._id) === String(selectedId))) return;
-//   const firstActive = filtered.find(
-//     (b: any) => String(b.status || "") !== "cancelled",
-//   );
-//   const next = (firstActive || filtered[0])?._id || "";
-//   setSelectedId(String(next));
-// }
