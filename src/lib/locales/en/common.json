@@ -754,5 +754,7 @@
   "common.admin.customers.stornoDialog.sinceDate": "since {{date}}",
 
   "common.admin.customers.stornoDialog.statusAll": "All",
-  "common.admin.customers.stornoDialog.sortOldest": "Oldest"
+  "common.admin.customers.stornoDialog.sortOldest": "Oldest",
+
+  "common.admin.customers.stornoDialog.noInvoiceYet": "No invoice yet"
 }

@@ -8,17 +8,25 @@ type Display = {
   status: string;
 };
 
-export function bookingDisplay(b: any, statusFilter: StatusFilter): Display {
+export function bookingDisplay(
+  b: any,
+  statusFilter: StatusFilter,
+  t: (key: string) => string,
+): Display {
   const titleRaw = String(b?.offerTitle || "—").trim();
   const venueRaw = String(b?.venue || "").trim();
 
   const invoiceRaw = String(b?.invoiceNumber || b?.invoiceNo || "").trim();
-  const invoice = invoiceRaw || "No invoice yet";
+  const invoice =
+    invoiceRaw || t("common.admin.customers.stornoDialog.noInvoiceYet");
 
   const statusRaw = String(b?.status || "")
     .trim()
     .toLowerCase();
-  const status = statusRaw === "cancelled" ? "Cancelled" : "Active";
+  const status =
+    statusRaw === "cancelled"
+      ? t("common.admin.customers.stornoDialog.statusCancelled")
+      : t("common.admin.customers.stornoDialog.statusActive");
 
   const venue = shouldHideVenue(titleRaw, venueRaw) ? "" : venueRaw;
 

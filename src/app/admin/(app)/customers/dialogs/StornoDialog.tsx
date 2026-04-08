@@ -522,7 +522,7 @@ export default function StornoDialog({
   );
 
   const bookingTrigger = useMemo(() => {
-    if (selected) return bookingDisplay(selected, statusFilter);
+    if (selected) return bookingDisplay(selected, statusFilter, t);
     if (filtered.length)
       return bookingDisplay(
         {
@@ -533,6 +533,7 @@ export default function StornoDialog({
           ),
         },
         statusFilter,
+        t,
       );
     return bookingDisplay(
       {
@@ -543,6 +544,7 @@ export default function StornoDialog({
         ),
       },
       statusFilter,
+      t,
     );
   }, [selected, filtered.length, statusFilter, t]);
 
