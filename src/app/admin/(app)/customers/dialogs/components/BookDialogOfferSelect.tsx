@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { useTranslation } from "react-i18next";
 import type { Offer } from "../../types";
 import { fmtEUR, isNum } from "../bookDialog/bookDialogFormatters";
 
@@ -15,6 +16,7 @@ type Props = {
 };
 
 export default function BookDialogOfferSelect(p: Props) {
+  const { i18n } = useTranslation();
   return (
     <div
       className={
@@ -42,7 +44,7 @@ export default function BookDialogOfferSelect(p: Props) {
           {p.filteredOffers.map((o) => {
             const parts = [
               o.title || "—",
-              isNum(o.price) ? fmtEUR(o.price) : undefined,
+              isNum(o.price) ? fmtEUR(o.price, i18n.language) : undefined,
             ].filter(Boolean);
             const label = parts.join(" — ");
             return (
