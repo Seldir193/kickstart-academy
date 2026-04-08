@@ -2,6 +2,7 @@
 "use client";
 
 import React, { useEffect, useMemo, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 type Props = {
   value?: string | null; // z.B. "2004-03-12"
@@ -29,7 +30,7 @@ function daysInMonth(year: number, month1to12: number) {
 
 function useOnClickOutside<T extends HTMLElement>(
   ref: React.RefObject<T | null>,
-  handler: () => void
+  handler: () => void,
 ) {
   useEffect(() => {
     function onPointerDown(e: PointerEvent) {
@@ -127,6 +128,7 @@ export default function KsBirthDateSelect({
   fromYear = 1980,
   toYear = new Date().getFullYear(),
 }: Props) {
+  const { t } = useTranslation();
   const [draft, setDraft] = useState(() => toParts(value));
   const [openKey, setOpenKey] = useState<OpenKey>(null);
   const rootRef = useRef<HTMLDivElement | null>(null);
@@ -146,7 +148,7 @@ export default function KsBirthDateSelect({
 
   const months = useMemo(
     () => Array.from({ length: 12 }, (_, i) => pad2(i + 1)),
-    []
+    [],
   );
 
   const days = useMemo(() => {
@@ -184,7 +186,7 @@ export default function KsBirthDateSelect({
         open={openKey === "d"}
         setOpen={(n) => setOpenKey(n ? "d" : null)}
         value={draft.d}
-        placeholder="TT"
+        placeholder={t("common.placeholders.dayShort")}
         options={days}
         onPick={(v) => {
           const next = { ...draft, d: v };
@@ -197,7 +199,7 @@ export default function KsBirthDateSelect({
         open={openKey === "mo"}
         setOpen={(n) => setOpenKey(n ? "mo" : null)}
         value={draft.mo}
-        placeholder="MM"
+        placeholder={t("common.placeholders.monthShort")}
         options={months}
         onPick={(v) => {
           const next = { ...draft, mo: v };
@@ -210,7 +212,7 @@ export default function KsBirthDateSelect({
         open={openKey === "y"}
         setOpen={(n) => setOpenKey(n ? "y" : null)}
         value={draft.y}
-        placeholder="JJJJ"
+        placeholder={t("common.placeholders.yearShort")}
         options={years}
         onPick={(v) => {
           const next = { ...draft, y: v };

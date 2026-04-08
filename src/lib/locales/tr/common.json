@@ -664,5 +664,9 @@
   "common.admin.customers.bookDialog.parentLabel": "Ebeveyn:",
   "common.admin.customers.bookDialog.childLabel": "Çocuk:",
   "common.admin.customers.bookDialog.empty": "—",
-  "common.admin.customers.bookDialog.family.currentCustomer": "Rezervasyon mevcut müşteri için oluşturulacak."
+  "common.admin.customers.bookDialog.family.currentCustomer": "Rezervasyon mevcut müşteri için oluşturulacak.",
+
+  "common.placeholders.dayShort": "GG",
+  "common.placeholders.monthShort": "AA",
+  "common.placeholders.yearShort": "YYYY"
 }

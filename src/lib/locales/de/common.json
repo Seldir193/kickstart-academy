@@ -667,5 +667,9 @@
   "common.admin.customers.bookDialog.parentLabel": "Elternteil:",
   "common.admin.customers.bookDialog.childLabel": "Kind:",
   "common.admin.customers.bookDialog.empty": "—",
-  "common.admin.customers.bookDialog.family.currentCustomer": "Die Buchung wird für den aktuellen Kunden erstellt."
+  "common.admin.customers.bookDialog.family.currentCustomer": "Die Buchung wird für den aktuellen Kunden erstellt.",
+
+  "common.placeholders.dayShort": "TT",
+  "common.placeholders.monthShort": "MM",
+  "common.placeholders.yearShort": "JJJJ"
 }
