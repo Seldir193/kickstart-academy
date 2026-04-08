@@ -758,5 +758,13 @@
 
   "common.admin.customers.stornoDialog.noInvoiceYet": "No invoice yet",
 
-  "common.close": "Close"
+  "common.close": "Close",
+
+  "common.admin.customers.customerDialog.statusSubscribed": "Subscribed",
+  "common.admin.customers.customerDialog.statusPending": "Pending (DOI)",
+  "common.admin.customers.customerDialog.statusUnsubscribed": "Unsubscribed",
+  "common.admin.customers.customerDialog.statusError": "Error",
+  "common.admin.customers.customerDialog.noChild": "(No child)",
+  "common.admin.customers.customerDialog.childNumber": "Child {{number}}",
+  "common.admin.customers.customerDialog.childWithoutName": "(Child without name)"
 }

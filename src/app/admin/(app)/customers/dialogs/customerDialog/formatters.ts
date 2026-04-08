@@ -1,26 +1,41 @@
+//src\app\admin\(app)\customers\dialogs\customerDialog\formatters.ts
 import type { FamilyMember } from "./types";
 
-export function fmtDE(dt: any) {
+export function dateLocale(lang?: string) {
+  if (lang === "tr") return "tr-TR";
+  if (lang === "en") return "en-US";
+  return "de-DE";
+}
+
+export function fmtDE(dt: any, lang?: string) {
   if (!dt) return "";
   const d = new Date(dt);
   if (isNaN(d.getTime())) return "";
-  return new Intl.DateTimeFormat("de-DE", {
+  return new Intl.DateTimeFormat(dateLocale(lang), {
     timeZone: "Europe/Berlin",
     dateStyle: "medium",
     timeStyle: "short",
   }).format(d);
 }
 
-export function statusLabel(s?: string) {
+export function statusLabel(s?: string, t?: (key: string) => string) {
   switch ((s || "").toLowerCase()) {
     case "subscribed":
-      return "Subscribed";
+      return t
+        ? t("common.admin.customers.customerDialog.statusSubscribed")
+        : "Subscribed";
     case "pending":
-      return "Pending (DOI)";
+      return t
+        ? t("common.admin.customers.customerDialog.statusPending")
+        : "Pending (DOI)";
     case "unsubscribed":
-      return "Unsubscribed";
+      return t
+        ? t("common.admin.customers.customerDialog.statusUnsubscribed")
+        : "Unsubscribed";
     case "error":
-      return "Error";
+      return t
+        ? t("common.admin.customers.customerDialog.statusError")
+        : "Error";
     default:
       return "—";
   }
@@ -47,42 +62,36 @@ export function firstChildOf(member: FamilyMember | null | undefined) {
   return null;
 }
 
-// export function formatChildLabel(m: FamilyMember): string {
-//   const ch = firstChildOf(m);
-//   if (!ch) {
-//     return m.userId != null ? `#${m.userId} · (kein Kind)` : "(kein Kind)";
-//   }
-
-//   const parts: string[] = [];
-
-//   if (m.userId != null) parts.push(`#${m.userId}`);
-
-//   if (typeof m.childNumber === "number" && m.childNumber > 0) {
-//     parts.push(`Kind ${m.childNumber}`);
-//   } else {
-//     const idx = childIndexFromId(m._id);
-//     if (idx != null) parts.push(`Kind ${idx >= 0 ? idx + 1 : 1}`);
-//   }
-
-//   parts.push(childBase(ch.firstName, ch.lastName));
-
-//   const birth = childBirth(ch.birthDate);
-//   if (birth) parts.push(birth);
-
-//   return parts.join(" · ");
-// }
-
-export function formatChildLabel(m: FamilyMember): string {
+export function formatChildLabel(
+  m: FamilyMember,
+  t?: (key: string, options?: Record<string, unknown>) => string,
+): string {
   const ch = firstChildOf(m);
-  if (!ch) return "(kein Kind)";
+  if (!ch)
+    return t
+      ? t("common.admin.customers.customerDialog.noChild")
+      : "(kein Kind)";
 
   const parts: string[] = [];
 
   if (typeof m.childNumber === "number" && m.childNumber > 0) {
-    parts.push(`Kind ${m.childNumber}`);
+    parts.push(
+      t
+        ? t("common.admin.customers.customerDialog.childNumber", {
+            number: m.childNumber,
+          })
+        : `Kind ${m.childNumber}`,
+    );
   } else {
     const idx = childIndexFromId(m._id);
-    if (idx != null) parts.push(`Kind ${idx >= 0 ? idx + 1 : 1}`);
+    if (idx != null)
+      parts.push(
+        t
+          ? t("common.admin.customers.customerDialog.childNumber", {
+              number: idx >= 0 ? idx + 1 : 1,
+            })
+          : `Kind ${idx >= 0 ? idx + 1 : 1}`,
+      );
   }
 
   parts.push(childBase(ch.firstName, ch.lastName));
@@ -90,16 +99,31 @@ export function formatChildLabel(m: FamilyMember): string {
   return parts.join(" · ");
 }
 
-function childBase(first?: string, last?: string) {
-  return `${first || ""} ${last || ""}`.trim() || "(Kind ohne Namen)";
+function childBase(first?: string, last?: string, t?: (key: string) => string) {
+  return (
+    `${first || ""} ${last || ""}`.trim() ||
+    (t
+      ? t("common.admin.customers.customerDialog.childWithoutName")
+      : "(Kind ohne Namen)")
+  );
 }
 
-function childBirth(birthDate?: string | null) {
-  if (!birthDate) return "";
-  const d = new Date(birthDate);
-  if (isNaN(d.getTime())) return "";
-  return new Intl.DateTimeFormat("de-DE", {
-    timeZone: "Europe/Berlin",
-    dateStyle: "medium",
-  }).format(d);
-}
+// function childBirth(birthDate?: string | null) {
+//   if (!birthDate) return "";
+//   const d = new Date(birthDate);
+//   if (isNaN(d.getTime())) return "";
+//   return new Intl.DateTimeFormat("de-DE", {
+//     timeZone: "Europe/Berlin",
+//     dateStyle: "medium",
+//   }).format(d);
+// }
+
+// function childBirth(birthDate?: string | null, lang?: string) {
+//   if (!birthDate) return "";
+//   const d = new Date(birthDate);
+//   if (isNaN(d.getTime())) return "";
+//   return new Intl.DateTimeFormat(dateLocale(lang), {
+//     timeZone: "Europe/Berlin",
+//     dateStyle: "medium",
+//   }).format(d);
+// }

@@ -755,5 +755,13 @@
 
   "common.admin.customers.stornoDialog.noInvoiceYet": "Henüz fatura yok",
 
-  "common.close": "Kapat"
+  "common.close": "Kapat",
+
+  "common.admin.customers.customerDialog.statusSubscribed": "Abone oldu",
+  "common.admin.customers.customerDialog.statusPending": "Beklemede (DOI)",
+  "common.admin.customers.customerDialog.statusUnsubscribed": "Abonelikten çıktı",
+  "common.admin.customers.customerDialog.statusError": "Hata",
+  "common.admin.customers.customerDialog.noChild": "(Çocuk yok)",
+  "common.admin.customers.customerDialog.childNumber": "Çocuk {{number}}",
+  "common.admin.customers.customerDialog.childWithoutName": "(İsimsiz çocuk)"
 }
