@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import type { ReactNode } from "react";
+import { useTranslation } from "react-i18next";
 import type { News } from "./types";
 import Pagination from "./components/Pagination";
 import NewsDialog from "./components/NewsDialog";
@@ -15,6 +16,7 @@ import { getId } from "./newsAdmin/helpers";
 import { useNewsAdminViewModel } from "./newsAdmin/useNewsAdminViewModel";
 
 function CreateButton({ busy, onOpen }: { busy: boolean; onOpen: () => void }) {
+  const { t } = useTranslation();
   return (
     <button
       className="btn"
@@ -30,12 +32,13 @@ function CreateButton({ busy, onOpen }: { busy: boolean; onOpen: () => void }) {
         aria-hidden="true"
         className="btn__icon"
       />
-      New post
+      {t("common.admin.news.page.createPost")}
     </button>
   );
 }
 
 export default function NewsAdminPage() {
+  const { t } = useTranslation();
   const p = useNewsAdminViewModel();
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState<News | null>(null);
@@ -58,7 +61,9 @@ export default function NewsAdminPage() {
   }
 
   function deleteName(item: News | null) {
-    return String(item?.title || item?.slug || "this post").trim();
+    return String(
+      item?.title || item?.slug || t("common.admin.news.page.thisPost"),
+    ).trim();
   }
 
   return (
@@ -76,7 +81,7 @@ export default function NewsAdminPage() {
           <section className="news-admin__section">
             <div className="news-admin__section-head">
               <h2 className="news-admin__section-title">
-                Providers – Pending review
+                {t("common.admin.news.page.providersPendingReview")}
               </h2>
               <span className="news-admin__section-meta">
                 {p.providerPendingMeta}
@@ -107,7 +112,7 @@ export default function NewsAdminPage() {
           <section className="news-admin__section">
             <div className="news-admin__section-head">
               <h2 className="news-admin__section-title">
-                Providers – Approved
+                {t("common.admin.news.page.providersApproved")}
               </h2>
               <span className="news-admin__section-meta">
                 {p.providerApprovedMeta}
@@ -145,7 +150,7 @@ export default function NewsAdminPage() {
           <section className="news-admin__section">
             <div className="news-admin__section-head">
               <h2 className="news-admin__section-title">
-                Providers – Rejected
+                {t("common.admin.news.page.providersRejected")}
               </h2>
               <span className="news-admin__section-meta">
                 {p.providerRejectedMeta}
@@ -186,7 +191,7 @@ export default function NewsAdminPage() {
           <section className="news-admin__section">
             <div className="news-admin__section-head">
               <h2 className="news-admin__section-title">
-                My news – Pending review
+                {t("common.admin.news.page.myNewsPendingReview")}
               </h2>
               <span className="news-admin__section-meta">
                 {p.myPendingMeta}
@@ -219,7 +224,10 @@ export default function NewsAdminPage() {
 
         <section className="news-admin__section">
           <div className="news-admin__section-head">
-            <h2 className="news-admin__section-title">My news – Approved</h2>
+            <h2 className="news-admin__section-title">
+              {" "}
+              {t("common.admin.news.page.myNewsApproved")}
+            </h2>
             <span className="news-admin__section-meta">{p.myApprovedMeta}</span>
           </div>
 
@@ -255,7 +263,10 @@ export default function NewsAdminPage() {
         {!p.isSuper ? (
           <section className="news-admin__section">
             <div className="news-admin__section-head">
-              <h2 className="news-admin__section-title">My news – Rejected</h2>
+              <h2 className="news-admin__section-title">
+                {" "}
+                {t("common.admin.news.page.myNewsRejected")}
+              </h2>
               <span className="news-admin__section-meta">
                 {p.myRejectedMeta}
               </span>
@@ -346,7 +357,7 @@ export default function NewsAdminPage() {
             target="_blank"
             rel="noreferrer"
           >
-            Open WordPress preview
+            {t("common.admin.news.page.openWordpressPreview")}
           </a>
         </div>
       ) : null}

@@ -826,5 +826,15 @@
   "common.admin.customers.customerDialog.street": "Straße",
   "common.admin.customers.customerDialog.houseNo": "Hausnr.",
   "common.admin.customers.customerDialog.zip": "PLZ",
-  "common.admin.customers.customerDialog.city": "Stadt"
+  "common.admin.customers.customerDialog.city": "Stadt",
+
+  "common.admin.news.page.createPost": "Neuer Beitrag",
+  "common.admin.news.page.thisPost": "dieser Beitrag",
+  "common.admin.news.page.providersPendingReview": "Anbieter – Warten auf Prüfung",
+  "common.admin.news.page.providersApproved": "Anbieter – Genehmigt",
+  "common.admin.news.page.providersRejected": "Anbieter – Abgelehnt",
+  "common.admin.news.page.myNewsPendingReview": "Meine News – Warten auf Prüfung",
+  "common.admin.news.page.myNewsApproved": "Meine News – Genehmigt",
+  "common.admin.news.page.myNewsRejected": "Meine News – Abgelehnt",
+  "common.admin.news.page.openWordpressPreview": "WordPress-Vorschau öffnen"
 }

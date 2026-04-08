@@ -823,5 +823,15 @@
   "common.admin.customers.customerDialog.street": "Sokak",
   "common.admin.customers.customerDialog.houseNo": "Kapı no.",
   "common.admin.customers.customerDialog.zip": "Posta kodu",
-  "common.admin.customers.customerDialog.city": "Şehir"
+  "common.admin.customers.customerDialog.city": "Şehir",
+
+  "common.admin.news.page.createPost": "Yeni gönderi",
+  "common.admin.news.page.thisPost": "bu gönderi",
+  "common.admin.news.page.providersPendingReview": "Sağlayıcılar – İnceleme bekliyor",
+  "common.admin.news.page.providersApproved": "Sağlayıcılar – Onaylandı",
+  "common.admin.news.page.providersRejected": "Sağlayıcılar – Reddedildi",
+  "common.admin.news.page.myNewsPendingReview": "Haberlerim – İnceleme bekliyor",
+  "common.admin.news.page.myNewsApproved": "Haberlerim – Onaylandı",
+  "common.admin.news.page.myNewsRejected": "Haberlerim – Reddedildi",
+  "common.admin.news.page.openWordpressPreview": "WordPress önizlemesini aç"
 }
