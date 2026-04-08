@@ -800,5 +800,14 @@
   "common.admin.customers.customerDialog.selectParent": "Select parent",
   "common.admin.customers.customerDialog.addAnotherChild": "Add another child",
   "common.admin.customers.customerDialog.addAnotherParent": "Add another parent",
-  "common.admin.customers.customerDialog.noAdditionalChildren": "No additional children linked yet."
+  "common.admin.customers.customerDialog.noAdditionalChildren": "No additional children linked yet.",
+
+  "common.admin.customers.customerDialog.customerNumber": "Customer ",
+  "common.admin.customers.customerDialog.statusActive": "Active",
+  "common.admin.customers.customerDialog.statusCancelled": "Cancelled",
+  "common.admin.customers.customerDialog.newChildWillBeCreated": "New child will be created",
+  "common.admin.customers.customerDialog.documents": "Documents",
+  "common.admin.customers.customerDialog.book": "Book",
+  "common.admin.customers.customerDialog.cancel": "Cancel",
+  "common.admin.customers.customerDialog.creditNote": "Credit note"
 }

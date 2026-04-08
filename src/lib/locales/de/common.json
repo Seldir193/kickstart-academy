@@ -800,5 +800,14 @@
   "common.admin.customers.customerDialog.selectParent": "Elternteil auswählen",
   "common.admin.customers.customerDialog.addAnotherChild": "Weiteres Kind hinzufügen",
   "common.admin.customers.customerDialog.addAnotherParent": "Weiteres Elternteil hinzufügen",
-  "common.admin.customers.customerDialog.noAdditionalChildren": "Noch keine weiteren Kinder verknüpft."
+  "common.admin.customers.customerDialog.noAdditionalChildren": "Noch keine weiteren Kinder verknüpft.",
+
+  "common.admin.customers.customerDialog.customerNumber": "Kunde ",
+  "common.admin.customers.customerDialog.statusActive": "Aktiv",
+  "common.admin.customers.customerDialog.statusCancelled": "Storniert",
+  "common.admin.customers.customerDialog.newChildWillBeCreated": "Neues Kind wird erstellt",
+  "common.admin.customers.customerDialog.documents": "Dokumente",
+  "common.admin.customers.customerDialog.book": "Buchen",
+  "common.admin.customers.customerDialog.cancel": "Stornieren",
+  "common.admin.customers.customerDialog.creditNote": "Gutschrift"
 }

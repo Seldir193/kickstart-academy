@@ -797,5 +797,14 @@
   "common.admin.customers.customerDialog.selectParent": "Veli seç",
   "common.admin.customers.customerDialog.addAnotherChild": "Başka çocuk ekle",
   "common.admin.customers.customerDialog.addAnotherParent": "Başka veli ekle",
-  "common.admin.customers.customerDialog.noAdditionalChildren": "Henüz başka çocuk bağlantısı yok."
+  "common.admin.customers.customerDialog.noAdditionalChildren": "Henüz başka çocuk bağlantısı yok.",
+
+  "common.admin.customers.customerDialog.customerNumber": "Müşteri ",
+  "common.admin.customers.customerDialog.statusActive": "Aktif",
+  "common.admin.customers.customerDialog.statusCancelled": "İptal edildi",
+  "common.admin.customers.customerDialog.newChildWillBeCreated": "Yeni çocuk oluşturulacak",
+  "common.admin.customers.customerDialog.documents": "Belgeler",
+  "common.admin.customers.customerDialog.book": "Rezervasyon",
+  "common.admin.customers.customerDialog.cancel": "İptal et",
+  "common.admin.customers.customerDialog.creditNote": "Alacak notu"
 }
