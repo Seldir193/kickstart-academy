@@ -9,5 +9,16 @@
   "common.admin.news.page.myNewsRejected": "My news – Rejected",
   "common.admin.news.page.openWordpressPreview": "Open WordPress preview",
 
-  "common.admin.news.meta.newSuffix": " new"
+  "common.admin.news.meta.newSuffix": " new",
+
+  "common.admin.news.rejectDialog.headingWithTitle": "Reject: {{title}}",
+  "common.admin.news.rejectDialog.heading": "Reject item",
+  "common.admin.news.rejectDialog.errorEnterReason": "Please enter a reason.",
+  "common.admin.news.rejectDialog.errorRejectFailed": "Reject failed.",
+  "common.admin.news.rejectDialog.readOnlySubtitle": "Review the stored rejection reason.",
+  "common.admin.news.rejectDialog.subtitle": "Add a clear reason for rejecting this item.",
+  "common.admin.news.rejectDialog.reasonLabel": "Reason *",
+  "common.admin.news.rejectDialog.reasonPlaceholder": "e.g. missing data, implausible content, or duplicate entry",
+  "common.admin.news.rejectDialog.rejecting": "Rejecting...",
+  "common.admin.news.rejectDialog.reject": "Reject"
 }

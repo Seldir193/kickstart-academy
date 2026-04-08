@@ -9,5 +9,16 @@
   "common.admin.news.page.myNewsRejected": "Meine News – Abgelehnt",
   "common.admin.news.page.openWordpressPreview": "WordPress-Vorschau öffnen",
 
-  "common.admin.news.meta.newSuffix": " neu"
+  "common.admin.news.meta.newSuffix": " neu",
+
+  "common.admin.news.rejectDialog.headingWithTitle": "Ablehnen: {{title}}",
+  "common.admin.news.rejectDialog.heading": "Eintrag ablehnen",
+  "common.admin.news.rejectDialog.errorEnterReason": "Bitte gib einen Grund ein.",
+  "common.admin.news.rejectDialog.errorRejectFailed": "Ablehnen fehlgeschlagen.",
+  "common.admin.news.rejectDialog.readOnlySubtitle": "Prüfe den gespeicherten Ablehnungsgrund.",
+  "common.admin.news.rejectDialog.subtitle": "Füge einen klaren Grund für die Ablehnung dieses Eintrags hinzu.",
+  "common.admin.news.rejectDialog.reasonLabel": "Grund *",
+  "common.admin.news.rejectDialog.reasonPlaceholder": "z. B. fehlende Daten, unplausibler Inhalt oder doppelter Eintrag",
+  "common.admin.news.rejectDialog.rejecting": "Wird abgelehnt...",
+  "common.admin.news.rejectDialog.reject": "Ablehnen"
 }

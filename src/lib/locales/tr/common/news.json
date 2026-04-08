@@ -9,5 +9,16 @@
   "common.admin.news.page.myNewsRejected": "Haberlerim – Reddedildi",
   "common.admin.news.page.openWordpressPreview": "WordPress önizlemesini aç",
 
-  "common.admin.news.meta.newSuffix": " yeni"
+  "common.admin.news.meta.newSuffix": " yeni",
+
+  "common.admin.news.rejectDialog.headingWithTitle": "Reddet: {{title}}",
+  "common.admin.news.rejectDialog.heading": "Kaydı reddet",
+  "common.admin.news.rejectDialog.errorEnterReason": "Lütfen bir gerekçe girin.",
+  "common.admin.news.rejectDialog.errorRejectFailed": "Reddetme başarısız oldu.",
+  "common.admin.news.rejectDialog.readOnlySubtitle": "Kaydedilmiş red gerekçesini inceleyin.",
+  "common.admin.news.rejectDialog.subtitle": "Bu kaydı reddetmek için açık bir gerekçe ekleyin.",
+  "common.admin.news.rejectDialog.reasonLabel": "Gerekçe *",
+  "common.admin.news.rejectDialog.reasonPlaceholder": "ör. eksik veriler, mantıksız içerik veya yinelenen kayıt",
+  "common.admin.news.rejectDialog.rejecting": "Reddediliyor...",
+  "common.admin.news.rejectDialog.reject": "Reddet"
 }
