@@ -813,5 +813,12 @@
 
   "common.admin.customers.customerDialog.creating": "Erstellen…",
   "common.admin.customers.customerDialog.create": "Erstellen",
-  "common.admin.customers.customerDialog.saveChanges": "Änderungen speichern"
+  "common.admin.customers.customerDialog.saveChanges": "Änderungen speichern",
+
+  "common.admin.customers.customerDialog.child": "Kind",
+  "common.admin.customers.customerDialog.gender": "Geschlecht",
+  "common.admin.customers.customerDialog.genderFemale": "Weiblich",
+  "common.admin.customers.customerDialog.genderMale": "Männlich",
+  "common.admin.customers.customerDialog.birthDate": "Geburtsdatum",
+  "common.admin.customers.customerDialog.club": "Verein"
 }

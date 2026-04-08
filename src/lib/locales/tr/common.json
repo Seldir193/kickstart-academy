@@ -810,5 +810,12 @@
 
   "common.admin.customers.customerDialog.creating": "Oluşturuluyor…",
   "common.admin.customers.customerDialog.create": "Oluştur",
-  "common.admin.customers.customerDialog.saveChanges": "Değişiklikleri kaydet"
+  "common.admin.customers.customerDialog.saveChanges": "Değişiklikleri kaydet",
+
+  "common.admin.customers.customerDialog.child": "Çocuk",
+  "common.admin.customers.customerDialog.gender": "Cinsiyet",
+  "common.admin.customers.customerDialog.genderFemale": "Kız",
+  "common.admin.customers.customerDialog.genderMale": "Erkek",
+  "common.admin.customers.customerDialog.birthDate": "Doğum tarihi",
+  "common.admin.customers.customerDialog.club": "Kulüp"
 }
