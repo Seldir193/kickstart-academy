@@ -713,5 +713,40 @@
 
   "common.admin.customers.cancelDialog.noCancellableBookings": "İptal edilebilir rezervasyon yok",
   "common.admin.customers.cancelDialog.select": "Seç…",
-  "common.admin.customers.cancelDialog.noInvoiceYet": "Henüz fatura yok"
+  "common.admin.customers.cancelDialog.noInvoiceYet": "Henüz fatura yok",
+
+  "common.admin.customers.stornoDialog.close": "Kapat",
+  "common.admin.customers.stornoDialog.title": "İptali onayla",
+  "common.admin.customers.stornoDialog.subtitle": "İptal işlemi için kapsamı, rezervasyonu ve isteğe bağlı notu seçin.",
+  "common.admin.customers.stornoDialog.scopeTitle": "İptal kapsamı",
+  "common.admin.customers.stornoDialog.loadingFamily": "Aile yükleniyor…",
+  "common.admin.customers.stornoDialog.familyLoadError": "Aile yüklenemedi – iptal listesi eksik olabilir.",
+  "common.admin.customers.stornoDialog.parent": "Ebeveyn",
+  "common.admin.customers.stornoDialog.child": "Çocuk",
+  "common.admin.customers.stornoDialog.selectParent": "Ebeveyn seç …",
+  "common.admin.customers.stornoDialog.selectChild": "Çocuk seç …",
+  "common.admin.customers.stornoDialog.customerSelf": "Müşterinin kendisi",
+  "common.admin.customers.stornoDialog.currentCustomerInfo": "İptal kayıtları mevcut müşteri için gösterilir.",
+  "common.admin.customers.stornoDialog.loading": "Yükleniyor…",
+  "common.admin.customers.stornoDialog.filtersTitle": "Filtreler",
+  "common.admin.customers.stornoDialog.courses": "Kurslar",
+  "common.admin.customers.stornoDialog.allCourses": "Tüm kurslar",
+  "common.admin.customers.stornoDialog.status": "Durum",
+  "common.admin.customers.stornoDialog.sort": "Sıralama",
+  "common.admin.customers.stornoDialog.booking": "Rezervasyon",
+  "common.admin.customers.stornoDialog.detailsTitle": "İptal detayları",
+  "common.admin.customers.stornoDialog.noteOptional": "Not (isteğe bağlı)",
+  "common.admin.customers.stornoDialog.notePlaceholder": "örn. kısmi iade, iyi niyet",
+  "common.admin.customers.stornoDialog.processing": "İşleniyor…",
+  "common.admin.customers.stornoDialog.confirm": "İptali onayla",
+  "common.admin.customers.stornoDialog.statusActive": "Aktif",
+  "common.admin.customers.stornoDialog.sortNewest": "En yeni",
+  "common.admin.customers.stornoDialog.selectBooking": "Seç…",
+  "common.admin.customers.stornoDialog.noBookings": "Rezervasyon yok",
+  "common.admin.customers.stornoDialog.errors.cancelFailed": "İptal başarısız oldu",
+  "common.admin.customers.stornoDialog.errors.loadFailed": "Yükleme başarısız oldu",
+
+  "common.admin.customers.stornoDialog.statusCancelled": "İptal edildi",
+
+  "common.admin.customers.stornoDialog.sinceDate": "{{date}} tarihinden beri"
 }

@@ -2,6 +2,8 @@
 "use client";
 
 import React, { useEffect, useMemo, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { toastErrorMessage, toastText } from "@/lib/toast-messages";
 import type { Customer } from "../types";
 import {
   GROUPED_COURSE_OPTIONS,
@@ -32,50 +34,49 @@ import type { FamilyChild, FamilyMember } from "./bookDialog/types";
 
 type Props = {
   customer: Customer;
-  // childFirst?: string;
-  // childLast?: string;
+
   onClose: () => void;
   onChanged: (freshCustomer: Customer) => void;
 };
 
 type BookingTarget = "self" | "child";
 
-type ChildOption = {
-  uid: string;
-  label: string;
-  parentId: string;
-  child: FamilyChild;
-};
+// type ChildOption = {
+//   uid: string;
+//   label: string;
+//   parentId: string;
+//   child: FamilyChild;
+// };
 
-type ParentOption = {
-  id: string;
-  label: string;
-};
+// type ParentOption = {
+//   id: string;
+//   label: string;
+// };
 
-function formatDateOnlyDe(value?: string | null) {
-  if (!value) return "";
-  const iso = /T/.test(value) ? value : `${value}T00:00:00`;
-  const d = new Date(iso);
-  if (Number.isNaN(d.getTime())) return value;
+// function formatDateOnlyDe(value?: string | null) {
+//   if (!value) return "";
+//   const iso = /T/.test(value) ? value : `${value}T00:00:00`;
+//   const d = new Date(iso);
+//   if (Number.isNaN(d.getTime())) return value;
 
-  return new Intl.DateTimeFormat("de-DE", {
-    day: "2-digit",
-    month: "2-digit",
-    year: "numeric",
-  }).format(d);
-}
-
-// function childLabel(child: FamilyChild) {
-//   const full = `${child.firstName} ${child.lastName}`.trim();
-//   const birth = formatDateOnlyDe(child.birthDate);
-//   return [full || "Kind", birth].filter(Boolean).join(" - ");
+//   return new Intl.DateTimeFormat("de-DE", {
+//     day: "2-digit",
+//     month: "2-digit",
+//     year: "numeric",
+//   }).format(d);
 // }
 
-function childLabel(child: FamilyChild) {
-  return `${child.firstName} ${child.lastName}`.trim() || "Kind";
+function childLabel(child: FamilyChild, t: (key: string) => string) {
+  return (
+    `${child.firstName} ${child.lastName}`.trim() ||
+    t("common.admin.customers.stornoDialog.Child")
+  );
 }
 
-function buildChildOptions(family: FamilyMember[] | null) {
+function buildChildOptions(
+  family: FamilyMember[] | null,
+  t: (key: string) => string,
+) {
   const members = Array.isArray(family) ? family : [];
 
   return members.flatMap((member) => {
@@ -108,7 +109,7 @@ function buildChildOptions(family: FamilyMember[] | null) {
       })
       .map((child) => ({
         uid: safeText(child.uid),
-        label: childLabel(child),
+        label: childLabel(child, t),
         parentId: member._id,
         child,
       }));
@@ -135,7 +136,10 @@ function parentOptionId(memberId: string, idx: number) {
   return `${memberId}::parent::${idx}`;
 }
 
-function buildParentOptions(family: FamilyMember[] | null) {
+function buildParentOptions(
+  family: FamilyMember[] | null,
+  t: (key: string) => string,
+) {
   const members = Array.isArray(family) ? family : [];
 
   return members.flatMap((member) => {
@@ -148,7 +152,7 @@ function buildParentOptions(family: FamilyMember[] | null) {
       id: parentOptionId(member._id, idx),
       label:
         `${safeText(parent?.firstName)} ${safeText(parent?.lastName)}`.trim() ||
-        "Elternteil",
+        t("common.admin.customers.stornoDialog.Parent"),
     }));
   });
 }
@@ -247,11 +251,11 @@ function toggleButtonFocus(
 
 export default function StornoDialog({
   customer,
-  // childFirst,
-  // childLast,
+
   onClose,
   onChanged,
 }: Props) {
+  const { t } = useTranslation();
   const [offers, setOffers] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useState<string | null>(null);
@@ -283,8 +287,11 @@ export default function StornoDialog({
     { ref: childDropdownRef, close: () => setIsChildDropdownOpen(false) },
   ]);
 
-  const childOptions = useMemo(() => buildChildOptions(family), [family]);
-  const parentOptions = useMemo(() => buildParentOptions(family), [family]);
+  const childOptions = useMemo(() => buildChildOptions(family, t), [family, t]);
+  const parentOptions = useMemo(
+    () => buildParentOptions(family, t),
+    [family, t],
+  );
 
   useEffect(() => {
     if (selectedParentId) return;
@@ -343,12 +350,13 @@ export default function StornoDialog({
   }, [family, selfMemberId]);
 
   const selectedParentLabel = useMemo(() => {
-    if (!selectedParent) return "Elternteil wählen …";
+    if (!selectedParent)
+      return t("common.admin.customers.stornoDialog.selectParent");
     return (
       `${selectedParent.parent.firstName} ${selectedParent.parent.lastName}`.trim() ||
-      "Elternteil"
+      t("common.admin.customers.stornoDialog.parent")
     );
-  }, [selectedParent]);
+  }, [selectedParent, t]);
 
   const selectedChildOption = useMemo(() => {
     if (!childOptions.length) return null;
@@ -363,32 +371,6 @@ export default function StornoDialog({
   const activeParentEmail = safeText(
     selectedParent?.parent?.email,
   ).toLowerCase();
-
-  // const allBookings = useMemo(() => {
-  //   const base = customer.bookings || [];
-  //   return base.filter((b: any) => childMatches(b, childFirst, childLast));
-  // }, [customer.bookings, childFirst, childLast]);
-
-  // const allBookings = useMemo(() => {
-  //   const base = customer.bookings || [];
-
-  //   return base.filter((b: any) => {
-  //     if (bookingTarget === "child") {
-  //       if (safeText(b?.childUid) !== safeText(activeChild?.uid)) return false;
-
-  //       const bookingParentEmail = safeText(
-  //         (b as any)?.parentEmail,
-  //       ).toLowerCase();
-  //       if (activeParentEmail) {
-  //         return bookingParentEmail === activeParentEmail;
-  //       }
-
-  //       return true;
-  //     }
-
-  //     return !safeText((b as any)?.childUid);
-  //   });
-  // }, [customer.bookings, bookingTarget, activeChild, activeParentEmail]);
 
   const allBookings = useMemo(() => {
     const base = customer.bookings || [];
@@ -415,42 +397,8 @@ export default function StornoDialog({
       return bookingParentEmail === activeParentEmail;
     });
   }, [customer.bookings, bookingTarget, activeChild, activeParentEmail]);
-  // const allBookings = useMemo(() => {
-  //   const base = customer.bookings || [];
-
-  //   return base.filter((b: any) => {
-  //     const bookingParentEmail = safeText(
-  //       (b as any)?.parentEmail,
-  //     ).toLowerCase();
-
-  //     if (bookingTarget === "child") {
-  //       if (safeText(b?.childUid) !== safeText(activeChild?.uid)) return false;
-
-  //       if (activeParentEmail) {
-  //         return bookingParentEmail === activeParentEmail;
-  //       }
-
-  //       return true;
-  //     }
-
-  //     if (safeText((b as any)?.childUid)) return false;
-
-  //     if (activeParentEmail) {
-  //       return bookingParentEmail === activeParentEmail;
-  //     }
-
-  //     return true;
-  //   });
-  // }, [customer.bookings, bookingTarget, activeChild, activeParentEmail]);
 
   const filtered = useMemo(() => {
-    // const byCourse = !courseValue
-    //   ? allBookings
-    //   : allBookings.filter(
-    //       (b) => courseValueFromBooking(b, offersById) === courseValue,
-    //     );
-
-    // return applyStatusAndSort(byCourse, statusFilter, sortOrder);
     const byCourse = !courseValue
       ? allBookings
       : allBookings.filter(
@@ -468,16 +416,8 @@ export default function StornoDialog({
   );
 
   useEffect(() => {
-    void loadOffers(setOffers, setLoading, setErr);
-  }, []);
-
-  // useEffect(() => {
-  //   setCourseValue("");
-  //   setStatusFilter("active");
-  //   setSortOrder("newest");
-  //   setSelectedId("");
-  //   setErr(null);
-  // }, [customer?._id, childFirst, childLast]);
+    void loadOffers(t, setOffers, setLoading, setErr);
+  }, [t]);
 
   useEffect(() => {
     setCourseValue("");
@@ -541,27 +481,52 @@ export default function StornoDialog({
   }, []);
 
   const selectedCourseLabel = useMemo(
-    () => selectedCourseLabelFor(courseValue, GROUPED_COURSE_OPTIONS),
-    [courseValue],
+    () => selectedCourseLabelFor(courseValue, GROUPED_COURSE_OPTIONS, t),
+    [courseValue, t],
   );
 
   const statusLabel = useMemo(
     () =>
-      STATUS_OPTIONS.find((o) => o.value === statusFilter)?.label || "Active",
-    [statusFilter],
+      STATUS_OPTIONS.find((o) => o.value === statusFilter)?.label ||
+      toastText(
+        t,
+        "common.admin.customers.stornoDialog.statusActive",
+        "Active",
+      ),
+    [statusFilter, t],
   );
 
   const sortLabel = useMemo(
-    () => SORT_OPTIONS.find((o) => o.value === sortOrder)?.label || "Newest",
-    [sortOrder],
+    () =>
+      SORT_OPTIONS.find((o) => o.value === sortOrder)?.label ||
+      toastText(t, "common.admin.customers.stornoDialog.sortNewest", "Newest"),
+    [sortOrder, t],
   );
 
   const bookingTrigger = useMemo(() => {
     if (selected) return bookingDisplay(selected, statusFilter);
     if (filtered.length)
-      return bookingDisplay({ offerTitle: "Select…" }, statusFilter);
-    return bookingDisplay({ offerTitle: "No bookings" }, statusFilter);
-  }, [selected, filtered.length, statusFilter]);
+      return bookingDisplay(
+        {
+          offerTitle: toastText(
+            t,
+            "common.admin.customers.stornoDialog.selectBooking",
+            "Select…",
+          ),
+        },
+        statusFilter,
+      );
+    return bookingDisplay(
+      {
+        offerTitle: toastText(
+          t,
+          "common.admin.customers.stornoDialog.noBookings",
+          "No bookings",
+        ),
+      },
+      statusFilter,
+    );
+  }, [selected, filtered.length, statusFilter, t]);
 
   async function submit() {
     if (!customer._id || !selected?._id) return;
@@ -575,339 +540,18 @@ export default function StornoDialog({
       const fresh = await fetchCustomer(customer._id);
       if (fresh) onChanged(fresh);
       onClose();
-    } catch (e: any) {
-      setErr(e?.message || "Storno failed");
+    } catch (e: unknown) {
+      setErr(
+        toastErrorMessage(
+          t,
+          e,
+          "common.admin.customers.stornoDialog.errors.cancelFailed",
+        ),
+      );
     } finally {
       setSaving(false);
     }
   }
-
-  // return (
-  //   <div className="ks-modal-root ks-modal-root--top ks-storno">
-  //     <div className="ks-backdrop" onClick={onClose} />
-  //     <div
-  //       className="ks-panel card ks-panel--md"
-  //       onClick={(e) => e.stopPropagation()}
-  //     >
-  //       <div className="dialog-subhead">
-  //         <h3 className="text-lg font-bold">Storno</h3>
-  //       </div>
-
-  //       <div className="mb-3 p-3 rounded border bg-gray-50 text-sm">
-  //         <div className="font-semibold mb-1">Storno for</div>
-
-  //         {familyLoading && (
-  //           <div className="text-gray-600">Loading family…</div>
-  //         )}
-
-  //         {familyError && (
-  //           <div className="text-red-600">
-  //             Family could not be loaded – storno list may be incomplete.
-  //           </div>
-  //         )}
-
-  //         {family && family.length > 0 ? (
-  //           <>
-  //             <div className="mb-2">
-  //               <label className="lbl">Elternteil</label>
-  //               <div
-  //                 className={
-  //                   "ks-selectbox" +
-  //                   (isParentDropdownOpen ? " ks-selectbox--open" : "")
-  //                 }
-  //                 ref={parentDropdownRef}
-  //               >
-  //                 <button
-  //                   type="button"
-  //                   className="ks-selectbox__trigger"
-  //                   onClick={() => setIsParentDropdownOpen((o) => !o)}
-  //                 >
-  //                   <span className="ks-selectbox__label">
-  //                     {selectedParentLabel || "Elternteil wählen …"}
-  //                   </span>
-  //                   <span
-  //                     className="ks-selectbox__chevron"
-  //                     aria-hidden="true"
-  //                   />
-  //                 </button>
-
-  //                 {isParentDropdownOpen && (
-  //                   <div className="ks-selectbox__panel" role="listbox">
-  //                     {parentOptions.map((item) => (
-  //                       <button
-  //                         type="button"
-  //                         key={item.id}
-  //                         className={
-  //                           "ks-selectbox__option" +
-  //                           (item.id === selfMemberId
-  //                             ? " ks-selectbox__option--active"
-  //                             : "")
-  //                         }
-  //                         onClick={() => {
-  //                           setSelectedParentId(item.id);
-  //                           setIsParentDropdownOpen(false);
-  //                         }}
-  //                       >
-  //                         {item.label}
-  //                       </button>
-  //                     ))}
-  //                   </div>
-  //                 )}
-  //               </div>
-  //             </div>
-
-  //             <div className="flex gap-2 mb-2">
-  //               <button
-  //                 type="button"
-  //                 className={`btn btn-sm ${
-  //                   bookingTarget === "self" ? "btn--tab-active" : "btn-outline"
-  //                 }`}
-  //                 onClick={() => setBookingTarget("self")}
-  //               >
-  //                 Kunde selbst
-  //               </button>
-
-  //               <button
-  //                 type="button"
-  //                 className={`btn btn-sm ${
-  //                   bookingTarget === "child"
-  //                     ? "btn--tab-active"
-  //                     : "btn-outline"
-  //                 }`}
-  //                 onClick={() => setBookingTarget("child")}
-  //               >
-  //                 Kind
-  //               </button>
-  //             </div>
-
-  //             {bookingTarget === "child" && (
-  //               <div className="mb-2">
-  //                 <label className="lbl">Kind</label>
-  //                 <div
-  //                   className={
-  //                     "ks-selectbox" +
-  //                     (isChildDropdownOpen ? " ks-selectbox--open" : "")
-  //                   }
-  //                   ref={childDropdownRef}
-  //                 >
-  //                   <button
-  //                     type="button"
-  //                     className="ks-selectbox__trigger"
-  //                     onClick={() => setIsChildDropdownOpen((o) => !o)}
-  //                   >
-  //                     <span className="ks-selectbox__label">
-  //                       {activeChild
-  //                         ? `${activeChild.firstName} ${activeChild.lastName}`.trim()
-  //                         : "Kind wählen …"}
-  //                     </span>
-  //                     <span
-  //                       className="ks-selectbox__chevron"
-  //                       aria-hidden="true"
-  //                     />
-  //                   </button>
-
-  //                   {isChildDropdownOpen && (
-  //                     <div className="ks-selectbox__panel" role="listbox">
-  //                       {childOptions.map((item) => (
-  //                         <button
-  //                           type="button"
-  //                           key={item.uid}
-  //                           className={
-  //                             "ks-selectbox__option" +
-  //                             (item.uid === selectedChildUid
-  //                               ? " ks-selectbox__option--active"
-  //                               : "")
-  //                           }
-  //                           onClick={() => {
-  //                             setSelectedChildUid(item.uid);
-  //                             setIsChildDropdownOpen(false);
-  //                           }}
-  //                         >
-  //                           {item.label}
-  //                         </button>
-  //                       ))}
-  //                     </div>
-  //                   )}
-  //                 </div>
-  //               </div>
-  //             )}
-
-  //             <div className="text-gray-700 mt-2">
-  //               <div>
-  //                 <span className="font-medium">Parent:</span>{" "}
-  //                 {selectedParent
-  //                   ? `${selectedParent.parent.firstName} ${selectedParent.parent.lastName}`.trim()
-  //                   : "—"}
-  //               </div>
-
-  //               <div>
-  //                 <span className="font-medium">Child:</span>{" "}
-  //                 {bookingTarget === "child" && activeChild
-  //                   ? `${activeChild.firstName} ${activeChild.lastName}`.trim()
-  //                   : "—"}
-  //               </div>
-  //             </div>
-  //           </>
-  //         ) : (
-  //           !familyLoading && (
-  //             <div className="text-gray-700">
-  //               Storno entries are shown for the current customer.
-  //             </div>
-  //           )
-  //         )}
-  //       </div>
-
-  //       {err && <div className="mb-2 text-red-600">{err}</div>}
-  //       {loading && <div className="mb-2 text-gray-600">Loading…</div>}
-
-  //       <div className="ks-storno__filters mb-2">
-  //         <div className="ks-storno__filter">
-  //           <label className="lbl">Courses</label>
-
-  //           <div
-  //             ref={courseDropdownRef}
-  //             className={cx(
-  //               "ks-selectbox",
-  //               isCourseDropdownOpen && "ks-selectbox--open",
-  //             )}
-  //           >
-  //             <button
-  //               type="button"
-  //               className="ks-selectbox__trigger"
-  //               onClick={() => setIsCourseDropdownOpen((o) => !o)}
-  //               aria-haspopup="listbox"
-  //               aria-expanded={isCourseDropdownOpen}
-  //             >
-  //               <span className="ks-selectbox__label">
-  //                 {selectedCourseLabel}
-  //               </span>
-  //               <span className="ks-selectbox__chevron" aria-hidden="true" />
-  //             </button>
-
-  //             {isCourseDropdownOpen && (
-  //               <div className="ks-selectbox__panel" role="listbox">
-  //                 <button
-  //                   type="button"
-  //                   className={cx(
-  //                     "ks-selectbox__option",
-  //                     !courseValue && "ks-selectbox__option--active",
-  //                   )}
-  //                   onClick={() => {
-  //                     setCourseValue("");
-  //                     setIsCourseDropdownOpen(false);
-  //                   }}
-  //                 >
-  //                   All courses
-  //                 </button>
-
-  //                 {GROUPED_COURSE_OPTIONS.map((g) => (
-  //                   <div key={g.label} className="ks-selectbox__group">
-  //                     <div className="ks-selectbox__group-label">{g.label}</div>
-  //                     {g.items.map((opt) => (
-  //                       <button
-  //                         key={opt.value}
-  //                         type="button"
-  //                         className={cx(
-  //                           "ks-selectbox__option",
-  //                           courseValue === opt.value &&
-  //                             "ks-selectbox__option--active",
-  //                         )}
-  //                         onClick={() => {
-  //                           setCourseValue(opt.value);
-  //                           setIsCourseDropdownOpen(false);
-  //                         }}
-  //                       >
-  //                         {opt.label}
-  //                       </button>
-  //                     ))}
-  //                   </div>
-  //                 ))}
-  //               </div>
-  //             )}
-  //           </div>
-  //         </div>
-
-  //         <div className="ks-storno__filter">
-  //           <InlineSelect
-  //             label="Status"
-  //             value={statusFilter}
-  //             displayLabel={statusLabel}
-  //             options={STATUS_OPTIONS}
-  //             rootRef={statusDropdownRef}
-  //             open={isStatusOpen}
-  //             setOpen={setIsStatusOpen}
-  //             onChange={(v) => setStatusFilter(v as StatusFilter)}
-  //           />
-  //         </div>
-
-  //         <div className="ks-storno__filter">
-  //           <InlineSelect
-  //             label="Sort"
-  //             value={sortOrder}
-  //             displayLabel={sortLabel}
-  //             options={SORT_OPTIONS}
-  //             rootRef={sortDropdownRef}
-  //             open={isSortOpen}
-  //             setOpen={setIsSortOpen}
-  //             onChange={(v) => setSortOrder(v as SortOrder)}
-  //           />
-  //         </div>
-  //       </div>
-
-  //       <div className="ks-storno__section mb-2">
-  //         <BookingSelect
-  //           label="Booking"
-  //           open={menuOpen}
-  //           setOpen={setMenuOpen}
-  //           openMenu={openMenu}
-  //           triggerRef={triggerRef}
-  //           menuRef={menuRef}
-  //           disabled={!filtered.length}
-  //           trigger={bookingTrigger}
-  //           items={filtered}
-  //           selectedId={selectedId}
-  //           onSelect={(id: string) => setSelectedId(id)}
-  //           statusFilter={statusFilter}
-  //           isCancelledSelected={isCancelled}
-  //         />
-  //       </div>
-
-  //       <div className="ks-storno__section">
-  //         <div>
-  //           <label className="lbl">Note (optional)</label>
-  //           <textarea
-  //             className="input"
-  //             rows={3}
-  //             value={note}
-  //             onChange={(e) => setNote(e.target.value)}
-  //             placeholder="e.g., partial refund, goodwill"
-  //             disabled={!selected || isCancelled}
-  //           />
-  //         </div>
-  //       </div>
-
-  //       <div className="flex justify-end gap-2 mt-3">
-  //         <button
-  //           type="button"
-  //           className="modal__close"
-  //           aria-label="Close"
-  //           onClick={onClose}
-  //         >
-  //           <img
-  //             src="/icons/close.svg"
-  //             alt=""
-  //             aria-hidden="true"
-  //             className="icon-img"
-  //           />
-  //         </button>
-
-  //         <button className="btn" disabled={disabled} onClick={submit}>
-  //           {saving ? "Processing…" : "Confirm storno"}
-  //         </button>
-  //       </div>
-  //     </div>
-  //   </div>
-  // );
 
   return (
     <div
@@ -919,7 +563,7 @@ export default function StornoDialog({
       <button
         type="button"
         className="dialog-backdrop-hit"
-        aria-label="Close"
+        aria-label={t("common.admin.customers.stornoDialog.close")}
         onClick={onClose}
       />
 
@@ -930,11 +574,10 @@ export default function StornoDialog({
         <div className="dialog-head storno-dialog__head">
           <div className="storno-dialog__head-main">
             <h3 id="storno-dialog-title" className="dialog-title">
-              Confirm Cancellation
+              {t("common.admin.customers.stornoDialog.title")}
             </h3>
             <p className="dialog-subtitle">
-              Select scope, booking, and optional note for the Cancellation
-              process.
+              {t("common.admin.customers.stornoDialog.subtitle")}
             </p>
           </div>
 
@@ -942,7 +585,7 @@ export default function StornoDialog({
             <button
               type="button"
               className="dialog-close"
-              aria-label="Close"
+              aria-label={t("common.admin.customers.stornoDialog.close")}
               onClick={onClose}
             >
               <img
@@ -958,25 +601,30 @@ export default function StornoDialog({
         <div className="dialog-body storno-dialog__body">
           <section className="dialog-section storno-dialog__scopeSection">
             <div className="dialog-section__head">
-              <h4 className="dialog-section__title">Cancellation scope</h4>
+              <h4 className="dialog-section__title">
+                {t("common.admin.customers.stornoDialog.scopeTitle")}
+              </h4>
             </div>
 
             <div className="dialog-section__body storno-dialog__scopeBody">
               {familyLoading && (
-                <div className="storno-dialog__note">Loading family…</div>
+                <div className="storno-dialog__note">
+                  {t("common.admin.customers.stornoDialog.loadingFamily")}
+                </div>
               )}
 
               {familyError && (
                 <div className="storno-dialog__error">
-                  Family could not be loaded – Cancellation list may be
-                  incomplete.
+                  {t("common.admin.customers.stornoDialog.familyLoadError")}
                 </div>
               )}
 
               {family && family.length > 0 ? (
                 <>
                   <div className="storno-dialog__field">
-                    <label className="dialog-label">Parent</label>
+                    <label className="dialog-label">
+                      {t("common.admin.customers.stornoDialog.parent")}
+                    </label>
 
                     <div
                       className={
@@ -991,7 +639,10 @@ export default function StornoDialog({
                         onClick={() => setIsParentDropdownOpen((o) => !o)}
                       >
                         <span className="ks-selectbox__label">
-                          {selectedParentLabel || "Select parent …"}
+                          {selectedParentLabel ||
+                            t(
+                              "common.admin.customers.stornoDialog.selectParent",
+                            )}
                         </span>
                         <span
                           className="ks-selectbox__chevron"
@@ -1038,7 +689,7 @@ export default function StornoDialog({
                         toggleButtonFocus(e, () => setBookingTarget("self"))
                       }
                     >
-                      Customer self
+                      {t("common.admin.customers.stornoDialog.customerSelf")}
                     </button>
 
                     <button
@@ -1054,13 +705,15 @@ export default function StornoDialog({
                         toggleButtonFocus(e, () => setBookingTarget("child"))
                       }
                     >
-                      Child
+                      {t("common.admin.customers.stornoDialog.child")}
                     </button>
                   </div>
 
                   {bookingTarget === "child" && (
                     <div className="storno-dialog__field">
-                      <label className="dialog-label">Child</label>
+                      <label className="dialog-label">
+                        {t("common.admin.customers.stornoDialog.child")}
+                      </label>
 
                       <div
                         className={
@@ -1077,7 +730,9 @@ export default function StornoDialog({
                           <span className="ks-selectbox__label">
                             {activeChild
                               ? `${activeChild.firstName} ${activeChild.lastName}`.trim()
-                              : "Select child …"}
+                              : t(
+                                  "common.admin.customers.stornoDialog.selectChild",
+                                )}
                           </span>
                           <span
                             className="ks-selectbox__chevron"
@@ -1113,7 +768,10 @@ export default function StornoDialog({
 
                   <div className="storno-dialog__summary">
                     <div className="storno-dialog__summaryItem">
-                      <span className="dialog-label">Parent</span>
+                      <span className="dialog-label">
+                        {" "}
+                        {t("common.admin.customers.stornoDialog.parent")}
+                      </span>
                       <span className="dialog-value">
                         {selectedParent
                           ? `${selectedParent.parent.firstName} ${selectedParent.parent.lastName}`.trim()
@@ -1122,7 +780,9 @@ export default function StornoDialog({
                     </div>
 
                     <div className="storno-dialog__summaryItem">
-                      <span className="dialog-label">Child</span>
+                      <span className="dialog-label">
+                        {t("common.admin.customers.stornoDialog.child")}
+                      </span>
                       <span className="dialog-value">
                         {bookingTarget === "child" && activeChild
                           ? `${activeChild.firstName} ${activeChild.lastName}`.trim()
@@ -1134,7 +794,9 @@ export default function StornoDialog({
               ) : (
                 !familyLoading && (
                   <div className="dialog-value">
-                    Cancellation entries are shown for the current customer.
+                    {t(
+                      "common.admin.customers.stornoDialog.currentCustomerInfo",
+                    )}
                   </div>
                 )
               )}
@@ -1145,20 +807,29 @@ export default function StornoDialog({
             <section className="dialog-section storno-dialog__statusSection">
               <div className="dialog-section__body">
                 {err && <div className="storno-dialog__error">{err}</div>}
-                {loading && <div className="storno-dialog__note">Loading…</div>}
+                {loading && (
+                  <div className="storno-dialog__note">
+                    {" "}
+                    {t("common.admin.customers.stornoDialog.loading")}
+                  </div>
+                )}
               </div>
             </section>
           )}
 
           <section className="dialog-section storno-dialog__filtersSection">
             <div className="dialog-section__head">
-              <h4 className="dialog-section__title">Filters</h4>
+              <h4 className="dialog-section__title">
+                {t("common.admin.customers.stornoDialog.filtersTitle")}
+              </h4>
             </div>
 
             <div className="dialog-section__body">
               <div className="ks-storno__filters mb-2">
                 <div className="ks-storno__filter">
-                  <label className="dialog-label">Courses</label>
+                  <label className="dialog-label">
+                    {t("common.admin.customers.stornoDialog.courses")}
+                  </label>
 
                   <div
                     ref={courseDropdownRef}
@@ -1196,7 +867,7 @@ export default function StornoDialog({
                             setIsCourseDropdownOpen(false);
                           }}
                         >
-                          All courses
+                          {t("common.admin.customers.stornoDialog.allCourses")}
                         </button>
 
                         {GROUPED_COURSE_OPTIONS.map((g) => (
@@ -1230,7 +901,7 @@ export default function StornoDialog({
 
                 <div className="ks-storno__filter">
                   <InlineSelect
-                    label="Status"
+                    label={t("common.admin.customers.stornoDialog.status")}
                     value={statusFilter}
                     displayLabel={statusLabel}
                     options={STATUS_OPTIONS}
@@ -1243,7 +914,7 @@ export default function StornoDialog({
 
                 <div className="ks-storno__filter">
                   <InlineSelect
-                    label="Sort"
+                    label={t("common.admin.customers.stornoDialog.sort")}
                     value={sortOrder}
                     displayLabel={sortLabel}
                     options={SORT_OPTIONS}
@@ -1257,10 +928,9 @@ export default function StornoDialog({
 
               <div className="ks-storno__section mb-2">
                 <BookingSelect
-                  label="Booking"
+                  label={t("common.admin.customers.stornoDialog.booking")}
                   open={menuOpen}
                   setOpen={setMenuOpen}
-                  // openMenu={openMenu}
                   triggerRef={triggerRef}
                   menuRef={menuRef}
                   disabled={!filtered.length}
@@ -1277,18 +947,25 @@ export default function StornoDialog({
 
           <section className="dialog-section storno-dialog__detailsSection">
             <div className="dialog-section__head">
-              <h4 className="dialog-section__title">Cancellation details</h4>
+              <h4 className="dialog-section__title">
+                {t("common.admin.customers.stornoDialog.detailsTitle")}
+              </h4>
             </div>
 
             <div className="dialog-section__body ks-storno__section">
               <div>
-                <label className="dialog-label">Note (optional)</label>
+                <label className="dialog-label">
+                  {" "}
+                  {t("common.admin.customers.stornoDialog.noteOptional")}
+                </label>
                 <textarea
                   className="input"
                   rows={3}
                   value={note}
                   onChange={(e) => setNote(e.target.value)}
-                  placeholder="e.g., partial refund, goodwill"
+                  placeholder={t(
+                    "common.admin.customers.stornoDialog.notePlaceholder",
+                  )}
                   disabled={!selected || isCancelled}
                 />
               </div>
@@ -1303,7 +980,9 @@ export default function StornoDialog({
               disabled={disabled}
               onClick={submit}
             >
-              {saving ? "Processing…" : "Confirm Cancellation"}
+              {saving
+                ? t("common.admin.customers.stornoDialog.processing")
+                : t("common.admin.customers.stornoDialog.confirm")}
             </button>
           </div>
         </div>
@@ -1364,6 +1043,7 @@ function toTime(v: any) {
 }
 
 async function loadOffers(
+  t: (key: string) => string,
   setOffers: (v: any[]) => void,
   setLoading: (v: boolean) => void,
   setErr: (v: string | null) => void,
@@ -1372,8 +1052,14 @@ async function loadOffers(
     setLoading(true);
     setErr(null);
     setOffers(await fetchOffers(500));
-  } catch (e: any) {
-    setErr(e?.message || "Load failed");
+  } catch (e: unknown) {
+    setErr(
+      toastErrorMessage(
+        t,
+        e,
+        "common.admin.customers.stornoDialog.errors.loadFailed",
+      ),
+    );
   } finally {
     setLoading(false);
   }

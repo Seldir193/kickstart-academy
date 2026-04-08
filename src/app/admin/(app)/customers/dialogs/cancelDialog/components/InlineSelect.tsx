@@ -9,7 +9,8 @@ type Props = {
   valueLabel: string;
   open: boolean;
   setOpen: (v: boolean | ((p: boolean) => boolean)) => void;
-  rootRef: React.RefObject<HTMLDivElement>;
+  rootRef: React.RefObject<HTMLDivElement | null>;
+
   items: Item[];
   activeValue: string;
   onSelect: (v: string) => void;

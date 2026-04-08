@@ -716,5 +716,40 @@
 
   "common.admin.customers.cancelDialog.noCancellableBookings": "No cancellable bookings",
   "common.admin.customers.cancelDialog.select": "Select…",
-  "common.admin.customers.cancelDialog.noInvoiceYet": "No invoice yet"
+  "common.admin.customers.cancelDialog.noInvoiceYet": "No invoice yet",
+
+  "common.admin.customers.stornoDialog.close": "Close",
+  "common.admin.customers.stornoDialog.title": "Confirm Cancellation",
+  "common.admin.customers.stornoDialog.subtitle": "Select scope, booking, and an optional note for the cancellation process.",
+  "common.admin.customers.stornoDialog.scopeTitle": "Cancellation scope",
+  "common.admin.customers.stornoDialog.loadingFamily": "Loading family…",
+  "common.admin.customers.stornoDialog.familyLoadError": "Family could not be loaded – the cancellation list may be incomplete.",
+  "common.admin.customers.stornoDialog.parent": "Parent",
+  "common.admin.customers.stornoDialog.child": "Child",
+  "common.admin.customers.stornoDialog.selectParent": "Select parent …",
+  "common.admin.customers.stornoDialog.selectChild": "Select child …",
+  "common.admin.customers.stornoDialog.customerSelf": "Customer self",
+  "common.admin.customers.stornoDialog.currentCustomerInfo": "Cancellation entries are shown for the current customer.",
+  "common.admin.customers.stornoDialog.loading": "Loading…",
+  "common.admin.customers.stornoDialog.filtersTitle": "Filters",
+  "common.admin.customers.stornoDialog.courses": "Courses",
+  "common.admin.customers.stornoDialog.allCourses": "All courses",
+  "common.admin.customers.stornoDialog.status": "Status",
+  "common.admin.customers.stornoDialog.sort": "Sort",
+  "common.admin.customers.stornoDialog.booking": "Booking",
+  "common.admin.customers.stornoDialog.detailsTitle": "Cancellation details",
+  "common.admin.customers.stornoDialog.noteOptional": "Note (optional)",
+  "common.admin.customers.stornoDialog.notePlaceholder": "e.g., partial refund, goodwill",
+  "common.admin.customers.stornoDialog.processing": "Processing…",
+  "common.admin.customers.stornoDialog.confirm": "Confirm Cancellation",
+  "common.admin.customers.stornoDialog.statusActive": "Active",
+  "common.admin.customers.stornoDialog.sortNewest": "Newest",
+  "common.admin.customers.stornoDialog.selectBooking": "Select…",
+  "common.admin.customers.stornoDialog.noBookings": "No bookings",
+  "common.admin.customers.stornoDialog.errors.cancelFailed": "Cancellation failed",
+  "common.admin.customers.stornoDialog.errors.loadFailed": "Loading failed",
+
+  "common.admin.customers.stornoDialog.statusCancelled": "Cancelled",
+
+  "common.admin.customers.stornoDialog.sinceDate": "since {{date}}"
 }

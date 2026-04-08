@@ -716,5 +716,40 @@
 
   "common.admin.customers.cancelDialog.noCancellableBookings": "Keine stornierbaren Buchungen",
   "common.admin.customers.cancelDialog.select": "Auswählen…",
-  "common.admin.customers.cancelDialog.noInvoiceYet": "Noch keine Rechnung"
+  "common.admin.customers.cancelDialog.noInvoiceYet": "Noch keine Rechnung",
+
+  "common.admin.customers.stornoDialog.close": "Schließen",
+  "common.admin.customers.stornoDialog.title": "Stornierung bestätigen",
+  "common.admin.customers.stornoDialog.subtitle": "Wähle Bereich, Buchung und eine optionale Notiz für den Stornierungsprozess.",
+  "common.admin.customers.stornoDialog.scopeTitle": "Stornierungsbereich",
+  "common.admin.customers.stornoDialog.loadingFamily": "Familie wird geladen…",
+  "common.admin.customers.stornoDialog.familyLoadError": "Familie konnte nicht geladen werden – die Stornoliste ist möglicherweise unvollständig.",
+  "common.admin.customers.stornoDialog.parent": "Elternteil",
+  "common.admin.customers.stornoDialog.child": "Kind",
+  "common.admin.customers.stornoDialog.selectParent": "Elternteil wählen …",
+  "common.admin.customers.stornoDialog.selectChild": "Kind wählen …",
+  "common.admin.customers.stornoDialog.customerSelf": "Kunde selbst",
+  "common.admin.customers.stornoDialog.currentCustomerInfo": "Stornoeinträge werden für den aktuellen Kunden angezeigt.",
+  "common.admin.customers.stornoDialog.loading": "Lädt…",
+  "common.admin.customers.stornoDialog.filtersTitle": "Filter",
+  "common.admin.customers.stornoDialog.courses": "Kurse",
+  "common.admin.customers.stornoDialog.allCourses": "Alle Kurse",
+  "common.admin.customers.stornoDialog.status": "Status",
+  "common.admin.customers.stornoDialog.sort": "Sortierung",
+  "common.admin.customers.stornoDialog.booking": "Buchung",
+  "common.admin.customers.stornoDialog.detailsTitle": "Stornodetails",
+  "common.admin.customers.stornoDialog.noteOptional": "Notiz (optional)",
+  "common.admin.customers.stornoDialog.notePlaceholder": "z. B. Teilrückerstattung, Kulanz",
+  "common.admin.customers.stornoDialog.processing": "Wird verarbeitet…",
+  "common.admin.customers.stornoDialog.confirm": "Stornierung bestätigen",
+  "common.admin.customers.stornoDialog.statusActive": "Aktiv",
+  "common.admin.customers.stornoDialog.sortNewest": "Neueste",
+  "common.admin.customers.stornoDialog.selectBooking": "Auswählen…",
+  "common.admin.customers.stornoDialog.noBookings": "Keine Buchungen",
+  "common.admin.customers.stornoDialog.errors.cancelFailed": "Stornierung fehlgeschlagen",
+  "common.admin.customers.stornoDialog.errors.loadFailed": "Laden fehlgeschlagen",
+
+  "common.admin.customers.stornoDialog.statusCancelled": "Storniert",
+
+  "common.admin.customers.stornoDialog.sinceDate": "seit {{date}}"
 }
