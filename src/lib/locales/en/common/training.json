@@ -1,0 +1,35 @@
+{
+  "common.training.filters.search.placeholder": "e.g. Summer Camp or street/city/zip",
+  "common.training.filters.locations.all": "All locations",
+  "common.training.filters.courses.all": "All courses",
+  "common.training.filters.sort.newest": "Newest",
+  "common.training.filters.sort.oldest": "Oldest",
+  "common.training.filters.sort.trainingAsc": "Training A–Z",
+  "common.training.filters.sort.trainingDesc": "Training Z–A",
+  "common.training.filters.create": "New training",
+
+  "common.training.results.fallback.training": "Training",
+  "common.training.results.loading": "Loading…",
+  "common.training.results.empty": "No entries.",
+  "common.training.results.head.coach": "Coach",
+  "common.training.results.head.course": "Course",
+  "common.training.results.head.place": "Place",
+  "common.training.results.head.price": "Price",
+  "common.training.results.head.date": "Date",
+  "common.training.results.head.action": "Action",
+  "common.training.results.aria.select": "Select: {{title}}",
+  "common.training.results.aria.open": "Open: {{title}}",
+  "common.training.results.avatar.named": "Coach {{name}}",
+  "common.training.results.avatar.default": "Coach",
+  "common.training.results.action.edit": "Edit",
+
+  "common.training.pager.previous": "Previous page",
+  "common.training.pager.next": "Next page",
+
+  "common.training.bulk.selectTrainings": "Select trainings",
+  "common.training.bulk.selected": "selected",
+  "common.training.bulk.clearAll": "Clear all",
+  "common.training.bulk.selectAll": "Select all",
+  "common.training.bulk.delete": "Delete ({{count}})",
+  "common.training.bulk.cancel": "Cancel"
+}

@@ -1,0 +1,126 @@
+{
+  "common.admin.bookings.sort.newest": "En yeniler önce",
+  "common.admin.bookings.sort.oldest": "En eskiler önce",
+  "common.admin.bookings.sort.nameAsc": "İsim A–Z",
+  "common.admin.bookings.sort.nameDesc": "İsim Z–A",
+
+  "common.admin.bookings.notice.deleted": "Rezervasyon silindi.",
+  "common.admin.bookings.notice.restored": "Rezervasyon geri yüklendi.",
+
+  "common.admin.bookings.error.detailsLoad": "Detaylar yüklenemedi.",
+
+  "common.admin.bookings.filters.programAria": "Kurs",
+  "common.admin.bookings.filters.statusAria": "Durum",
+  "common.admin.bookings.filters.sortAria": "Sıralama",
+
+  "common.admin.bookings.filters.program.all": "Tüm kurslar",
+  "common.admin.bookings.filters.program.weeklyGroup": "Haftalık kurslar",
+  "common.admin.bookings.filters.program.weeklyFoerdertraining": "Gelişim antrenmanı",
+  "common.admin.bookings.filters.program.weeklyKindergarten": "Futbol anaokulu",
+  "common.admin.bookings.filters.program.weeklyGoalkeeper": "Kaleci antrenmanı",
+  "common.admin.bookings.filters.program.weeklyDevelopmentAthletik": "Gelişim antrenmanı • Atletik",
+  "common.admin.bookings.filters.program.individualGroup": "Bireysel kurslar",
+  "common.admin.bookings.filters.program.individual1to1": "1:1 antrenman",
+  "common.admin.bookings.filters.program.individual1to1Athletik": "1:1 antrenman atletik",
+  "common.admin.bookings.filters.program.individual1to1Goalkeeper": "1:1 kaleci antrenmanı",
+  "common.admin.bookings.filters.program.clubGroup": "Kulüp programları",
+  "common.admin.bookings.filters.program.clubRentACoach": "Rent-a-Coach",
+  "common.admin.bookings.filters.program.clubTrainingCamps": "Antrenman kampları",
+  "common.admin.bookings.filters.program.clubCoachEducation": "Antrenör eğitimi",
+
+  "common.admin.bookings.filters.status.all": "Tümü",
+  "common.admin.bookings.filters.status.pending": "Beklemede",
+  "common.admin.bookings.filters.status.processing": "İşleniyor",
+  "common.admin.bookings.filters.status.confirmed": "Onaylandı",
+  "common.admin.bookings.filters.status.cancelled": "İptal edildi",
+  "common.admin.bookings.filters.status.deleted": "Silindi",
+
+  "common.admin.bookings.search.placeholder": "Ad, e-posta, seviye, kod, mesaj…",
+
+  "common.admin.bookings.bulk.toggleLabel": "Rezervasyonları seç",
+  "common.admin.bookings.bulk.selectedLabel": "seçildi",
+  "common.admin.bookings.bulk.selectAllLabel": "Tümünü seç",
+  "common.admin.bookings.bulk.clearAllLabel": "Seçimi temizle",
+  "common.admin.bookings.bulk.deleteLabel": "Sil",
+  "common.admin.bookings.bulk.cancelLabel": "İptal",
+  "common.admin.bookings.bulk.restoreLabel": "Geri yükle",
+
+  "common.admin.bookings.table.empty": "Kayıt yok.",
+  "common.admin.bookings.table.head.name": "Ad",
+  "common.admin.bookings.table.head.email": "E-posta",
+  "common.admin.bookings.table.head.date": "Tarih",
+  "common.admin.bookings.table.head.program": "Program",
+  "common.admin.bookings.table.head.status": "Durum",
+  "common.admin.bookings.table.head.payment": "Ödeme",
+  "common.admin.bookings.table.head.created": "Oluşturuldu",
+  "common.admin.bookings.table.head.action": "İşlem",
+
+  "common.admin.bookings.row.empty": "—",
+
+  "common.admin.bookings.row.select": "Seç",
+  "common.admin.bookings.row.open": "Aç",
+  "common.admin.bookings.row.openAction": "Aç",
+
+  "common.admin.bookings.error.loadFailed": "Yükleme başarısız oldu.",
+
+  "common.admin.bookings.dialog.ariaLabel": "Rezervasyon detayları",
+  "common.admin.bookings.dialog.close": "Kapat",
+  "common.admin.bookings.dialog.empty": "—",
+
+  "common.admin.bookings.dialog.sections.booking": "Rezervasyon",
+  "common.admin.bookings.dialog.sections.message": "Mesaj",
+
+  "common.admin.bookings.dialog.labels.program": "Program",
+  "common.admin.bookings.dialog.labels.venue": "Konum",
+  "common.admin.bookings.dialog.labels.name": "Ad",
+  "common.admin.bookings.dialog.labels.email": "E-posta",
+  "common.admin.bookings.dialog.labels.age": "Yaş",
+  "common.admin.bookings.dialog.labels.preferredDate": "Tercih edilen tarih",
+  "common.admin.bookings.dialog.labels.dateStartDate": "Tarih / Başlangıç tarihi",
+  "common.admin.bookings.dialog.labels.created": "Oluşturuldu",
+  "common.admin.bookings.dialog.labels.paymentApprovedAt": "Ödeme onay tarihi",
+  "common.admin.bookings.dialog.labels.subscriptionApprovedAt": "Abonelik onay tarihi",
+  "common.admin.bookings.dialog.labels.confirmationCode": "Onay kodu",
+  "common.admin.bookings.dialog.labels.invoiceNumber": "Fatura numarası",
+  "common.admin.bookings.dialog.labels.invoiceDate": "Fatura tarihi",
+
+  "common.admin.bookings.dialog.actions.pleaseWait": "Lütfen bekleyin...",
+  "common.admin.bookings.dialog.actions.processing": "İşleniyor",
+  "common.admin.bookings.dialog.actions.confirm": "Onayla",
+  "common.admin.bookings.dialog.actions.resend": "Tekrar gönder",
+  "common.admin.bookings.dialog.actions.cancelConfirmedBooking": "Onaylanmış rezervasyonu iptal et",
+  "common.admin.bookings.dialog.actions.cancel": "İptal et",
+  "common.admin.bookings.dialog.actions.removeSubscriptionApproval": "Abonelik onayını kaldır",
+  "common.admin.bookings.dialog.actions.approveForSubscription": "Abonelik için onayla",
+  "common.admin.bookings.dialog.actions.approvePayment": "Ödemeyi onayla",
+  "common.admin.bookings.dialog.actions.delete": "Sil",
+
+  "common.admin.bookings.dialog.error.actionFailed": "İşlem başarısız oldu",
+
+  "common.admin.bookings.dialog.message.registration": "Kayıt",
+  "common.admin.bookings.dialog.message.birthday": "Doğum günü",
+  "common.admin.bookings.dialog.message.contact": "İletişim",
+  "common.admin.bookings.dialog.message.address": "Adres",
+  "common.admin.bookings.dialog.message.phone": "Telefon",
+  "common.admin.bookings.dialog.message.voucher": "Kupon",
+  "common.admin.bookings.dialog.message.source": "Kaynak",
+  "common.admin.bookings.dialog.message.child": "Çocuk",
+
+  "common.admin.bookings.status.pending": "Beklemede",
+  "common.admin.bookings.status.processing": "İşleniyor",
+  "common.admin.bookings.status.confirmed": "Onaylandı",
+  "common.admin.bookings.status.cancelled": "İptal edildi",
+  "common.admin.bookings.status.deleted": "Silindi",
+
+  "common.admin.bookings.payment.open": "Açık",
+  "common.admin.bookings.payment.paid": "Ödendi",
+  "common.admin.bookings.payment.returned": "İade edildi",
+
+  "common.admin.bookings.notice.confirmed": "Rezervasyon onaylandı.",
+  "common.admin.bookings.notice.confirmationResent": "Onay tekrar gönderildi.",
+  "common.admin.bookings.notice.statusUpdated": "Durum güncellendi.",
+
+  "common.admin.bookings.notice.cancelledConfirmed": "Onaylanmış rezervasyon iptal edildi.",
+  "common.admin.bookings.notice.subscriptionUpdated": "Abonelik onayı güncellendi.",
+  "common.admin.bookings.notice.paymentApproved": "Ödeme onaylandı."
+}

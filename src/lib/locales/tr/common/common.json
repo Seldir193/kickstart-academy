@@ -1,0 +1,60 @@
+{
+  "language.label": "Dil",
+  "language.de": "Deutsch",
+  "language.en": "English",
+  "language.tr": "Türkçe",
+
+  "nav.more": "Daha fazla",
+  "nav.trainings": "Antrenmanlar",
+  "nav.coaches": "Antrenörler",
+  "nav.contact": "İletişim",
+
+  "nav.admin.home": "Ana sayfa",
+  "nav.admin.places": "Yerler",
+  "nav.admin.courses": "Kurslar",
+  "nav.admin.coaches": "Antrenörler",
+  "nav.admin.invoices": "Faturalar",
+  "nav.admin.customers": "Müşteriler",
+  "nav.admin.datev": "DATEV",
+  "nav.admin.news": "Haberler",
+  "nav.admin.revenue": "Ciro",
+  "nav.admin.bookings": "Rezervasyonlar",
+  "nav.admin.holidayBookings": "Tatil rezervasyonları",
+  "nav.admin.vouchers": "Kuponlar",
+  "nav.admin.locations": "Lokasyonlar",
+  "nav.admin.members": "Üyeler",
+
+  "aria.home": "Ana sayfa",
+
+  "common.pagination.previousPage": "Önceki sayfa",
+  "common.pagination.nextPage": "Sonraki sayfa",
+
+  "common.datePicker.placeholder": "gg.aa.yyyy",
+  "common.datePicker.selectDate": "Tarih seç",
+  "common.datePicker.previousMonth": "Önceki ay",
+  "common.datePicker.selectYear": "Yıl seç",
+  "common.datePicker.nextMonth": "Sonraki ay",
+  "common.datePicker.searchYear": "Yıl ara…",
+  "common.datePicker.years": "Yıllar",
+  "common.datePicker.back": "Geri",
+  "common.datePicker.today": "Bugün",
+  "common.datePicker.calendar": "Takvim",
+  "common.datePicker.clear": "Sil",
+  "common.datePicker.weekday.mon": "Pzt",
+  "common.datePicker.weekday.tue": "Sal",
+  "common.datePicker.weekday.wed": "Çar",
+  "common.datePicker.weekday.thu": "Per",
+  "common.datePicker.weekday.fri": "Cum",
+  "common.datePicker.weekday.sat": "Cmt",
+  "common.datePicker.weekday.sun": "Paz",
+
+  "common.actions.close": "Close",
+
+  "common.placeholders.date": "dd.mm.yyyy",
+
+  "common.close": "Kapat",
+
+  "common.placeholders.dayShort": "GG",
+  "common.placeholders.monthShort": "AA",
+  "common.placeholders.yearShort": "YYYY"
+}

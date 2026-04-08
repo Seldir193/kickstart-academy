@@ -1,0 +1,56 @@
+{
+  "language.label": "Sprache",
+  "language.de": "Deutsch",
+  "language.en": "English",
+  "language.tr": "Türkçe",
+
+  "nav.more": "Mehr",
+  "nav.trainings": "Trainings",
+  "nav.coaches": "Trainer",
+  "nav.contact": "Kontakt",
+
+  "nav.admin.home": "Start",
+  "nav.admin.places": "Orte",
+  "nav.admin.courses": "Kurse",
+  "nav.admin.coaches": "Trainer",
+  "nav.admin.invoices": "Rechnungen",
+  "nav.admin.customers": "Kunden",
+  "nav.admin.datev": "DATEV",
+  "nav.admin.news": "News",
+  "nav.admin.revenue": "Umsatz",
+  "nav.admin.bookings": "Buchungen",
+
+  "nav.admin.vouchers": "Gutscheine",
+  "nav.admin.locations": "Standorte",
+  "nav.admin.members": "Mitglieder",
+  "nav.admin.holidayBookings": "Ferienbuchungen",
+  "aria.home": "Startseite",
+
+  "common.datePicker.placeholder": "tt.mm.jjjj",
+  "common.datePicker.selectDate": "Datum auswählen",
+  "common.datePicker.previousMonth": "Vorheriger Monat",
+  "common.datePicker.selectYear": "Jahr auswählen",
+  "common.datePicker.nextMonth": "Nächster Monat",
+  "common.datePicker.searchYear": "Jahr suchen…",
+  "common.datePicker.years": "Jahre",
+  "common.datePicker.back": "Zurück",
+  "common.datePicker.today": "Heute",
+  "common.datePicker.calendar": "Kalender",
+  "common.datePicker.clear": "Löschen",
+  "common.datePicker.weekday.mon": "Mo",
+  "common.datePicker.weekday.tue": "Di",
+  "common.datePicker.weekday.wed": "Mi",
+  "common.datePicker.weekday.thu": "Do",
+  "common.datePicker.weekday.fri": "Fr",
+  "common.datePicker.weekday.sat": "Sa",
+  "common.datePicker.weekday.sun": "So",
+
+  "common.actions.close": "Schließen",
+
+  "common.placeholders.date": "dd.mm.yyyy",
+  "common.placeholders.dayShort": "TT",
+  "common.placeholders.monthShort": "MM",
+  "common.placeholders.yearShort": "JJJJ",
+
+  "common.close": "Schließen"
+}
