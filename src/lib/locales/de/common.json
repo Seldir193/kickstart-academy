@@ -710,5 +710,7 @@
 
   "common.admin.customers.cancelDialog.statusCancelled": "Storniert",
   "common.admin.customers.cancelDialog.statusAll": "Alle",
-  "common.admin.customers.cancelDialog.sortOldest": "Älteste"
+  "common.admin.customers.cancelDialog.sortOldest": "Älteste",
+
+  "common.admin.customers.cancelDialog.sinceDate": "seit {{date}}"
 }

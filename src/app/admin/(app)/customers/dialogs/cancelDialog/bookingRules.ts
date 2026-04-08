@@ -1,12 +1,21 @@
 // src/app/admin/(app)/customers/dialogs/cancelDialog/bookingRules.ts
 import type { BookingRef } from "../../types";
 
-export function labelFor(b: any) {
+export function labelFor(
+  b: any,
+  t: (key: string, options?: Record<string, unknown>) => string,
+) {
   const parts = [
-    b.offerTitle || "—",
-    rawType(b) || "—",
-    b.status === "cancelled" ? "Cancelled" : b.status || "Active",
-    b.date ? `since ${String(b.date).slice(0, 10)}` : undefined,
+    b.offerTitle || t("common.admin.customers.cancelDialog.empty"),
+    rawType(b) || t("common.admin.customers.cancelDialog.empty"),
+    b.status === "cancelled"
+      ? t("common.admin.customers.cancelDialog.statusCancelled")
+      : b.status || t("common.admin.customers.cancelDialog.statusActive"),
+    b.date
+      ? t("common.admin.customers.cancelDialog.sinceDate", {
+          date: String(b.date).slice(0, 10),
+        })
+      : undefined,
   ].filter(Boolean);
   return parts.join(" — ");
 }
