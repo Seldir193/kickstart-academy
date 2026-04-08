@@ -806,5 +806,9 @@
   "common.admin.customers.customerDialog.documents": "Belgeler",
   "common.admin.customers.customerDialog.book": "Rezervasyon",
   "common.admin.customers.customerDialog.cancel": "İptal et",
-  "common.admin.customers.customerDialog.creditNote": "Alacak notu"
+  "common.admin.customers.customerDialog.creditNote": "Alacak notu",
+
+  "common.admin.customers.customerDialog.creating": "Oluşturuluyor…",
+  "common.admin.customers.customerDialog.create": "Oluştur",
+  "common.admin.customers.customerDialog.saveChanges": "Değişiklikleri kaydet"
 }

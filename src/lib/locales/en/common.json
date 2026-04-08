@@ -809,5 +809,9 @@
   "common.admin.customers.customerDialog.documents": "Documents",
   "common.admin.customers.customerDialog.book": "Book",
   "common.admin.customers.customerDialog.cancel": "Cancel",
-  "common.admin.customers.customerDialog.creditNote": "Credit note"
+  "common.admin.customers.customerDialog.creditNote": "Credit note",
+
+  "common.admin.customers.customerDialog.creating": "Creating…",
+  "common.admin.customers.customerDialog.create": "Create",
+  "common.admin.customers.customerDialog.saveChanges": "Save changes"
 }

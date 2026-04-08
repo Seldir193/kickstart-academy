@@ -809,5 +809,9 @@
   "common.admin.customers.customerDialog.documents": "Dokumente",
   "common.admin.customers.customerDialog.book": "Buchen",
   "common.admin.customers.customerDialog.cancel": "Stornieren",
-  "common.admin.customers.customerDialog.creditNote": "Gutschrift"
+  "common.admin.customers.customerDialog.creditNote": "Gutschrift",
+
+  "common.admin.customers.customerDialog.creating": "Erstellen…",
+  "common.admin.customers.customerDialog.create": "Erstellen",
+  "common.admin.customers.customerDialog.saveChanges": "Änderungen speichern"
 }
