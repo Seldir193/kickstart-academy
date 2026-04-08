@@ -20,5 +20,21 @@
   "common.admin.news.rejectDialog.reasonLabel": "Grund *",
   "common.admin.news.rejectDialog.reasonPlaceholder": "z. B. fehlende Daten, unplausibler Inhalt oder doppelter Eintrag",
   "common.admin.news.rejectDialog.rejecting": "Wird abgelehnt...",
-  "common.admin.news.rejectDialog.reject": "Ablehnen"
+  "common.admin.news.rejectDialog.reject": "Ablehnen",
+
+  "common.admin.news.infoDialog.defaultTitle": "News",
+  "common.admin.news.infoDialog.readOnly": "Nur Ansicht",
+  "common.admin.news.infoDialog.meta": "Meta",
+  "common.admin.news.infoDialog.category": "Kategorie",
+  "common.admin.news.infoDialog.tags": "Tags",
+  "common.admin.news.infoDialog.timestamps": "Zeitstempel",
+  "common.admin.news.infoDialog.submitted": "Eingereicht",
+  "common.admin.news.infoDialog.approved": "Freigegeben",
+  "common.admin.news.infoDialog.liveUpdate": "Live-Update",
+  "common.admin.news.infoDialog.providerEdit": "Provider-Bearbeitung",
+  "common.admin.news.infoDialog.superEdit": "Super-Bearbeitung",
+  "common.admin.news.infoDialog.statusRejected": "Abgelehnt",
+  "common.admin.news.infoDialog.statusPending": "Wartet (zu prüfen)",
+  "common.admin.news.infoDialog.statusPublished": "Freigegeben",
+  "common.admin.news.infoDialog.statusOffline": "Offline"
 }

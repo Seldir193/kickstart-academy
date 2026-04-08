@@ -20,5 +20,21 @@
   "common.admin.news.rejectDialog.reasonLabel": "Gerekçe *",
   "common.admin.news.rejectDialog.reasonPlaceholder": "ör. eksik veriler, mantıksız içerik veya yinelenen kayıt",
   "common.admin.news.rejectDialog.rejecting": "Reddediliyor...",
-  "common.admin.news.rejectDialog.reject": "Reddet"
+  "common.admin.news.rejectDialog.reject": "Reddet",
+
+  "common.admin.news.infoDialog.defaultTitle": "Haber",
+  "common.admin.news.infoDialog.readOnly": "Salt okunur",
+  "common.admin.news.infoDialog.meta": "Meta",
+  "common.admin.news.infoDialog.category": "Kategori",
+  "common.admin.news.infoDialog.tags": "Etiketler",
+  "common.admin.news.infoDialog.timestamps": "Zaman damgaları",
+  "common.admin.news.infoDialog.submitted": "Gönderildi",
+  "common.admin.news.infoDialog.approved": "Onaylandı",
+  "common.admin.news.infoDialog.liveUpdate": "Canlı güncelleme",
+  "common.admin.news.infoDialog.providerEdit": "Sağlayıcı düzenlemesi",
+  "common.admin.news.infoDialog.superEdit": "Süper düzenleme",
+  "common.admin.news.infoDialog.statusRejected": "Reddedildi",
+  "common.admin.news.infoDialog.statusPending": "Bekliyor (incelenecek)",
+  "common.admin.news.infoDialog.statusPublished": "Yayınlandı",
+  "common.admin.news.infoDialog.statusOffline": "Çevrimdışı"
 }

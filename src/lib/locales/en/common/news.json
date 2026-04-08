@@ -20,5 +20,21 @@
   "common.admin.news.rejectDialog.reasonLabel": "Reason *",
   "common.admin.news.rejectDialog.reasonPlaceholder": "e.g. missing data, implausible content, or duplicate entry",
   "common.admin.news.rejectDialog.rejecting": "Rejecting...",
-  "common.admin.news.rejectDialog.reject": "Reject"
+  "common.admin.news.rejectDialog.reject": "Reject",
+
+  "common.admin.news.infoDialog.defaultTitle": "News",
+  "common.admin.news.infoDialog.readOnly": "Read only",
+  "common.admin.news.infoDialog.meta": "Meta",
+  "common.admin.news.infoDialog.category": "Category",
+  "common.admin.news.infoDialog.tags": "Tags",
+  "common.admin.news.infoDialog.timestamps": "Timestamps",
+  "common.admin.news.infoDialog.submitted": "Submitted",
+  "common.admin.news.infoDialog.approved": "Approved",
+  "common.admin.news.infoDialog.liveUpdate": "Live update",
+  "common.admin.news.infoDialog.providerEdit": "Provider edit",
+  "common.admin.news.infoDialog.superEdit": "Super edit",
+  "common.admin.news.infoDialog.statusRejected": "Rejected",
+  "common.admin.news.infoDialog.statusPending": "Pending review",
+  "common.admin.news.infoDialog.statusPublished": "Published",
+  "common.admin.news.infoDialog.statusOffline": "Offline"
 }

@@ -1,7 +1,10 @@
 "use client";
 
 import React, { useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import type { News } from "../types";
+
+import { formatDateTime } from "../utils/dateFormat";
 
 type Props = {
   open: boolean;
@@ -18,20 +21,23 @@ function val(v: unknown) {
   return s ? s : "—";
 }
 
-function fmtDateDE(value?: string | null) {
-  const v = clean(value);
-  if (!v) return "—";
-  const d = new Date(v);
-  if (isNaN(d.getTime())) return v;
-  return new Intl.DateTimeFormat("de-DE", {
-    dateStyle: "medium",
-    timeStyle: "short",
-  }).format(d);
-}
+// function fmtDateDE(value?: string | null) {
+//   const v = clean(value);
+//   if (!v) return "—";
+//   const d = new Date(v);
+//   if (isNaN(d.getTime())) return v;
+//   return new Intl.DateTimeFormat("de-DE", {
+//     dateStyle: "medium",
+//     timeStyle: "short",
+//   }).format(d);
+// }
 
-function titleOf(n: News) {
-  const t = clean((n as any)?.title);
-  return t ? t : "News";
+function titleOf(
+  n: News,
+  t: (key: string, options?: Record<string, unknown>) => string,
+) {
+  const text = clean((n as any)?.title);
+  return text ? text : t("common.admin.news.infoDialog.defaultTitle");
 }
 
 function isRejected(n: News) {
@@ -42,39 +48,63 @@ function isSubmitted(n: News) {
   return clean((n as any)?.submittedAt).length > 0;
 }
 
-function statusLabel(n: News) {
-  if (isRejected(n)) return "Abgelehnt";
-  if (isSubmitted(n)) return "Wartet (zu prüfen)";
-  return n.published ? "Freigegeben" : "Offline";
+// function statusLabel(n: News) {
+//   if (isRejected(n)) return "Abgelehnt";
+//   if (isSubmitted(n)) return "Wartet (zu prüfen)";
+//   return n.published ? "Freigegeben" : "Offline";
+// }
+
+// function statusClass(status: string) {
+//   if (status.includes("Abgelehnt")) return "dialog-status--danger";
+//   if (status.includes("Wartet")) return "dialog-status--warning";
+//   return "dialog-status--success";
+// }
+
+function statusKey(n: News) {
+  if (isRejected(n)) return "common.admin.news.infoDialog.statusRejected";
+  if (isSubmitted(n)) return "common.admin.news.infoDialog.statusPending";
+  return n.published
+    ? "common.admin.news.infoDialog.statusPublished"
+    : "common.admin.news.infoDialog.statusOffline";
 }
 
 function statusClass(status: string) {
-  if (status.includes("Abgelehnt")) return "dialog-status--danger";
-  if (status.includes("Wartet")) return "dialog-status--warning";
+  if (status === "common.admin.news.infoDialog.statusRejected") {
+    return "dialog-status--danger";
+  }
+
+  if (status === "common.admin.news.infoDialog.statusPending") {
+    return "dialog-status--warning";
+  }
+
   return "dialog-status--success";
 }
 
 export default function NewsInfoDialog({ open, item, onClose }: Props) {
+  const { t, i18n } = useTranslation();
   const data = useMemo(() => {
     if (!item) return null;
 
     const anyN = item as any;
 
     return {
-      title: titleOf(item),
-      status: statusLabel(item),
+      title: titleOf(item, t),
+      status: statusKey(item),
       category: val(anyN?.category),
       slug: val(anyN?.slug),
       tags: Array.isArray(anyN?.tags)
         ? anyN.tags.map(clean).filter(Boolean)
         : [],
-      approvedAt: fmtDateDE(anyN?.approvedAt),
-      liveUpdatedAt: fmtDateDE(anyN?.liveUpdatedAt),
-      submittedAt: fmtDateDE(anyN?.submittedAt),
-      lastProviderEditAt: fmtDateDE(anyN?.lastProviderEditAt),
-      lastSuperEditAt: fmtDateDE(anyN?.lastSuperEditAt),
+      approvedAt: formatDateTime(anyN?.approvedAt, i18n.language),
+      liveUpdatedAt: formatDateTime(anyN?.liveUpdatedAt, i18n.language),
+      submittedAt: formatDateTime(anyN?.submittedAt, i18n.language),
+      lastProviderEditAt: formatDateTime(
+        anyN?.lastProviderEditAt,
+        i18n.language,
+      ),
+      lastSuperEditAt: formatDateTime(anyN?.lastSuperEditAt, i18n.language),
     };
-  }, [item]);
+  }, [i18n.language, item, t]);
 
   if (!open || !item || !data) return null;
 
@@ -85,20 +115,20 @@ export default function NewsInfoDialog({ open, item, onClose }: Props) {
           <div className="news-info__head-left">
             <div className="dialog-title news-info__title">{data.title}</div>
             <div className="dialog-subtitle news-info__subtitle">
-              Nur Ansicht
+              {t("common.admin.news.infoDialog.readOnly")}
             </div>
           </div>
 
           <div className="news-info__head-right">
             <span className={`dialog-status ${statusClass(data.status)}`}>
-              {data.status}
+              {t(data.status)}
             </span>
 
             <div className="dialog-head__actions">
               <button
                 type="button"
                 className="dialog-close modal__close"
-                aria-label="Close"
+                aria-label={t("common.close")}
                 onClick={onClose}
               >
                 <img
@@ -116,12 +146,17 @@ export default function NewsInfoDialog({ open, item, onClose }: Props) {
           <div className="news-info__grid">
             <section className="dialog-section news-info__section">
               <div className="dialog-section__head">
-                <div className="dialog-section__title">Meta</div>
+                <div className="dialog-section__title">
+                  {" "}
+                  {t("common.admin.news.infoDialog.meta")}
+                </div>
               </div>
 
               <div className="dialog-section__body news-info__list">
                 <div className="news-info__row">
-                  <div className="dialog-label">Kategorie</div>
+                  <div className="dialog-label">
+                    {t("common.admin.news.infoDialog.category")}
+                  </div>
                   <div className="dialog-value">{data.category}</div>
                 </div>
 
@@ -131,7 +166,9 @@ export default function NewsInfoDialog({ open, item, onClose }: Props) {
                 </div>
 
                 <div className="news-info__row is-multiline">
-                  <div className="dialog-label">Tags</div>
+                  <div className="dialog-label">
+                    {t("common.admin.news.infoDialog.tags")}
+                  </div>
                   <div className="dialog-value">
                     {data.tags.length ? data.tags.join(", ") : "—"}
                   </div>
@@ -141,32 +178,45 @@ export default function NewsInfoDialog({ open, item, onClose }: Props) {
 
             <section className="dialog-section news-info__section">
               <div className="dialog-section__head">
-                <div className="dialog-section__title">Zeitstempel</div>
+                <div className="dialog-section__title">
+                  {" "}
+                  {t("common.admin.news.infoDialog.timestamps")}
+                </div>
               </div>
 
               <div className="dialog-section__body news-info__list">
                 <div className="news-info__row">
-                  <div className="dialog-label">Submitted</div>
+                  <div className="dialog-label">
+                    {t("common.admin.news.infoDialog.submitted")}
+                  </div>
                   <div className="dialog-value">{data.submittedAt}</div>
                 </div>
 
                 <div className="news-info__row">
-                  <div className="dialog-label">Approved</div>
+                  <div className="dialog-label">
+                    {t("common.admin.news.infoDialog.approved")}
+                  </div>
                   <div className="dialog-value">{data.approvedAt}</div>
                 </div>
 
                 <div className="news-info__row">
-                  <div className="dialog-label">Live Update</div>
+                  <div className="dialog-label">
+                    {t("common.admin.news.infoDialog.liveUpdate")}
+                  </div>
                   <div className="dialog-value">{data.liveUpdatedAt}</div>
                 </div>
 
                 <div className="news-info__row">
-                  <div className="dialog-label">Provider Edit</div>
+                  <div className="dialog-label">
+                    {t("common.admin.news.infoDialog.providerEdit")}
+                  </div>
                   <div className="dialog-value">{data.lastProviderEditAt}</div>
                 </div>
 
                 <div className="news-info__row">
-                  <div className="dialog-label">Super Edit</div>
+                  <div className="dialog-label">
+                    {t("common.admin.news.infoDialog.superEdit")}
+                  </div>
                   <div className="dialog-value">{data.lastSuperEditAt}</div>
                 </div>
               </div>
@@ -178,7 +228,7 @@ export default function NewsInfoDialog({ open, item, onClose }: Props) {
       <button
         type="button"
         className="dialog-backdrop-hit news-info__backdrop-hit"
-        aria-label="Close"
+        aria-label={t("common.close")}
         onClick={onClose}
       />
     </div>
