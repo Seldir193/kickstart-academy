@@ -791,5 +791,14 @@
   "common.admin.customers.customerDialog.synced": "Synchronisiert",
   "common.admin.customers.customerDialog.errors.newsletterUpdateFailed": "Newsletter-Aktualisierung fehlgeschlagen",
 
-  "common.admin.customers.customerDialog.notes": "Notizen"
+  "common.admin.customers.customerDialog.notes": "Notizen",
+
+  "common.admin.customers.customerDialog.familyChildren": "Familie / Kinder",
+  "common.admin.customers.customerDialog.loadingFamily": "Familie wird geladen…",
+  "common.admin.customers.customerDialog.selectChild": "Kind auswählen",
+  "common.admin.customers.customerDialog.selectChildPlaceholder": "Kind auswählen…",
+  "common.admin.customers.customerDialog.selectParent": "Elternteil auswählen",
+  "common.admin.customers.customerDialog.addAnotherChild": "Weiteres Kind hinzufügen",
+  "common.admin.customers.customerDialog.addAnotherParent": "Weiteres Elternteil hinzufügen",
+  "common.admin.customers.customerDialog.noAdditionalChildren": "Noch keine weiteren Kinder verknüpft."
 }

@@ -788,5 +788,14 @@
   "common.admin.customers.customerDialog.synced": "Senkronize edildi",
   "common.admin.customers.customerDialog.errors.newsletterUpdateFailed": "Bülten güncellemesi başarısız oldu",
 
-  "common.admin.customers.customerDialog.notes": "Notlar"
+  "common.admin.customers.customerDialog.notes": "Notlar",
+
+  "common.admin.customers.customerDialog.familyChildren": "Aile / çocuklar",
+  "common.admin.customers.customerDialog.loadingFamily": "Aile yükleniyor…",
+  "common.admin.customers.customerDialog.selectChild": "Çocuk seç",
+  "common.admin.customers.customerDialog.selectChildPlaceholder": "Çocuk seç…",
+  "common.admin.customers.customerDialog.selectParent": "Veli seç",
+  "common.admin.customers.customerDialog.addAnotherChild": "Başka çocuk ekle",
+  "common.admin.customers.customerDialog.addAnotherParent": "Başka veli ekle",
+  "common.admin.customers.customerDialog.noAdditionalChildren": "Henüz başka çocuk bağlantısı yok."
 }

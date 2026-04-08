@@ -791,5 +791,14 @@
   "common.admin.customers.customerDialog.synced": "Synced",
   "common.admin.customers.customerDialog.errors.newsletterUpdateFailed": "Newsletter update failed",
 
-  "common.admin.customers.customerDialog.notes": "Notes"
+  "common.admin.customers.customerDialog.notes": "Notes",
+
+  "common.admin.customers.customerDialog.familyChildren": "Family / children",
+  "common.admin.customers.customerDialog.loadingFamily": "Loading family…",
+  "common.admin.customers.customerDialog.selectChild": "Select child",
+  "common.admin.customers.customerDialog.selectChildPlaceholder": "Select child…",
+  "common.admin.customers.customerDialog.selectParent": "Select parent",
+  "common.admin.customers.customerDialog.addAnotherChild": "Add another child",
+  "common.admin.customers.customerDialog.addAnotherParent": "Add another parent",
+  "common.admin.customers.customerDialog.noAdditionalChildren": "No additional children linked yet."
 }
