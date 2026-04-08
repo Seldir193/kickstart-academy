@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { GROUPED_COURSE_OPTIONS } from "src/app/lib/courseOptions";
 
 type Props = {
@@ -13,6 +14,7 @@ type Props = {
 };
 
 export default function BookDialogCourseSelect(p: Props) {
+  const { t } = useTranslation();
   return (
     <div
       className={"ks-selectbox" + (p.isOpen ? " ks-selectbox--open" : "")}
@@ -40,7 +42,7 @@ export default function BookDialogCourseSelect(p: Props) {
               p.setIsOpen(false);
             }}
           >
-            All courses
+            {t("common.admin.customers.bookDialog.allCourses")}
           </button>
 
           {GROUPED_COURSE_OPTIONS.map((g) => (
