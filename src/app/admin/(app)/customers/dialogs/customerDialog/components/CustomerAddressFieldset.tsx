@@ -2,6 +2,7 @@
 "use client";
 
 import React from "react";
+import { useTranslation } from "react-i18next";
 import type { Customer } from "../../../types";
 
 type Props = {
@@ -10,13 +11,18 @@ type Props = {
 };
 
 export default function CustomerAddressFieldset(p: Props) {
+  const { t } = useTranslation();
   return (
     <fieldset className="card">
-      <legend className="font-bold">Address</legend>
+      <legend className="font-bold">
+        {t("common.admin.customers.customerDialog.address")}
+      </legend>
 
       <div className="grid grid-cols-2 gap-2">
         <div>
-          <label className="lbl">Street</label>
+          <label className="lbl">
+            {t("common.admin.customers.customerDialog.street")}
+          </label>
           <input
             className="input"
             value={p.form.address?.street || ""}
@@ -24,7 +30,9 @@ export default function CustomerAddressFieldset(p: Props) {
           />
         </div>
         <div>
-          <label className="lbl">House no.</label>
+          <label className="lbl">
+            {t("common.admin.customers.customerDialog.houseNo")}
+          </label>
           <input
             className="input"
             value={p.form.address?.houseNo || ""}
@@ -35,7 +43,9 @@ export default function CustomerAddressFieldset(p: Props) {
 
       <div className="grid grid-cols-2 gap-2">
         <div>
-          <label className="lbl">ZIP</label>
+          <label className="lbl">
+            {t("common.admin.customers.customerDialog.zip")}
+          </label>
           <input
             className="input"
             value={p.form.address?.zip || ""}
@@ -43,7 +53,9 @@ export default function CustomerAddressFieldset(p: Props) {
           />
         </div>
         <div>
-          <label className="lbl">City</label>
+          <label className="lbl">
+            {t("common.admin.customers.customerDialog.city")}
+          </label>
           <input
             className="input"
             value={p.form.address?.city || ""}

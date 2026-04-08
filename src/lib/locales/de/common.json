@@ -820,5 +820,11 @@
   "common.admin.customers.customerDialog.genderFemale": "Weiblich",
   "common.admin.customers.customerDialog.genderMale": "Männlich",
   "common.admin.customers.customerDialog.birthDate": "Geburtsdatum",
-  "common.admin.customers.customerDialog.club": "Verein"
+  "common.admin.customers.customerDialog.club": "Verein",
+
+  "common.admin.customers.customerDialog.address": "Adresse",
+  "common.admin.customers.customerDialog.street": "Straße",
+  "common.admin.customers.customerDialog.houseNo": "Hausnr.",
+  "common.admin.customers.customerDialog.zip": "PLZ",
+  "common.admin.customers.customerDialog.city": "Stadt"
 }
