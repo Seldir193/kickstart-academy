@@ -657,5 +657,15 @@
   "common.admin.customers.bookDialog.powertrainingDetails": "Powertraining details",
   "common.admin.customers.bookDialog.oneTimeBooking": "One-time booking",
   "common.admin.customers.bookDialog.subscriptionDetails": "Subscription details",
-  "common.admin.customers.bookDialog.subscriptionBooking": "Subscription booking"
+  "common.admin.customers.bookDialog.subscriptionBooking": "Subscription booking",
+
+  "common.admin.customers.bookDialog.family.bookingFor": "Booking for",
+  "common.admin.customers.bookDialog.family.loading": "Loading family…",
+  "common.admin.customers.bookDialog.family.error": "Family could not be loaded – booking is still possible.",
+  "common.admin.customers.bookDialog.customerSelf": "Customer self",
+  "common.admin.customers.bookDialog.selectChild": "Select child …",
+  "common.admin.customers.bookDialog.parentLabel": "Parent:",
+  "common.admin.customers.bookDialog.childLabel": "Child:",
+  "common.admin.customers.bookDialog.empty": "—",
+  "common.admin.customers.bookDialog.family.currentCustomer": "The booking will be created for the current customer."
 }
