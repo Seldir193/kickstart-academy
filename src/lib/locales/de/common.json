@@ -836,5 +836,7 @@
   "common.admin.news.page.myNewsPendingReview": "Meine News – Warten auf Prüfung",
   "common.admin.news.page.myNewsApproved": "Meine News – Genehmigt",
   "common.admin.news.page.myNewsRejected": "Meine News – Abgelehnt",
-  "common.admin.news.page.openWordpressPreview": "WordPress-Vorschau öffnen"
+  "common.admin.news.page.openWordpressPreview": "WordPress-Vorschau öffnen",
+
+  "common.admin.news.meta.newSuffix": " neu"
 }

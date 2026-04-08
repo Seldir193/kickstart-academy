@@ -2,6 +2,7 @@
 "use client";
 
 import { useCallback, useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import type { News } from "../types";
 import { buildPreview, clean, pageNext, pagePrev } from "./helpers";
 import { useNewsAdminActions } from "./useNewsAdminActions";
@@ -12,6 +13,7 @@ function metaCount(n: number, suffix = "") {
 }
 
 export function useNewsAdminViewModel() {
+  const { t } = useTranslation();
   const s = useNewsAdminState();
 
   const resetSelections = useCallback(() => {
@@ -72,7 +74,10 @@ export function useNewsAdminViewModel() {
 
   const showAlarm = s.isSuper && s.providerPending.items.length > 0;
 
-  const providerPendingMeta = metaCount(s.providerPending.items.length, " neu");
+  const providerPendingMeta = metaCount(
+    s.providerPending.items.length,
+    t("common.admin.news.meta.newSuffix"),
+  );
   const providerApprovedMeta = metaCount(s.providerApproved.items.length);
   const providerRejectedMeta = metaCount(s.providerRejected.items.length);
   const myPendingMeta = metaCount(myPendingItems.length);

@@ -833,5 +833,7 @@
   "common.admin.news.page.myNewsPendingReview": "Haberlerim – İnceleme bekliyor",
   "common.admin.news.page.myNewsApproved": "Haberlerim – Onaylandı",
   "common.admin.news.page.myNewsRejected": "Haberlerim – Reddedildi",
-  "common.admin.news.page.openWordpressPreview": "WordPress önizlemesini aç"
+  "common.admin.news.page.openWordpressPreview": "WordPress önizlemesini aç",
+
+  "common.admin.news.meta.newSuffix": " yeni"
 }
