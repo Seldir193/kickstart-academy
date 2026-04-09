@@ -50,5 +50,22 @@
   "common.admin.news.rejectedList.resubmit": "Yeniden gönder",
   "common.admin.news.rejectedList.updateFirst": "Lütfen önce güncelleyin",
   "common.emptyDash": "—",
-  "common.status": "Durum"
+  "common.status": "Durum",
+
+  "common.admin.news.pendingList.empty": "İnceleme bekleyen yeni gönderi yok.",
+  "common.admin.news.pendingList.statusPleaseReview": "Lütfen inceleyin",
+  "common.admin.news.pendingList.statusAwaitingApproval": "Onay bekliyor",
+  "common.admin.news.pendingList.dateOfChange": "Değişiklik tarihi: {{date}}",
+  "common.admin.news.pendingList.date": "Tarih: {{date}}",
+  "common.admin.news.pendingList.by": "Ekleyen",
+  "common.admin.news.pendingList.titleChange": "Başlık değişikliği",
+  "common.admin.news.pendingList.leadChange": "Özet değişikliği",
+  "common.admin.news.pendingList.categoryChange": "Kategori değişikliği",
+  "common.admin.news.pendingList.openEdit": "Aç / Düzenle",
+  "common.admin.news.pendingList.open": "Aç",
+  "common.admin.news.pendingList.approve": "Onayla",
+  "common.admin.news.pendingList.reject": "Reddet",
+
+  "common.pagination.previousPage": "Önceki sayfa",
+  "common.pagination.nextPage": "Sonraki sayfa"
 }

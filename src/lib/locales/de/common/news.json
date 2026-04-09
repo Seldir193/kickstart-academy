@@ -50,5 +50,22 @@
   "common.admin.news.rejectedList.resubmit": "Erneut einreichen",
   "common.admin.news.rejectedList.updateFirst": "Bitte zuerst aktualisieren",
   "common.emptyDash": "—",
-  "common.status": "Status"
+  "common.status": "Status",
+
+  "common.admin.news.pendingList.empty": "Keine neuen Beiträge warten auf Prüfung.",
+  "common.admin.news.pendingList.statusPleaseReview": "Bitte prüfen",
+  "common.admin.news.pendingList.statusAwaitingApproval": "Wartet auf Freigabe",
+  "common.admin.news.pendingList.dateOfChange": "Änderungsdatum: {{date}}",
+  "common.admin.news.pendingList.date": "Datum: {{date}}",
+  "common.admin.news.pendingList.by": "Von",
+  "common.admin.news.pendingList.titleChange": "Titeländerung",
+  "common.admin.news.pendingList.leadChange": "Lead-Änderung",
+  "common.admin.news.pendingList.categoryChange": "Kategorieänderung",
+  "common.admin.news.pendingList.openEdit": "Öffnen / Bearbeiten",
+  "common.admin.news.pendingList.open": "Öffnen",
+  "common.admin.news.pendingList.approve": "Freigeben",
+  "common.admin.news.pendingList.reject": "Ablehnen",
+
+  "common.pagination.previousPage": "Vorherige Seite",
+  "common.pagination.nextPage": "Nächste Seite"
 }

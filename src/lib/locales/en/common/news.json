@@ -50,5 +50,22 @@
   "common.admin.news.rejectedList.resubmit": "Resubmit",
   "common.admin.news.rejectedList.updateFirst": "Please update first",
   "common.emptyDash": "—",
-  "common.status": "Status"
+  "common.status": "Status",
+
+  "common.admin.news.pendingList.empty": "No new posts awaiting review.",
+  "common.admin.news.pendingList.statusPleaseReview": "Please review",
+  "common.admin.news.pendingList.statusAwaitingApproval": "Awaiting approval",
+  "common.admin.news.pendingList.dateOfChange": "Date of change: {{date}}",
+  "common.admin.news.pendingList.date": "Date: {{date}}",
+  "common.admin.news.pendingList.by": "By",
+  "common.admin.news.pendingList.titleChange": "Title change",
+  "common.admin.news.pendingList.leadChange": "Lead change",
+  "common.admin.news.pendingList.categoryChange": "Category change",
+  "common.admin.news.pendingList.openEdit": "Open / Edit",
+  "common.admin.news.pendingList.open": "Open",
+  "common.admin.news.pendingList.approve": "Approve",
+  "common.admin.news.pendingList.reject": "Reject",
+
+  "common.pagination.previousPage": "Previous page",
+  "common.pagination.nextPage": "Next page"
 }
