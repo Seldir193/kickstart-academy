@@ -58,5 +58,13 @@
   "common.admin.franchiseLocations.bulk.cancel": "Abbrechen",
 
   "common.admin.franchiseLocations.pagination.previousPage": "Vorherige Seite",
-  "common.admin.franchiseLocations.pagination.nextPage": "Nächste Seite"
+  "common.admin.franchiseLocations.pagination.nextPage": "Nächste Seite",
+
+  "common.admin.franchiseLocations.pending.empty": "Keine neuen Standorte warten auf Prüfung.",
+  "common.admin.franchiseLocations.pending.dateOfChange": "Datum der Änderung:",
+  "common.admin.franchiseLocations.pending.date": "Datum:",
+  "common.admin.franchiseLocations.pending.status": "Status",
+  "common.admin.franchiseLocations.pending.open": "Öffnen",
+  "common.admin.franchiseLocations.pending.approve": "Genehmigen",
+  "common.admin.franchiseLocations.pending.reject": "Ablehnen"
 }

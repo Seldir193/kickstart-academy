@@ -58,5 +58,13 @@
   "common.admin.franchiseLocations.bulk.cancel": "Cancel",
 
   "common.admin.franchiseLocations.pagination.previousPage": "Previous page",
-  "common.admin.franchiseLocations.pagination.nextPage": "Next page"
+  "common.admin.franchiseLocations.pagination.nextPage": "Next page",
+
+  "common.admin.franchiseLocations.pending.empty": "No new locations awaiting review.",
+  "common.admin.franchiseLocations.pending.dateOfChange": "Date of change:",
+  "common.admin.franchiseLocations.pending.date": "Date:",
+  "common.admin.franchiseLocations.pending.status": "Status",
+  "common.admin.franchiseLocations.pending.open": "Open",
+  "common.admin.franchiseLocations.pending.approve": "Approve",
+  "common.admin.franchiseLocations.pending.reject": "Reject"
 }

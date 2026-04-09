@@ -58,5 +58,13 @@
   "common.admin.franchiseLocations.bulk.cancel": "İptal",
 
   "common.admin.franchiseLocations.pagination.previousPage": "Önceki sayfa",
-  "common.admin.franchiseLocations.pagination.nextPage": "Sonraki sayfa"
+  "common.admin.franchiseLocations.pagination.nextPage": "Sonraki sayfa",
+
+  "common.admin.franchiseLocations.pending.empty": "İnceleme bekleyen yeni lokasyon yok.",
+  "common.admin.franchiseLocations.pending.dateOfChange": "Değişiklik tarihi:",
+  "common.admin.franchiseLocations.pending.date": "Tarih:",
+  "common.admin.franchiseLocations.pending.status": "Durum",
+  "common.admin.franchiseLocations.pending.open": "Aç",
+  "common.admin.franchiseLocations.pending.approve": "Onayla",
+  "common.admin.franchiseLocations.pending.reject": "Reddet"
 }
