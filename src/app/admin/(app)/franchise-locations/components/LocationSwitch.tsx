@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 type Props = {
   checked: boolean;
@@ -32,16 +33,20 @@ export default function LocationSwitch({
   disabled,
   onToggle,
 }: Props) {
+  const { t } = useTranslation();
   const lock = busy || disabled === true;
 
-  // LocationSwitch.tsx
   return (
     <span
       className={`coach-switch ${checked ? "is-on" : ""} ${busy ? "is-busy" : ""} ${
         disabled ? "is-disabled" : ""
       }`}
       role="switch"
-      aria-label={checked ? "Online" : "Offline"}
+      aria-label={
+        checked
+          ? t("common.admin.franchiseLocations.status.online")
+          : t("common.admin.franchiseLocations.status.offline")
+      }
       aria-checked={!!checked}
       aria-disabled={disabled ? true : undefined}
       tabIndex={lock ? -1 : 0}
