@@ -12,5 +12,13 @@
   "common.admin.franchiseLocations.sections.providerApproved": "Providers – Approved",
   "common.admin.franchiseLocations.sections.providerRejected": "Providers – Rejected",
   "common.admin.franchiseLocations.count.new": "({{count}} new)",
-  "common.admin.franchiseLocations.count.results": "{{count}} results"
+  "common.admin.franchiseLocations.count.results": "{{count}} results",
+
+  "common.admin.franchiseLocations.empty": "No entries.",
+  "common.admin.franchiseLocations.table.licence": "Licence",
+  "common.admin.franchiseLocations.table.country": "Country",
+  "common.admin.franchiseLocations.table.city": "City",
+  "common.admin.franchiseLocations.table.status": "Status",
+  "common.admin.franchiseLocations.table.updated": "Updated",
+  "common.admin.franchiseLocations.table.actions": "Action"
 }

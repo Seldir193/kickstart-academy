@@ -12,5 +12,13 @@
   "common.admin.franchiseLocations.sections.providerApproved": "Sağlayıcılar – Onaylandı",
   "common.admin.franchiseLocations.sections.providerRejected": "Sağlayıcılar – Reddedildi",
   "common.admin.franchiseLocations.count.new": "({{count}} yeni)",
-  "common.admin.franchiseLocations.count.results": "{{count}} sonuç"
+  "common.admin.franchiseLocations.count.results": "{{count}} sonuç",
+
+  "common.admin.franchiseLocations.empty": "Kayıt yok.",
+  "common.admin.franchiseLocations.table.licence": "Lisans",
+  "common.admin.franchiseLocations.table.country": "Ülke",
+  "common.admin.franchiseLocations.table.city": "Şehir",
+  "common.admin.franchiseLocations.table.status": "Durum",
+  "common.admin.franchiseLocations.table.updated": "Güncellendi",
+  "common.admin.franchiseLocations.table.actions": "İşlem"
 }

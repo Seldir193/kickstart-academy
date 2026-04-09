@@ -12,5 +12,13 @@
   "common.admin.franchiseLocations.sections.providerApproved": "Anbieter – Genehmigt",
   "common.admin.franchiseLocations.sections.providerRejected": "Anbieter – Abgelehnt",
   "common.admin.franchiseLocations.count.new": "({{count}} neu)",
-  "common.admin.franchiseLocations.count.results": "{{count}} Treffer"
+  "common.admin.franchiseLocations.count.results": "{{count}} Treffer",
+
+  "common.admin.franchiseLocations.empty": "Keine Einträge.",
+  "common.admin.franchiseLocations.table.licence": "Lizenz",
+  "common.admin.franchiseLocations.table.country": "Land",
+  "common.admin.franchiseLocations.table.city": "Stadt",
+  "common.admin.franchiseLocations.table.status": "Status",
+  "common.admin.franchiseLocations.table.updated": "Aktualisiert",
+  "common.admin.franchiseLocations.table.actions": "Aktion"
 }

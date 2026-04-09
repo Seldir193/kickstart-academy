@@ -3,6 +3,7 @@
 
 import type { RefObject } from "react";
 import React, { useEffect, useMemo, useRef } from "react";
+import { useTranslation } from "react-i18next";
 import type { FranchiseLocation } from "../types";
 import { useSelection } from "../hooks/useSelection";
 import BulkActions from "./BulkActions";
@@ -73,23 +74,23 @@ function getCanToggle(it: FranchiseLocation, mineRow: boolean) {
   return mineRow ? canTogglePublished(it) : true;
 }
 
-function EmptyState() {
+function EmptyState({ t }: { t: (key: string) => string }) {
   return (
     <section className="card">
-      <div className="card__empty">No entries.</div>
+      <div className="card__empty">{t("common.admin.franchiseLocations.empty")}</div>
     </section>
   );
 }
 
-function HeadRow() {
+function HeadRow({ t }: { t: (key: string) => string }) {
   return (
     <div className="news-list__head" aria-hidden="true">
-      <div className="news-list__h">Licence</div>
-      <div className="news-list__h">Country</div>
-      <div className="news-list__h">City</div>
-      <div className="news-list__h">Status</div>
-      <div className="news-list__h">Updated</div>
-      <div className="news-list__h news-list__h--right">Aktion</div>
+      <div className="news-list__h">{t("common.admin.franchiseLocations.table.licence")}</div>
+      <div className="news-list__h">{t("common.admin.franchiseLocations.table.country")}</div>
+      <div className="news-list__h">{t("common.admin.franchiseLocations.table.city")}</div>
+      <div className="news-list__h">{t("common.admin.franchiseLocations.table.status")}</div>
+      <div className="news-list__h">{t("common.admin.franchiseLocations.table.updated")}</div>
+      <div className="news-list__h news-list__h--right">{t("common.admin.franchiseLocations.table.actions")}</div>
     </div>
   );
 }
@@ -305,6 +306,7 @@ function RowItem(opts: {
 }
 
 export default function LocationsTableList(p: Props) {
+  const { t } = useTranslation();
   const idsOnPage = useMemo(
     () => p.items.map((it) => idOf(it)).filter(Boolean),
     [p.items],
@@ -334,7 +336,7 @@ export default function LocationsTableList(p: Props) {
     p.onToggleSelectMode();
   }
 
-  if (!p.items.length) return <EmptyState />;
+  if (!p.items.length) return <EmptyState t={t}/>;
 
   return (
     <>
@@ -365,7 +367,7 @@ export default function LocationsTableList(p: Props) {
 
       <section className={`card news-list ${p.busy ? "is-busy" : ""}`}>
         <div className="news-list__table">
-          <HeadRow />
+          <HeadRow t={t}/>
           <ul className="list list--bleed">
             {p.items.map((it) => {
               const id = idOf(it);
