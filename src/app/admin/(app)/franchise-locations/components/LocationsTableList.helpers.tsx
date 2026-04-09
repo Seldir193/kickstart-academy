@@ -4,6 +4,7 @@
 import type React from "react";
 import type { FranchiseLocation } from "../types";
 import { canSubmitUpdate } from "../franchise_locations.utils";
+import { formatDateOnly } from "../utils/dateFormat";
 import { buildDraftHint, hasReviewChange } from "./LocationsTableList.hints";
 
 export type RowMode =
@@ -24,6 +25,8 @@ export type Action = {
   run: () => void | Promise<void>;
 };
 
+type TFn = (key: string) => string;
+
 export type StatusParts = {
   main: string;
   sub: string;
@@ -42,11 +45,15 @@ export function fullName(it: FranchiseLocation) {
   return `${clean(it.licenseeFirstName)} ${clean(it.licenseeLastName)}`.trim();
 }
 
-export function fmtDateDe(value?: string) {
-  if (!value) return "—";
-  const d = new Date(value);
-  if (Number.isNaN(d.getTime())) return value;
-  return new Intl.DateTimeFormat("de-DE", { dateStyle: "medium" }).format(d);
+// export function fmtDateDe(value?: string) {
+//   if (!value) return "—";
+//   const d = new Date(value);
+//   if (Number.isNaN(d.getTime())) return value;
+//   return new Intl.DateTimeFormat("de-DE", { dateStyle: "medium" }).format(d);
+// }
+
+export function fmtDate(value?: string, lang?: string) {
+  return formatDateOnly(value, lang);
 }
 
 function statusOf(it: any) {
@@ -75,37 +82,53 @@ export function statusClass(it: any) {
   return "is-off";
 }
 
-function hintFor(it: any, rowMode: RowMode) {
+function hintFor(it: any, rowMode: RowMode, t: TFn) {
   if (rowMode !== "provider_pending") return "";
   if (!hasReviewChange(it)) return "";
-  return buildDraftHint(it);
+  return buildDraftHint(it, t);
 }
 
-function pendingMain(it: any, rowMode: RowMode) {
+function pendingMain(it: any, rowMode: RowMode, t: TFn) {
   const review = hasReviewChange(it);
   if (rowMode === "provider_pending")
-    return review ? "Please review" : "Awaiting approval";
-  return review ? "Under review" : "Awaiting approval";
+    return review
+      ? t("common.admin.franchiseLocations.status.pleaseReview")
+      : t("common.admin.franchiseLocations.status.awaitingApproval");
+
+  return review
+    ? t("common.admin.franchiseLocations.status.underReview")
+    : t("common.admin.franchiseLocations.status.awaitingApproval");
 }
 
-function approvedParts(it: any, rowMode: RowMode): StatusParts {
+function approvedParts(it: any, rowMode: RowMode, t: TFn): StatusParts {
   const review = rowMode === "mine_approved" && hasReviewChange(it);
-  if (review) return { main: "Under review", sub: "", hint: "" };
+  if (review)
+    return {
+      main: t("common.admin.franchiseLocations.status.underReview"),
+      sub: "",
+      hint: "",
+    };
   return {
-    main: "Approved",
-    sub: isPublished(it) ? "Online" : "Offline",
+    main: t("common.admin.franchiseLocations.status.approved"),
+    sub: isPublished(it)
+      ? t("common.admin.franchiseLocations.status.online")
+      : t("common.admin.franchiseLocations.status.offline"),
     hint: "",
   };
 }
 
-export function statusParts(it: any, rowMode: RowMode): StatusParts {
-  const hint = hintFor(it, rowMode);
+export function statusParts(it: any, rowMode: RowMode, t: TFn): StatusParts {
+  const hint = hintFor(it, rowMode, t);
   if (rowMode === "mine_pending" || rowMode === "provider_pending")
-    return { main: pendingMain(it, rowMode), sub: "", hint };
+    return { main: pendingMain(it, rowMode, t), sub: "", hint };
   if (rowMode === "mine_rejected" || rowMode === "provider_rejected")
-    return { main: "Rejected", sub: "", hint: "" };
-  if (isApproved(it)) return approvedParts(it, rowMode);
-  return { main: pendingMain(it, rowMode), sub: "", hint };
+    return {
+      main: t("common.admin.franchiseLocations.status.rejected"),
+      sub: "",
+      hint: "",
+    };
+  if (isApproved(it)) return approvedParts(it, rowMode, t);
+  return { main: pendingMain(it, rowMode, t), sub: "", hint };
 }
 
 export function blurTarget(t: EventTarget | null) {
@@ -135,11 +158,12 @@ export function buildOpenAction(
   it: FranchiseLocation,
   busy: boolean,
   onOpen: (it: FranchiseLocation) => void,
+  t: TFn,
 ): Action {
   return {
     key: "open",
     icon: "/icons/edit.svg",
-    title: "Edit",
+    title: t("common.admin.franchiseLocations.actions.edit"),
     disabled: busy,
     run: () => onOpen(it),
   };
@@ -149,11 +173,12 @@ export function buildInfoAction(
   it: FranchiseLocation,
   busy: boolean,
   onInfo: (it: FranchiseLocation) => void,
+  t: TFn,
 ): Action {
   return {
     key: "info",
     icon: "/icons/info.svg",
-    title: "Info",
+    title: t("common.admin.franchiseLocations.actions.info"),
     disabled: busy,
     run: () => onInfo(it),
   };
@@ -162,12 +187,13 @@ export function buildInfoAction(
 export function buildRejectAction(
   it: FranchiseLocation,
   busy: boolean,
-  onAskReject?: (it: FranchiseLocation) => void,
+  onAskReject?: (it: FranchiseLocation) => void | undefined,
+  t: TFn,
 ): Action {
   return {
     key: "reject",
     icon: "/icons/arrow_right_alt.svg",
-    title: "Reject",
+    title: t("common.admin.franchiseLocations.actions.reject"),
     left: true,
     disabled: busy,
     run: () => onAskReject?.(it),
@@ -177,35 +203,39 @@ export function buildRejectAction(
 export function buildDeleteAction(
   it: FranchiseLocation,
   busy: boolean,
-  onDeleteOne?: (it: FranchiseLocation) => void,
+  onDeleteOne?: (it: FranchiseLocation) => void | undefined,
+  t: TFn,
 ): Action {
   return {
     key: "delete",
     icon: "/icons/delete.svg",
-    title: "Delete",
+    title: t("common.admin.franchiseLocations.actions.delete"),
     disabled: busy,
     run: () => onDeleteOne?.(it),
   };
 }
 
-function submitBase(it: FranchiseLocation, busy: boolean) {
+function submitBase(it: FranchiseLocation, busy: boolean, t: TFn) {
   const ok = canSubmitUpdate(it);
   return {
     disabled: busy || !ok,
-    tip: ok ? undefined : "Please update first",
+    tip: ok
+      ? undefined
+      : t("common.admin.franchiseLocations.actions.updateFirst"),
   };
 }
 
 export function buildResubmitAction(
   it: FranchiseLocation,
   busy: boolean,
-  onResubmit?: (it: FranchiseLocation) => void,
+  onResubmit?: (it: FranchiseLocation) => void | undefined,
+  t: TFn,
 ): Action {
-  const base = submitBase(it, busy);
+  const base = submitBase(it, busy, t);
   return {
     key: "resubmit",
     icon: "/icons/arrow_right_alt.svg",
-    title: "Resubmit",
+    title: t("common.admin.franchiseLocations.actions.resubmit"),
     left: true,
     disabled: base.disabled,
     tip: base.tip,
@@ -216,13 +246,14 @@ export function buildResubmitAction(
 export function buildSubmitForReviewAction(
   it: FranchiseLocation,
   busy: boolean,
-  onSubmitForReview?: (it: FranchiseLocation) => void,
+  onSubmitForReview?: (it: FranchiseLocation) => void | undefined,
+  t: TFn,
 ): Action {
-  const base = submitBase(it, busy);
+  const base = submitBase(it, busy, t);
   return {
     key: "submit",
     icon: "/icons/arrow_right_alt.svg",
-    title: "Submit for review",
+    title: t("common.admin.franchiseLocations.actions.submitForReview"),
     left: true,
     disabled: base.disabled,
     tip: base.tip,
@@ -245,6 +276,7 @@ export function actionsFor(args: {
   onSubmitForReview?: (it: FranchiseLocation) => void;
   onDeleteOne?: (it: FranchiseLocation) => void;
   onAskReject?: (it: FranchiseLocation) => void;
+  t: TFn;
 }) {
   const {
     it,
@@ -256,61 +288,62 @@ export function actionsFor(args: {
     onSubmitForReview,
     onDeleteOne,
     onAskReject,
+    t,
   } = args;
 
   if (rowMode === "mine_pending") {
-    const a: Action[] = [buildOpenAction(it, busy, onOpen)];
+    const a: Action[] = [buildOpenAction(it, busy, onOpen, t)];
     return addIf(
       a,
-      onDeleteOne ? buildDeleteAction(it, busy, onDeleteOne) : null,
+      onDeleteOne ? buildDeleteAction(it, busy, onDeleteOne, t) : null,
     );
   }
 
   if (rowMode === "mine_approved") {
-    const a: Action[] = [buildOpenAction(it, busy, onOpen)];
-    addIf(a, onInfo ? buildInfoAction(it, busy, onInfo) : null);
+    const a: Action[] = [buildOpenAction(it, busy, onOpen, t)];
+    addIf(a, onInfo ? buildInfoAction(it, busy, onInfo, t) : null);
     addIf(
       a,
       onSubmitForReview
-        ? buildSubmitForReviewAction(it, busy, onSubmitForReview)
+        ? buildSubmitForReviewAction(it, busy, onSubmitForReview, t)
         : null,
     );
-    addIf(a, onDeleteOne ? buildDeleteAction(it, busy, onDeleteOne) : null);
+    addIf(a, onDeleteOne ? buildDeleteAction(it, busy, onDeleteOne, t) : null);
     return a;
   }
 
   if (rowMode === "mine_rejected") {
-    const a: Action[] = [buildOpenAction(it, busy, onOpen)];
-    addIf(a, onInfo ? buildInfoAction(it, busy, onInfo) : null);
-    addIf(a, onResubmit ? buildResubmitAction(it, busy, onResubmit) : null);
-    addIf(a, onDeleteOne ? buildDeleteAction(it, busy, onDeleteOne) : null);
+    const a: Action[] = [buildOpenAction(it, busy, onOpen, t)];
+    addIf(a, onInfo ? buildInfoAction(it, busy, onInfo, t) : null);
+    addIf(a, onResubmit ? buildResubmitAction(it, busy, onResubmit, t) : null);
+    addIf(a, onDeleteOne ? buildDeleteAction(it, busy, onDeleteOne, t) : null);
     return a;
   }
 
   if (rowMode === "provider_pending") {
     const a: Action[] = [];
-    addIf(a, onInfo ? buildInfoAction(it, busy, onInfo) : null);
-    addIf(a, onAskReject ? buildRejectAction(it, busy, onAskReject) : null);
-    addIf(a, onDeleteOne ? buildDeleteAction(it, busy, onDeleteOne) : null);
+    addIf(a, onInfo ? buildInfoAction(it, busy, onInfo, t) : null);
+    addIf(a, onAskReject ? buildRejectAction(it, busy, onAskReject, t) : null);
+    addIf(a, onDeleteOne ? buildDeleteAction(it, busy, onDeleteOne, t) : null);
     return a;
   }
 
   if (rowMode === "provider_approved") {
     const a: Action[] = [];
-    addIf(a, onInfo ? buildInfoAction(it, busy, onInfo) : null);
-    a.push(buildOpenAction(it, busy, onOpen));
-    addIf(a, onAskReject ? buildRejectAction(it, busy, onAskReject) : null);
-    addIf(a, onDeleteOne ? buildDeleteAction(it, busy, onDeleteOne) : null);
+    addIf(a, onInfo ? buildInfoAction(it, busy, onInfo, t) : null);
+    a.push(buildOpenAction(it, busy, onOpen, t));
+    addIf(a, onAskReject ? buildRejectAction(it, busy, onAskReject, t) : null);
+    addIf(a, onDeleteOne ? buildDeleteAction(it, busy, onDeleteOne, t) : null);
     return a;
   }
 
   if (rowMode === "provider_rejected") {
     const a: Action[] = [];
-    addIf(a, onInfo ? buildInfoAction(it, busy, onInfo) : null);
-    a.push(buildOpenAction(it, busy, onOpen));
-    addIf(a, onDeleteOne ? buildDeleteAction(it, busy, onDeleteOne) : null);
+    addIf(a, onInfo ? buildInfoAction(it, busy, onInfo, t) : null);
+    a.push(buildOpenAction(it, busy, onOpen, t));
+    addIf(a, onDeleteOne ? buildDeleteAction(it, busy, onDeleteOne, t) : null);
     return a;
   }
 
-  return [buildOpenAction(it, busy, onOpen)];
+  return [buildOpenAction(it, busy, onOpen, z)];
 }

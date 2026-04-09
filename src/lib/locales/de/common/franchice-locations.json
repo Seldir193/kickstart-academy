@@ -33,5 +33,20 @@
   "common.admin.franchiseLocations.hints.fields.phone": "Telefon",
   "common.admin.franchiseLocations.hints.changeSubmitted": "Änderung eingereicht",
   "common.admin.franchiseLocations.hints.changeField": "Änderung {{field}}",
-  "common.admin.franchiseLocations.hints.changeFieldValue": "Änderung {{field}}: {{value}}"
+  "common.admin.franchiseLocations.hints.changeFieldValue": "Änderung {{field}}: {{value}}",
+
+  "common.admin.franchiseLocations.status.pleaseReview": "Bitte prüfen",
+  "common.admin.franchiseLocations.status.awaitingApproval": "Wartet auf Freigabe",
+  "common.admin.franchiseLocations.status.underReview": "In Prüfung",
+  "common.admin.franchiseLocations.status.approved": "Genehmigt",
+  "common.admin.franchiseLocations.status.rejected": "Abgelehnt",
+  "common.admin.franchiseLocations.status.online": "Online",
+  "common.admin.franchiseLocations.status.offline": "Offline",
+  "common.admin.franchiseLocations.actions.edit": "Bearbeiten",
+  "common.admin.franchiseLocations.actions.info": "Info",
+  "common.admin.franchiseLocations.actions.reject": "Ablehnen",
+  "common.admin.franchiseLocations.actions.delete": "Löschen",
+  "common.admin.franchiseLocations.actions.resubmit": "Erneut einreichen",
+  "common.admin.franchiseLocations.actions.submitForReview": "Zur Prüfung einreichen",
+  "common.admin.franchiseLocations.actions.updateFirst": "Bitte zuerst aktualisieren"
 }

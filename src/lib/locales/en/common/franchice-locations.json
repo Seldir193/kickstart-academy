@@ -22,7 +22,6 @@
   "common.admin.franchiseLocations.table.updated": "Updated",
   "common.admin.franchiseLocations.table.actions": "Action",
 
-
   "common.admin.franchiseLocations.hints.fields.licensee": "Licensee",
   "common.admin.franchiseLocations.hints.fields.country": "Country",
   "common.admin.franchiseLocations.hints.fields.city": "City",
@@ -34,5 +33,20 @@
   "common.admin.franchiseLocations.hints.fields.phone": "Phone",
   "common.admin.franchiseLocations.hints.changeSubmitted": "Change submitted",
   "common.admin.franchiseLocations.hints.changeField": "Change {{field}}",
-  "common.admin.franchiseLocations.hints.changeFieldValue": "Change {{field}}: {{value}}"
+  "common.admin.franchiseLocations.hints.changeFieldValue": "Change {{field}}: {{value}}",
+
+  "common.admin.franchiseLocations.status.pleaseReview": "Please review",
+  "common.admin.franchiseLocations.status.awaitingApproval": "Awaiting approval",
+  "common.admin.franchiseLocations.status.underReview": "Under review",
+  "common.admin.franchiseLocations.status.approved": "Approved",
+  "common.admin.franchiseLocations.status.rejected": "Rejected",
+  "common.admin.franchiseLocations.status.online": "Online",
+  "common.admin.franchiseLocations.status.offline": "Offline",
+  "common.admin.franchiseLocations.actions.edit": "Edit",
+  "common.admin.franchiseLocations.actions.info": "Info",
+  "common.admin.franchiseLocations.actions.reject": "Reject",
+  "common.admin.franchiseLocations.actions.delete": "Delete",
+  "common.admin.franchiseLocations.actions.resubmit": "Resubmit",
+  "common.admin.franchiseLocations.actions.submitForReview": "Submit for review",
+  "common.admin.franchiseLocations.actions.updateFirst": "Please update first"
 }
