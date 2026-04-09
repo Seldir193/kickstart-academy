@@ -101,5 +101,13 @@
   "common.admin.news.table.submitForReview": "Zur Prüfung einreichen",
   "common.admin.news.table.updateFirst": "Bitte zuerst aktualisieren",
 
-  "common.delete": "Löschen"
+  "common.delete": "Löschen",
+
+  "common.admin.news.table.underReview": "In Prüfung",
+  "common.admin.news.table.awaitingApproval": "Wartet auf Freigabe",
+  "common.admin.news.table.rejected": "Abgelehnt",
+  "common.admin.news.table.approved": "Freigegeben",
+  "common.admin.news.table.online": "Online",
+  "common.admin.news.table.offline": "Offline",
+  "common.admin.news.table.edit": "Bearbeiten"
 }

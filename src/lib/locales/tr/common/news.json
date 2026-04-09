@@ -101,5 +101,13 @@
   "common.admin.news.table.submitForReview": "İncelemeye gönder",
   "common.admin.news.table.updateFirst": "Lütfen önce güncelleyin",
 
-  "common.delete": "Sil"
+  "common.delete": "Sil",
+
+  "common.admin.news.table.underReview": "İncelemede",
+  "common.admin.news.table.awaitingApproval": "Onay bekliyor",
+  "common.admin.news.table.rejected": "Reddedildi",
+  "common.admin.news.table.approved": "Onaylandı",
+  "common.admin.news.table.online": "Çevrimiçi",
+  "common.admin.news.table.offline": "Çevrimdışı",
+  "common.admin.news.table.edit": "Düzenle"
 }

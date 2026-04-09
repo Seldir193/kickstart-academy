@@ -101,5 +101,13 @@
   "common.admin.news.table.submitForReview": "Submit for review",
   "common.admin.news.table.updateFirst": "Please update first",
 
-  "common.delete": "Delete"
+  "common.delete": "Delete",
+
+  "common.admin.news.table.underReview": "Under review",
+  "common.admin.news.table.awaitingApproval": "Awaiting approval",
+  "common.admin.news.table.rejected": "Rejected",
+  "common.admin.news.table.approved": "Approved",
+  "common.admin.news.table.online": "Online",
+  "common.admin.news.table.offline": "Offline",
+  "common.admin.news.table.edit": "Edit"
 }

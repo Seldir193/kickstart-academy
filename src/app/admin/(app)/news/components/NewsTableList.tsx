@@ -12,7 +12,7 @@ import {
   actionsFor,
   blurTarget,
   clean,
-  fmtDateDe,
+  fmtDate,
   getDraftDelta,
   getNeedsCorrection,
   idOf,
@@ -25,7 +25,6 @@ import {
   type NewsWithProvider,
   type RowMode,
 } from "./NewsTableList.helpers";
-
 
 type Props = {
   items: NewsWithProvider[];
@@ -89,7 +88,7 @@ export default function NewsTableList({
   onTogglePublished,
   toggleBtnRef,
 }: Props) {
-   const { t, i18n } = useTranslation();
+  const { t, i18n } = useTranslation();
   const viewItems = useMemo(
     () => filterItemsForView(items, rowMode),
     [items, rowMode],
@@ -173,26 +172,38 @@ export default function NewsTableList({
           showClear={showClear}
           onDelete={deleteSelected}
           canDelete={!!onDeleteMany}
-
           toggleLabel={t("common.admin.news.table.selectNews")}
           selectedLabel={t("common.admin.news.table.selected")}
           selectAllLabel={t("common.admin.news.table.selectAll")}
           clearAllLabel={t("common.admin.news.table.clearAll")}
           deleteLabel={t("common.delete")}
           cancelLabel={t("common.cancel")}
-
         />
       </div>
 
       <section className={`card news-list ${busy ? "is-busy" : ""}`}>
         <div className="news-list__table">
           <div className="news-list__head" aria-hidden="true">
-            <div className="news-list__h">{t("common.admin.news.table.title")}</div>
-            <div className="news-list__h">{t("common.admin.news.table.category")}</div>
-            <div className="news-list__h"> {t("common.admin.news.table.date")}</div>
-            <div className="news-list__h">{t("common.admin.news.table.status")}</div>
-            <div className="news-list__h">  {t("common.admin.news.table.author")}</div>
-            <div className="news-list__h news-list__h--right">{t("common.admin.news.table.action")}</div>
+            <div className="news-list__h">
+              {t("common.admin.news.table.title")}
+            </div>
+            <div className="news-list__h">
+              {t("common.admin.news.table.category")}
+            </div>
+            <div className="news-list__h">
+              {" "}
+              {t("common.admin.news.table.date")}
+            </div>
+            <div className="news-list__h">
+              {t("common.admin.news.table.status")}
+            </div>
+            <div className="news-list__h">
+              {" "}
+              {t("common.admin.news.table.author")}
+            </div>
+            <div className="news-list__h news-list__h--right">
+              {t("common.admin.news.table.action")}
+            </div>
           </div>
 
           <ul className="list list--bleed">
@@ -253,20 +264,26 @@ export default function NewsTableList({
 
                     {draftTitle && draftTitle !== clean(n.title) ? (
                       <div className="news-list__draft-wrap">
-                        {draftLine(t("common.admin.news.table.titleChange"), draftTitle)}
+                        {draftLine(
+                          t("common.admin.news.table.titleChange"),
+                          draftTitle,
+                        )}
                       </div>
                     ) : null}
 
                     {draftExcerpt && draftExcerpt !== clean(n.excerpt) ? (
                       <div className="news-list__draft-wrap">
-                        {draftLine(t("common.admin.news.table.leadChange"), draftExcerpt)}
+                        {draftLine(
+                          t("common.admin.news.table.leadChange"),
+                          draftExcerpt,
+                        )}
                       </div>
                     ) : null}
                   </div>
 
                   <div className="news-list__cell news-list__cell--cat">
                     <span className="news-list__pill">
-                      {clean(n.category) || t("common.emptyDash")}}
+                      {clean(n.category) || t("common.emptyDash")}
                     </span>
                     {draftCategory && draftCategory !== clean(n.category) ? (
                       <span className="news-list__pill news-list__pill--draft">
@@ -277,11 +294,14 @@ export default function NewsTableList({
 
                   <div className="news-list__cell news-list__cell--date">
                     <div>
-                      {fmtDateDe((n as any).date || (n as any).createdAt, i18n.language)}
+                      {fmtDate(
+                        (n as any).date || (n as any).createdAt,
+                        i18n.language,
+                      )}
                     </div>
                     {needsCorrection ? (
                       <div className="news-list__draft-date is-alert">
-                          {t("common.admin.news.table.pleaseCorrect")}
+                        {t("common.admin.news.table.pleaseCorrect")}
                       </div>
                     ) : null}
                   </div>
