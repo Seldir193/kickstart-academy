@@ -129,5 +129,13 @@
   "common.admin.news.list.infoAria": "Info: {{title}}",
   "common.admin.news.list.editAria": "Edit: {{title}}",
   "common.admin.news.list.defaultTitle": "News",
-  "common.admin.news.list.authorEmpty": "–"
+  "common.admin.news.list.authorEmpty": "–",
+
+  "common.admin.news.filters.searchPlaceholder": "Title, slug, content…",
+  "common.admin.news.filters.searchAria": "Search news",
+  "common.admin.news.filters.sort": "Sort",
+  "common.admin.news.filters.newestFirst": "Newest first",
+  "common.admin.news.filters.oldestFirst": "Oldest first",
+  "common.admin.news.filters.titleAsc": "Title A–Z",
+  "common.admin.news.filters.titleDesc": "Title Z–A"
 }

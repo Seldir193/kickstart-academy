@@ -84,7 +84,6 @@ export default function NewsList({
             {t("common.admin.news.list.title")}
           </div>
           <div className="news-list__h news-list__h--cat">
-            {" "}
             {t("common.admin.news.list.category")}
           </div>
           <div className="news-list__h news-list__h--date">

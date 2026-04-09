@@ -129,5 +129,13 @@
   "common.admin.news.list.infoAria": "Bilgi: {{title}}",
   "common.admin.news.list.editAria": "Düzenle: {{title}}",
   "common.admin.news.list.defaultTitle": "Haber",
-  "common.admin.news.list.authorEmpty": "–"
+  "common.admin.news.list.authorEmpty": "–",
+
+  "common.admin.news.filters.searchPlaceholder": "Başlık, slug, içerik…",
+  "common.admin.news.filters.searchAria": "Haberlerde ara",
+  "common.admin.news.filters.sort": "Sıralama",
+  "common.admin.news.filters.newestFirst": "En yeni önce",
+  "common.admin.news.filters.oldestFirst": "En eski önce",
+  "common.admin.news.filters.titleAsc": "Başlık A–Z",
+  "common.admin.news.filters.titleDesc": "Başlık Z–A"
 }
