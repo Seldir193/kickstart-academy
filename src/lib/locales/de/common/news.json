@@ -186,5 +186,14 @@
   "common.admin.news.mediaManager.noFileSelected": "Keine Datei ausgewählt",
   "common.admin.news.mediaManager.chooseFile": "Datei wählen",
   "common.admin.news.mediaManager.open": "Öffnen",
-  "common.admin.news.mediaManager.remove": "Entfernen"
+  "common.admin.news.mediaManager.remove": "Entfernen",
+
+  "common.admin.news.editor.insertTemplate": "Vorlage einfügen",
+  "common.admin.news.editor.bold": "Fett",
+  "common.admin.news.editor.h2": "H2",
+  "common.admin.news.editor.bulletList": "Aufzählung",
+  "common.admin.news.editor.numberedList": "Nummerierte Liste",
+  "common.admin.news.editor.quote": "Zitat",
+  "common.admin.news.editor.placeholder": "Schreibe wie einen Zeitungsartikel (Markdown).",
+  "common.admin.news.editor.ariaLabel": "Artikelinhalt-Editor"
 }

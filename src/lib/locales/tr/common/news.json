@@ -186,5 +186,14 @@
   "common.admin.news.mediaManager.noFileSelected": "Dosya seçilmedi",
   "common.admin.news.mediaManager.chooseFile": "Dosya seç",
   "common.admin.news.mediaManager.open": "Aç",
-  "common.admin.news.mediaManager.remove": "Kaldır"
+  "common.admin.news.mediaManager.remove": "Kaldır",
+
+  "common.admin.news.editor.insertTemplate": "Şablon ekle",
+  "common.admin.news.editor.bold": "Kalın",
+  "common.admin.news.editor.h2": "H2",
+  "common.admin.news.editor.bulletList": "Madde işaretli liste",
+  "common.admin.news.editor.numberedList": "Numaralı liste",
+  "common.admin.news.editor.quote": "Alıntı",
+  "common.admin.news.editor.placeholder": "Bir gazete makalesi gibi yazın (Markdown).",
+  "common.admin.news.editor.ariaLabel": "Makale içerik düzenleyicisi"
 }

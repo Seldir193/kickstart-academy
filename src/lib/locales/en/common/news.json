@@ -186,5 +186,14 @@
   "common.admin.news.mediaManager.noFileSelected": "No file selected",
   "common.admin.news.mediaManager.chooseFile": "Choose file",
   "common.admin.news.mediaManager.open": "Open",
-  "common.admin.news.mediaManager.remove": "Remove"
+  "common.admin.news.mediaManager.remove": "Remove",
+
+  "common.admin.news.editor.insertTemplate": "Insert template",
+  "common.admin.news.editor.bold": "Bold",
+  "common.admin.news.editor.h2": "H2",
+  "common.admin.news.editor.bulletList": "Bullet list",
+  "common.admin.news.editor.numberedList": "Numbered list",
+  "common.admin.news.editor.quote": "Quote",
+  "common.admin.news.editor.placeholder": "Write like a newspaper article (Markdown).",
+  "common.admin.news.editor.ariaLabel": "Article content editor"
 }
