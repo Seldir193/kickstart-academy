@@ -195,5 +195,12 @@
   "common.admin.news.editor.numberedList": "Numbered list",
   "common.admin.news.editor.quote": "Quote",
   "common.admin.news.editor.placeholder": "Write like a newspaper article (Markdown).",
-  "common.admin.news.editor.ariaLabel": "Article content editor"
+  "common.admin.news.editor.ariaLabel": "Article content editor",
+
+  "common.admin.news.categorySelect.ariaLabel": "Select category",
+  "common.admin.news.categorySelect.optionsAriaLabel": "Categories",
+  "common.admin.news.categories.general": "General",
+  "common.admin.news.categories.news": "News",
+  "common.admin.news.categories.partnerClub": "Partner Club",
+  "common.admin.news.categories.projects": "Projects"
 }

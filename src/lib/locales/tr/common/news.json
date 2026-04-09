@@ -195,5 +195,12 @@
   "common.admin.news.editor.numberedList": "Numaralı liste",
   "common.admin.news.editor.quote": "Alıntı",
   "common.admin.news.editor.placeholder": "Bir gazete makalesi gibi yazın (Markdown).",
-  "common.admin.news.editor.ariaLabel": "Makale içerik düzenleyicisi"
+  "common.admin.news.editor.ariaLabel": "Makale içerik düzenleyicisi",
+
+  "common.admin.news.categorySelect.ariaLabel": "Kategori seç",
+  "common.admin.news.categorySelect.optionsAriaLabel": "Kategoriler",
+  "common.admin.news.categories.general": "Genel",
+  "common.admin.news.categories.news": "Haberler",
+  "common.admin.news.categories.partnerClub": "Partner kulübü",
+  "common.admin.news.categories.projects": "Projeler"
 }

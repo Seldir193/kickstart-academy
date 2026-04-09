@@ -195,5 +195,12 @@
   "common.admin.news.editor.numberedList": "Nummerierte Liste",
   "common.admin.news.editor.quote": "Zitat",
   "common.admin.news.editor.placeholder": "Schreibe wie einen Zeitungsartikel (Markdown).",
-  "common.admin.news.editor.ariaLabel": "Artikelinhalt-Editor"
+  "common.admin.news.editor.ariaLabel": "Artikelinhalt-Editor",
+
+  "common.admin.news.categorySelect.ariaLabel": "Kategorie auswählen",
+  "common.admin.news.categorySelect.optionsAriaLabel": "Kategorien",
+  "common.admin.news.categories.general": "Allgemein",
+  "common.admin.news.categories.news": "News",
+  "common.admin.news.categories.partnerClub": "Partnerverein",
+  "common.admin.news.categories.projects": "Projekte"
 }

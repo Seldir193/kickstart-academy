@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslation } from "react-i18next";
 import type { Category } from "../types";
 import { CATEGORIES } from "../constants";
 
@@ -16,6 +17,7 @@ export default function CategorySelect({
   onToggle,
   onPick,
 }: Props) {
+  const { t } = useTranslation();
   const current = value || "News";
   return (
     <div className={"ks-selectbox" + (open ? " ks-selectbox--open" : "")}>
@@ -25,13 +27,18 @@ export default function CategorySelect({
         onClick={onToggle}
         aria-haspopup="listbox"
         aria-expanded={open}
+        aria-label={t("common.admin.news.categorySelect.ariaLabel")}
       >
         <span className="ks-selectbox__label">{current}</span>
         <span className="ks-selectbox__chevron" aria-hidden="true" />
       </button>
 
       {open ? (
-        <div className="ks-selectbox__panel" role="listbox">
+        <div
+          className="ks-selectbox__panel"
+          role="listbox"
+          aria-label={t("common.admin.news.categorySelect.optionsAriaLabel")}
+        >
           {CATEGORIES.map((c) => (
             <button
               key={c}
