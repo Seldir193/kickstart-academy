@@ -19,6 +19,19 @@ export default function CategorySelect({
 }: Props) {
   const { t } = useTranslation();
   const current = value || "News";
+
+  function categoryLabel(category: string) {
+    if (category === "General" || category === "Allgemein") {
+      return t("common.admin.news.categories.general");
+    }
+    if (category === "Partner Club" || category === "Partnerverein") {
+      return t("common.admin.news.categories.partnerClub");
+    }
+    if (category === "Projects" || category === "Projekte") {
+      return t("common.admin.news.categories.projects");
+    }
+    return t("common.admin.news.categories.news");
+  }
   return (
     <div className={"ks-selectbox" + (open ? " ks-selectbox--open" : "")}>
       <button
@@ -29,7 +42,7 @@ export default function CategorySelect({
         aria-expanded={open}
         aria-label={t("common.admin.news.categorySelect.ariaLabel")}
       >
-        <span className="ks-selectbox__label">{current}</span>
+        <span className="ks-selectbox__label">{categoryLabel(current)}</span>
         <span className="ks-selectbox__chevron" aria-hidden="true" />
       </button>
 
@@ -49,7 +62,7 @@ export default function CategorySelect({
               }
               onClick={() => onPick(c)}
             >
-              {c}
+              {categoryLabel(c)}
             </button>
           ))}
         </div>

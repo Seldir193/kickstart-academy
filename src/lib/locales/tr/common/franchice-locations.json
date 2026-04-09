@@ -1,0 +1,7 @@
+{
+  "common.admin.franchiseLocations.searchPlaceholder": "İsim, şehir, e-posta, telefon…",
+  "common.admin.franchiseLocations.searchAria": "Lokasyonlarda ara",
+  "common.admin.franchiseLocations.newLocation": "Yeni lokasyon",
+  "common.admin.franchiseLocations.loading": "Yükleniyor…",
+  "common.admin.franchiseLocations.deleteFallbackLocation": "bu lokasyon"
+}

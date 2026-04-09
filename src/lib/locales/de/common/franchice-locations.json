@@ -1,0 +1,7 @@
+{
+  "common.admin.franchiseLocations.searchPlaceholder": "Name, Stadt, E-Mail, Telefon…",
+  "common.admin.franchiseLocations.searchAria": "Standorte durchsuchen",
+  "common.admin.franchiseLocations.newLocation": "Neuer Standort",
+  "common.admin.franchiseLocations.loading": "Wird geladen…",
+  "common.admin.franchiseLocations.deleteFallbackLocation": "diesen Standort"
+}
