@@ -109,5 +109,25 @@
   "common.admin.news.table.approved": "Onaylandı",
   "common.admin.news.table.online": "Çevrimiçi",
   "common.admin.news.table.offline": "Çevrimdışı",
-  "common.admin.news.table.edit": "Düzenle"
+  "common.admin.news.table.edit": "Düzenle",
+
+  "common.admin.news.switch.online": "Çevrimiçi",
+  "common.admin.news.switch.offline": "Çevrimdışı",
+
+  "common.admin.news.list.empty": "Kayıt yok.",
+  "common.admin.news.list.title": "Başlık",
+  "common.admin.news.list.category": "Kategori",
+  "common.admin.news.list.date": "Tarih",
+  "common.admin.news.list.status": "Durum",
+  "common.admin.news.list.author": "Yazar",
+  "common.admin.news.list.action": "İşlem",
+  "common.admin.news.list.statusApproved": "Onaylandı",
+  "common.admin.news.list.statusRejected": "Reddedildi",
+  "common.admin.news.list.statusToReview": "İncelenecek",
+  "common.admin.news.list.selectAria": "Seç: {{title}}",
+  "common.admin.news.list.openAria": "Aç: {{title}}",
+  "common.admin.news.list.infoAria": "Bilgi: {{title}}",
+  "common.admin.news.list.editAria": "Düzenle: {{title}}",
+  "common.admin.news.list.defaultTitle": "Haber",
+  "common.admin.news.list.authorEmpty": "–"
 }

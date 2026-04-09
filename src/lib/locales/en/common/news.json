@@ -112,5 +112,22 @@
   "common.admin.news.table.edit": "Edit",
 
   "common.admin.news.switch.online": "Online",
-  "common.admin.news.switch.offline": "Offline"
+  "common.admin.news.switch.offline": "Offline",
+
+  "common.admin.news.list.empty": "No entries.",
+  "common.admin.news.list.title": "Title",
+  "common.admin.news.list.category": "Category",
+  "common.admin.news.list.date": "Date",
+  "common.admin.news.list.status": "Status",
+  "common.admin.news.list.author": "Author",
+  "common.admin.news.list.action": "Action",
+  "common.admin.news.list.statusApproved": "Approved",
+  "common.admin.news.list.statusRejected": "Rejected",
+  "common.admin.news.list.statusToReview": "To review",
+  "common.admin.news.list.selectAria": "Select: {{title}}",
+  "common.admin.news.list.openAria": "Open: {{title}}",
+  "common.admin.news.list.infoAria": "Info: {{title}}",
+  "common.admin.news.list.editAria": "Edit: {{title}}",
+  "common.admin.news.list.defaultTitle": "News",
+  "common.admin.news.list.authorEmpty": "–"
 }
