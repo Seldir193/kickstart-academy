@@ -202,5 +202,10 @@
   "common.admin.news.categories.general": "Genel",
   "common.admin.news.categories.news": "Haberler",
   "common.admin.news.categories.partnerClub": "Partner kulübü",
-  "common.admin.news.categories.projects": "Projeler"
+  "common.admin.news.categories.projects": "Projeler",
+
+  "common.bulkActions.select": "Seç",
+  "common.bulkActions.selected": "seçildi",
+  "common.bulkActions.selectAll": "Tümünü seç",
+  "common.bulkActions.clearAll": "Tüm seçimi kaldır"
 }

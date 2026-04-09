@@ -202,5 +202,10 @@
   "common.admin.news.categories.general": "Allgemein",
   "common.admin.news.categories.news": "News",
   "common.admin.news.categories.partnerClub": "Partnerverein",
-  "common.admin.news.categories.projects": "Projekte"
+  "common.admin.news.categories.projects": "Projekte",
+
+  "common.bulkActions.select": "Auswählen",
+  "common.bulkActions.selected": "ausgewählt",
+  "common.bulkActions.selectAll": "Alle auswählen",
+  "common.bulkActions.clearAll": "Alle abwählen"
 }

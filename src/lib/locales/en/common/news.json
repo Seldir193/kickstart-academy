@@ -202,5 +202,10 @@
   "common.admin.news.categories.general": "General",
   "common.admin.news.categories.news": "News",
   "common.admin.news.categories.partnerClub": "Partner Club",
-  "common.admin.news.categories.projects": "Projects"
+  "common.admin.news.categories.projects": "Projects",
+
+  "common.bulkActions.select": "Select",
+  "common.bulkActions.selected": "selected",
+  "common.bulkActions.selectAll": "Select all",
+  "common.bulkActions.clearAll": "Clear all"
 }
