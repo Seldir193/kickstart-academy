@@ -155,8 +155,8 @@ export default function FranchiseLocationsPage() {
               <>
                 <section className="news-admin__section">
                   {sectionHead(
-                    viewLabelProvider("provider_pending"),
-                    countLabel(p.provPendingAllCount, "provider_pending"),
+                    viewLabelProvider("provider_pending", t),
+                    countLabel(p.provPendingAllCount, "provider_pending", t),
                     true,
                   )}
                   <div className="news-admin__box--scroll3">
@@ -180,8 +180,8 @@ export default function FranchiseLocationsPage() {
 
                 <section className="news-admin__section">
                   {sectionHead(
-                    viewLabelProvider("provider_approved"),
-                    countLabel(p.provApprovedAllCount, "provider_approved"),
+                    viewLabelProvider("provider_approved", t),
+                    countLabel(p.provApprovedAllCount, "provider_approved", t),
                   )}
                   <div className="fl-admin__box fl-admin__box--scroll3">
                     <LocationsTableList
@@ -211,8 +211,8 @@ export default function FranchiseLocationsPage() {
 
                 <section className="news-admin__section">
                   {sectionHead(
-                    viewLabelProvider("provider_rejected"),
-                    countLabel(p.provRejectedAllCount, "provider_rejected"),
+                    viewLabelProvider("provider_rejected", t),
+                    countLabel(p.provRejectedAllCount, "provider_rejected", t),
                   )}
                   <div className="fl-admin__box fl-admin__box--scroll3">
                     <LocationsTableList
@@ -239,8 +239,8 @@ export default function FranchiseLocationsPage() {
 
                 <section className="news-admin__section">
                   {sectionHead(
-                    viewLabelMine("mine_approved"),
-                    countLabel(p.mineApprovedAllCount, "mine_approved"),
+                    viewLabelMine("mine_approved", t),
+                    countLabel(p.mineApprovedAllCount, "mine_approved", t),
                   )}
                   <div className="fl-admin__box fl-admin__box--scroll3">
                     <LocationsTableList
@@ -271,8 +271,8 @@ export default function FranchiseLocationsPage() {
               <>
                 <section className="news-admin__section">
                   {sectionHead(
-                    viewLabelMine("mine_pending"),
-                    countLabel(p.minePendingAllCount, "mine_pending"),
+                    viewLabelMine("mine_pending", t),
+                    countLabel(p.minePendingAllCount, "mine_pending", t),
                   )}
                   <div className="fl-admin__box fl-admin__box--scroll3">
                     <LocationsTableList
@@ -298,8 +298,8 @@ export default function FranchiseLocationsPage() {
 
                 <section className="news-admin__section">
                   {sectionHead(
-                    viewLabelMine("mine_approved"),
-                    countLabel(p.mineApprovedAllCount, "mine_approved"),
+                    viewLabelMine("mine_approved", t),
+                    countLabel(p.mineApprovedAllCount, "mine_approved", t),
                   )}
                   <div className="fl-admin__box fl-admin__box--scroll3">
                     <LocationsTableList
@@ -329,8 +329,8 @@ export default function FranchiseLocationsPage() {
 
                 <section className="news-admin__section">
                   {sectionHead(
-                    viewLabelMine("mine_rejected"),
-                    countLabel(p.mineRejectedAllCount, "mine_rejected"),
+                    viewLabelMine("mine_rejected", t),
+                    countLabel(p.mineRejectedAllCount, "mine_rejected", t),
                   )}
                   <div className="fl-admin__box fl-admin__box--scroll3">
                     <LocationsTableList

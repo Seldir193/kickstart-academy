@@ -3,5 +3,14 @@
   "common.admin.franchiseLocations.searchAria": "Standorte durchsuchen",
   "common.admin.franchiseLocations.newLocation": "Neuer Standort",
   "common.admin.franchiseLocations.loading": "Wird geladen…",
-  "common.admin.franchiseLocations.deleteFallbackLocation": "diesen Standort"
+  "common.admin.franchiseLocations.deleteFallbackLocation": "diesen Standort",
+
+  "common.admin.franchiseLocations.sections.minePending": "Meine Standorte – Zur Prüfung",
+  "common.admin.franchiseLocations.sections.mineApproved": "Meine Standorte – Genehmigt",
+  "common.admin.franchiseLocations.sections.mineRejected": "Meine Standorte – Abgelehnt",
+  "common.admin.franchiseLocations.sections.providerPending": "Anbieter – Zur Prüfung",
+  "common.admin.franchiseLocations.sections.providerApproved": "Anbieter – Genehmigt",
+  "common.admin.franchiseLocations.sections.providerRejected": "Anbieter – Abgelehnt",
+  "common.admin.franchiseLocations.count.new": "({{count}} neu)",
+  "common.admin.franchiseLocations.count.results": "{{count}} Treffer"
 }

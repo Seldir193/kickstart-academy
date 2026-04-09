@@ -3,5 +3,14 @@
   "common.admin.franchiseLocations.searchAria": "Lokasyonlarda ara",
   "common.admin.franchiseLocations.newLocation": "Yeni lokasyon",
   "common.admin.franchiseLocations.loading": "Yükleniyor…",
-  "common.admin.franchiseLocations.deleteFallbackLocation": "bu lokasyon"
+  "common.admin.franchiseLocations.deleteFallbackLocation": "bu lokasyon",
+
+  "common.admin.franchiseLocations.sections.minePending": "Lokasyonlarım – İnceleme bekliyor",
+  "common.admin.franchiseLocations.sections.mineApproved": "Lokasyonlarım – Onaylandı",
+  "common.admin.franchiseLocations.sections.mineRejected": "Lokasyonlarım – Reddedildi",
+  "common.admin.franchiseLocations.sections.providerPending": "Sağlayıcılar – İnceleme bekliyor",
+  "common.admin.franchiseLocations.sections.providerApproved": "Sağlayıcılar – Onaylandı",
+  "common.admin.franchiseLocations.sections.providerRejected": "Sağlayıcılar – Reddedildi",
+  "common.admin.franchiseLocations.count.new": "({{count}} yeni)",
+  "common.admin.franchiseLocations.count.results": "{{count}} sonuç"
 }
