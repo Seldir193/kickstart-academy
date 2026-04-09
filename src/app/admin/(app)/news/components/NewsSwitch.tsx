@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 type Props = {
   checked: boolean;
@@ -26,6 +27,7 @@ function onActionKey(
 }
 
 export default function NewsSwitch({ checked, busy, onToggle }: Props) {
+  const { t } = useTranslation();
   return (
     <span
       className={`coach-switch ${checked ? "is-on" : ""} ${
@@ -33,6 +35,11 @@ export default function NewsSwitch({ checked, busy, onToggle }: Props) {
       }`}
       role="switch"
       aria-checked={!!checked}
+      aria-label={
+        checked
+          ? t("common.admin.news.switch.online")
+          : t("common.admin.news.switch.offline")
+      }
       tabIndex={0}
       onPointerDown={stop}
       onMouseDown={stop}
@@ -42,7 +49,11 @@ export default function NewsSwitch({ checked, busy, onToggle }: Props) {
         onToggle();
       }}
       onKeyDown={(e) => onActionKey(e, onToggle, busy)}
-      title={checked ? "Online" : "Offline"}
+      title={
+        checked
+          ? t("common.admin.news.switch.online")
+          : t("common.admin.news.switch.offline")
+      }
     >
       <span className="coach-switch__track">
         <span className="coach-switch__thumb" />
@@ -50,33 +61,3 @@ export default function NewsSwitch({ checked, busy, onToggle }: Props) {
     </span>
   );
 }
-
-// //src\app\admin\(app)\news\components\NewsSwitch.tsx
-// "use client";
-
-// type Props = {
-//   checked: boolean;
-//   busy: boolean;
-//   label: string;
-//   onToggle: (next: boolean) => void;
-// };
-
-// export default function NewsSwitch({ checked, busy, label, onToggle }: Props) {
-//   return (
-//     <button
-//       type="button"
-//       className={`coach-switch ${checked ? "is-on" : ""} ${busy ? "is-busy" : ""}`}
-//       aria-label={label}
-//       aria-pressed={checked}
-//       disabled={busy}
-//       onClick={() => {
-//         if (busy) return;
-//         onToggle(!checked);
-//       }}
-//     >
-//       <span className="coach-switch__track">
-//         <span className="coach-switch__thumb" />
-//       </span>
-//     </button>
-//   );
-// }

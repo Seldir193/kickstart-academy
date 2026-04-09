@@ -109,5 +109,8 @@
   "common.admin.news.table.approved": "Freigegeben",
   "common.admin.news.table.online": "Online",
   "common.admin.news.table.offline": "Offline",
-  "common.admin.news.table.edit": "Bearbeiten"
+  "common.admin.news.table.edit": "Bearbeiten",
+
+  "common.admin.news.switch.online": "Online",
+  "common.admin.news.switch.offline": "Offline"
 }
