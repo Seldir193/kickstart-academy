@@ -187,7 +187,7 @@ export function buildInfoAction(
 export function buildRejectAction(
   it: FranchiseLocation,
   busy: boolean,
-  onAskReject?: (it: FranchiseLocation) => void | undefined,
+  onAskReject: ((it: FranchiseLocation) => void) | undefined,
   t: TFn,
 ): Action {
   return {
@@ -203,7 +203,7 @@ export function buildRejectAction(
 export function buildDeleteAction(
   it: FranchiseLocation,
   busy: boolean,
-  onDeleteOne?: (it: FranchiseLocation) => void | undefined,
+  onDeleteOne: ((it: FranchiseLocation) => void) | undefined,
   t: TFn,
 ): Action {
   return {
@@ -228,7 +228,7 @@ function submitBase(it: FranchiseLocation, busy: boolean, t: TFn) {
 export function buildResubmitAction(
   it: FranchiseLocation,
   busy: boolean,
-  onResubmit?: (it: FranchiseLocation) => void | undefined,
+  onResubmit: ((it: FranchiseLocation) => void) | undefined,
   t: TFn,
 ): Action {
   const base = submitBase(it, busy, t);
@@ -246,7 +246,7 @@ export function buildResubmitAction(
 export function buildSubmitForReviewAction(
   it: FranchiseLocation,
   busy: boolean,
-  onSubmitForReview?: (it: FranchiseLocation) => void | undefined,
+  onSubmitForReview: ((it: FranchiseLocation) => void) | undefined,
   t: TFn,
 ): Action {
   const base = submitBase(it, busy, t);
@@ -345,5 +345,5 @@ export function actionsFor(args: {
     return a;
   }
 
-  return [buildOpenAction(it, busy, onOpen, z)];
+  return [buildOpenAction(it, busy, onOpen, t)];
 }
