@@ -2,6 +2,7 @@
 "use client";
 
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 type Props = {
   page: number;
@@ -23,6 +24,7 @@ export default function Pagination({
   onPrev,
   onNext,
 }: Props) {
+  const { t } = useTranslation();
   const p = clamp_page(page, totalPages);
   const prevDisabled = p <= 1;
   const nextDisabled = p >= totalPages;
@@ -32,7 +34,9 @@ export default function Pagination({
       <button
         type="button"
         className="btn"
-        aria-label="Previous page"
+        aria-label={t(
+          "common.admin.franchiseLocations.pagination.previousPage",
+        )}
         disabled={prevDisabled}
         onClick={onPrev}
       >
@@ -51,7 +55,7 @@ export default function Pagination({
       <button
         type="button"
         className="btn"
-        aria-label="Next page"
+        aria-label={t("common.admin.franchiseLocations.pagination.nextPage")}
         disabled={nextDisabled}
         onClick={onNext}
       >

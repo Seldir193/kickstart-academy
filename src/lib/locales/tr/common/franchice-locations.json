@@ -55,5 +55,8 @@
   "common.admin.franchiseLocations.bulk.clearSelection": "Seçimi temizle",
   "common.admin.franchiseLocations.bulk.selectAll": "Tümünü seç",
   "common.admin.franchiseLocations.bulk.delete": "Sil",
-  "common.admin.franchiseLocations.bulk.cancel": "İptal"
+  "common.admin.franchiseLocations.bulk.cancel": "İptal",
+
+  "common.admin.franchiseLocations.pagination.previousPage": "Önceki sayfa",
+  "common.admin.franchiseLocations.pagination.nextPage": "Sonraki sayfa"
 }

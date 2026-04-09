@@ -55,5 +55,8 @@
   "common.admin.franchiseLocations.bulk.clearSelection": "Auswahl aufheben",
   "common.admin.franchiseLocations.bulk.selectAll": "Alle auswählen",
   "common.admin.franchiseLocations.bulk.delete": "Löschen",
-  "common.admin.franchiseLocations.bulk.cancel": "Abbrechen"
+  "common.admin.franchiseLocations.bulk.cancel": "Abbrechen",
+
+  "common.admin.franchiseLocations.pagination.previousPage": "Vorherige Seite",
+  "common.admin.franchiseLocations.pagination.nextPage": "Nächste Seite"
 }
