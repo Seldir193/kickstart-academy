@@ -48,5 +48,12 @@
   "common.admin.franchiseLocations.actions.delete": "Löschen",
   "common.admin.franchiseLocations.actions.resubmit": "Erneut einreichen",
   "common.admin.franchiseLocations.actions.submitForReview": "Zur Prüfung einreichen",
-  "common.admin.franchiseLocations.actions.updateFirst": "Bitte zuerst aktualisieren"
+  "common.admin.franchiseLocations.actions.updateFirst": "Bitte zuerst aktualisieren",
+
+  "common.admin.franchiseLocations.bulk.select": "Auswählen",
+  "common.admin.franchiseLocations.bulk.selected": "ausgewählt",
+  "common.admin.franchiseLocations.bulk.clearSelection": "Auswahl aufheben",
+  "common.admin.franchiseLocations.bulk.selectAll": "Alle auswählen",
+  "common.admin.franchiseLocations.bulk.delete": "Löschen",
+  "common.admin.franchiseLocations.bulk.cancel": "Abbrechen"
 }

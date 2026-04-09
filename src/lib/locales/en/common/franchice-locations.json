@@ -48,5 +48,12 @@
   "common.admin.franchiseLocations.actions.delete": "Delete",
   "common.admin.franchiseLocations.actions.resubmit": "Resubmit",
   "common.admin.franchiseLocations.actions.submitForReview": "Submit for review",
-  "common.admin.franchiseLocations.actions.updateFirst": "Please update first"
+  "common.admin.franchiseLocations.actions.updateFirst": "Please update first",
+
+  "common.admin.franchiseLocations.bulk.select": "Select",
+  "common.admin.franchiseLocations.bulk.selected": "selected",
+  "common.admin.franchiseLocations.bulk.clearSelection": "Clear selection",
+  "common.admin.franchiseLocations.bulk.selectAll": "Select all",
+  "common.admin.franchiseLocations.bulk.delete": "Delete",
+  "common.admin.franchiseLocations.bulk.cancel": "Cancel"
 }

@@ -48,5 +48,12 @@
   "common.admin.franchiseLocations.actions.delete": "Sil",
   "common.admin.franchiseLocations.actions.resubmit": "Yeniden gönder",
   "common.admin.franchiseLocations.actions.submitForReview": "İnceleme için gönder",
-  "common.admin.franchiseLocations.actions.updateFirst": "Lütfen önce güncelleyin"
+  "common.admin.franchiseLocations.actions.updateFirst": "Lütfen önce güncelleyin",
+
+  "common.admin.franchiseLocations.bulk.select": "Seç",
+  "common.admin.franchiseLocations.bulk.selected": "seçildi",
+  "common.admin.franchiseLocations.bulk.clearSelection": "Seçimi temizle",
+  "common.admin.franchiseLocations.bulk.selectAll": "Tümünü seç",
+  "common.admin.franchiseLocations.bulk.delete": "Sil",
+  "common.admin.franchiseLocations.bulk.cancel": "İptal"
 }
