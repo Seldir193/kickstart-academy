@@ -181,5 +181,10 @@
   "common.admin.news.dialog.snippet.bold": "Kalın metin",
   "common.admin.news.dialog.snippet.heading": "Başlık",
   "common.admin.news.dialog.snippet.item": "Madde",
-  "common.admin.news.dialog.snippet.quote": "Alıntı"
+  "common.admin.news.dialog.snippet.quote": "Alıntı",
+
+  "common.admin.news.mediaManager.noFileSelected": "Dosya seçilmedi",
+  "common.admin.news.mediaManager.chooseFile": "Dosya seç",
+  "common.admin.news.mediaManager.open": "Aç",
+  "common.admin.news.mediaManager.remove": "Kaldır"
 }

@@ -181,5 +181,10 @@
   "common.admin.news.dialog.snippet.bold": "Bold text",
   "common.admin.news.dialog.snippet.heading": "Heading",
   "common.admin.news.dialog.snippet.item": "Item",
-  "common.admin.news.dialog.snippet.quote": "Quote"
+  "common.admin.news.dialog.snippet.quote": "Quote",
+
+  "common.admin.news.mediaManager.noFileSelected": "No file selected",
+  "common.admin.news.mediaManager.chooseFile": "Choose file",
+  "common.admin.news.mediaManager.open": "Open",
+  "common.admin.news.mediaManager.remove": "Remove"
 }

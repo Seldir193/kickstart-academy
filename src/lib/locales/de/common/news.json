@@ -181,5 +181,10 @@
   "common.admin.news.dialog.snippet.bold": "Fetter Text",
   "common.admin.news.dialog.snippet.heading": "Überschrift",
   "common.admin.news.dialog.snippet.item": "Eintrag",
-  "common.admin.news.dialog.snippet.quote": "Zitat"
+  "common.admin.news.dialog.snippet.quote": "Zitat",
+
+  "common.admin.news.mediaManager.noFileSelected": "Keine Datei ausgewählt",
+  "common.admin.news.mediaManager.chooseFile": "Datei wählen",
+  "common.admin.news.mediaManager.open": "Öffnen",
+  "common.admin.news.mediaManager.remove": "Entfernen"
 }
