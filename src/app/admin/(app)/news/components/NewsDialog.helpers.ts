@@ -20,25 +20,27 @@ export function buildPreviewUrl(slug: string) {
   return s ? `${WP_DETAIL_BASE}${encodeURIComponent(s)}` : "";
 }
 
-export function templateText() {
+export function templateText(
+  t: (key: string, options?: Record<string, unknown>) => string,
+) {
   return [
-    "## Intro",
+    `## ${t("common.admin.news.dialog.template.intro")}`,
     "",
-    "Write 2–4 sentences that hook the reader.",
+    t("common.admin.news.dialog.template.introText"),
     "",
-    "## Main section",
+    `## ${t("common.admin.news.dialog.template.mainSection")}`,
     "",
-    "1. First point",
-    "2. Second point",
-    "3. Third point",
+    `1. ${t("common.admin.news.dialog.template.firstPoint")}`,
+    `2. ${t("common.admin.news.dialog.template.secondPoint")}`,
+    `3. ${t("common.admin.news.dialog.template.thirdPoint")}`,
     "",
-    "> Add a quote if needed.",
+    `> ${t("common.admin.news.dialog.template.quoteHint")}`,
     "",
-    "## Checklist",
+    `## ${t("common.admin.news.dialog.template.checklist")}`,
     "",
-    "- Bullet one",
-    "- Bullet two",
-    "- Bullet three",
+    `- ${t("common.admin.news.dialog.template.bulletOne")}`,
+    `- ${t("common.admin.news.dialog.template.bulletTwo")}`,
+    `- ${t("common.admin.news.dialog.template.bulletThree")}`,
   ].join("\n");
 }
 
@@ -81,9 +83,11 @@ export async function uploadCoverFile(args: {
 export async function saveForm(args: {
   form: News;
   save: (n: News) => Promise<void>;
+  t: (key: string, options?: Record<string, unknown>) => string;
 }) {
   const final = finalizeNewsPayload(args.form);
-  if (!String(final.title || "").trim()) throw new Error("Title is missing.");
+  if (!String(final.title || "").trim())
+    throw new Error(args.t("common.admin.news.dialog.errorTitleMissing"));
   await args.save(final);
 }
 
