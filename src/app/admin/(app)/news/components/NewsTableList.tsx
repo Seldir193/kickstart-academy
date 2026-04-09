@@ -191,14 +191,12 @@ export default function NewsTableList({
               {t("common.admin.news.table.category")}
             </div>
             <div className="news-list__h">
-              {" "}
               {t("common.admin.news.table.date")}
             </div>
             <div className="news-list__h">
               {t("common.admin.news.table.status")}
             </div>
             <div className="news-list__h">
-              {" "}
               {t("common.admin.news.table.author")}
             </div>
             <div className="news-list__h news-list__h--right">
