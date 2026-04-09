@@ -20,5 +20,19 @@
   "common.admin.franchiseLocations.table.city": "City",
   "common.admin.franchiseLocations.table.status": "Status",
   "common.admin.franchiseLocations.table.updated": "Updated",
-  "common.admin.franchiseLocations.table.actions": "Action"
+  "common.admin.franchiseLocations.table.actions": "Action",
+
+
+  "common.admin.franchiseLocations.hints.fields.licensee": "Licensee",
+  "common.admin.franchiseLocations.hints.fields.country": "Country",
+  "common.admin.franchiseLocations.hints.fields.city": "City",
+  "common.admin.franchiseLocations.hints.fields.state": "State",
+  "common.admin.franchiseLocations.hints.fields.address": "Address",
+  "common.admin.franchiseLocations.hints.fields.zip": "ZIP code",
+  "common.admin.franchiseLocations.hints.fields.website": "Website",
+  "common.admin.franchiseLocations.hints.fields.email": "Email",
+  "common.admin.franchiseLocations.hints.fields.phone": "Phone",
+  "common.admin.franchiseLocations.hints.changeSubmitted": "Change submitted",
+  "common.admin.franchiseLocations.hints.changeField": "Change {{field}}",
+  "common.admin.franchiseLocations.hints.changeFieldValue": "Change {{field}}: {{value}}"
 }

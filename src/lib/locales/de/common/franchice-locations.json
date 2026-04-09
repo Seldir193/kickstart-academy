@@ -20,5 +20,18 @@
   "common.admin.franchiseLocations.table.city": "Stadt",
   "common.admin.franchiseLocations.table.status": "Status",
   "common.admin.franchiseLocations.table.updated": "Aktualisiert",
-  "common.admin.franchiseLocations.table.actions": "Aktion"
+  "common.admin.franchiseLocations.table.actions": "Aktion",
+
+  "common.admin.franchiseLocations.hints.fields.licensee": "Lizenznehmer",
+  "common.admin.franchiseLocations.hints.fields.country": "Land",
+  "common.admin.franchiseLocations.hints.fields.city": "Stadt",
+  "common.admin.franchiseLocations.hints.fields.state": "Bundesland",
+  "common.admin.franchiseLocations.hints.fields.address": "Adresse",
+  "common.admin.franchiseLocations.hints.fields.zip": "PLZ",
+  "common.admin.franchiseLocations.hints.fields.website": "Webseite",
+  "common.admin.franchiseLocations.hints.fields.email": "E-Mail",
+  "common.admin.franchiseLocations.hints.fields.phone": "Telefon",
+  "common.admin.franchiseLocations.hints.changeSubmitted": "Änderung eingereicht",
+  "common.admin.franchiseLocations.hints.changeField": "Änderung {{field}}",
+  "common.admin.franchiseLocations.hints.changeFieldValue": "Änderung {{field}}: {{value}}"
 }

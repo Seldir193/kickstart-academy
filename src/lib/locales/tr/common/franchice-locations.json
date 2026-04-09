@@ -20,5 +20,18 @@
   "common.admin.franchiseLocations.table.city": "Şehir",
   "common.admin.franchiseLocations.table.status": "Durum",
   "common.admin.franchiseLocations.table.updated": "Güncellendi",
-  "common.admin.franchiseLocations.table.actions": "İşlem"
+  "common.admin.franchiseLocations.table.actions": "İşlem",
+
+  "common.admin.franchiseLocations.hints.fields.licensee": "Lisans sahibi",
+  "common.admin.franchiseLocations.hints.fields.country": "Ülke",
+  "common.admin.franchiseLocations.hints.fields.city": "Şehir",
+  "common.admin.franchiseLocations.hints.fields.state": "Eyalet",
+  "common.admin.franchiseLocations.hints.fields.address": "Adres",
+  "common.admin.franchiseLocations.hints.fields.zip": "Posta kodu",
+  "common.admin.franchiseLocations.hints.fields.website": "Web sitesi",
+  "common.admin.franchiseLocations.hints.fields.email": "E-posta",
+  "common.admin.franchiseLocations.hints.fields.phone": "Telefon",
+  "common.admin.franchiseLocations.hints.changeSubmitted": "Değişiklik gönderildi",
+  "common.admin.franchiseLocations.hints.changeField": "{{field}} değişikliği",
+  "common.admin.franchiseLocations.hints.changeFieldValue": "{{field}} değişikliği: {{value}}"
 }
