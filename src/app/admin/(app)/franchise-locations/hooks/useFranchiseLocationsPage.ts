@@ -259,7 +259,7 @@ export function useFranchiseLocationsPage() {
         if (!silent) setLoading(false);
       }
     },
-    [assignLists, toastErr],
+    [assignLists, t, toastErr],
   );
 
   useEffect(() => {
@@ -352,7 +352,7 @@ export function useFranchiseLocationsPage() {
         throw e;
       }
     },
-    [edit, loadAll, toastErr, toastOk],
+    [edit, loadAll, t, toastErr, toastOk],
   );
 
   const removeMineOne = useCallback(
@@ -363,7 +363,7 @@ export function useFranchiseLocationsPage() {
       );
       await loadAll(true);
     },
-    [loadAll, toastOk],
+    [loadAll, t, toastOk],
   );
 
   const deleteManyMine = useCallback(
@@ -376,7 +376,7 @@ export function useFranchiseLocationsPage() {
       );
       await loadAll(true);
     },
-    [loadAll, toastOk],
+    [loadAll, t, toastOk],
   );
 
   const deleteManyAdmin = useCallback(
@@ -389,7 +389,7 @@ export function useFranchiseLocationsPage() {
       );
       await loadAll(true);
     },
-    [loadAll, toastOk],
+    [loadAll, t, toastOk],
   );
 
   const deleteOneAdmin = useCallback(
@@ -398,7 +398,7 @@ export function useFranchiseLocationsPage() {
       toastOk(toastText(t, "common.admin.franchiseLocations.toast.deleted"));
       await loadAll(true);
     },
-    [loadAll, toastOk],
+    [loadAll, t, toastOk],
   );
 
   const approveOne = useCallback(
@@ -422,7 +422,7 @@ export function useFranchiseLocationsPage() {
         );
       }
     },
-    [loadAll, toastErr, toastOk],
+    [loadAll, t, toastErr, toastOk],
   );
 
   const submitReject = useCallback(
@@ -447,7 +447,7 @@ export function useFranchiseLocationsPage() {
         );
       }
     },
-    [loadAll, rejectTarget, toastErr, toastOk],
+    [loadAll, rejectTarget, t, toastErr, toastOk],
   );
 
   const submitMine = useCallback(
@@ -471,7 +471,7 @@ export function useFranchiseLocationsPage() {
         );
       }
     },
-    [loadAll, toastErr, toastOk],
+    [loadAll, t, toastErr, toastOk],
   );
 
   const togglePublished = useCallback(
@@ -494,7 +494,7 @@ export function useFranchiseLocationsPage() {
         setPublishedBusyId(null);
       }
     },
-    [loadAll, toastErr],
+    [loadAll, t, toastErr],
   );
 
   const toggleMinePendingSelectMode = useCallback(
