@@ -118,5 +118,15 @@
   "common.admin.franchiseLocations.infoDialog.fields.publicPhone": "Herkese açık telefon",
   "common.admin.franchiseLocations.infoDialog.fields.status": "Durum",
   "common.admin.franchiseLocations.infoDialog.fields.updated": "Güncellendi",
-  "common.admin.franchiseLocations.infoDialog.fields.reason": "Neden"
+  "common.admin.franchiseLocations.infoDialog.fields.reason": "Neden",
+
+  "common.admin.franchiseLocations.rejectDialog.enterReason": "Lütfen bir neden girin.",
+  "common.admin.franchiseLocations.rejectDialog.failed": "Reddetme başarısız oldu.",
+  "common.admin.franchiseLocations.rejectDialog.title": "Lokasyonu reddet",
+  "common.admin.franchiseLocations.rejectDialog.subtitle": "Lütfen reddetme için açık bir neden belirtin.",
+  "common.admin.franchiseLocations.rejectDialog.close": "Kapat",
+  "common.admin.franchiseLocations.rejectDialog.reason": "Neden *",
+  "common.admin.franchiseLocations.rejectDialog.placeholder": "örn. adres eksik / makul değil / yinelenen kayıt",
+  "common.admin.franchiseLocations.rejectDialog.rejecting": "Reddediliyor...",
+  "common.admin.franchiseLocations.rejectDialog.reject": "Reddet"
 }

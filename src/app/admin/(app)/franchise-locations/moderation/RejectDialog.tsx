@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 type Props = {
   open: boolean;
@@ -9,6 +10,7 @@ type Props = {
 };
 
 export default function RejectDialog({ open, onClose, onSubmit }: Props) {
+  const { t } = useTranslation();
   const [reason, setReason] = useState("");
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
@@ -25,7 +27,7 @@ export default function RejectDialog({ open, onClose, onSubmit }: Props) {
   async function submit() {
     const r = reason.trim();
     if (!r) {
-      setErr("Please enter a reason.");
+      setErr(t("common.admin.franchiseLocations.rejectDialog.enterReason"));
       return;
     }
     setErr(null);
@@ -34,7 +36,9 @@ export default function RejectDialog({ open, onClose, onSubmit }: Props) {
       await onSubmit(r);
       onClose();
     } catch (e: any) {
-      setErr(e?.message || "Reject failed.");
+      setErr(
+        e?.message || t("common.admin.franchiseLocations.rejectDialog.failed"),
+      );
     } finally {
       setBusy(false);
     }
@@ -52,9 +56,11 @@ export default function RejectDialog({ open, onClose, onSubmit }: Props) {
       <div className="dialog fl-reject__dialog">
         <div className="dialog-head fl-reject__head">
           <div className="fl-reject__head-left">
-            <div className="dialog-title fl-reject__title">Reject location</div>
+            <div className="dialog-title fl-reject__title">
+              {t("common.admin.franchiseLocations.rejectDialog.title")}
+            </div>
             <div className="dialog-subtitle fl-reject__subtitle">
-              Please provide a clear reason for the rejection.
+              {t("common.admin.franchiseLocations.rejectDialog.subtitle")}
             </div>
           </div>
 
@@ -63,7 +69,9 @@ export default function RejectDialog({ open, onClose, onSubmit }: Props) {
               <button
                 type="button"
                 className="dialog-close modal__close"
-                aria-label="Close"
+                aria-label={t(
+                  "common.admin.franchiseLocations.rejectDialog.close",
+                )}
                 onClick={onClose}
                 disabled={busy}
               >
@@ -81,13 +89,17 @@ export default function RejectDialog({ open, onClose, onSubmit }: Props) {
         <div className="dialog-body fl-reject__body">
           {err ? <div className="error fl-reject__error">{err}</div> : null}
           <div className="fl-reject__field">
-            <label className="dialog-label fl-reject__label">Reason *</label>
+            <label className="dialog-label fl-reject__label">
+              {t("common.admin.franchiseLocations.rejectDialog.reason")}
+            </label>
 
             <textarea
               className="input fl-reject__textarea"
               value={reason}
               onChange={(e) => setReason(e.target.value)}
-              placeholder="e.g. address incomplete / not plausible / duplicate"
+              placeholder={t(
+                "common.admin.franchiseLocations.rejectDialog.placeholder",
+              )}
             />
           </div>
         </div>
@@ -99,7 +111,9 @@ export default function RejectDialog({ open, onClose, onSubmit }: Props) {
             onClick={submit}
             disabled={busy}
           >
-            {busy ? "Rejecting..." : "Reject"}
+            {busy
+              ? t("common.admin.franchiseLocations.rejectDialog.rejecting")
+              : t("common.admin.franchiseLocations.rejectDialog.reject")}
           </button>
         </div>
       </div>

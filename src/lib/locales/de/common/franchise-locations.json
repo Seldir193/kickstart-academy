@@ -118,5 +118,15 @@
   "common.admin.franchiseLocations.infoDialog.fields.publicPhone": "Öffentliches Telefon",
   "common.admin.franchiseLocations.infoDialog.fields.status": "Status",
   "common.admin.franchiseLocations.infoDialog.fields.updated": "Aktualisiert",
-  "common.admin.franchiseLocations.infoDialog.fields.reason": "Grund"
+  "common.admin.franchiseLocations.infoDialog.fields.reason": "Grund",
+
+  "common.admin.franchiseLocations.rejectDialog.enterReason": "Bitte gib einen Grund ein.",
+  "common.admin.franchiseLocations.rejectDialog.failed": "Ablehnen fehlgeschlagen.",
+  "common.admin.franchiseLocations.rejectDialog.title": "Standort ablehnen",
+  "common.admin.franchiseLocations.rejectDialog.subtitle": "Bitte gib einen klaren Grund für die Ablehnung an.",
+  "common.admin.franchiseLocations.rejectDialog.close": "Schließen",
+  "common.admin.franchiseLocations.rejectDialog.reason": "Grund *",
+  "common.admin.franchiseLocations.rejectDialog.placeholder": "z. B. Adresse unvollständig / nicht plausibel / Duplikat",
+  "common.admin.franchiseLocations.rejectDialog.rejecting": "Wird abgelehnt...",
+  "common.admin.franchiseLocations.rejectDialog.reject": "Ablehnen"
 }

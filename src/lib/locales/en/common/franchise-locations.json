@@ -118,5 +118,15 @@
   "common.admin.franchiseLocations.infoDialog.fields.publicPhone": "Public phone",
   "common.admin.franchiseLocations.infoDialog.fields.status": "Status",
   "common.admin.franchiseLocations.infoDialog.fields.updated": "Updated",
-  "common.admin.franchiseLocations.infoDialog.fields.reason": "Reason"
+  "common.admin.franchiseLocations.infoDialog.fields.reason": "Reason",
+
+  "common.admin.franchiseLocations.rejectDialog.enterReason": "Please enter a reason.",
+  "common.admin.franchiseLocations.rejectDialog.failed": "Reject failed.",
+  "common.admin.franchiseLocations.rejectDialog.title": "Reject location",
+  "common.admin.franchiseLocations.rejectDialog.subtitle": "Please provide a clear reason for the rejection.",
+  "common.admin.franchiseLocations.rejectDialog.close": "Close",
+  "common.admin.franchiseLocations.rejectDialog.reason": "Reason *",
+  "common.admin.franchiseLocations.rejectDialog.placeholder": "e.g. address incomplete / not plausible / duplicate",
+  "common.admin.franchiseLocations.rejectDialog.rejecting": "Rejecting...",
+  "common.admin.franchiseLocations.rejectDialog.reject": "Reject"
 }
