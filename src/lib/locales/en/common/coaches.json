@@ -1,0 +1,13 @@
+{
+  "common.admin.coaches.pending.empty": "No new coaches awaiting review.",
+  "common.admin.coaches.pending.open": "Open",
+  "common.admin.coaches.pending.approve": "Approve",
+  "common.admin.coaches.pending.reject": "Reject",
+  "common.admin.coaches.pending.by": "By",
+  "common.admin.coaches.pending.status": "Status",
+  "common.admin.coaches.pending.date": "Date",
+  "common.admin.coaches.pending.dateOfChange": "Date of change",
+  "common.admin.coaches.pending.firstReview": "First review",
+  "common.admin.coaches.pending.review": "Please review",
+  "common.admin.coaches.pending.awaitingApproval": "Awaiting approval"
+}

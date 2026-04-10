@@ -1,6 +1,8 @@
 // src/app/admin/(app)/coaches/components/PendingCoachesList.tsx
 "use client";
 
+import { useTranslation } from "react-i18next";
+import type { TFunction } from "i18next";
 import type { Coach } from "../types";
 import {
   cleanStr,
@@ -13,6 +15,7 @@ import {
   providerLabel,
 } from "../utils";
 
+type Translate = TFunction;
 type Props = {
   items: Coach[];
   onOpen: (c: Coach) => void;
@@ -22,30 +25,30 @@ type Props = {
   busySlug?: string | null;
 };
 
-// function isFirstReviewText(s: string) {
-//   return cleanStr(s).toLowerCase() === "erstprüfung";
-// }
+function isFirstReviewText(s: string, t: Translate) {
+  const value = cleanStr(s).toLowerCase();
+  const localized = cleanStr(
+    t("common.admin.coaches.pending.firstReview"),
+  ).toLowerCase();
 
-function isFirstReviewText(s: string) {
-  return cleanStr(s).toLowerCase() === "first review";
+  return value === "first review" || value === localized;
 }
-
-function changeText(c: Coach) {
+function changeText(c: Coach, t: Translate) {
   const s = cleanStr(draftSummary(c));
-  return s && !isFirstReviewText(s) ? s : "";
+  return s && !isFirstReviewText(s, t) ? s : "";
 }
-
-function changeDate(c: Coach) {
+function changeDate(c: Coach, lang?: string) {
   const iso = cleanStr(
     (c as any).draftUpdatedAt || (c as any).lastChangeAt || "",
   );
-  return iso ? fmtDateDE(iso) : "";
+  return iso ? fmtDateDE(iso, lang) : "";
 }
 
-function dateLine(c: Coach, date: string) {
+function dateLine(c: Coach, date: string, t: Translate) {
   if (!date) return "";
-  if (!everApproved(c)) return `Date: ${date}`;
-  return `Date of change: ${date}`;
+  if (!everApproved(c))
+    return `${t("common.admin.coaches.pending.date")}: ${date}`;
+  return `${t("common.admin.coaches.pending.dateOfChange")}: ${date}`;
 }
 
 function isRowBusy(
@@ -57,10 +60,10 @@ function isRowBusy(
   return cleanStr(busySlug) === cleanStr(getSlug(c));
 }
 
-function EmptyState() {
+function EmptyState({ text }: { text: string }) {
   return (
     <section className="card">
-      <div className="card__empty">No new coaches awaiting review.</div>
+      <div className="card__empty">{text}</div>
     </section>
   );
 }
@@ -89,23 +92,24 @@ function RowActions(p: {
   onOpen: (c: Coach) => void;
   onApprove: (c: Coach) => void;
   onReject: (c: Coach) => void;
+  t: Translate;
 }) {
-  const { c, disabled, onOpen, onApprove, onReject } = p;
+  const { c, disabled, onOpen, onApprove, onReject, t } = p;
 
   return (
     <div className="pending-coaches__actions">
       <ActionBtn
-        label="Open"
+        label={t("common.admin.coaches.pending.open")}
         disabled={disabled}
         onClick={() => (disabled ? null : onOpen(c))}
       />
       <ActionBtn
-        label="Approve"
+        label={t("common.admin.coaches.pending.approve")}
         disabled={disabled}
         onClick={() => (disabled ? null : onApprove(c))}
       />
       <ActionBtn
-        label="Reject"
+        label={t("common.admin.coaches.pending.reject")}
         danger
         disabled={disabled}
         onClick={() => (disabled ? null : onReject(c))}
@@ -114,27 +118,33 @@ function RowActions(p: {
   );
 }
 
-function StatusLine({ c }: { c: Coach }) {
+function StatusLine(p: { c: Coach; t: Translate }) {
+  const { c, t } = p;
+
   return (
     <div className="pending-coaches__sub">
-      <span>By: {providerLabel(c)}</span>
+      <span>
+        {t("common.admin.coaches.pending.by")}: {providerLabel(c)}
+      </span>
       <span className="pending-coaches__sep">•</span>
       <span>
-        Status: <b>{pendingReviewLabel(c)}</b>
+        {t("common.admin.coaches.pending.status")}:{" "}
+        <b>{pendingReviewLabel(c, t)}</b>
       </span>
     </div>
   );
 }
 
-function RowMeta({ c }: { c: Coach }) {
-  const text = changeText(c);
-  const date = changeDate(c);
-  const line = dateLine(c, date);
+function RowMeta(p: { c: Coach; t: Translate; lang?: string }) {
+  const { c, t, lang } = p;
+  const text = changeText(c, t);
+  const date = changeDate(c, lang);
+  const line = dateLine(c, date, t);
 
   return (
     <div className="pending-coaches__meta">
       <div className="pending-coaches__title">{fullName(c)}</div>
-      <StatusLine c={c} />
+      <StatusLine c={c} t={t} />
       {text ? <div className="pending-coaches__sub">{text}</div> : null}
       {line ? <div className="pending-coaches__sub">{line}</div> : null}
     </div>
@@ -149,7 +159,9 @@ export default function PendingCoachesList({
   busy,
   busySlug,
 }: Props) {
-  if (!items.length) return <EmptyState />;
+  const { t, i18n } = useTranslation();
+  if (!items.length)
+    return <EmptyState text={t("common.admin.coaches.pending.empty")} />;
 
   return (
     <section className="card">
@@ -160,13 +172,14 @@ export default function PendingCoachesList({
 
           return (
             <div key={slug} className="pending-coaches__row">
-              <RowMeta c={c} />
+              <RowMeta c={c} t={t} lang={i18n.language} />
               <RowActions
                 c={c}
                 disabled={rowBusy}
                 onOpen={onOpen}
                 onApprove={onApprove}
                 onReject={onReject}
+                t={t}
               />
             </div>
           );

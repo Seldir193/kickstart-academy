@@ -1,0 +1,13 @@
+{
+  "common.admin.coaches.pending.empty": "İnceleme bekleyen yeni antrenör yok.",
+  "common.admin.coaches.pending.open": "Aç",
+  "common.admin.coaches.pending.approve": "Onayla",
+  "common.admin.coaches.pending.reject": "Reddet",
+  "common.admin.coaches.pending.by": "Ekleyen",
+  "common.admin.coaches.pending.status": "Durum",
+  "common.admin.coaches.pending.date": "Tarih",
+  "common.admin.coaches.pending.dateOfChange": "Değişiklik tarihi",
+  "common.admin.coaches.pending.firstReview": "İlk inceleme",
+  "common.admin.coaches.pending.review": "Lütfen inceleyin",
+  "common.admin.coaches.pending.awaitingApproval": "Onay bekliyor"
+}

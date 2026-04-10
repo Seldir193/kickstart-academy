@@ -1,0 +1,13 @@
+{
+  "common.admin.coaches.pending.empty": "Keine neuen Trainer zur Prüfung.",
+  "common.admin.coaches.pending.open": "Öffnen",
+  "common.admin.coaches.pending.approve": "Freigeben",
+  "common.admin.coaches.pending.reject": "Ablehnen",
+  "common.admin.coaches.pending.by": "Von",
+  "common.admin.coaches.pending.status": "Status",
+  "common.admin.coaches.pending.date": "Datum",
+  "common.admin.coaches.pending.dateOfChange": "Änderungsdatum",
+  "common.admin.coaches.pending.firstReview": "Erstprüfung",
+  "common.admin.coaches.pending.review": "Bitte prüfen",
+  "common.admin.coaches.pending.awaitingApproval": "Wartet auf Freigabe"
+}
