@@ -11,6 +11,7 @@ import deInvoices from "../locales/de/common/invoices.json";
 import deCustomers from "../locales/de/common/customers.json";
 import deNews from "../locales/de/common/news.json";
 import deFranchiseLocations from "../locales/de/common/franchise-locations.json";
+import deCoaches from "../locales/de/common/coaches.json";
 
 import enCommonBase from "../locales/en/common/common.json";
 import enBookings from "../locales/en/common/bookings.json";
@@ -21,6 +22,7 @@ import enInvoices from "../locales/en/common/invoices.json";
 import enCustomers from "../locales/en/common/customers.json";
 import enNews from "../locales/en/common/news.json";
 import enFranchiseLocations from "../locales/en/common/franchise-locations.json";
+import enCoaches from "../locales/de/common/coaches.json";
 
 import trCommonBase from "../locales/tr/common/common.json";
 import trBookings from "../locales/tr/common/bookings.json";
@@ -31,6 +33,7 @@ import trInvoices from "../locales/tr/common/invoices.json";
 import trCustomers from "../locales/tr/common/customers.json";
 import trNews from "../locales/tr/common/news.json";
 import trFranchiseLocations from "../locales/tr/common/franchise-locations.json";
+import trCoaches from "../locales/de/common/coaches.json";
 
 import deBook from "../locales/de/book.json";
 import enBook from "../locales/en/book.json";
@@ -49,6 +52,7 @@ const resources = {
       ...deCustomers,
       ...deNews,
       ...deFranchiseLocations,
+      ...deCoaches,
     },
     book: deBook,
   },
@@ -63,6 +67,7 @@ const resources = {
       ...enCustomers,
       ...enNews,
       ...enFranchiseLocations,
+      ...enCoaches,
     },
     book: enBook,
   },
@@ -77,6 +82,7 @@ const resources = {
       ...trCustomers,
       ...trNews,
       ...trFranchiseLocations,
+      ...trCoaches,
     },
     book: trBook,
   },
