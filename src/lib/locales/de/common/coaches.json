@@ -9,5 +9,8 @@
   "common.admin.coaches.pending.dateOfChange": "Änderungsdatum",
   "common.admin.coaches.pending.firstReview": "Erstprüfung",
   "common.admin.coaches.pending.review": "Bitte prüfen",
-  "common.admin.coaches.pending.awaitingApproval": "Wartet auf Freigabe"
+  "common.admin.coaches.pending.awaitingApproval": "Wartet auf Freigabe",
+
+  "common.admin.coaches.pagination.previous": "Vorherige Seite",
+  "common.admin.coaches.pagination.next": "Nächste Seite"
 }

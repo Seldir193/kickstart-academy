@@ -9,5 +9,8 @@
   "common.admin.coaches.pending.dateOfChange": "Date of change",
   "common.admin.coaches.pending.firstReview": "First review",
   "common.admin.coaches.pending.review": "Please review",
-  "common.admin.coaches.pending.awaitingApproval": "Awaiting approval"
+  "common.admin.coaches.pending.awaitingApproval": "Awaiting approval",
+
+  "common.admin.coaches.pagination.previous": "Previous page",
+  "common.admin.coaches.pagination.next": "Next page"
 }

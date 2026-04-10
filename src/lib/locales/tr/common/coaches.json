@@ -9,5 +9,8 @@
   "common.admin.coaches.pending.dateOfChange": "Değişiklik tarihi",
   "common.admin.coaches.pending.firstReview": "İlk inceleme",
   "common.admin.coaches.pending.review": "Lütfen inceleyin",
-  "common.admin.coaches.pending.awaitingApproval": "Onay bekliyor"
+  "common.admin.coaches.pending.awaitingApproval": "Onay bekliyor",
+
+  "common.admin.coaches.pagination.previous": "Önceki sayfa",
+  "common.admin.coaches.pagination.next": "Sonraki sayfa"
 }
