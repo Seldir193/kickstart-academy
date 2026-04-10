@@ -22,6 +22,8 @@ import {
   updateMine,
 } from "../franchise_locations.api";
 import { isSuperAdminUser } from "../page.helpers";
+import { useTranslation } from "react-i18next";
+import { toastErrorMessage, toastText } from "@/lib/toast-messages";
 
 type Notice = { type: "ok" | "error"; text: string };
 const pageSize = 8;
@@ -73,6 +75,7 @@ function clampPage(n: number, pages: number, dir: 1 | -1) {
 }
 
 export function useFranchiseLocationsPage() {
+  const { t } = useTranslation();
   const [meUser, setMeUser] = useState<{
     role?: string | null;
     isSuperAdmin?: boolean;
@@ -245,7 +248,11 @@ export function useFranchiseLocationsPage() {
         const [mp, ma, mr, pp, pa, pr] = await Promise.all(tasks);
         assignLists(mp, ma, mr, pp, pa, pr);
       } catch (e: any) {
-        const msg = e?.message || "Load failed";
+        const msg = toastErrorMessage(
+          t,
+          e,
+          "common.admin.franchiseLocations.toast.loadFailed",
+        );
         setErr(msg);
         toastErr(msg);
       } finally {
@@ -321,11 +328,27 @@ export function useFranchiseLocationsPage() {
       try {
         if (edit?.id) await updateMine(edit.id, payload);
         else await createMine(payload);
-        toastOk(edit?.id ? "Location saved." : "Location created.");
+        toastOk(
+          edit?.id
+            ? toastText(
+                t,
+                "common.admin.franchiseLocations.toast.locationSaved",
+              )
+            : toastText(
+                t,
+                "common.admin.franchiseLocations.toast.locationCreated",
+              ),
+        );
         setOpenDialog(false);
         await loadAll(true);
       } catch (e: any) {
-        toastErr(e?.message || "Saving failed");
+        toastErr(
+          toastErrorMessage(
+            t,
+            e,
+            "common.admin.franchiseLocations.toast.savingFailed",
+          ),
+        );
         throw e;
       }
     },
@@ -335,7 +358,9 @@ export function useFranchiseLocationsPage() {
   const removeMineOne = useCallback(
     async (id: string) => {
       await deleteMine(id);
-      toastOk("Location deleted.");
+      toastOk(
+        toastText(t, "common.admin.franchiseLocations.toast.locationDeleted"),
+      );
       await loadAll(true);
     },
     [loadAll, toastOk],
@@ -344,7 +369,11 @@ export function useFranchiseLocationsPage() {
   const deleteManyMine = useCallback(
     async (ids: string[]) => {
       await Promise.all(ids.map((id) => deleteMine(id)));
-      toastOk(`(${ids.length}) deleted.`);
+      toastOk(
+        t("common.admin.franchiseLocations.toast.locationsDeleted", {
+          count: ids.length,
+        }),
+      );
       await loadAll(true);
     },
     [loadAll, toastOk],
@@ -353,7 +382,11 @@ export function useFranchiseLocationsPage() {
   const deleteManyAdmin = useCallback(
     async (ids: string[]) => {
       await Promise.all(ids.map((id) => deleteAdmin(id)));
-      toastOk(`(${ids.length}) deleted.`);
+      toastOk(
+        t("common.admin.franchiseLocations.toast.locationsDeleted", {
+          count: ids.length,
+        }),
+      );
       await loadAll(true);
     },
     [loadAll, toastOk],
@@ -362,7 +395,7 @@ export function useFranchiseLocationsPage() {
   const deleteOneAdmin = useCallback(
     async (it: FranchiseLocation) => {
       await deleteAdmin(it.id);
-      toastOk("Deleted.");
+      toastOk(toastText(t, "common.admin.franchiseLocations.toast.deleted"));
       await loadAll(true);
     },
     [loadAll, toastOk],
@@ -372,10 +405,21 @@ export function useFranchiseLocationsPage() {
     async (it: FranchiseLocation) => {
       try {
         await approve(it.id);
-        toastOk("Location approved.");
+        toastOk(
+          toastText(
+            t,
+            "common.admin.franchiseLocations.toast.locationApproved",
+          ),
+        );
         await loadAll(true);
       } catch (e: any) {
-        toastErr(e?.message || "Approve failed");
+        toastErr(
+          toastErrorMessage(
+            t,
+            e,
+            "common.admin.franchiseLocations.toast.approveFailed",
+          ),
+        );
       }
     },
     [loadAll, toastErr, toastOk],
@@ -386,10 +430,21 @@ export function useFranchiseLocationsPage() {
       if (!rejectTarget) return;
       try {
         await reject(rejectTarget.id, reason);
-        toastOk("Location rejected.");
+        toastOk(
+          toastText(
+            t,
+            "common.admin.franchiseLocations.toast.locationRejected",
+          ),
+        );
         await loadAll(true);
       } catch (e: any) {
-        toastErr(e?.message || "Reject failed");
+        toastErr(
+          toastErrorMessage(
+            t,
+            e,
+            "common.admin.franchiseLocations.toast.rejectFailed",
+          ),
+        );
       }
     },
     [loadAll, rejectTarget, toastErr, toastOk],
@@ -399,10 +454,21 @@ export function useFranchiseLocationsPage() {
     async (it: FranchiseLocation) => {
       try {
         await submitForReview(it.id);
-        toastOk("Changes submitted.");
+        toastOk(
+          toastText(
+            t,
+            "common.admin.franchiseLocations.toast.changesSubmitted",
+          ),
+        );
         await loadAll(true);
       } catch (e: any) {
-        toastErr(e?.message || "Submit failed");
+        toastErr(
+          toastErrorMessage(
+            t,
+            e,
+            "common.admin.franchiseLocations.toast.submitFailed",
+          ),
+        );
       }
     },
     [loadAll, toastErr, toastOk],
@@ -417,7 +483,13 @@ export function useFranchiseLocationsPage() {
         await setPublished(id, next);
         await loadAll(true);
       } catch (e: any) {
-        toastErr(e?.message || "Toggle failed");
+        toastErr(
+          toastErrorMessage(
+            t,
+            e,
+            "common.admin.franchiseLocations.toast.toggleFailed",
+          ),
+        );
       } finally {
         setPublishedBusyId(null);
       }

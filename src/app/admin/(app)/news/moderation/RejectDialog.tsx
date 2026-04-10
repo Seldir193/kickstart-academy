@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { toastErrorMessage } from "@/lib/toast-messages";
 
 type Props = {
   open: boolean;
@@ -23,14 +25,16 @@ export default function RejectDialog({
   readOnly,
   initialReason,
 }: Props) {
+  const { t } = useTranslation();
   const [reason, setReason] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const heading = useMemo(() => {
-    const t = clean(title);
-    return t ? `Reject: ${t}` : "Reject item";
-  }, [title]);
+    const text = clean(title);
+    return text ? t("common.admin.news.rejectDialog.headingWithTitle", { title: text })
+      : t("common.admin.news.rejectDialog.heading");
+  }, [t,title]);
 
   useEffect(() => {
     if (!open) return;
@@ -41,14 +45,20 @@ export default function RejectDialog({
 
   async function submit() {
     const r = clean(reason);
-    if (!r) return setError("Please enter a reason.");
+    if (!r)  return setError(t("common.admin.news.rejectDialog.errorEnterReason"));
     setError(null);
     setBusy(true);
     try {
       await onSubmit(r);
       onClose();
-    } catch (e: any) {
-      setError(e?.message || "Reject failed.");
+    } catch (error: unknown) {
+      setError(
+        toastErrorMessage(
+          t,
+          error,
+          "common.admin.news.rejectDialog.errorRejectFailed",
+        ),
+      );
     } finally {
       setBusy(false);
     }
@@ -65,7 +75,8 @@ export default function RejectDialog({
       <button
         type="button"
         className="dialog-backdrop-hit news-reject__backdrop-hit"
-        aria-label="Close"
+       
+        aria-label={t("common.close")}
         onClick={() => {
           if (!busy) onClose();
         }}
@@ -77,8 +88,8 @@ export default function RejectDialog({
             <div className="dialog-title news-reject__title">{heading}</div>
             <div className="dialog-subtitle news-reject__subtitle">
               {readOnly
-                ? "Review the stored rejection reason."
-                : "Add a clear reason for rejecting this item."}
+                ? t("common.admin.news.rejectDialog.readOnlySubtitle")
+                : t("common.admin.news.rejectDialog.subtitle")}
             </div>
           </div>
 
@@ -87,7 +98,7 @@ export default function RejectDialog({
               <button
                 type="button"
                 className="dialog-close modal__close"
-                aria-label="Close"
+                aria-label={t("common.close")}
                 onClick={() => {
                   if (!busy) onClose();
                 }}
@@ -110,13 +121,13 @@ export default function RejectDialog({
           ) : null}
 
           <div className="field">
-            <label className="dialog-label">Reason *</label>
+            <label className="dialog-label">{t("common.admin.news.rejectDialog.reasonLabel")}</label>
             <textarea
               className="input news-reject__textarea"
               value={reason}
               readOnly={!!readOnly}
               onChange={(e) => setReason(e.target.value)}
-              placeholder="e.g. missing data, implausible content, or duplicate entry"
+              placeholder={t("common.admin.news.rejectDialog.reasonPlaceholder")}
             />
           </div>
         </div>
@@ -131,7 +142,8 @@ export default function RejectDialog({
               }}
               disabled={busy}
             >
-              {busy ? "Rejecting..." : "Reject"}
+              {busy ? t("common.admin.news.rejectDialog.rejecting")
+                : t("common.admin.news.rejectDialog.reject")}
             </button>
           </div>
         ) : null}

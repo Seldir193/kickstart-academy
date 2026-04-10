@@ -1,3 +1,4 @@
+//src\app\api\admin\auth\users\[id]\active\route.ts
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 

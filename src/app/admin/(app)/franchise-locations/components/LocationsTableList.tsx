@@ -14,7 +14,7 @@ import {
   actionsFor,
   blurTarget,
   clean,
-  fmtDateDe,
+  fmtDate,
   fullName,
   idOf,
   onActionKey,
@@ -77,7 +77,9 @@ function getCanToggle(it: FranchiseLocation, mineRow: boolean) {
 function EmptyState({ t }: { t: (key: string) => string }) {
   return (
     <section className="card">
-      <div className="card__empty">{t("common.admin.franchiseLocations.empty")}</div>
+      <div className="card__empty">
+        {t("common.admin.franchiseLocations.empty")}
+      </div>
     </section>
   );
 }
@@ -85,12 +87,24 @@ function EmptyState({ t }: { t: (key: string) => string }) {
 function HeadRow({ t }: { t: (key: string) => string }) {
   return (
     <div className="news-list__head" aria-hidden="true">
-      <div className="news-list__h">{t("common.admin.franchiseLocations.table.licence")}</div>
-      <div className="news-list__h">{t("common.admin.franchiseLocations.table.country")}</div>
-      <div className="news-list__h">{t("common.admin.franchiseLocations.table.city")}</div>
-      <div className="news-list__h">{t("common.admin.franchiseLocations.table.status")}</div>
-      <div className="news-list__h">{t("common.admin.franchiseLocations.table.updated")}</div>
-      <div className="news-list__h news-list__h--right">{t("common.admin.franchiseLocations.table.actions")}</div>
+      <div className="news-list__h">
+        {t("common.admin.franchiseLocations.table.licence")}
+      </div>
+      <div className="news-list__h">
+        {t("common.admin.franchiseLocations.table.country")}
+      </div>
+      <div className="news-list__h">
+        {t("common.admin.franchiseLocations.table.city")}
+      </div>
+      <div className="news-list__h">
+        {t("common.admin.franchiseLocations.table.status")}
+      </div>
+      <div className="news-list__h">
+        {t("common.admin.franchiseLocations.table.updated")}
+      </div>
+      <div className="news-list__h news-list__h--right">
+        {t("common.admin.franchiseLocations.table.actions")}
+      </div>
     </div>
   );
 }
@@ -130,10 +144,10 @@ function CityCell(it: FranchiseLocation) {
   );
 }
 
-function UpdatedCell(it: FranchiseLocation) {
+function UpdatedCell(it: FranchiseLocation, lang?: string) {
   return (
     <div className="news-list__cell news-list__cell--author">
-      {fmtDateDe((it as any).updatedAt)}
+      {fmtDate((it as any).updatedAt, lang)}
     </div>
   );
 }
@@ -254,6 +268,8 @@ function RowItem(opts: {
   onAskReject?: (it: FranchiseLocation) => void;
   onDeleteOne?: (it: FranchiseLocation) => void;
   sel: ReturnType<typeof useSelection>;
+  t: (key: string) => string;
+  lang?: string;
 }) {
   const id = idOf(opts.it);
   const hideActions = opts.selectMode || opts.checked;
@@ -261,8 +277,13 @@ function RowItem(opts: {
   const published = getPublished(opts.it);
   const canT = getCanToggle(opts.it, isMineRow(opts.rowMode));
   const swDisabled = opts.busy || swBusy || !canT;
-  const st = statusParts(opts.it, opts.rowMode);
-  const acts = actionsFor({ ...opts, it: opts.it, rowMode: opts.rowMode });
+  const st = statusParts(opts.it, opts.rowMode, opts.t);
+  const acts = actionsFor({
+    ...opts,
+    it: opts.it,
+    rowMode: opts.rowMode,
+    t: opts.t,
+  });
 
   return (
     <li
@@ -299,14 +320,15 @@ function RowItem(opts: {
         switchDisabled: swDisabled,
         onTogglePublished: opts.onTogglePublished,
       })}
-      {UpdatedCell(opts.it)}
+      {UpdatedCell(opts.it, opts.lang)}
       {ActionsCell({ hideActions, acts })}
     </li>
   );
 }
 
 export default function LocationsTableList(p: Props) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+
   const idsOnPage = useMemo(
     () => p.items.map((it) => idOf(it)).filter(Boolean),
     [p.items],
@@ -336,7 +358,7 @@ export default function LocationsTableList(p: Props) {
     p.onToggleSelectMode();
   }
 
-  if (!p.items.length) return <EmptyState t={t}/>;
+  if (!p.items.length) return <EmptyState t={t} />;
 
   return (
     <>
@@ -367,7 +389,7 @@ export default function LocationsTableList(p: Props) {
 
       <section className={`card news-list ${p.busy ? "is-busy" : ""}`}>
         <div className="news-list__table">
-          <HeadRow t={t}/>
+          <HeadRow t={t} />
           <ul className="list list--bleed">
             {p.items.map((it) => {
               const id = idOf(it);
@@ -391,6 +413,8 @@ export default function LocationsTableList(p: Props) {
                   onAskReject={p.onAskReject}
                   onDeleteOne={p.onDeleteOne}
                   sel={sel}
+                  t={t}
+                  lang={i18n.language}
                 />
               );
             })}

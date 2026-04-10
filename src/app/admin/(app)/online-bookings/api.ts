@@ -49,9 +49,6 @@ export async function confirmBooking(id: string, resend: boolean) {
   const d = await readJson<any>(r);
   if (!r.ok || d?.ok === false) throw new Error(d?.error || r.statusText);
 
-  // return resend
-  //   ? "Bestätigung erneut gesendet."
-  //   : "Buchung bestätigt + Rechnung geschickt.";
   return d;
 }
 
@@ -65,7 +62,7 @@ export async function setBookingStatus(id: string, next: Status) {
   });
   const d = await readJson<any>(r);
   if (!r.ok || d?.ok === false) throw new Error(d?.error || r.statusText);
-  return "Status aktualisiert.";
+  return d;
 }
 
 export async function deleteBooking(id: string) {
@@ -75,7 +72,7 @@ export async function deleteBooking(id: string) {
   });
   const d = await readJson<any>(r);
   if (!r.ok || d?.ok === false) throw new Error(d?.error || r.statusText);
-  return "Buchung gelöscht.";
+ return d;
 }
 
 export async function cancelConfirmedBooking(id: string) {
@@ -85,7 +82,7 @@ export async function cancelConfirmedBooking(id: string) {
   );
   const d = await readJson<any>(r);
   if (!r.ok || d?.ok === false) throw new Error(d?.error || r.statusText);
-  return "Termin abgesagt.";
+  return d;
 }
 
 export async function restoreBooking(id: string) {
@@ -132,5 +129,5 @@ export async function approvePayment(id: string) {
   );
   const d = await readJson<any>(r);
   if (!r.ok || d?.ok === false) throw new Error(d?.error || r.statusText);
-  return "Zahlung freigegeben.";
+ return d;
 }

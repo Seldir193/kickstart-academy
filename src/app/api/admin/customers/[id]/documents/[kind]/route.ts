@@ -1,4 +1,4 @@
-// app/api/admin/customers/[id]/bookings/[bid]/documents/[kind]/route.ts
+//src\app\api\admin\customers\[id]\documents\[kind]\route.ts
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 

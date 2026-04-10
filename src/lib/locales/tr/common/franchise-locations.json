@@ -74,5 +74,20 @@
   "common.admin.franchiseLocations.sort.name_az": "İsim A–Z",
   "common.admin.franchiseLocations.sort.name_za": "İsim Z–A",
   "common.admin.franchiseLocations.sort.city_az": "Şehir A–Z",
-  "common.admin.franchiseLocations.sort.city_za": "Şehir Z–A"
+  "common.admin.franchiseLocations.sort.city_za": "Şehir Z–A",
+
+  "common.admin.franchiseLocations.toast.loadFailed": "Yükleme başarısız oldu.",
+  "common.admin.franchiseLocations.toast.locationSaved": "Lokasyon kaydedildi.",
+  "common.admin.franchiseLocations.toast.locationCreated": "Lokasyon oluşturuldu.",
+  "common.admin.franchiseLocations.toast.savingFailed": "Kaydetme başarısız oldu.",
+  "common.admin.franchiseLocations.toast.locationDeleted": "Lokasyon silindi.",
+  "common.admin.franchiseLocations.toast.locationsDeleted": "({{count}}) silindi.",
+  "common.admin.franchiseLocations.toast.deleted": "Silindi.",
+  "common.admin.franchiseLocations.toast.locationApproved": "Lokasyon onaylandı.",
+  "common.admin.franchiseLocations.toast.approveFailed": "Onaylama başarısız oldu.",
+  "common.admin.franchiseLocations.toast.locationRejected": "Lokasyon reddedildi.",
+  "common.admin.franchiseLocations.toast.rejectFailed": "Reddetme başarısız oldu.",
+  "common.admin.franchiseLocations.toast.changesSubmitted": "Değişiklikler gönderildi.",
+  "common.admin.franchiseLocations.toast.submitFailed": "Gönderme başarısız oldu.",
+  "common.admin.franchiseLocations.toast.toggleFailed": "Değiştirme başarısız oldu."
 }

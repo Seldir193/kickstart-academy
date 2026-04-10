@@ -74,5 +74,20 @@
   "common.admin.franchiseLocations.sort.name_az": "Name A–Z",
   "common.admin.franchiseLocations.sort.name_za": "Name Z–A",
   "common.admin.franchiseLocations.sort.city_az": "Stadt A–Z",
-  "common.admin.franchiseLocations.sort.city_za": "Stadt Z–A"
+  "common.admin.franchiseLocations.sort.city_za": "Stadt Z–A",
+
+  "common.admin.franchiseLocations.toast.loadFailed": "Laden fehlgeschlagen.",
+  "common.admin.franchiseLocations.toast.locationSaved": "Standort gespeichert.",
+  "common.admin.franchiseLocations.toast.locationCreated": "Standort erstellt.",
+  "common.admin.franchiseLocations.toast.savingFailed": "Speichern fehlgeschlagen.",
+  "common.admin.franchiseLocations.toast.locationDeleted": "Standort gelöscht.",
+  "common.admin.franchiseLocations.toast.locationsDeleted": "({{count}}) gelöscht.",
+  "common.admin.franchiseLocations.toast.deleted": "Gelöscht.",
+  "common.admin.franchiseLocations.toast.locationApproved": "Standort genehmigt.",
+  "common.admin.franchiseLocations.toast.approveFailed": "Genehmigen fehlgeschlagen.",
+  "common.admin.franchiseLocations.toast.locationRejected": "Standort abgelehnt.",
+  "common.admin.franchiseLocations.toast.rejectFailed": "Ablehnen fehlgeschlagen.",
+  "common.admin.franchiseLocations.toast.changesSubmitted": "Änderungen eingereicht.",
+  "common.admin.franchiseLocations.toast.submitFailed": "Einreichen fehlgeschlagen.",
+  "common.admin.franchiseLocations.toast.toggleFailed": "Umschalten fehlgeschlagen."
 }

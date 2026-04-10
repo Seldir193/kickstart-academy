@@ -1,3 +1,4 @@
+//src\app\admin\(app)\customers\constants.ts
 export const CANCEL_ALLOWED = new Set([
   "Kindergarten",
   "Foerdertraining",

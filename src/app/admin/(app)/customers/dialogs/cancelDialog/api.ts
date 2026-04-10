@@ -1,3 +1,4 @@
+//src\app\admin\(app)\customers\dialogs\cancelDialog\api.ts
 import type { Customer } from "../../types";
 
 export async function fetchOffers(limit: number) {

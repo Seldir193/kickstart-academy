@@ -74,5 +74,20 @@
   "common.admin.franchiseLocations.sort.name_az": "Name A–Z",
   "common.admin.franchiseLocations.sort.name_za": "Name Z–A",
   "common.admin.franchiseLocations.sort.city_az": "City A–Z",
-  "common.admin.franchiseLocations.sort.city_za": "City Z–A"
+  "common.admin.franchiseLocations.sort.city_za": "City Z–A",
+
+  "common.admin.franchiseLocations.toast.loadFailed": "Loading failed.",
+  "common.admin.franchiseLocations.toast.locationSaved": "Location saved.",
+  "common.admin.franchiseLocations.toast.locationCreated": "Location created.",
+  "common.admin.franchiseLocations.toast.savingFailed": "Saving failed.",
+  "common.admin.franchiseLocations.toast.locationDeleted": "Location deleted.",
+  "common.admin.franchiseLocations.toast.locationsDeleted": "({{count}}) deleted.",
+  "common.admin.franchiseLocations.toast.deleted": "Deleted.",
+  "common.admin.franchiseLocations.toast.locationApproved": "Location approved.",
+  "common.admin.franchiseLocations.toast.approveFailed": "Approval failed.",
+  "common.admin.franchiseLocations.toast.locationRejected": "Location rejected.",
+  "common.admin.franchiseLocations.toast.rejectFailed": "Rejection failed.",
+  "common.admin.franchiseLocations.toast.changesSubmitted": "Changes submitted.",
+  "common.admin.franchiseLocations.toast.submitFailed": "Submission failed.",
+  "common.admin.franchiseLocations.toast.toggleFailed": "Toggle failed."
 }

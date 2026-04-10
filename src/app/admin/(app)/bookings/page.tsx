@@ -38,37 +38,6 @@ type Busy =
   | { kind: "bulk_restore" }
   | null;
 
-// type BookingDialogDetail = {
-//   child?: {
-//     firstName?: string;
-//     lastName?: string;
-//     gender?: string;
-//     birthDate?: string | null;
-//   } | null;
-//   parent?: {
-//     salutation?: string;
-//     firstName?: string;
-//     lastName?: string;
-//     phone?: string;
-//   } | null;
-//   contact?: string;
-//   address?: string;
-// } | null;
-
-// type DialogBooking = Booking & {
-//   detail?: BookingDialogDetail;
-// };
-
-// function sortLabel(sort: SortKey) {
-//   const map: Record<SortKey, string> = {
-//     newest: "Newest first",
-//     oldest: "Oldest first",
-//     nameAsc: "Name A–Z",
-//     nameDesc: "Name Z–A",
-
-//   };
-//   return map[sort] || "Newest first";
-// }
 
 function sortLabel(sort: SortKey, t: (key: string) => string) {
   const map: Record<SortKey, string> = {
@@ -89,7 +58,7 @@ export default function AdminBookingsPage() {
   const [page, setPage] = useState(1);
   const [selectMode, setSelectMode] = useState(false);
   const toggleBtnRef = useRef<HTMLButtonElement | null>(null);
-  //const [sel, setSel] = useState<DialogBooking | null>(null);
+  
   const [sel, setSel] = useState<Booking | null>(null);
   const { notice, showOk, showError } = useNotice(5000);
 
@@ -101,16 +70,7 @@ export default function AdminBookingsPage() {
   const sortDd = useDropdown();
   const { t } = useTranslation();
 
-  // const computedStatusLabel = useMemo(
-  //   () =>
-  //     statusLabel({
-  //       status,
-  //       total: list.total,
-  //       totalAll: list.totalAll,
-  //       counts: list.counts,
-  //     }),
-  //   [status, list.total, list.totalAll, list.counts, t],
-  // );
+ 
 
   const computedStatusLabel = useMemo(
     () =>
@@ -185,8 +145,7 @@ export default function AdminBookingsPage() {
       await list.reload();
       setSelectMode(false);
     });
-    //showOk(`Deleted (${ids.length}).`);
-    //  showOk(t("common.admin.bookings.notice.deleted", { count: ids.length }));
+   
 
     showOk(`${t("common.admin.bookings.notice.deleted")} (${ids.length}).`);
   }
@@ -198,8 +157,7 @@ export default function AdminBookingsPage() {
       await list.reload();
       setSelectMode(false);
     });
-    //  showOk(`Restored (${ids.length}).`);
-    // showOk(t("common.admin.bookings.notice.restored", { count: ids.length }));
+    
     showOk(`${t("common.admin.bookings.notice.restored")} (${ids.length}).`);
   }
 
@@ -217,7 +175,7 @@ export default function AdminBookingsPage() {
       });
     } catch (e: any) {
       showError(e?.message || t("common.admin.bookings.error.detailsLoad"));
-      //  showError(e?.message || "Details could not be loaded.");
+     
       setSel(b);
     }
   }
@@ -286,7 +244,7 @@ export default function AdminBookingsPage() {
             programLabel={programLabel(program, t)}
             statusLabel={computedStatusLabel}
             sortLabel={sortLabel(sort, t)}
-            //  sortLabel={sortLabel(sort)}
+           
             program={program}
             status={status}
             sort={sort}

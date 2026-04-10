@@ -1,3 +1,4 @@
+//src\app\api\admin\auth\logout\route.ts
 import { NextResponse } from "next/server";
 
 export const dynamic = "force-dynamic";
