@@ -94,5 +94,8 @@
   "common.admin.franchiseLocations.confirmDialog.confirm": "Confirm",
   "common.admin.franchiseLocations.confirmDialog.cancel": "Cancel",
   "common.admin.franchiseLocations.confirmDialog.close": "Close",
-  "common.admin.franchiseLocations.confirmDialog.actionFailed": "Action failed."
+  "common.admin.franchiseLocations.confirmDialog.actionFailed": "Action failed.",
+
+  "common.admin.franchiseLocations.deleteDialog.title": "Delete location",
+  "common.admin.franchiseLocations.deleteDialog.text": "Do you really want to delete location \"{{name}}\"?"
 }

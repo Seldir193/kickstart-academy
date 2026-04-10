@@ -1,6 +1,7 @@
 "use client";
 
 import ConfirmDialog from "../../coaches/moderation/ConfirmDialog";
+import { useTranslation } from "react-i18next";
 
 type Props = {
   open: boolean;
@@ -15,11 +16,14 @@ export default function DeleteLocationDialog({
   onClose,
   onConfirm,
 }: Props) {
+  const { t } = useTranslation();
   return (
     <ConfirmDialog
       open={open}
-      title="Delete location"
-      text={`Do you really want to delete location "${locationName}"?`}
+      title={t("common.admin.franchiseLocations.deleteDialog.title")}
+      text={t("common.admin.franchiseLocations.deleteDialog.text", {
+        name: locationName,
+      })}
       confirmText="Confirm"
       cancelText="Cancel"
       danger={false}

@@ -94,5 +94,8 @@
   "common.admin.franchiseLocations.confirmDialog.confirm": "Onayla",
   "common.admin.franchiseLocations.confirmDialog.cancel": "İptal",
   "common.admin.franchiseLocations.confirmDialog.close": "Kapat",
-  "common.admin.franchiseLocations.confirmDialog.actionFailed": "İşlem başarısız oldu."
+  "common.admin.franchiseLocations.confirmDialog.actionFailed": "İşlem başarısız oldu.",
+
+  "common.admin.franchiseLocations.deleteDialog.title": "Lokasyonu sil",
+  "common.admin.franchiseLocations.deleteDialog.text": "\"{{name}}\" lokasyonunu gerçekten silmek istiyor musun?"
 }

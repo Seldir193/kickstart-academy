@@ -94,5 +94,8 @@
   "common.admin.franchiseLocations.confirmDialog.confirm": "Bestätigen",
   "common.admin.franchiseLocations.confirmDialog.cancel": "Abbrechen",
   "common.admin.franchiseLocations.confirmDialog.close": "Schließen",
-  "common.admin.franchiseLocations.confirmDialog.actionFailed": "Aktion fehlgeschlagen."
+  "common.admin.franchiseLocations.confirmDialog.actionFailed": "Aktion fehlgeschlagen.",
+
+  "common.admin.franchiseLocations.deleteDialog.title": "Standort löschen",
+  "common.admin.franchiseLocations.deleteDialog.text": "Möchtest du den Standort „{{name}}“ wirklich löschen?"
 }
