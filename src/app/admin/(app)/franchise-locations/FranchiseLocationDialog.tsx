@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import type { FranchiseLocation, LocationPayload } from "./types";
 
 type Props = {
@@ -37,10 +38,14 @@ export default function FranchiseLocationDialog({
   onSave,
   onDelete,
 }: Props) {
+  const { t } = useTranslation();
   const isEdit = Boolean(initial?.id);
   const title = useMemo(
-    () => (isEdit ? "Edit location" : "Add location"),
-    [isEdit],
+    () =>
+      isEdit
+        ? t("common.admin.franchiseLocations.formDialog.titleEdit")
+        : t("common.admin.franchiseLocations.formDialog.titleAdd"),
+    [isEdit, t],
   );
 
   const [busy, setBusy] = useState(false);
@@ -82,12 +87,16 @@ export default function FranchiseLocationDialog({
     };
 
     if (!payload.licenseeFirstName || !payload.licenseeLastName) {
-      setErr("First name and last name are required.");
+      setErr(
+        t("common.admin.franchiseLocations.formDialog.errors.nameRequired"),
+      );
       return;
     }
 
     if (!payload.country || !payload.city) {
-      setErr("Country and city are required.");
+      setErr(
+        t("common.admin.franchiseLocations.formDialog.errors.locationRequired"),
+      );
       return;
     }
 
@@ -96,7 +105,10 @@ export default function FranchiseLocationDialog({
       await onSave(payload);
       onClose();
     } catch (e: any) {
-      setErr(e?.message || "Saving failed.");
+      setErr(
+        e?.message ||
+          t("common.admin.franchiseLocations.formDialog.errors.saveFailed"),
+      );
     } finally {
       setBusy(false);
     }
@@ -110,7 +122,10 @@ export default function FranchiseLocationDialog({
       await onDelete();
       onClose();
     } catch (e: any) {
-      setErr(e?.message || "Deleting failed.");
+      setErr(
+        e?.message ||
+          t("common.admin.franchiseLocations.formDialog.errors.deleteFailed"),
+      );
     } finally {
       setBusy(false);
     }
@@ -121,7 +136,7 @@ export default function FranchiseLocationDialog({
       <button
         type="button"
         className="dialog-backdrop-hit fl-dialog__backdrop-hit"
-        aria-label="Close"
+        aria-label={t("common.admin.franchiseLocations.formDialog.close")}
         onClick={onClose}
       />
 
@@ -131,13 +146,14 @@ export default function FranchiseLocationDialog({
             <div className="dialog-title fl-dialog__title">{title}</div>
 
             <div className="dialog-subtitle fl-dialog__subtitle">
-              New or updated locations become visible only after superadmin
-              approval.
+              {t("common.admin.franchiseLocations.formDialog.subtitle")}
             </div>
 
             <div className="fl-dialog__title-actions">
               <span className="dialog-status dialog-status--neutral">
-                {isEdit ? "Edit" : "New"}
+                {isEdit
+                  ? t("common.admin.franchiseLocations.formDialog.badgeEdit")
+                  : t("common.admin.franchiseLocations.formDialog.badgeNew")}
               </span>
             </div>
           </div>
@@ -147,7 +163,9 @@ export default function FranchiseLocationDialog({
               <button
                 type="button"
                 className="dialog-close modal__close"
-                aria-label="Close"
+                aria-label={t(
+                  "common.admin.franchiseLocations.formDialog.close",
+                )}
                 onClick={onClose}
                 disabled={busy}
               >
@@ -167,7 +185,11 @@ export default function FranchiseLocationDialog({
 
           <div className="fl-dialog__grid">
             <div className="field">
-              <label className="dialog-label">First name *</label>
+              <label className="dialog-label">
+                {t(
+                  "common.admin.franchiseLocations.formDialog.fields.firstName",
+                )}
+              </label>
               <input
                 className="input"
                 value={form.licenseeFirstName}
@@ -178,7 +200,11 @@ export default function FranchiseLocationDialog({
             </div>
 
             <div className="field">
-              <label className="dialog-label">Last name *</label>
+              <label className="dialog-label">
+                {t(
+                  "common.admin.franchiseLocations.formDialog.fields.lastName",
+                )}
+              </label>
               <input
                 className="input"
                 value={form.licenseeLastName}
@@ -189,7 +215,9 @@ export default function FranchiseLocationDialog({
             </div>
 
             <div className="field">
-              <label className="dialog-label">Country *</label>
+              <label className="dialog-label">
+                {t("common.admin.franchiseLocations.formDialog.fields.country")}
+              </label>
               <input
                 className="input"
                 value={form.country}
@@ -198,7 +226,9 @@ export default function FranchiseLocationDialog({
             </div>
 
             <div className="field">
-              <label className="dialog-label">City *</label>
+              <label className="dialog-label">
+                {t("common.admin.franchiseLocations.formDialog.fields.city")}
+              </label>
               <input
                 className="input"
                 value={form.city}
@@ -207,7 +237,9 @@ export default function FranchiseLocationDialog({
             </div>
 
             <div className="field">
-              <label className="dialog-label">State/Region</label>
+              <label className="dialog-label">
+                {t("common.admin.franchiseLocations.formDialog.fields.state")}
+              </label>
               <input
                 className="input"
                 value={form.state}
@@ -216,7 +248,9 @@ export default function FranchiseLocationDialog({
             </div>
 
             <div className="field">
-              <label className="dialog-label">ZIP</label>
+              <label className="dialog-label">
+                {t("common.admin.franchiseLocations.formDialog.fields.zip")}
+              </label>
               <input
                 className="input"
                 value={form.zip}
@@ -225,7 +259,9 @@ export default function FranchiseLocationDialog({
             </div>
 
             <div className="field field--full">
-              <label className="dialog-label">Address</label>
+              <label className="dialog-label">
+                {t("common.admin.franchiseLocations.formDialog.fields.address")}
+              </label>
               <input
                 className="input"
                 value={form.address}
@@ -234,7 +270,9 @@ export default function FranchiseLocationDialog({
             </div>
 
             <div className="field">
-              <label className="dialog-label">Website</label>
+              <label className="dialog-label">
+                {t("common.admin.franchiseLocations.formDialog.fields.website")}
+              </label>
               <input
                 className="input"
                 value={form.website}
@@ -243,7 +281,11 @@ export default function FranchiseLocationDialog({
             </div>
 
             <div className="field">
-              <label className="dialog-label">Public email</label>
+              <label className="dialog-label">
+                {t(
+                  "common.admin.franchiseLocations.formDialog.fields.publicEmail",
+                )}
+              </label>
               <input
                 className="input"
                 value={form.emailPublic}
@@ -254,7 +296,11 @@ export default function FranchiseLocationDialog({
             </div>
 
             <div className="field">
-              <label className="dialog-label">Public phone</label>
+              <label className="dialog-label">
+                {t(
+                  "common.admin.franchiseLocations.formDialog.fields.publicPhone",
+                )}
+              </label>
               <input
                 className="input"
                 value={form.phonePublic}
@@ -275,7 +321,7 @@ export default function FranchiseLocationDialog({
                 disabled={busy}
                 type="button"
               >
-                Delete
+                {t("common.admin.franchiseLocations.formDialog.delete")}
               </button>
             ) : (
               <span />
@@ -289,7 +335,9 @@ export default function FranchiseLocationDialog({
               disabled={busy}
               type="button"
             >
-              {busy ? "Saving..." : "Save"}
+              {busy
+                ? t("common.admin.franchiseLocations.formDialog.saving")
+                : t("common.admin.franchiseLocations.formDialog.save")}
             </button>
           </div>
         </div>
