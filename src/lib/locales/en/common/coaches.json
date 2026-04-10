@@ -12,5 +12,28 @@
   "common.admin.coaches.pending.awaitingApproval": "Awaiting approval",
 
   "common.admin.coaches.pagination.previous": "Previous page",
-  "common.admin.coaches.pagination.next": "Next page"
+  "common.admin.coaches.pagination.next": "Next page",
+
+  "common.admin.coaches.table.empty": "No entries.",
+  "common.admin.coaches.table.name": "Name",
+  "common.admin.coaches.table.position": "Position",
+  "common.admin.coaches.table.since": "Since",
+  "common.admin.coaches.table.status": "Status",
+  "common.admin.coaches.table.author": "Author",
+  "common.admin.coaches.table.action": "Action",
+  "common.admin.coaches.table.positionFallback": "Coach",
+  "common.admin.coaches.table.me": "Me",
+  "common.admin.coaches.table.emptyValue": "—",
+  "common.admin.coaches.table.statusApproved": "Approved",
+  "common.admin.coaches.table.statusRejected": "Rejected",
+  "common.admin.coaches.table.underReview": "Under review",
+  "common.admin.coaches.table.online": "Online",
+  "common.admin.coaches.table.offline": "Offline",
+  "common.admin.coaches.table.edit": "Edit",
+  "common.admin.coaches.table.info": "Info",
+  "common.admin.coaches.table.updateFirst": "Please update first",
+  "common.admin.coaches.table.submitForReview": "Submit for review",
+  "common.admin.coaches.table.reject": "Reject",
+  "common.admin.coaches.table.delete": "Delete",
+  "common.admin.coaches.table.remove": "Remove"
 }

@@ -12,5 +12,28 @@
   "common.admin.coaches.pending.awaitingApproval": "Onay bekliyor",
 
   "common.admin.coaches.pagination.previous": "Önceki sayfa",
-  "common.admin.coaches.pagination.next": "Sonraki sayfa"
+  "common.admin.coaches.pagination.next": "Sonraki sayfa",
+
+  "common.admin.coaches.table.empty": "Girdi yok.",
+  "common.admin.coaches.table.name": "Ad",
+  "common.admin.coaches.table.position": "Pozisyon",
+  "common.admin.coaches.table.since": "Başlangıç",
+  "common.admin.coaches.table.status": "Durum",
+  "common.admin.coaches.table.author": "Yazar",
+  "common.admin.coaches.table.action": "İşlem",
+  "common.admin.coaches.table.positionFallback": "Antrenör",
+  "common.admin.coaches.table.me": "Ben",
+  "common.admin.coaches.table.emptyValue": "—",
+  "common.admin.coaches.table.statusApproved": "Onaylandı",
+  "common.admin.coaches.table.statusRejected": "Reddedildi",
+  "common.admin.coaches.table.underReview": "İncelemede",
+  "common.admin.coaches.table.online": "Online",
+  "common.admin.coaches.table.offline": "Offline",
+  "common.admin.coaches.table.edit": "Düzenle",
+  "common.admin.coaches.table.info": "Bilgi",
+  "common.admin.coaches.table.updateFirst": "Lütfen önce güncelleyin",
+  "common.admin.coaches.table.submitForReview": "İnceleme için gönder",
+  "common.admin.coaches.table.reject": "Reddet",
+  "common.admin.coaches.table.delete": "Sil",
+  "common.admin.coaches.table.remove": "Kaldır"
 }

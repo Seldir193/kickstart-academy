@@ -12,5 +12,28 @@
   "common.admin.coaches.pending.awaitingApproval": "Wartet auf Freigabe",
 
   "common.admin.coaches.pagination.previous": "Vorherige Seite",
-  "common.admin.coaches.pagination.next": "Nächste Seite"
+  "common.admin.coaches.pagination.next": "Nächste Seite",
+
+  "common.admin.coaches.table.empty": "Keine Einträge.",
+  "common.admin.coaches.table.name": "Name",
+  "common.admin.coaches.table.position": "Position",
+  "common.admin.coaches.table.since": "Seit",
+  "common.admin.coaches.table.status": "Status",
+  "common.admin.coaches.table.author": "Autor",
+  "common.admin.coaches.table.action": "Aktion",
+  "common.admin.coaches.table.positionFallback": "Trainer",
+  "common.admin.coaches.table.me": "Ich",
+  "common.admin.coaches.table.emptyValue": "—",
+  "common.admin.coaches.table.statusApproved": "Freigegeben",
+  "common.admin.coaches.table.statusRejected": "Abgelehnt",
+  "common.admin.coaches.table.underReview": "In Prüfung",
+  "common.admin.coaches.table.online": "Online",
+  "common.admin.coaches.table.offline": "Offline",
+  "common.admin.coaches.table.edit": "Bearbeiten",
+  "common.admin.coaches.table.info": "Info",
+  "common.admin.coaches.table.updateFirst": "Bitte zuerst aktualisieren",
+  "common.admin.coaches.table.submitForReview": "Zur Prüfung einreichen",
+  "common.admin.coaches.table.reject": "Ablehnen",
+  "common.admin.coaches.table.delete": "Löschen",
+  "common.admin.coaches.table.remove": "Entfernen"
 }
