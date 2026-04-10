@@ -89,5 +89,10 @@
   "common.admin.franchiseLocations.toast.rejectFailed": "Rejection failed.",
   "common.admin.franchiseLocations.toast.changesSubmitted": "Changes submitted.",
   "common.admin.franchiseLocations.toast.submitFailed": "Submission failed.",
-  "common.admin.franchiseLocations.toast.toggleFailed": "Toggle failed."
+  "common.admin.franchiseLocations.toast.toggleFailed": "Toggle failed.",
+
+  "common.admin.franchiseLocations.confirmDialog.confirm": "Confirm",
+  "common.admin.franchiseLocations.confirmDialog.cancel": "Cancel",
+  "common.admin.franchiseLocations.confirmDialog.close": "Close",
+  "common.admin.franchiseLocations.confirmDialog.actionFailed": "Action failed."
 }

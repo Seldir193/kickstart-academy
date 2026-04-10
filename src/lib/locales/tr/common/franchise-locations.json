@@ -89,5 +89,10 @@
   "common.admin.franchiseLocations.toast.rejectFailed": "Reddetme başarısız oldu.",
   "common.admin.franchiseLocations.toast.changesSubmitted": "Değişiklikler gönderildi.",
   "common.admin.franchiseLocations.toast.submitFailed": "Gönderme başarısız oldu.",
-  "common.admin.franchiseLocations.toast.toggleFailed": "Değiştirme başarısız oldu."
+  "common.admin.franchiseLocations.toast.toggleFailed": "Değiştirme başarısız oldu.",
+
+  "common.admin.franchiseLocations.confirmDialog.confirm": "Onayla",
+  "common.admin.franchiseLocations.confirmDialog.cancel": "İptal",
+  "common.admin.franchiseLocations.confirmDialog.close": "Kapat",
+  "common.admin.franchiseLocations.confirmDialog.actionFailed": "İşlem başarısız oldu."
 }
