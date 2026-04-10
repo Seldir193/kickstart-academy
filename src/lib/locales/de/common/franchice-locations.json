@@ -66,5 +66,13 @@
   "common.admin.franchiseLocations.pending.status": "Status",
   "common.admin.franchiseLocations.pending.open": "Öffnen",
   "common.admin.franchiseLocations.pending.approve": "Genehmigen",
-  "common.admin.franchiseLocations.pending.reject": "Ablehnen"
+  "common.admin.franchiseLocations.pending.reject": "Ablehnen",
+
+  "common.admin.franchiseLocations.sort.aria": "Sortierung",
+  "common.admin.franchiseLocations.sort.newest": "Neueste zuerst",
+  "common.admin.franchiseLocations.sort.oldest": "Älteste zuerst",
+  "common.admin.franchiseLocations.sort.name_az": "Name A–Z",
+  "common.admin.franchiseLocations.sort.name_za": "Name Z–A",
+  "common.admin.franchiseLocations.sort.city_az": "Stadt A–Z",
+  "common.admin.franchiseLocations.sort.city_za": "Stadt Z–A"
 }

@@ -66,5 +66,13 @@
   "common.admin.franchiseLocations.pending.status": "Durum",
   "common.admin.franchiseLocations.pending.open": "Aç",
   "common.admin.franchiseLocations.pending.approve": "Onayla",
-  "common.admin.franchiseLocations.pending.reject": "Reddet"
+  "common.admin.franchiseLocations.pending.reject": "Reddet",
+
+  "common.admin.franchiseLocations.sort.aria": "Sıralama",
+  "common.admin.franchiseLocations.sort.newest": "En yeniden eskiye",
+  "common.admin.franchiseLocations.sort.oldest": "En eskiden yeniye",
+  "common.admin.franchiseLocations.sort.name_az": "İsim A–Z",
+  "common.admin.franchiseLocations.sort.name_za": "İsim Z–A",
+  "common.admin.franchiseLocations.sort.city_az": "Şehir A–Z",
+  "common.admin.franchiseLocations.sort.city_za": "Şehir Z–A"
 }
