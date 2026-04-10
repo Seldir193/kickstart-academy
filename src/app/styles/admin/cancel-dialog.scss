@@ -57,32 +57,6 @@
     flex-wrap: wrap;
   }
 
-  //   .cancel-dialog__scopeBtn.btn {
-  //     min-height: 44px;
-  //     padding: 0 16px;
-  //     background-image: none;
-  //     background-size: auto;
-  //     background-color: var(--brand-gold);
-  //     border-color: var(--brand-gold);
-  //     color: var(--brand-black);
-  //     transition:
-  //       background-color 160ms ease,
-  //       border-color 160ms ease,
-  //       color 160ms ease,
-  //       box-shadow 160ms ease;
-  //   }
-
-  //   .cancel-dialog__scopeBtn.btn:hover,
-  //   .cancel-dialog__scopeBtn.btn:focus,
-  //   .cancel-dialog__scopeBtn.btn:focus-visible,
-  //   .cancel-dialog__scopeBtn--active.btn {
-  //     background-color: var(--brand-black);
-  //     border-color: var(--brand-black);
-  //     color: var(--brand-white);
-  //     outline: none;
-  //     box-shadow: none;
-  //   }
-
   .cancel-dialog__scopeBtn.btn {
     min-height: 44px;
     padding: 0 16px;
@@ -150,30 +124,6 @@
     width: 100%;
   }
 
-  //   .cancel-dialog__confirmBtn.btn {
-  //     min-height: 44px;
-  //     padding: 0 16px;
-  //     background-image: none;
-  //     background-size: auto;
-  //     background-color: var(--brand-gold);
-  //     border-color: var(--brand-gold);
-  //     color: var(--brand-black);
-  //     transition:
-  //       background-color 160ms ease,
-  //       border-color 160ms ease,
-  //       color 160ms ease,
-  //       box-shadow 160ms ease;
-  //   }
-
-  //   .cancel-dialog__confirmBtn.btn:hover:not(:disabled),
-  //   .cancel-dialog__confirmBtn.btn:focus-visible:not(:disabled) {
-  //     background-color: var(--brand-black);
-  //     border-color: var(--brand-black);
-  //     color: var(--brand-white);
-  //     outline: none;
-  //     box-shadow: none;
-  //   }
-
   .cancel-dialog__confirmBtn.btn {
     min-height: 44px;
     padding: 0 16px;
@@ -194,6 +144,67 @@
     opacity: 0.55;
     cursor: not-allowed;
     box-shadow: none;
+  }
+
+  .ks-selectbox,
+  .ks-selectbox__trigger,
+  .ks-selectbox__label,
+  .ks-booking-select,
+  .ks-booking-select__triggerLabel,
+  .ks-booking-select__row,
+  .ks-booking-select__top,
+  .ks-booking-select__bottom,
+  .ks-booking-select__title {
+    min-width: 0;
+  }
+
+  .ks-selectbox__trigger {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
+  }
+
+  .ks-selectbox__label.ks-booking-select__triggerLabel {
+    display: block;
+    flex: 1 1 auto;
+    min-width: 0;
+    max-width: 100%;
+    overflow: hidden;
+  }
+
+  .ks-booking-select__row {
+    display: grid;
+    gap: 2px;
+    min-width: 0;
+    width: 100%;
+  }
+
+  .ks-booking-select__top {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+    width: 100%;
+  }
+
+  .ks-booking-select__title {
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .ks-booking-select__invoiceCol {
+    flex: 0 0 auto;
+  }
+
+  .ks-selectbox__chevron {
+    flex: 0 0 auto;
+    margin-left: auto;
   }
 }
 

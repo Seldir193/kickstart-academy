@@ -67,9 +67,12 @@ export function BookingSelect({
           aria-haspopup="listbox"
           aria-expanded={open}
         >
-          <span className="ks-selectbox__label ks-booking-select__triggerLabel">
+          {/* <span className="ks-selectbox__label ks-booking-select__triggerLabel">
             {triggerNode}
-          </span>
+          </span> */}
+          <div className="ks-selectbox__label ks-booking-select__triggerLabel">
+            {triggerNode}
+          </div>
           <span className="ks-selectbox__chevron" aria-hidden="true" />
         </button>
 
