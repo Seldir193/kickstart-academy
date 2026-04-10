@@ -97,5 +97,26 @@
   "common.admin.franchiseLocations.confirmDialog.actionFailed": "Aktion fehlgeschlagen.",
 
   "common.admin.franchiseLocations.deleteDialog.title": "Standort löschen",
-  "common.admin.franchiseLocations.deleteDialog.text": "Möchtest du den Standort „{{name}}“ wirklich löschen?"
+  "common.admin.franchiseLocations.deleteDialog.text": "Möchtest du den Standort „{{name}}“ wirklich löschen?",
+
+  "common.admin.franchiseLocations.infoDialog.title": "Lizenznehmer: {{name}}",
+  "common.admin.franchiseLocations.infoDialog.subtitle": "Nur Ansicht — Superadmin kann hier nichts bearbeiten.",
+  "common.admin.franchiseLocations.infoDialog.close": "Schließen",
+  "common.admin.franchiseLocations.infoDialog.sections.location": "Standortdetails",
+  "common.admin.franchiseLocations.infoDialog.sections.contact": "Kontakt",
+  "common.admin.franchiseLocations.infoDialog.sections.status": "Status",
+  "common.admin.franchiseLocations.infoDialog.sections.rejection": "Ablehnungsgrund",
+  "common.admin.franchiseLocations.infoDialog.fields.firstName": "Vorname",
+  "common.admin.franchiseLocations.infoDialog.fields.lastName": "Nachname",
+  "common.admin.franchiseLocations.infoDialog.fields.country": "Land",
+  "common.admin.franchiseLocations.infoDialog.fields.city": "Stadt",
+  "common.admin.franchiseLocations.infoDialog.fields.state": "Bundesland/Region",
+  "common.admin.franchiseLocations.infoDialog.fields.zip": "PLZ",
+  "common.admin.franchiseLocations.infoDialog.fields.address": "Adresse",
+  "common.admin.franchiseLocations.infoDialog.fields.website": "Webseite",
+  "common.admin.franchiseLocations.infoDialog.fields.publicEmail": "Öffentliche E-Mail",
+  "common.admin.franchiseLocations.infoDialog.fields.publicPhone": "Öffentliches Telefon",
+  "common.admin.franchiseLocations.infoDialog.fields.status": "Status",
+  "common.admin.franchiseLocations.infoDialog.fields.updated": "Aktualisiert",
+  "common.admin.franchiseLocations.infoDialog.fields.reason": "Grund"
 }

@@ -97,5 +97,26 @@
   "common.admin.franchiseLocations.confirmDialog.actionFailed": "İşlem başarısız oldu.",
 
   "common.admin.franchiseLocations.deleteDialog.title": "Lokasyonu sil",
-  "common.admin.franchiseLocations.deleteDialog.text": "\"{{name}}\" lokasyonunu gerçekten silmek istiyor musun?"
+  "common.admin.franchiseLocations.deleteDialog.text": "\"{{name}}\" lokasyonunu gerçekten silmek istiyor musun?",
+
+  "common.admin.franchiseLocations.infoDialog.title": "Lisans sahibi: {{name}}",
+  "common.admin.franchiseLocations.infoDialog.subtitle": "Sadece görüntüleme — superadmin burada hiçbir şeyi düzenleyemez.",
+  "common.admin.franchiseLocations.infoDialog.close": "Kapat",
+  "common.admin.franchiseLocations.infoDialog.sections.location": "Lokasyon detayları",
+  "common.admin.franchiseLocations.infoDialog.sections.contact": "İletişim",
+  "common.admin.franchiseLocations.infoDialog.sections.status": "Durum",
+  "common.admin.franchiseLocations.infoDialog.sections.rejection": "Reddetme nedeni",
+  "common.admin.franchiseLocations.infoDialog.fields.firstName": "Ad",
+  "common.admin.franchiseLocations.infoDialog.fields.lastName": "Soyad",
+  "common.admin.franchiseLocations.infoDialog.fields.country": "Ülke",
+  "common.admin.franchiseLocations.infoDialog.fields.city": "Şehir",
+  "common.admin.franchiseLocations.infoDialog.fields.state": "Eyalet/Bölge",
+  "common.admin.franchiseLocations.infoDialog.fields.zip": "Posta kodu",
+  "common.admin.franchiseLocations.infoDialog.fields.address": "Adres",
+  "common.admin.franchiseLocations.infoDialog.fields.website": "Web sitesi",
+  "common.admin.franchiseLocations.infoDialog.fields.publicEmail": "Herkese açık e-posta",
+  "common.admin.franchiseLocations.infoDialog.fields.publicPhone": "Herkese açık telefon",
+  "common.admin.franchiseLocations.infoDialog.fields.status": "Durum",
+  "common.admin.franchiseLocations.infoDialog.fields.updated": "Güncellendi",
+  "common.admin.franchiseLocations.infoDialog.fields.reason": "Neden"
 }

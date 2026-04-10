@@ -2,6 +2,8 @@
 
 import React, { useMemo } from "react";
 import type { FranchiseLocation } from "../types";
+import { useTranslation } from "react-i18next";
+import { formatDateTime } from "../utils/dateFormat";
 
 type Props = {
   open: boolean;
@@ -27,16 +29,6 @@ function owner_label(it: FranchiseLocation) {
     val(it.ownerEmail) ||
     val(it.ownerId || it.owner)
   );
-}
-
-function fmt_date(value?: string) {
-  if (!value) return "—";
-  const d = new Date(value);
-  if (isNaN(d.getTime())) return value;
-  return new Intl.DateTimeFormat("de-DE", {
-    dateStyle: "medium",
-    timeStyle: "short",
-  }).format(d);
 }
 
 function status_class(status: string) {
@@ -68,6 +60,7 @@ function Row({
 }
 
 export default function LicenseeInfoDialog({ open, item, onClose }: Props) {
+  const { t, i18n } = useTranslation();
   const it = item;
 
   const sections = useMemo(() => {
@@ -78,9 +71,11 @@ export default function LicenseeInfoDialog({ open, item, onClose }: Props) {
 
     return {
       header: {
-        title: `Licensee: ${owner_label(it)}`,
+        title: t("common.admin.franchiseLocations.infoDialog.title", {
+          name: owner_label(it),
+        }),
         status,
-        updated: fmt_date(it.updatedAt),
+        updated: formatDateTime(it.updatedAt, i18n.language),
       },
       location: {
         firstName: it.licenseeFirstName,
@@ -98,11 +93,11 @@ export default function LicenseeInfoDialog({ open, item, onClose }: Props) {
       },
       meta: {
         status,
-        updated: fmt_date(it.updatedAt),
+        updated: formatDateTime(it.updatedAt, i18n.language),
       },
       reject: rejected ? { reason: it.rejectionReason } : null,
     };
-  }, [it]);
+  }, [i18n.language, it, t]);
 
   if (!open || !it || !sections) return null;
 
@@ -111,7 +106,7 @@ export default function LicenseeInfoDialog({ open, item, onClose }: Props) {
       <button
         type="button"
         className="dialog-backdrop-hit fl-info__backdrop-hit"
-        aria-label="Close"
+        aria-label={t("common.admin.franchiseLocations.infoDialog.close")}
         onClick={onClose}
       />
 
@@ -122,7 +117,7 @@ export default function LicenseeInfoDialog({ open, item, onClose }: Props) {
               {sections.header.title}
             </div>
             <div className="dialog-subtitle fl-info__subtitle">
-              View only — superadmin cannot edit anything here.
+              {t("common.admin.franchiseLocations.infoDialog.subtitle")}
             </div>
           </div>
 
@@ -131,7 +126,9 @@ export default function LicenseeInfoDialog({ open, item, onClose }: Props) {
               <button
                 type="button"
                 className="dialog-close modal__close"
-                aria-label="Close"
+                aria-label={t(
+                  "common.admin.franchiseLocations.infoDialog.close",
+                )}
                 onClick={onClose}
               >
                 <img
@@ -149,18 +146,55 @@ export default function LicenseeInfoDialog({ open, item, onClose }: Props) {
           <div className="fl-info__grid">
             <section className="dialog-section fl-info__section">
               <div className="dialog-section__head">
-                <div className="dialog-section__title">Location details</div>
+                <div className="dialog-section__title">
+                  {t(
+                    "common.admin.franchiseLocations.infoDialog.sections.location",
+                  )}
+                </div>
               </div>
 
               <div className="dialog-section__body fl-info__list">
-                <Row label="First name" value={sections.location.firstName} />
-                <Row label="Last name" value={sections.location.lastName} />
-                <Row label="Country" value={sections.location.country} />
-                <Row label="City" value={sections.location.city} />
-                <Row label="State/Region" value={sections.location.state} />
-                <Row label="ZIP" value={sections.location.zip} mono />
                 <Row
-                  label="Address"
+                  label={t(
+                    "common.admin.franchiseLocations.infoDialog.fields.firstName",
+                  )}
+                  value={sections.location.firstName}
+                />
+                <Row
+                  label={t(
+                    "common.admin.franchiseLocations.infoDialog.fields.lastName",
+                  )}
+                  value={sections.location.lastName}
+                />
+                <Row
+                  label={t(
+                    "common.admin.franchiseLocations.infoDialog.fields.country",
+                  )}
+                  value={sections.location.country}
+                />
+                <Row
+                  label={t(
+                    "common.admin.franchiseLocations.infoDialog.fields.city",
+                  )}
+                  value={sections.location.city}
+                />
+                <Row
+                  label={t(
+                    "common.admin.franchiseLocations.infoDialog.fields.state",
+                  )}
+                  value={sections.location.state}
+                />
+                <Row
+                  label={t(
+                    "common.admin.franchiseLocations.infoDialog.fields.zip",
+                  )}
+                  value={sections.location.zip}
+                  mono
+                />
+                <Row
+                  label={t(
+                    "common.admin.franchiseLocations.infoDialog.fields.address",
+                  )}
                   value={sections.location.address}
                   multiline
                 />
@@ -169,18 +203,31 @@ export default function LicenseeInfoDialog({ open, item, onClose }: Props) {
 
             <section className="dialog-section fl-info__section">
               <div className="dialog-section__head">
-                <div className="dialog-section__title">Contact</div>
+                <div className="dialog-section__title">
+                  {t(
+                    "common.admin.franchiseLocations.infoDialog.sections.contact",
+                  )}
+                </div>
               </div>
 
               <div className="dialog-section__body fl-info__list">
-                <Row label="Website" value={sections.contact.website} />
                 <Row
-                  label="Public email"
+                  label={t(
+                    "common.admin.franchiseLocations.infoDialog.fields.website",
+                  )}
+                  value={sections.contact.website}
+                />
+                <Row
+                  label={t(
+                    "common.admin.franchiseLocations.infoDialog.fields.publicEmail",
+                  )}
                   value={sections.contact.emailPublic}
                   mono
                 />
                 <Row
-                  label="Public phone"
+                  label={t(
+                    "common.admin.franchiseLocations.infoDialog.fields.publicPhone",
+                  )}
                   value={sections.contact.phonePublic}
                   mono
                 />
@@ -189,12 +236,20 @@ export default function LicenseeInfoDialog({ open, item, onClose }: Props) {
 
             <section className="dialog-section fl-info__section fl-info__section--status">
               <div className="dialog-section__head">
-                <div className="dialog-section__title">Status</div>
+                <div className="dialog-section__title">
+                  {t(
+                    "common.admin.franchiseLocations.infoDialog.sections.status",
+                  )}
+                </div>
               </div>
 
               <div className="dialog-section__body fl-info__list">
                 <div className="fl-info__status-row">
-                  <div className="dialog-label">Status</div>
+                  <div className="dialog-label">
+                    {t(
+                      "common.admin.franchiseLocations.infoDialog.fields.status",
+                    )}
+                  </div>
                   <div className="dialog-value">
                     <span
                       className={`dialog-status ${status_class(
@@ -206,18 +261,30 @@ export default function LicenseeInfoDialog({ open, item, onClose }: Props) {
                   </div>
                 </div>
 
-                <Row label="Updated" value={sections.meta.updated} mono />
+                <Row
+                  label={t(
+                    "common.admin.franchiseLocations.infoDialog.fields.updated",
+                  )}
+                  value={sections.meta.updated}
+                  mono
+                />
               </div>
             </section>
             {sections.reject ? (
               <section className="dialog-section fl-info__section fl-info__section--danger">
                 <div className="dialog-section__head">
-                  <div className="dialog-section__title">Rejection reason</div>
+                  <div className="dialog-section__title">
+                    {t(
+                      "common.admin.franchiseLocations.infoDialog.sections.rejection",
+                    )}
+                  </div>
                 </div>
 
                 <div className="dialog-section__body fl-info__list">
                   <Row
-                    label="Reason"
+                    label={t(
+                      "common.admin.franchiseLocations.infoDialog.fields.reason",
+                    )}
                     value={sections.reject.reason}
                     multiline
                   />

@@ -97,5 +97,26 @@
   "common.admin.franchiseLocations.confirmDialog.actionFailed": "Action failed.",
 
   "common.admin.franchiseLocations.deleteDialog.title": "Delete location",
-  "common.admin.franchiseLocations.deleteDialog.text": "Do you really want to delete location \"{{name}}\"?"
+  "common.admin.franchiseLocations.deleteDialog.text": "Do you really want to delete location \"{{name}}\"?",
+
+  "common.admin.franchiseLocations.infoDialog.title": "Licensee: {{name}}",
+  "common.admin.franchiseLocations.infoDialog.subtitle": "View only — superadmin cannot edit anything here.",
+  "common.admin.franchiseLocations.infoDialog.close": "Close",
+  "common.admin.franchiseLocations.infoDialog.sections.location": "Location details",
+  "common.admin.franchiseLocations.infoDialog.sections.contact": "Contact",
+  "common.admin.franchiseLocations.infoDialog.sections.status": "Status",
+  "common.admin.franchiseLocations.infoDialog.sections.rejection": "Rejection reason",
+  "common.admin.franchiseLocations.infoDialog.fields.firstName": "First name",
+  "common.admin.franchiseLocations.infoDialog.fields.lastName": "Last name",
+  "common.admin.franchiseLocations.infoDialog.fields.country": "Country",
+  "common.admin.franchiseLocations.infoDialog.fields.city": "City",
+  "common.admin.franchiseLocations.infoDialog.fields.state": "State/Region",
+  "common.admin.franchiseLocations.infoDialog.fields.zip": "ZIP",
+  "common.admin.franchiseLocations.infoDialog.fields.address": "Address",
+  "common.admin.franchiseLocations.infoDialog.fields.website": "Website",
+  "common.admin.franchiseLocations.infoDialog.fields.publicEmail": "Public email",
+  "common.admin.franchiseLocations.infoDialog.fields.publicPhone": "Public phone",
+  "common.admin.franchiseLocations.infoDialog.fields.status": "Status",
+  "common.admin.franchiseLocations.infoDialog.fields.updated": "Updated",
+  "common.admin.franchiseLocations.infoDialog.fields.reason": "Reason"
 }
