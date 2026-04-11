@@ -35,5 +35,13 @@
   "common.admin.coaches.table.submitForReview": "Zur Prüfung einreichen",
   "common.admin.coaches.table.reject": "Ablehnen",
   "common.admin.coaches.table.delete": "Löschen",
-  "common.admin.coaches.table.remove": "Entfernen"
+  "common.admin.coaches.table.remove": "Entfernen",
+
+  "common.admin.coaches.filters.searchPlaceholder": "Name, Slug, Position…",
+  "common.admin.coaches.filters.searchAria": "Trainer durchsuchen",
+  "common.admin.coaches.filters.sortAria": "Sortierung",
+  "common.admin.coaches.filters.sortNewest": "Neueste zuerst",
+  "common.admin.coaches.filters.sortOldest": "Älteste zuerst",
+  "common.admin.coaches.filters.sortNameAsc": "Name A–Z",
+  "common.admin.coaches.filters.sortNameDesc": "Name Z–A"
 }

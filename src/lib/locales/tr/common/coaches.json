@@ -35,5 +35,13 @@
   "common.admin.coaches.table.submitForReview": "İnceleme için gönder",
   "common.admin.coaches.table.reject": "Reddet",
   "common.admin.coaches.table.delete": "Sil",
-  "common.admin.coaches.table.remove": "Kaldır"
+  "common.admin.coaches.table.remove": "Kaldır",
+
+  "common.admin.coaches.filters.searchPlaceholder": "Ad, slug, pozisyon…",
+  "common.admin.coaches.filters.searchAria": "Antrenörleri ara",
+  "common.admin.coaches.filters.sortAria": "Sıralama",
+  "common.admin.coaches.filters.sortNewest": "En yeni önce",
+  "common.admin.coaches.filters.sortOldest": "En eski önce",
+  "common.admin.coaches.filters.sortNameAsc": "Ad A–Z",
+  "common.admin.coaches.filters.sortNameDesc": "Ad Z–A"
 }

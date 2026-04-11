@@ -2,6 +2,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import type { ReactNode } from "react";
 import type { SortKey } from "../types";
 
@@ -20,16 +21,18 @@ export default function CoachesFilters({
   onChangeSort,
   actionSlot,
 }: Props) {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const triggerRef = useRef<HTMLButtonElement | null>(null);
   const menuRef = useRef<HTMLUListElement | null>(null);
 
   const sortLabel = useMemo(() => {
-    if (sort === "newest") return "Newest first";
-    if (sort === "oldest") return "Oldest first";
-    if (sort === "name_asc") return "Name A–Z";
-    return "Name Z–A";
-  }, [sort]);
+    if (sort === "newest") return t("common.admin.coaches.filters.sortNewest");
+    if (sort === "oldest") return t("common.admin.coaches.filters.sortOldest");
+    if (sort === "name_asc")
+      return t("common.admin.coaches.filters.sortNameAsc");
+    return t("common.admin.coaches.filters.sortNameDesc");
+  }, [sort, t]);
 
   useEffect(() => {
     if (!open) return;
@@ -60,7 +63,8 @@ export default function CoachesFilters({
           />
           <input
             className="input input-with-icon__input"
-            placeholder="Name, slug, position…"
+            placeholder={t("common.admin.coaches.filters.searchPlaceholder")}
+            aria-label={t("common.admin.coaches.filters.searchAria")}
             value={q}
             onChange={(e) => onChangeQ(e.target.value)}
             onKeyDown={(e) => {
@@ -91,7 +95,7 @@ export default function CoachesFilters({
               ref={menuRef}
               className="ks-training-select__menu"
               role="listbox"
-              aria-label="Sort"
+              aria-label={t("common.admin.coaches.filters.sortAria")}
             >
               <li>
                 <button
@@ -105,7 +109,7 @@ export default function CoachesFilters({
                     setOpen(false);
                   }}
                 >
-                  Newest first
+                  {t("common.admin.coaches.filters.sortNewest")}
                 </button>
               </li>
               <li>
@@ -120,7 +124,7 @@ export default function CoachesFilters({
                     setOpen(false);
                   }}
                 >
-                  Oldest first
+                  {t("common.admin.coaches.filters.sortOldest")}
                 </button>
               </li>
               <li>
@@ -135,7 +139,7 @@ export default function CoachesFilters({
                     setOpen(false);
                   }}
                 >
-                  Name A–Z
+                  {t("common.admin.coaches.filters.sortNameAsc")}
                 </button>
               </li>
               <li>
@@ -150,7 +154,7 @@ export default function CoachesFilters({
                     setOpen(false);
                   }}
                 >
-                  Name Z–A
+                  {t("common.admin.coaches.filters.sortNameDesc")}
                 </button>
               </li>
             </ul>

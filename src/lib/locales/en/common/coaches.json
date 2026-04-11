@@ -35,5 +35,13 @@
   "common.admin.coaches.table.submitForReview": "Submit for review",
   "common.admin.coaches.table.reject": "Reject",
   "common.admin.coaches.table.delete": "Delete",
-  "common.admin.coaches.table.remove": "Remove"
+  "common.admin.coaches.table.remove": "Remove",
+
+  "common.admin.coaches.filters.searchPlaceholder": "Name, slug, position…",
+  "common.admin.coaches.filters.searchAria": "Search coaches",
+  "common.admin.coaches.filters.sortAria": "Sort",
+  "common.admin.coaches.filters.sortNewest": "Newest first",
+  "common.admin.coaches.filters.sortOldest": "Oldest first",
+  "common.admin.coaches.filters.sortNameAsc": "Name A–Z",
+  "common.admin.coaches.filters.sortNameDesc": "Name Z–A"
 }
