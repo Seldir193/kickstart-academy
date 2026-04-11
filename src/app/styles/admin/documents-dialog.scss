@@ -1,7 +1,24 @@
+.documents-dialog.dialog-backdrop {
+  inset: 0;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  z-index: 1100;
+}
+
 .documents-dialog {
+  .dialog-backdrop-hit {
+    z-index: 0;
+  }
+
   .documents-dialog__dialog {
-    width: min(1040px, calc(100% - 40px));
-    max-width: 1040px;
+    position: relative;
+    z-index: 1;
+    width: 988px;
+
+    max-width: calc(100vw - 40px);
+    // width: min(1120px, calc(100% - 40px));
+    // max-width: 1120px;
     max-height: calc(100dvh - var(--header-height, 64px) - 48px);
     grid-template-rows: auto minmax(0, 1fr) auto;
   }
@@ -16,11 +33,14 @@
     display: grid;
     gap: 16px;
     position: relative;
+    min-width: 0;
+    min-height: 0;
   }
 
   .documents-dialog__scopeBody {
     display: grid;
     gap: 14px;
+    min-width: 0;
   }
 
   .documents-dialog__field {
@@ -104,12 +124,14 @@
     justify-content: space-between;
     gap: 12px;
     flex-wrap: wrap;
+    min-width: 0;
   }
 
   .documents-dialog__perPage {
     display: flex;
     align-items: center;
     gap: 8px;
+    min-width: 0;
   }
 
   .documents-dialog__perPageLabel {
@@ -173,28 +195,82 @@
     flex-shrink: 0;
   }
 
-  .ks-documents-overlay {
-    position: fixed;
-    z-index: 10000;
-    top: var(--sb-top);
-    left: var(--sb-left);
-    width: var(--sb-width);
-    overflow-y: auto;
-    touch-action: pan-y;
+  .dialog-section,
+  .dialog-section__body,
+  .ks-selectbox,
+  .ks-selectbox__trigger,
+  .ks-selectbox__label,
+  .ks-selectbox__panel,
+  .ks-documents-premium,
+  .ks-documents-premium__topRow,
+  .ks-documents-premium__searchItem,
+  .ks-documents-premium__dateItem,
+  .ks-documents-premium__sortItem,
+  .documents-dialog__controls,
+  .documents-dialog__pagerRow,
+  .documents-dialog__perPage,
+  .ks-doc-select__row,
+  .ks-doc-select__top,
+  .ks-doc-select__title,
+  .ks-doc-select__titleText,
+  .ks-doc-select__badgeCol {
+    min-width: 0;
+    max-width: 100%;
   }
 
-  .ks-documents-overlay--docs {
+  .ks-selectbox,
+  .ks-selectbox__trigger,
+  .ks-selectbox__panel {
+    width: 100%;
+  }
+
+  .ks-selectbox__trigger {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    overflow: hidden;
+  }
+
+  .ks-selectbox__label {
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .ks-selectbox__chevron {
+    flex: 0 0 auto;
+    margin-left: auto;
+  }
+
+  .documents-dialog__anchor {
+    position: relative;
+    width: 100%;
+    min-width: 0;
+  }
+
+  .documents-dialog__panel {
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    width: 100%;
+    z-index: 40;
+    overflow-y: auto;
+    border-radius: 12px;
+  }
+
+  .documents-dialog__panel--docs {
     max-height: calc(44px * 7);
   }
 
-  .ks-documents-overlay--perpage {
-    max-height: 88px;
-    overflow-y: auto;
-    scrollbar-width: thin;
+  .documents-dialog__panel--sort {
+    max-height: calc(44px * 6);
   }
 
-  .ks-documents-overlay--sort {
-    max-height: calc(44px * 6);
+  .documents-dialog__panel--perpage {
+    max-height: 88px;
+    scrollbar-width: thin;
   }
 
   .ks-documents-option {
@@ -223,30 +299,29 @@
 
   .ks-documents-premium {
     margin-bottom: 0;
+    min-width: 0;
   }
 
   .ks-documents-premium__topRow {
-    display: flex;
-    flex-wrap: nowrap;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 170px 170px 148px;
     align-items: center;
     width: 100%;
     gap: 10px;
     margin-bottom: 14px;
+    min-width: 0;
   }
 
   .ks-documents-premium__searchItem {
-    flex: 1 1 auto;
     min-width: 0;
   }
 
   .ks-documents-premium__dateItem {
-    flex: 0 0 170px;
-    min-width: 170px;
+    min-width: 0;
   }
 
   .ks-documents-premium__sortItem {
-    flex: 0 0 148px;
-    min-width: 148px;
+    min-width: 0;
     position: relative;
   }
 
@@ -254,6 +329,7 @@
     margin-bottom: 0;
     padding-top: 2px;
     padding-bottom: 2px;
+    min-width: 0;
   }
 
   .ks-documents-premium__typesRow .ks-filter-chips {
@@ -261,6 +337,7 @@
     flex-wrap: wrap !important;
     gap: 10px !important;
     justify-items: unset !important;
+    min-width: 0;
   }
 
   .ks-documents-premium__typesRow .ks-filter-chips > .ks-filter-chip {
@@ -358,6 +435,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 12px;
+  min-width: 0;
 }
 
 .ks-doc-select__title {
@@ -368,10 +446,6 @@
   min-width: 0;
   font-weight: 600;
   line-height: 1.25;
-  white-space: normal;
-  overflow: visible;
-  text-overflow: unset;
-  word-break: break-word;
 }
 
 .ks-doc-select__titleText {
@@ -424,18 +498,11 @@
 @media (max-width: 980px) {
   .documents-dialog {
     .documents-dialog__dialog {
-      width: min(960px, calc(100% - 24px));
+      width: min(1040px, calc(100% - 24px));
     }
 
     .ks-documents-premium__topRow {
-      flex-wrap: wrap;
-    }
-
-    .ks-documents-premium__searchItem,
-    .ks-documents-premium__dateItem,
-    .ks-documents-premium__sortItem {
-      flex: 1 1 calc(50% - 5px);
-      min-width: 0;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     }
   }
 }
@@ -443,7 +510,7 @@
 @media (max-width: 720px) {
   .documents-dialog.dialog-backdrop {
     padding: 12px;
-    place-items: start center;
+    place-items: center;
   }
 
   .documents-dialog {
@@ -478,15 +545,7 @@
     }
 
     .ks-documents-premium__topRow {
-      flex-direction: column;
-      align-items: stretch;
-    }
-
-    .ks-documents-premium__searchItem,
-    .ks-documents-premium__dateItem,
-    .ks-documents-premium__sortItem {
-      flex: 1 1 auto;
-      min-width: 0;
+      grid-template-columns: 1fr;
     }
   }
 
@@ -524,38 +583,181 @@
   }
 }
 
-//neu4
-
-.documents-dialog {
-  .documents-dialog__anchor {
-    position: relative;
-  }
-
-  .documents-dialog__panel {
-    position: absolute;
-    top: calc(100% + 6px);
-    left: 0;
-    width: 100%;
-    z-index: 40;
-    overflow-y: auto;
-    border-radius: 12px;
-  }
-
-  .documents-dialog__panel--docs {
-    max-height: calc(44px * 7);
-  }
-
-  .documents-dialog__panel--sort {
-    max-height: calc(44px * 6);
-  }
-
-  .documents-dialog__panel--perpage {
-    max-height: 88px;
-    scrollbar-width: thin;
-  }
-}
-// // src/app/styles/admin/documents-dialog.scss
 // .documents-dialog {
+//   .documents-dialog__dialog {
+//     width: min(1040px, calc(100% - 40px));
+//     max-width: 1040px;
+//     max-height: calc(100dvh - var(--header-height, 64px) - 48px);
+//     grid-template-rows: auto minmax(0, 1fr) auto;
+//   }
+
+//   .documents-dialog__head-main {
+//     min-width: 0;
+//     flex: 1 1 auto;
+//     padding-right: 12px;
+//   }
+
+//   .documents-dialog__body {
+//     display: grid;
+//     gap: 16px;
+//     position: relative;
+//   }
+
+//   .documents-dialog__scopeBody {
+//     display: grid;
+//     gap: 14px;
+//   }
+
+//   .documents-dialog__field {
+//     display: grid;
+//     gap: 6px;
+//     min-width: 0;
+//   }
+
+//   .documents-dialog__scopeButtons {
+//     display: flex;
+//     align-items: center;
+//     gap: 8px;
+//     flex-wrap: wrap;
+//   }
+
+//   .documents-dialog__scopeBtn.btn {
+//     min-height: 44px;
+//     padding: 0 16px;
+//     background-image: none;
+//     background-size: auto;
+//     background-color: var(--brand-gold);
+//     border-color: var(--brand-gold);
+//     color: var(--brand-black);
+//     transition:
+//       background-color 160ms ease,
+//       border-color 160ms ease,
+//       color 160ms ease,
+//       box-shadow 160ms ease;
+//   }
+
+//   .documents-dialog__scopeBtn.btn:hover,
+//   .documents-dialog__scopeBtn.btn:focus,
+//   .documents-dialog__scopeBtn.btn:focus-visible,
+//   .documents-dialog__scopeBtn--active.btn {
+//     background-color: var(--brand-black);
+//     border-color: var(--brand-black);
+//     color: var(--brand-white);
+//     outline: none;
+//     box-shadow: none;
+//   }
+
+//   .documents-dialog__summary {
+//     display: grid;
+//     grid-template-columns: repeat(2, minmax(0, 1fr));
+//     gap: 12px;
+//     padding: 14px 16px;
+//     border: 1px solid #e5ebf2;
+//     border-radius: 16px;
+//     background: #f8fafc;
+//   }
+
+//   .documents-dialog__summaryItem {
+//     display: grid;
+//     gap: 4px;
+//     min-width: 0;
+//   }
+
+//   .documents-dialog__note {
+//     color: #5b6472;
+//     font-size: 14px;
+//     line-height: 1.5;
+//   }
+
+//   .documents-dialog__error {
+//     color: #b42318;
+//     font-size: 14px;
+//     line-height: 1.5;
+//     font-weight: 600;
+//   }
+
+//   .documents-dialog__controls {
+//     display: grid;
+//     gap: 14px;
+//     min-width: 0;
+//     position: relative;
+//   }
+
+//   .documents-dialog__pagerRow {
+//     display: flex;
+//     align-items: center;
+//     justify-content: space-between;
+//     gap: 12px;
+//     flex-wrap: wrap;
+//   }
+
+//   .documents-dialog__perPage {
+//     display: flex;
+//     align-items: center;
+//     gap: 8px;
+//   }
+
+//   .documents-dialog__perPageLabel {
+//     color: #5b6472;
+//     font-size: 14px;
+//     line-height: 1.4;
+//     font-weight: 600;
+//   }
+
+//   .documents-dialog__footer {
+//     justify-content: flex-end;
+//   }
+
+//   .documents-dialog__footerActions {
+//     display: flex;
+//     align-items: center;
+//     justify-content: flex-end;
+//     gap: 8px;
+//     flex-wrap: wrap;
+//     width: 100%;
+//   }
+
+//   .documents-dialog__downloadBtn.btn,
+//   .documents-dialog__footerClose.btn {
+//     min-height: 44px;
+//     padding: 0 16px;
+//     background-image: none;
+//     background-size: auto;
+//     background-color: var(--brand-gold);
+//     border-color: var(--brand-gold);
+//     color: var(--brand-black);
+//     transition:
+//       background-color 160ms ease,
+//       border-color 160ms ease,
+//       color 160ms ease,
+//       box-shadow 160ms ease;
+//   }
+
+//   .documents-dialog__downloadBtn.btn:hover,
+//   .documents-dialog__downloadBtn.btn:focus-visible,
+//   .documents-dialog__footerClose.btn:hover,
+//   .documents-dialog__footerClose.btn:focus-visible {
+//     background-color: var(--brand-black);
+//     border-color: var(--brand-black);
+//     color: var(--brand-white);
+//     outline: none;
+//     box-shadow: none;
+//   }
+
+//   .documents-dialog__downloadBtn {
+//     display: inline-flex;
+//     align-items: center;
+//     justify-content: center;
+//     gap: 8px;
+//     white-space: nowrap;
+//   }
+
+//   .documents-dialog__downloadIcon {
+//     width: 16px;
+//     height: 16px;
+//     flex-shrink: 0;
+//   }
+
 //   .ks-documents-overlay {
 //     position: fixed;
 //     z-index: 10000;
@@ -571,7 +773,9 @@
 //   }
 
 //   .ks-documents-overlay--perpage {
-//     max-height: calc(44px * 6);
+//     max-height: 88px;
+//     overflow-y: auto;
+//     scrollbar-width: thin;
 //   }
 
 //   .ks-documents-overlay--sort {
@@ -603,7 +807,7 @@
 //   }
 
 //   .ks-documents-premium {
-//     margin-bottom: 12px;
+//     margin-bottom: 0;
 //   }
 
 //   .ks-documents-premium__topRow {
@@ -628,10 +832,11 @@
 //   .ks-documents-premium__sortItem {
 //     flex: 0 0 148px;
 //     min-width: 148px;
+//     position: relative;
 //   }
 
 //   .ks-documents-premium__typesRow {
-//     margin-bottom: 14px;
+//     margin-bottom: 0;
 //     padding-top: 2px;
 //     padding-bottom: 2px;
 //   }
@@ -801,37 +1006,136 @@
 //   text-overflow: ellipsis;
 // }
 
-// // src/app/styles/admin/documents-dialog.scss
-// .documents-dialog {
-//   .ks-documents-premium__downloadRow {
-//     display: flex;
-//     justify-content: flex-end;
-//     align-items: center;
-//     gap: 8px;
-//     margin-top: 16px;
-//   }
+// @media (max-width: 980px) {
+//   .documents-dialog {
+//     .documents-dialog__dialog {
+//       width: min(960px, calc(100% - 24px));
+//     }
 
-//   .ks-invoices__downloadBtn {
-//     display: inline-flex;
-//     align-items: center;
-//     justify-content: center;
-//     gap: 8px;
-//     min-height: 44px;
-//     padding: 0 16px;
-//     white-space: nowrap;
-//   }
+//     .ks-documents-premium__topRow {
+//       flex-wrap: wrap;
+//     }
 
-//   .ks-invoices__downloadIcon {
-//     width: 16px;
-//     height: 16px;
-//     flex-shrink: 0;
+//     .ks-documents-premium__searchItem,
+//     .ks-documents-premium__dateItem,
+//     .ks-documents-premium__sortItem {
+//       flex: 1 1 calc(50% - 5px);
+//       min-width: 0;
+//     }
 //   }
 // }
 
+// @media (max-width: 720px) {
+//   .documents-dialog.dialog-backdrop {
+//     padding: 12px;
+//     place-items: start center;
+//   }
+
+//   .documents-dialog {
+//     .documents-dialog__dialog {
+//       width: 100%;
+//       max-width: 100%;
+//       max-height: calc(100dvh - 24px);
+//     }
+
+//     .documents-dialog__summary {
+//       grid-template-columns: 1fr;
+//     }
+
+//     .documents-dialog__pagerRow {
+//       align-items: stretch;
+//       flex-direction: column;
+//     }
+
+//     .documents-dialog__perPage {
+//       width: 100%;
+//       justify-content: space-between;
+//     }
+
+//     .documents-dialog__footerActions {
+//       justify-content: stretch;
+//     }
+
+//     .documents-dialog__downloadBtn,
+//     .documents-dialog__footerClose {
+//       flex: 1 1 auto;
+//       justify-content: center;
+//     }
+
+//     .ks-documents-premium__topRow {
+//       flex-direction: column;
+//       align-items: stretch;
+//     }
+
+//     .ks-documents-premium__searchItem,
+//     .ks-documents-premium__dateItem,
+//     .ks-documents-premium__sortItem {
+//       flex: 1 1 auto;
+//       min-width: 0;
+//     }
+//   }
+
+//   .ks-doc-select__top,
+//   .ks-doc-select__top--single {
+//     align-items: flex-start;
+//     flex-direction: column;
+//   }
+
+//   .ks-doc-select__badgeCol {
+//     width: 100%;
+//     min-width: 0;
+//     justify-content: flex-start;
+//   }
+// }
+
+// @media (max-width: 480px) {
+//   .documents-dialog.dialog-backdrop {
+//     padding: 8px;
+//   }
+
+//   .documents-dialog {
+//     .documents-dialog__dialog {
+//       max-height: calc(100dvh - 16px);
+//     }
+
+//     .documents-dialog__scopeButtons {
+//       flex-direction: column;
+//       align-items: stretch;
+//     }
+
+//     .documents-dialog__scopeBtn {
+//       width: 100%;
+//     }
+//   }
+// }
+
+// //neu4
+
 // .documents-dialog {
-//   .ks-documents-overlay--perpage {
-//     max-height: 88px;
+//   .documents-dialog__anchor {
+//     position: relative;
+//   }
+
+//   .documents-dialog__panel {
+//     position: absolute;
+//     top: calc(100% + 6px);
+//     left: 0;
+//     width: 100%;
+//     z-index: 40;
 //     overflow-y: auto;
+//     border-radius: 12px;
+//   }
+
+//   .documents-dialog__panel--docs {
+//     max-height: calc(44px * 7);
+//   }
+
+//   .documents-dialog__panel--sort {
+//     max-height: calc(44px * 6);
+//   }
+
+//   .documents-dialog__panel--perpage {
+//     max-height: 88px;
 //     scrollbar-width: thin;
 //   }
 // }
