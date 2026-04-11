@@ -300,5 +300,7 @@
   "common.admin.customers.customerDialog.street": "Street",
   "common.admin.customers.customerDialog.houseNo": "House no.",
   "common.admin.customers.customerDialog.zip": "ZIP code",
-  "common.admin.customers.customerDialog.city": "City"
+  "common.admin.customers.customerDialog.city": "City",
+
+  "common.admin.customers.customerDialog.newParentWillBeCreated": "New parent will be created"
 }

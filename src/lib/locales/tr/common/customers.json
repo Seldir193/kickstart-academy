@@ -299,5 +299,7 @@
 
   "common.admin.customers.bookDialog.errors.loadOffers": "Teklifler yüklenemedi",
 
-  "common.admin.customers.bookDialog.errors.loadFamily": "Aile yüklenemedi"
+  "common.admin.customers.bookDialog.errors.loadFamily": "Aile yüklenemedi",
+
+  "common.admin.customers.customerDialog.newParentWillBeCreated": "Yeni ebeveyn oluşturulacak"
 }
