@@ -864,585 +864,609 @@ export default function BookDialog({
               </div>
             </div>
           </section>
+          <div className="book-dialog__dynamic">
+            {isCamp && (
+              <section className="dialog-section book-dialog__detailsSection">
+                <div className="dialog-section__head">
+                  <h4 className="dialog-section__title">
+                    {t("common.admin.customers.bookDialog.campDetails")}
+                  </h4>
+                </div>
 
-          {isCamp && (
-            <section className="dialog-section book-dialog__detailsSection">
-              <div className="dialog-section__head">
-                <h4 className="dialog-section__title">
-                  {t("common.admin.customers.bookDialog.campDetails")}
-                </h4>
-              </div>
-
-              <div className="dialog-section__body">
-                <section className="camp-options camp-options--premium">
-                  <div className="camp-card">
-                    <div className="camp-card__head">
-                      <div>
-                        <div className="camp-card__eyebrow">
-                          {t(
-                            "common.admin.customers.bookDialog.holidayProgram",
-                          )}
-                        </div>
-                        <div className="camp-card__title">
-                          {t("common.admin.customers.bookDialog.campDetails")}
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="camp-summary-grid">
-                      <div className="camp-summary-item">
-                        <span className="camp-summary-item__label">
-                          {t("common.admin.customers.bookDialog.holiday")}
-                        </span>
-                        <span className="camp-summary-item__value">
-                          {holidayLabel || "-"}
-                        </span>
-                      </div>
-
-                      <div className="camp-summary-item">
-                        <span className="camp-summary-item__label">
-                          {" "}
-                          {t("common.admin.customers.bookDialog.period")}
-                        </span>
-                        <span className="camp-summary-item__value">
-                          {holidayRange || "-"}
-                        </span>
-                      </div>
-                    </div>
-
-                    <div className="camp-block">
-                      <div className="camp-block__title">
-                        {" "}
-                        {t("common.admin.customers.bookDialog.mainChild")}
-                      </div>
-
-                      <div className="camp-grid">
-                        <div className="field">
-                          <label className="dialog-label">
-                            {t("common.admin.customers.bookDialog.tShirtSize")}
-                          </label>
-                          <select
-                            className="input"
-                            value={mainTShirtSize}
-                            onChange={(e) => setMainTShirtSize(e.target.value)}
-                          >
-                            <option value="">
-                              {t(
-                                "common.admin.customers.bookDialog.pleaseSelect",
-                              )}
-                            </option>
-                            {T_SHIRT_OPTIONS.map((item) => (
-                              <option key={item} value={item}>
-                                {item}
-                              </option>
-                            ))}
-                          </select>
-                        </div>
-
-                        <div className="field">
-                          <label className="dialog-label">
-                            {t(
-                              "common.admin.customers.bookDialog.goalkeeperSchool",
-                            )}
-                          </label>
-                          <div className="camp-toggle-row camp-toggle-row--full">
-                            <button
-                              type="button"
-                              className={`camp-toggle-btn ${
-                                !mainGoalkeeperSchool ? "is-active" : ""
-                              }`}
-                              onClick={() => setMainGoalkeeperSchool(false)}
-                            >
-                              {t("common.admin.customers.bookDialog.no")}
-                            </button>
-
-                            <button
-                              type="button"
-                              className={`camp-toggle-btn ${
-                                mainGoalkeeperSchool ? "is-active" : ""
-                              }`}
-                              onClick={() => setMainGoalkeeperSchool(true)}
-                            >
-                              {t("common.admin.customers.bookDialog.yesPlus40")}
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="camp-block camp-block--sibling">
-                      <div className="sibling-head">
+                <div className="dialog-section__body">
+                  <section className="camp-options camp-options--premium">
+                    <div className="camp-card">
+                      <div className="camp-card__head">
                         <div>
-                          <div className="camp-block__title">
-                            {t("common.admin.customers.bookDialog.addSibling")}
-                          </div>
-                          <div className="sibling-head__subline">
+                          <div className="camp-card__eyebrow">
                             {t(
-                              "common.admin.customers.bookDialog.optionalSiblingDiscount",
+                              "common.admin.customers.bookDialog.holidayProgram",
                             )}
+                          </div>
+                          <div className="camp-card__title">
+                            {t("common.admin.customers.bookDialog.campDetails")}
                           </div>
                         </div>
-
-                        <label className="sibling-switch">
-                          <input
-                            type="checkbox"
-                            checked={hasSibling}
-                            onChange={(e) => setHasSibling(e.target.checked)}
-                          />
-                          <span className="sibling-switch__text">
-                            {t(
-                              "common.admin.customers.bookDialog.yesGet14Discount",
-                            )}
-                          </span>
-                        </label>
                       </div>
 
-                      {hasSibling && (
-                        <div className="sibling-fields is-open">
-                          <div className="camp-grid">
-                            <div className="field">
-                              <label className="dialog-label">
-                                {t("common.admin.customers.bookDialog.gender")}
-                              </label>
-                              <div className="camp-toggle-row camp-toggle-row--full">
-                                <button
-                                  type="button"
-                                  className={`camp-toggle-btn ${
-                                    siblingGender === "weiblich"
-                                      ? "is-active"
-                                      : ""
-                                  }`}
-                                  onClick={() => setSiblingGender("weiblich")}
-                                >
-                                  {t(
-                                    "common.admin.customers.bookDialog.female",
-                                  )}
-                                </button>
+                      <div className="camp-summary-grid">
+                        <div className="camp-summary-item">
+                          <span className="camp-summary-item__label">
+                            {t("common.admin.customers.bookDialog.holiday")}
+                          </span>
+                          <span className="camp-summary-item__value">
+                            {holidayLabel || "-"}
+                          </span>
+                        </div>
 
-                                <button
-                                  type="button"
-                                  className={`camp-toggle-btn ${
-                                    siblingGender === "männlich"
-                                      ? "is-active"
-                                      : ""
-                                  }`}
-                                  onClick={() => setSiblingGender("männlich")}
-                                >
-                                  {t("common.admin.customers.bookDialog.male")}
-                                </button>
-                              </div>
-                            </div>
+                        <div className="camp-summary-item">
+                          <span className="camp-summary-item__label">
+                            {" "}
+                            {t("common.admin.customers.bookDialog.period")}
+                          </span>
+                          <span className="camp-summary-item__value">
+                            {holidayRange || "-"}
+                          </span>
+                        </div>
+                      </div>
 
-                            <div className="field">
-                              <label className="dialog-label">
-                                {" "}
+                      <div className="camp-block">
+                        <div className="camp-block__title">
+                          {" "}
+                          {t("common.admin.customers.bookDialog.mainChild")}
+                        </div>
+
+                        <div className="camp-grid">
+                          <div className="field">
+                            <label className="dialog-label">
+                              {t(
+                                "common.admin.customers.bookDialog.tShirtSize",
+                              )}
+                            </label>
+                            <select
+                              className="input"
+                              value={mainTShirtSize}
+                              onChange={(e) =>
+                                setMainTShirtSize(e.target.value)
+                              }
+                            >
+                              <option value="">
                                 {t(
-                                  "common.admin.customers.bookDialog.birthDate",
+                                  "common.admin.customers.bookDialog.pleaseSelect",
                                 )}
-                              </label>
-                              <KsDatePicker
-                                value={siblingBirthDate}
-                                onChange={(nextIso) =>
-                                  setSiblingBirthDate(nextIso)
-                                }
-                                placeholder={t("common.placeholders.date")}
-                                disabled={false}
-                              />
-                            </div>
-                          </div>
-
-                          <div className="camp-grid">
-                            <div className="field">
-                              <label className="dialog-label">
-                                {" "}
-                                {t(
-                                  "common.admin.customers.bookDialog.firstName",
-                                )}
-                              </label>
-                              <input
-                                className="input"
-                                value={siblingFirstName}
-                                onChange={(e) =>
-                                  setSiblingFirstName(e.target.value)
-                                }
-                              />
-                            </div>
-
-                            <div className="field">
-                              <label className="dialog-label">
-                                {t(
-                                  "common.admin.customers.bookDialog.lastName",
-                                )}
-                              </label>
-                              <input
-                                className="input"
-                                value={siblingLastName}
-                                onChange={(e) =>
-                                  setSiblingLastName(e.target.value)
-                                }
-                              />
-                            </div>
-                          </div>
-
-                          <div className="camp-grid">
-                            <div className="field">
-                              <label className="dialog-label">
-                                {t(
-                                  "common.admin.customers.bookDialog.tShirtSize",
-                                )}
-                              </label>
-                              <select
-                                className="input"
-                                value={siblingTShirtSize}
-                                onChange={(e) =>
-                                  setSiblingTShirtSize(e.target.value)
-                                }
-                              >
-                                <option value="">
-                                  {t(
-                                    "common.admin.customers.bookDialog.pleaseSelect",
-                                  )}
+                              </option>
+                              {T_SHIRT_OPTIONS.map((item) => (
+                                <option key={item} value={item}>
+                                  {item}
                                 </option>
-                                {T_SHIRT_OPTIONS.map((item) => (
-                                  <option key={item} value={item}>
-                                    {item}
-                                  </option>
-                                ))}
-                              </select>
-                            </div>
+                              ))}
+                            </select>
+                          </div>
 
-                            <div className="field">
-                              <label className="dialog-label">
+                          <div className="field">
+                            <label className="dialog-label">
+                              {t(
+                                "common.admin.customers.bookDialog.goalkeeperSchool",
+                              )}
+                            </label>
+                            <div className="camp-toggle-row camp-toggle-row--full">
+                              <button
+                                type="button"
+                                className={`camp-toggle-btn ${
+                                  !mainGoalkeeperSchool ? "is-active" : ""
+                                }`}
+                                onClick={() => setMainGoalkeeperSchool(false)}
+                              >
+                                {t("common.admin.customers.bookDialog.no")}
+                              </button>
+
+                              <button
+                                type="button"
+                                className={`camp-toggle-btn ${
+                                  mainGoalkeeperSchool ? "is-active" : ""
+                                }`}
+                                onClick={() => setMainGoalkeeperSchool(true)}
+                              >
                                 {t(
-                                  "common.admin.customers.bookDialog.goalkeeperSchool",
+                                  "common.admin.customers.bookDialog.yesPlus40",
                                 )}
-                              </label>
-                              <div className="camp-toggle-row camp-toggle-row--full">
-                                <button
-                                  type="button"
-                                  className={`camp-toggle-btn ${
-                                    !siblingGoalkeeperSchool ? "is-active" : ""
-                                  }`}
-                                  onClick={() =>
-                                    setSiblingGoalkeeperSchool(false)
-                                  }
-                                >
-                                  {t("common.admin.customers.bookDialog.no")}
-                                </button>
-
-                                <button
-                                  type="button"
-                                  className={`camp-toggle-btn ${
-                                    siblingGoalkeeperSchool ? "is-active" : ""
-                                  }`}
-                                  onClick={() =>
-                                    setSiblingGoalkeeperSchool(true)
-                                  }
-                                >
-                                  {t(
-                                    "common.admin.customers.bookDialog.yesPlus40",
-                                  )}
-                                </button>
-                              </div>
+                              </button>
                             </div>
                           </div>
                         </div>
-                      )}
-                    </div>
-
-                    <div className="camp-block camp-block--footer">
-                      <div className="camp-block__title">
-                        {t("common.admin.customers.bookDialog.bookingDetails")}
                       </div>
 
-                      <div className="camp-grid camp-grid--top">
-                        <div className="field">
-                          <label className="dialog-label">
-                            {t("common.admin.customers.bookDialog.voucher")}
+                      <div className="camp-block camp-block--sibling">
+                        <div className="sibling-head">
+                          <div>
+                            <div className="camp-block__title">
+                              {t(
+                                "common.admin.customers.bookDialog.addSibling",
+                              )}
+                            </div>
+                            <div className="sibling-head__subline">
+                              {t(
+                                "common.admin.customers.bookDialog.optionalSiblingDiscount",
+                              )}
+                            </div>
+                          </div>
+
+                          <label className="sibling-switch">
+                            <input
+                              type="checkbox"
+                              checked={hasSibling}
+                              onChange={(e) => setHasSibling(e.target.checked)}
+                            />
+                            <span className="sibling-switch__text">
+                              {t(
+                                "common.admin.customers.bookDialog.yesGet14Discount",
+                              )}
+                            </span>
                           </label>
-                          <input
-                            className="input"
-                            value={voucher}
-                            onChange={(e) => setVoucher(e.target.value)}
-                          />
                         </div>
 
-                        <div className="field">
-                          <label className="dialog-label">
-                            {t("common.admin.customers.bookDialog.source")}
-                          </label>
-                          <input
-                            className="input"
-                            value={source}
-                            onChange={(e) => setSource(e.target.value)}
-                          />
-                        </div>
+                        {hasSibling && (
+                          <div className="sibling-fields is-open">
+                            <div className="camp-grid">
+                              <div className="field">
+                                <label className="dialog-label">
+                                  {t(
+                                    "common.admin.customers.bookDialog.gender",
+                                  )}
+                                </label>
+                                <div className="camp-toggle-row camp-toggle-row--full">
+                                  <button
+                                    type="button"
+                                    className={`camp-toggle-btn ${
+                                      siblingGender === "weiblich"
+                                        ? "is-active"
+                                        : ""
+                                    }`}
+                                    onClick={() => setSiblingGender("weiblich")}
+                                  >
+                                    {t(
+                                      "common.admin.customers.bookDialog.female",
+                                    )}
+                                  </button>
+
+                                  <button
+                                    type="button"
+                                    className={`camp-toggle-btn ${
+                                      siblingGender === "männlich"
+                                        ? "is-active"
+                                        : ""
+                                    }`}
+                                    onClick={() => setSiblingGender("männlich")}
+                                  >
+                                    {t(
+                                      "common.admin.customers.bookDialog.male",
+                                    )}
+                                  </button>
+                                </div>
+                              </div>
+
+                              <div className="field">
+                                <label className="dialog-label">
+                                  {" "}
+                                  {t(
+                                    "common.admin.customers.bookDialog.birthDate",
+                                  )}
+                                </label>
+                                <KsDatePicker
+                                  value={siblingBirthDate}
+                                  onChange={(nextIso) =>
+                                    setSiblingBirthDate(nextIso)
+                                  }
+                                  placeholder={t("common.placeholders.date")}
+                                  disabled={false}
+                                />
+                              </div>
+                            </div>
+
+                            <div className="camp-grid">
+                              <div className="field">
+                                <label className="dialog-label">
+                                  {" "}
+                                  {t(
+                                    "common.admin.customers.bookDialog.firstName",
+                                  )}
+                                </label>
+                                <input
+                                  className="input"
+                                  value={siblingFirstName}
+                                  onChange={(e) =>
+                                    setSiblingFirstName(e.target.value)
+                                  }
+                                />
+                              </div>
+
+                              <div className="field">
+                                <label className="dialog-label">
+                                  {t(
+                                    "common.admin.customers.bookDialog.lastName",
+                                  )}
+                                </label>
+                                <input
+                                  className="input"
+                                  value={siblingLastName}
+                                  onChange={(e) =>
+                                    setSiblingLastName(e.target.value)
+                                  }
+                                />
+                              </div>
+                            </div>
+
+                            <div className="camp-grid">
+                              <div className="field">
+                                <label className="dialog-label">
+                                  {t(
+                                    "common.admin.customers.bookDialog.tShirtSize",
+                                  )}
+                                </label>
+                                <select
+                                  className="input"
+                                  value={siblingTShirtSize}
+                                  onChange={(e) =>
+                                    setSiblingTShirtSize(e.target.value)
+                                  }
+                                >
+                                  <option value="">
+                                    {t(
+                                      "common.admin.customers.bookDialog.pleaseSelect",
+                                    )}
+                                  </option>
+                                  {T_SHIRT_OPTIONS.map((item) => (
+                                    <option key={item} value={item}>
+                                      {item}
+                                    </option>
+                                  ))}
+                                </select>
+                              </div>
+
+                              <div className="field">
+                                <label className="dialog-label">
+                                  {t(
+                                    "common.admin.customers.bookDialog.goalkeeperSchool",
+                                  )}
+                                </label>
+                                <div className="camp-toggle-row camp-toggle-row--full">
+                                  <button
+                                    type="button"
+                                    className={`camp-toggle-btn ${
+                                      !siblingGoalkeeperSchool
+                                        ? "is-active"
+                                        : ""
+                                    }`}
+                                    onClick={() =>
+                                      setSiblingGoalkeeperSchool(false)
+                                    }
+                                  >
+                                    {t("common.admin.customers.bookDialog.no")}
+                                  </button>
+
+                                  <button
+                                    type="button"
+                                    className={`camp-toggle-btn ${
+                                      siblingGoalkeeperSchool ? "is-active" : ""
+                                    }`}
+                                    onClick={() =>
+                                      setSiblingGoalkeeperSchool(true)
+                                    }
+                                  >
+                                    {t(
+                                      "common.admin.customers.bookDialog.yesPlus40",
+                                    )}
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        )}
                       </div>
-                    </div>
-                  </div>
-                </section>
-              </div>
-            </section>
-          )}
 
-          {isPowertraining && (
-            <section className="dialog-section book-dialog__detailsSection">
-              <div className="dialog-section__head">
-                <h4 className="dialog-section__title">
-                  {t("common.admin.customers.bookDialog.powertrainingDetails")}
-                </h4>
-              </div>
-
-              <div className="dialog-section__body">
-                <section className="camp-options camp-options--premium">
-                  <div className="camp-card">
-                    <div className="camp-card__head">
-                      <div>
-                        <div className="camp-card__eyebrow">
-                          {t(
-                            "common.admin.customers.bookDialog.holidayProgram",
-                          )}
-                        </div>
-                        <div className="camp-card__title">
-                          {t(
-                            "common.admin.customers.bookDialog.powertrainingDetails",
-                          )}
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="camp-summary-grid">
-                      <div className="camp-summary-item">
-                        <span className="camp-summary-item__label">
-                          {t("common.admin.customers.bookDialog.holiday")}
-                        </span>
-                        <span className="camp-summary-item__value">
-                          {holidayLabel || "—"}
-                        </span>
-                      </div>
-
-                      <div className="camp-summary-item">
-                        <span className="camp-summary-item__label">
-                          {t("common.admin.customers.bookDialog.period")}
-                        </span>
-                        <span className="camp-summary-item__value">
-                          {holidayRange || "—"}
-                        </span>
-                      </div>
-                    </div>
-
-                    <div className="camp-block camp-block--footer">
-                      <div className="camp-block__title">
-                        {t("common.admin.customers.bookDialog.bookingDetails")}
-                      </div>
-
-                      <div className="camp-grid camp-grid--top">
-                        <div className="field">
-                          <label className="dialog-label">
-                            {t("common.admin.customers.bookDialog.voucher")}
-                          </label>
-                          <input
-                            className="input"
-                            value={voucher}
-                            onChange={(e) => setVoucher(e.target.value)}
-                          />
-                        </div>
-
-                        <div className="field">
-                          <label className="dialog-label">
-                            {t("common.admin.customers.bookDialog.source")}
-                          </label>
-                          <input
-                            className="input"
-                            value={source}
-                            onChange={(e) => setSource(e.target.value)}
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </section>
-              </div>
-            </section>
-          )}
-
-          {isOneTimeVoucherOffer && (
-            <section className="dialog-section book-dialog__detailsSection">
-              <div className="dialog-section__head">
-                <h4 className="dialog-section__title">
-                  {t("common.admin.customers.bookDialog.bookingDetails")}
-                </h4>
-              </div>
-
-              <div className="dialog-section__body">
-                <section className="camp-options camp-options--premium">
-                  <div className="camp-card">
-                    <div className="camp-card__head">
-                      <div>
-                        <div className="camp-card__eyebrow">
-                          {t(
-                            "common.admin.customers.bookDialog.oneTimeBooking",
-                          )}
-                        </div>
-                        <div className="camp-card__title">
-                          {t(
-                            "common.admin.customers.bookDialog.bookingDetails",
-                          )}
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="camp-block camp-block--footer">
-                      <div className="camp-block__title">
-                        {t("common.admin.customers.bookDialog.bookingDetails")}
-                      </div>
-
-                      <div className="camp-grid camp-grid--top">
-                        <div className="field">
-                          <label className="dialog-label">
-                            {t("common.admin.customers.bookDialog.voucher")}
-                          </label>
-                          <input
-                            className="input"
-                            value={voucher}
-                            onChange={(e) => setVoucher(e.target.value)}
-                          />
-                        </div>
-
-                        <div className="field">
-                          <label className="dialog-label">
-                            {t("common.admin.customers.bookDialog.source")}
-                          </label>
-                          <input
-                            className="input"
-                            value={source}
-                            onChange={(e) => setSource(e.target.value)}
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </section>
-              </div>
-            </section>
-          )}
-
-          {isWeekly && (
-            <section className="dialog-section book-dialog__detailsSection">
-              <div className="dialog-section__head">
-                <h4 className="dialog-section__title">
-                  {t("common.admin.customers.bookDialog.subscriptionDetails")}
-                </h4>
-              </div>
-
-              <div className="dialog-section__body">
-                <section className="camp-options camp-options--premium">
-                  <div className="camp-card">
-                    <div className="camp-card__head">
-                      <div>
-                        <div className="camp-card__eyebrow">
-                          {t(
-                            "common.admin.customers.bookDialog.subscriptionBooking",
-                          )}
-                        </div>
-                        <div className="camp-card__title">
+                      <div className="camp-block camp-block--footer">
+                        <div className="camp-block__title">
                           {t(
                             "common.admin.customers.bookDialog.bookingDetails",
                           )}
                         </div>
-                      </div>
-                    </div>
 
-                    <div className="camp-block camp-block--footer">
-                      <div className="camp-block__title">
-                        {t("common.admin.customers.bookDialog.bookingDetails")}
-                      </div>
+                        <div className="camp-grid camp-grid--top">
+                          <div className="field">
+                            <label className="dialog-label">
+                              {t("common.admin.customers.bookDialog.voucher")}
+                            </label>
+                            <input
+                              className="input"
+                              value={voucher}
+                              onChange={(e) => setVoucher(e.target.value)}
+                            />
+                          </div>
 
-                      <div className="camp-grid camp-grid--top">
-                        <div className="field">
-                          <label className="dialog-label">
-                            {t("common.admin.customers.bookDialog.voucher")}
-                          </label>
-                          <input
-                            className="input"
-                            value={voucher}
-                            onChange={(e) => setVoucher(e.target.value)}
-                          />
-                        </div>
-
-                        <div className="field">
-                          <label className="dialog-label">
-                            {t("common.admin.customers.bookDialog.source")}
-                          </label>
-                          <input
-                            className="input"
-                            value={source}
-                            onChange={(e) => setSource(e.target.value)}
-                          />
+                          <div className="field">
+                            <label className="dialog-label">
+                              {t("common.admin.customers.bookDialog.source")}
+                            </label>
+                            <input
+                              className="input"
+                              value={source}
+                              onChange={(e) => setSource(e.target.value)}
+                            />
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                </section>
-              </div>
-            </section>
-          )}
+                  </section>
+                </div>
+              </section>
+            )}
 
-          {isNum(selectedOffer?.price) && (
-            <section className="dialog-section book-dialog__priceSection">
-              <div className="dialog-section__head">
-                <h4 className="dialog-section__title">
-                  {t("common.admin.customers.bookDialog.priceOverview")}
-                </h4>
-              </div>
+            {isPowertraining && (
+              <section className="dialog-section book-dialog__detailsSection">
+                <div className="dialog-section__head">
+                  <h4 className="dialog-section__title">
+                    {t(
+                      "common.admin.customers.bookDialog.powertrainingDetails",
+                    )}
+                  </h4>
+                </div>
 
-              <div className="dialog-section__body">
-                {isWeekly ? (
-                  <div className="book-dialog__priceCard">
-                    <ul className="book-dialog__priceList">
-                      <li>
-                        {t("common.admin.customers.bookDialog.monthlyPrice")}:{" "}
-                        <b>{fmtEUR(selectedOffer.price!, i18n.language)}</b>
-                      </li>
-                      {pro ? (
-                        <li>
-                          {t(
-                            "common.admin.customers.bookDialog.firstMonthProRata",
-                            {
-                              date: fmtDE(selectedDate, i18n.language),
-                            },
-                          )}{" "}
-                          <b>{fmtEUR(pro.firstMonthPrice, i18n.language)}</b>{" "}
-                          <span className="book-dialog__muted">
+                <div className="dialog-section__body">
+                  <section className="camp-options camp-options--premium">
+                    <div className="camp-card">
+                      <div className="camp-card__head">
+                        <div>
+                          <div className="camp-card__eyebrow">
                             {t(
-                              "common.admin.customers.bookDialog.remainingDays",
-                              {
-                                daysRemaining: pro.daysRemaining,
-                                daysInMonth: pro.daysInMonth,
-                              },
+                              "common.admin.customers.bookDialog.holidayProgram",
                             )}
-                          </span>
-                        </li>
-                      ) : (
-                        <li className="book-dialog__muted">
-                          {t(
-                            "common.admin.customers.bookDialog.selectValidDate",
-                          )}
-                        </li>
-                      )}
-                    </ul>
-                  </div>
-                ) : (
-                  <div className="book-dialog__priceInline">
-                    {t("common.admin.customers.bookDialog.price")}:{" "}
-                    <b>{fmtEUR(selectedOffer.price!, i18n.language)}</b>
-                  </div>
-                )}
-              </div>
-            </section>
-          )}
-        </div>
+                          </div>
+                          <div className="camp-card__title">
+                            {t(
+                              "common.admin.customers.bookDialog.powertrainingDetails",
+                            )}
+                          </div>
+                        </div>
+                      </div>
 
+                      <div className="camp-summary-grid">
+                        <div className="camp-summary-item">
+                          <span className="camp-summary-item__label">
+                            {t("common.admin.customers.bookDialog.holiday")}
+                          </span>
+                          <span className="camp-summary-item__value">
+                            {holidayLabel || "—"}
+                          </span>
+                        </div>
+
+                        <div className="camp-summary-item">
+                          <span className="camp-summary-item__label">
+                            {t("common.admin.customers.bookDialog.period")}
+                          </span>
+                          <span className="camp-summary-item__value">
+                            {holidayRange || "—"}
+                          </span>
+                        </div>
+                      </div>
+
+                      <div className="camp-block camp-block--footer">
+                        <div className="camp-block__title">
+                          {t(
+                            "common.admin.customers.bookDialog.bookingDetails",
+                          )}
+                        </div>
+
+                        <div className="camp-grid camp-grid--top">
+                          <div className="field">
+                            <label className="dialog-label">
+                              {t("common.admin.customers.bookDialog.voucher")}
+                            </label>
+                            <input
+                              className="input"
+                              value={voucher}
+                              onChange={(e) => setVoucher(e.target.value)}
+                            />
+                          </div>
+
+                          <div className="field">
+                            <label className="dialog-label">
+                              {t("common.admin.customers.bookDialog.source")}
+                            </label>
+                            <input
+                              className="input"
+                              value={source}
+                              onChange={(e) => setSource(e.target.value)}
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </section>
+                </div>
+              </section>
+            )}
+
+            {isOneTimeVoucherOffer && (
+              <section className="dialog-section book-dialog__detailsSection">
+                <div className="dialog-section__head">
+                  <h4 className="dialog-section__title">
+                    {t("common.admin.customers.bookDialog.bookingDetails")}
+                  </h4>
+                </div>
+
+                <div className="dialog-section__body">
+                  <section className="camp-options camp-options--premium">
+                    <div className="camp-card">
+                      <div className="camp-card__head">
+                        <div>
+                          <div className="camp-card__eyebrow">
+                            {t(
+                              "common.admin.customers.bookDialog.oneTimeBooking",
+                            )}
+                          </div>
+                          <div className="camp-card__title">
+                            {t(
+                              "common.admin.customers.bookDialog.bookingDetails",
+                            )}
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="camp-block camp-block--footer">
+                        <div className="camp-block__title">
+                          {t(
+                            "common.admin.customers.bookDialog.bookingDetails",
+                          )}
+                        </div>
+
+                        <div className="camp-grid camp-grid--top">
+                          <div className="field">
+                            <label className="dialog-label">
+                              {t("common.admin.customers.bookDialog.voucher")}
+                            </label>
+                            <input
+                              className="input"
+                              value={voucher}
+                              onChange={(e) => setVoucher(e.target.value)}
+                            />
+                          </div>
+
+                          <div className="field">
+                            <label className="dialog-label">
+                              {t("common.admin.customers.bookDialog.source")}
+                            </label>
+                            <input
+                              className="input"
+                              value={source}
+                              onChange={(e) => setSource(e.target.value)}
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </section>
+                </div>
+              </section>
+            )}
+
+            {isWeekly && (
+              <section className="dialog-section book-dialog__detailsSection">
+                <div className="dialog-section__head">
+                  <h4 className="dialog-section__title">
+                    {t("common.admin.customers.bookDialog.subscriptionDetails")}
+                  </h4>
+                </div>
+
+                <div className="dialog-section__body">
+                  <section className="camp-options camp-options--premium">
+                    <div className="camp-card">
+                      <div className="camp-card__head">
+                        <div>
+                          <div className="camp-card__eyebrow">
+                            {t(
+                              "common.admin.customers.bookDialog.subscriptionBooking",
+                            )}
+                          </div>
+                          <div className="camp-card__title">
+                            {t(
+                              "common.admin.customers.bookDialog.bookingDetails",
+                            )}
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="camp-block camp-block--footer">
+                        <div className="camp-block__title">
+                          {t(
+                            "common.admin.customers.bookDialog.bookingDetails",
+                          )}
+                        </div>
+
+                        <div className="camp-grid camp-grid--top">
+                          <div className="field">
+                            <label className="dialog-label">
+                              {t("common.admin.customers.bookDialog.voucher")}
+                            </label>
+                            <input
+                              className="input"
+                              value={voucher}
+                              onChange={(e) => setVoucher(e.target.value)}
+                            />
+                          </div>
+
+                          <div className="field">
+                            <label className="dialog-label">
+                              {t("common.admin.customers.bookDialog.source")}
+                            </label>
+                            <input
+                              className="input"
+                              value={source}
+                              onChange={(e) => setSource(e.target.value)}
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </section>
+                </div>
+              </section>
+            )}
+
+            {isNum(selectedOffer?.price) && (
+              <section className="dialog-section book-dialog__priceSection">
+                <div className="dialog-section__head">
+                  <h4 className="dialog-section__title">
+                    {t("common.admin.customers.bookDialog.priceOverview")}
+                  </h4>
+                </div>
+
+                <div className="dialog-section__body">
+                  {isWeekly ? (
+                    <div className="book-dialog__priceCard">
+                      <ul className="book-dialog__priceList">
+                        <li>
+                          {t("common.admin.customers.bookDialog.monthlyPrice")}:{" "}
+                          <b>{fmtEUR(selectedOffer.price!, i18n.language)}</b>
+                        </li>
+                        {pro ? (
+                          <li>
+                            {t(
+                              "common.admin.customers.bookDialog.firstMonthProRata",
+                              {
+                                date: fmtDE(selectedDate, i18n.language),
+                              },
+                            )}{" "}
+                            <b>{fmtEUR(pro.firstMonthPrice, i18n.language)}</b>{" "}
+                            <span className="book-dialog__muted">
+                              {t(
+                                "common.admin.customers.bookDialog.remainingDays",
+                                {
+                                  daysRemaining: pro.daysRemaining,
+                                  daysInMonth: pro.daysInMonth,
+                                },
+                              )}
+                            </span>
+                          </li>
+                        ) : (
+                          <li className="book-dialog__muted">
+                            {t(
+                              "common.admin.customers.bookDialog.selectValidDate",
+                            )}
+                          </li>
+                        )}
+                      </ul>
+                    </div>
+                  ) : (
+                    <div className="book-dialog__priceInline">
+                      {t("common.admin.customers.bookDialog.price")}:{" "}
+                      <b>{fmtEUR(selectedOffer.price!, i18n.language)}</b>
+                    </div>
+                  )}
+                </div>
+              </section>
+            )}
+          </div>
+        </div>
         <div className="dialog-footer book-dialog__footer">
           <div className="book-dialog__footerActions">
             <button
