@@ -43,5 +43,12 @@
   "common.admin.coaches.filters.sortNewest": "En yeni önce",
   "common.admin.coaches.filters.sortOldest": "En eski önce",
   "common.admin.coaches.filters.sortNameAsc": "Ad A–Z",
-  "common.admin.coaches.filters.sortNameDesc": "Ad Z–A"
+  "common.admin.coaches.filters.sortNameDesc": "Ad Z–A",
+
+  "common.admin.coaches.bulk.select": "Seç",
+  "common.admin.coaches.bulk.selected": "seçildi",
+  "common.admin.coaches.bulk.clearSelection": "Seçimi temizle",
+  "common.admin.coaches.bulk.selectAll": "Tümünü seç",
+  "common.admin.coaches.bulk.delete": "Sil",
+  "common.admin.coaches.bulk.cancel": "İptal"
 }

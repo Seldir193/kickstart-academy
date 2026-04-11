@@ -43,5 +43,12 @@
   "common.admin.coaches.filters.sortNewest": "Neueste zuerst",
   "common.admin.coaches.filters.sortOldest": "Älteste zuerst",
   "common.admin.coaches.filters.sortNameAsc": "Name A–Z",
-  "common.admin.coaches.filters.sortNameDesc": "Name Z–A"
+  "common.admin.coaches.filters.sortNameDesc": "Name Z–A",
+
+  "common.admin.coaches.bulk.select": "Auswählen",
+  "common.admin.coaches.bulk.selected": "ausgewählt",
+  "common.admin.coaches.bulk.clearSelection": "Auswahl aufheben",
+  "common.admin.coaches.bulk.selectAll": "Alle auswählen",
+  "common.admin.coaches.bulk.delete": "Löschen",
+  "common.admin.coaches.bulk.cancel": "Abbrechen"
 }
