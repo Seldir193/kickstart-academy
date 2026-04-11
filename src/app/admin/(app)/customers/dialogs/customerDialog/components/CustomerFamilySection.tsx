@@ -118,18 +118,18 @@ function renderDropdown(
 export default function CustomerFamilySection(p: Props) {
   const { t } = useTranslation();
   if (p.mode !== "edit") return null;
-
+  void p.familyLoading;
   return (
     <fieldset className="card mb-3">
       <legend className="font-bold">
         {t("common.admin.customers.customerDialog.familyChildren")}
       </legend>
 
-      {p.familyLoading ? (
+      {/* {p.familyLoading ? (
         <div className="text-xs text-gray-600 mb-1">
           {t("common.admin.customers.customerDialog.loadingFamily")}
         </div>
-      ) : null}
+      ) : null} */}
 
       {p.familyError ? (
         <div className="text-xs text-red-600 mb-1">{p.familyError}</div>

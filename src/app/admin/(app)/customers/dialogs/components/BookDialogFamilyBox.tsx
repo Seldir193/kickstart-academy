@@ -66,12 +66,12 @@ function toggleButtonFocus(
 
 export default function BookDialogFamilyBox(p: Props) {
   const { t } = useTranslation();
+
   return (
     <div className="mb-3 p-3 rounded border bg-gray-50 text-sm">
       <div className="font-semibold mb-1">
         {t("common.admin.customers.bookDialog.family.bookingFor")}
       </div>
-
       {p.familyLoading && (
         <div className="text-gray-600">
           {t("common.admin.customers.bookDialog.family.loading")}
@@ -83,7 +83,6 @@ export default function BookDialogFamilyBox(p: Props) {
           {t("common.admin.customers.bookDialog.family.error")}
         </div>
       )}
-
       {p.family && p.family.length > 0 ? (
         <>
           <div className="mb-2">
