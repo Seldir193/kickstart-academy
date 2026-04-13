@@ -87,5 +87,13 @@
   "common.admin.coaches.deleteDialog.title": "Coach löschen",
   "common.admin.coaches.deleteDialog.text": "Möchtest du den Coach „{{coachName}}“ wirklich löschen?",
   "common.actions.confirm": "Bestätigen",
-  "common.actions.cancel": "Abbrechen"
+  "common.actions.cancel": "Abbrechen",
+
+  "common.admin.coaches.rejectDialog.title": "Coach ablehnen",
+  "common.admin.coaches.rejectDialog.subtitle": "Füge einen klaren Grund für die Ablehnung dieses Eintrags hinzu.",
+  "common.admin.coaches.rejectDialog.reasonRequired": "Grund *",
+  "common.admin.coaches.rejectDialog.placeholder": "z. B. unvollständige Daten / unplausible Daten / Duplikat…",
+  "common.admin.coaches.rejectDialog.reject": "Ablehnen",
+  "common.admin.coaches.rejectDialog.errors.enterReason": "Bitte gib einen Grund ein.",
+  "common.admin.coaches.rejectDialog.errors.rejectFailed": "Ablehnung fehlgeschlagen."
 }

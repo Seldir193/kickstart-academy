@@ -87,5 +87,13 @@
   "common.admin.coaches.deleteDialog.title": "Delete coach",
   "common.admin.coaches.deleteDialog.text": "Do you really want to delete coach \"{{coachName}}\"?",
   "common.actions.confirm": "Confirm",
-  "common.actions.cancel": "Cancel"
+  "common.actions.cancel": "Cancel",
+
+  "common.admin.coaches.rejectDialog.title": "Reject coach",
+  "common.admin.coaches.rejectDialog.subtitle": "Add a clear reason for rejecting this item.",
+  "common.admin.coaches.rejectDialog.reasonRequired": "Reason *",
+  "common.admin.coaches.rejectDialog.placeholder": "e.g. incomplete data / implausible data / duplicate…",
+  "common.admin.coaches.rejectDialog.reject": "Reject",
+  "common.admin.coaches.rejectDialog.errors.enterReason": "Please enter a reason.",
+  "common.admin.coaches.rejectDialog.errors.rejectFailed": "Rejecting failed."
 }

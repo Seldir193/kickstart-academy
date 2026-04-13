@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { toastErrorMessage, toastText } from "@/lib/toast-messages";
 
 type Props = {
   open: boolean;
@@ -9,6 +11,7 @@ type Props = {
 };
 
 export default function RejectDialog({ open, onClose, onSubmit }: Props) {
+  const { t } = useTranslation();
   const [reason, setReason] = useState("");
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
@@ -25,7 +28,9 @@ export default function RejectDialog({ open, onClose, onSubmit }: Props) {
   async function submit() {
     const r = reason.trim();
     if (!r) {
-      setErr("Please enter a reason.");
+      setErr(
+        toastText(t, "common.admin.coaches.rejectDialog.errors.enterReason"),
+      );
       return;
     }
 
@@ -35,7 +40,13 @@ export default function RejectDialog({ open, onClose, onSubmit }: Props) {
       await onSubmit(r);
       onClose();
     } catch (e: any) {
-      setErr(e?.message || "Rejecting failed.");
+      setErr(
+        toastErrorMessage(
+          t,
+          e,
+          "common.admin.coaches.rejectDialog.errors.rejectFailed",
+        ),
+      );
     } finally {
       setBusy(false);
     }
@@ -50,10 +61,12 @@ export default function RejectDialog({ open, onClose, onSubmit }: Props) {
       <div className="dialog coach-reject__dialog">
         <div className="dialog-head coach-reject__head">
           <div className="coach-reject__head-left">
-            <div className="dialog-title coach-reject__title">Reject coach</div>
+            <div className="dialog-title coach-reject__title">
+              {t("common.admin.coaches.rejectDialog.title")}
+            </div>
 
             <div className="dialog-subtitle coach-reject__subtitle">
-              Add a clear reason for rejecting this item.
+              {t("common.admin.coaches.rejectDialog.subtitle")}
             </div>
           </div>
 
@@ -62,7 +75,7 @@ export default function RejectDialog({ open, onClose, onSubmit }: Props) {
               <button
                 type="button"
                 className="dialog-close modal__close"
-                aria-label="Close"
+                aria-label={t("common.actions.close")}
                 onClick={onClose}
                 disabled={busy}
               >
@@ -76,42 +89,20 @@ export default function RejectDialog({ open, onClose, onSubmit }: Props) {
             </div>
           </div>
         </div>
-        {/* <div className="dialog-head coach-reject__head">
-          <div className="coach-reject__head-left">
-            <div className="dialog-title coach-reject__title">Reject coach</div>
-          </div>
-
-          <div className="coach-reject__head-right">
-            <div className="dialog-head__actions">
-              <button
-                type="button"
-                className="dialog-close modal__close"
-                aria-label="Close"
-                onClick={onClose}
-                disabled={busy}
-              >
-                <img
-                  src="/icons/close.svg"
-                  alt=""
-                  aria-hidden="true"
-                  className="icon-img"
-                />
-              </button>
-            </div>
-          </div>
-        </div> */}
 
         <div className="dialog-body coach-reject__body">
           {err ? <div className="error coach-reject__error">{err}</div> : null}
 
           <div className="coach-reject__field">
-            <label className="dialog-label coach-reject__label">Reason *</label>
+            <label className="dialog-label coach-reject__label">
+              {t("common.admin.coaches.rejectDialog.reasonRequired")}
+            </label>
 
             <textarea
               className="input coach-reject__textarea"
               value={reason}
               onChange={(e) => setReason(e.target.value)}
-              placeholder="e.g. incomplete data / implausible data / duplicate…"
+              placeholder={t("common.admin.coaches.rejectDialog.placeholder")}
             />
           </div>
         </div>
@@ -123,7 +114,7 @@ export default function RejectDialog({ open, onClose, onSubmit }: Props) {
             onClick={submit}
             disabled={busy}
           >
-            {busy ? "…" : "Reject"}
+            {busy ? "…" : t("common.admin.coaches.rejectDialog.reject")}
           </button>
         </div>
       </div>
@@ -131,7 +122,7 @@ export default function RejectDialog({ open, onClose, onSubmit }: Props) {
       <button
         type="button"
         className="dialog-backdrop-hit coach-reject__backdrop-hit"
-        aria-label="Close"
+        aria-label={t("common.actions.close")}
         onClick={onClose}
         disabled={busy}
       />

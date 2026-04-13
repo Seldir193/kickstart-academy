@@ -87,5 +87,13 @@
   "common.admin.coaches.deleteDialog.title": "Antrenörü sil",
   "common.admin.coaches.deleteDialog.text": "\"{{coachName}}\" adlı antrenörü gerçekten silmek istiyor musunuz?",
   "common.actions.confirm": "Onayla",
-  "common.actions.cancel": "İptal"
+  "common.actions.cancel": "İptal",
+
+  "common.admin.coaches.rejectDialog.title": "Antrenörü reddet",
+  "common.admin.coaches.rejectDialog.subtitle": "Bu kaydı reddetmek için açık bir neden ekleyin.",
+  "common.admin.coaches.rejectDialog.reasonRequired": "Neden *",
+  "common.admin.coaches.rejectDialog.placeholder": "ör. eksik veri / mantıksız veri / kopya…",
+  "common.admin.coaches.rejectDialog.reject": "Reddet",
+  "common.admin.coaches.rejectDialog.errors.enterReason": "Lütfen bir neden girin.",
+  "common.admin.coaches.rejectDialog.errors.rejectFailed": "Reddetme başarısız oldu."
 }
