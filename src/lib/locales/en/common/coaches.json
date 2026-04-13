@@ -80,5 +80,7 @@
   "common.admin.coaches.infoDialog.viewOnly": "View only",
   "common.admin.coaches.infoDialog.rejectionReason": "Rejection reason",
   "common.admin.coaches.infoDialog.reason": "Reason",
-  "common.values.emptyDash": "—"
+  "common.values.emptyDash": "—",
+
+  "common.admin.coaches.confirmDialog.actionFailed": "Action failed."
 }

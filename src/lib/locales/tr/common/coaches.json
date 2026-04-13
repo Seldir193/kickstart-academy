@@ -80,5 +80,7 @@
   "common.admin.coaches.infoDialog.viewOnly": "Sadece görüntüleme",
   "common.admin.coaches.infoDialog.rejectionReason": "Reddetme nedeni",
   "common.admin.coaches.infoDialog.reason": "Neden",
-  "common.values.emptyDash": "—"
+  "common.values.emptyDash": "—",
+
+  "common.admin.coaches.confirmDialog.actionFailed": "İşlem başarısız oldu."
 }

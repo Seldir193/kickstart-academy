@@ -80,5 +80,7 @@
   "common.admin.coaches.infoDialog.viewOnly": "Nur Ansicht",
   "common.admin.coaches.infoDialog.rejectionReason": "Ablehnungsgrund",
   "common.admin.coaches.infoDialog.reason": "Grund",
-  "common.values.emptyDash": "—"
+  "common.values.emptyDash": "—",
+
+  "common.admin.coaches.confirmDialog.actionFailed": "Aktion fehlgeschlagen."
 }
