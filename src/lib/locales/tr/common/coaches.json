@@ -95,5 +95,17 @@
   "common.admin.coaches.rejectDialog.placeholder": "ör. eksik veri / mantıksız veri / kopya…",
   "common.admin.coaches.rejectDialog.reject": "Reddet",
   "common.admin.coaches.rejectDialog.errors.enterReason": "Lütfen bir neden girin.",
-  "common.admin.coaches.rejectDialog.errors.rejectFailed": "Reddetme başarısız oldu."
+  "common.admin.coaches.rejectDialog.errors.rejectFailed": "Reddetme başarısız oldu.",
+
+  "common.admin.coaches.page.newCoach": "Yeni antrenör",
+  "common.admin.coaches.page.meLabel": "Ben",
+  "common.admin.coaches.page.loading": "Yükleniyor…",
+  "common.admin.coaches.page.providersPendingReview": "Sağlayıcılar – İncelenmeyi bekliyor",
+  "common.admin.coaches.page.providersApproved": "Sağlayıcılar – Onaylandı",
+  "common.admin.coaches.page.providersRejected": "Sağlayıcılar – Reddedildi",
+  "common.admin.coaches.page.coachesPendingReview": "Antrenörler – İncelenmeyi bekliyor",
+  "common.admin.coaches.page.coachesApproved": "Antrenörler – Onaylandı",
+  "common.admin.coaches.page.coachesRejected": "Antrenörler – Reddedildi",
+  "common.admin.coaches.page.myCoachesApproved": "Antrenörlerim – Onaylandı",
+  "common.admin.coaches.page.countNew": "({{count}} yeni)"
 }

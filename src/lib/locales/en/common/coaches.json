@@ -95,5 +95,17 @@
   "common.admin.coaches.rejectDialog.placeholder": "e.g. incomplete data / implausible data / duplicate…",
   "common.admin.coaches.rejectDialog.reject": "Reject",
   "common.admin.coaches.rejectDialog.errors.enterReason": "Please enter a reason.",
-  "common.admin.coaches.rejectDialog.errors.rejectFailed": "Rejecting failed."
+  "common.admin.coaches.rejectDialog.errors.rejectFailed": "Rejecting failed.",
+
+  "common.admin.coaches.page.newCoach": "New coach",
+  "common.admin.coaches.page.meLabel": "Me",
+  "common.admin.coaches.page.loading": "Loading…",
+  "common.admin.coaches.page.providersPendingReview": "Providers – Pending review",
+  "common.admin.coaches.page.providersApproved": "Providers – Approved",
+  "common.admin.coaches.page.providersRejected": "Providers – Rejected",
+  "common.admin.coaches.page.coachesPendingReview": "Coaches – Pending review",
+  "common.admin.coaches.page.coachesApproved": "Coaches – Approved",
+  "common.admin.coaches.page.coachesRejected": "Coaches – Rejected",
+  "common.admin.coaches.page.myCoachesApproved": "My coaches – Approved",
+  "common.admin.coaches.page.countNew": "({{count}} new)"
 }

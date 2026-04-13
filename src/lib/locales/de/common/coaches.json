@@ -95,5 +95,17 @@
   "common.admin.coaches.rejectDialog.placeholder": "z. B. unvollständige Daten / unplausible Daten / Duplikat…",
   "common.admin.coaches.rejectDialog.reject": "Ablehnen",
   "common.admin.coaches.rejectDialog.errors.enterReason": "Bitte gib einen Grund ein.",
-  "common.admin.coaches.rejectDialog.errors.rejectFailed": "Ablehnung fehlgeschlagen."
+  "common.admin.coaches.rejectDialog.errors.rejectFailed": "Ablehnung fehlgeschlagen.",
+
+  "common.admin.coaches.page.newCoach": "Neuer Coach",
+  "common.admin.coaches.page.meLabel": "Ich",
+  "common.admin.coaches.page.loading": "Wird geladen…",
+  "common.admin.coaches.page.providersPendingReview": "Anbieter – Zur Prüfung",
+  "common.admin.coaches.page.providersApproved": "Anbieter – Genehmigt",
+  "common.admin.coaches.page.providersRejected": "Anbieter – Abgelehnt",
+  "common.admin.coaches.page.coachesPendingReview": "Coaches – Zur Prüfung",
+  "common.admin.coaches.page.coachesApproved": "Coaches – Genehmigt",
+  "common.admin.coaches.page.coachesRejected": "Coaches – Abgelehnt",
+  "common.admin.coaches.page.myCoachesApproved": "Meine Coaches – Genehmigt",
+  "common.admin.coaches.page.countNew": "({{count}} neu)"
 }
