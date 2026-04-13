@@ -65,5 +65,7 @@
   "common.admin.coaches.publishedInfoDialog.favorites": "Favorites",
   "common.admin.coaches.publishedInfoDialog.favoriteClub": "Favorite club",
   "common.admin.coaches.publishedInfoDialog.favoriteCoach": "Favorite coach",
-  "common.admin.coaches.publishedInfoDialog.favoriteTrick": "Favorite trick"
+  "common.admin.coaches.publishedInfoDialog.favoriteTrick": "Favorite trick",
+
+  "common.admin.coaches.errors.loadFailed": "Load failed."
 }

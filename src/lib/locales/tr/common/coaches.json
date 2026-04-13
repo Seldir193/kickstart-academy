@@ -65,5 +65,7 @@
   "common.admin.coaches.publishedInfoDialog.favorites": "Favoriler",
   "common.admin.coaches.publishedInfoDialog.favoriteClub": "Favori kulüp",
   "common.admin.coaches.publishedInfoDialog.favoriteCoach": "Favori antrenör",
-  "common.admin.coaches.publishedInfoDialog.favoriteTrick": "Favori hareket"
+  "common.admin.coaches.publishedInfoDialog.favoriteTrick": "Favori hareket",
+
+  "common.admin.coaches.errors.loadFailed": "Yükleme başarısız oldu."
 }
