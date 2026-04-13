@@ -2,6 +2,7 @@
 "use client";
 
 import { useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import type { Coach } from "../types";
 import {
   approveCoach,
@@ -33,7 +34,7 @@ export function useCoachesPageMutations(args: {
     applyMineRemove,
     resetSelections,
   } = args;
-
+  const { t } = useTranslation();
   const [mutating, setMutating] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
   const [publishedBusySlug, setPublishedBusySlug] = useState<string | null>(
@@ -71,7 +72,10 @@ export function useCoachesPageMutations(args: {
   }
 
   async function handleCreate(values: Partial<Coach>) {
-    const r = await runSafe(() => createCoach(values), "Create failed.");
+    const r = await runSafe(
+      () => createCoach(values),
+      t("common.admin.coaches.errors.createFailed"),
+    );
     if (!r.ok) return null;
     resetSelections();
     applyUpsert(r.data);
@@ -80,7 +84,10 @@ export function useCoachesPageMutations(args: {
 
   async function handleSave(slug: string, values: Partial<Coach>) {
     const payload = buildUpdatePayload(values, isSuper);
-    const r = await runSafe(() => updateCoach(slug, payload), "Save failed.");
+    const r = await runSafe(
+      () => updateCoach(slug, payload),
+      t("common.admin.coaches.errors.saveFailed"),
+    );
     if (!r.ok) return null;
     resetSelections();
     applyUpsert(r.data);
@@ -88,28 +95,40 @@ export function useCoachesPageMutations(args: {
   }
 
   async function handleApprove(slug: string) {
-    const r = await runSafe(() => approveCoach(slug), "Approve failed.");
+    const r = await runSafe(
+      () => approveCoach(slug),
+      t("common.admin.coaches.errors.approveFailed"),
+    );
     if (!r.ok) return null;
     applySplitMoveProvider(r.data);
     return r.data;
   }
 
   async function handleReject(slug: string, reason: string) {
-    const r = await runSafe(() => rejectCoach(slug, reason), "Reject failed.");
+    const r = await runSafe(
+      () => rejectCoach(slug, reason),
+      t("common.admin.coaches.errors.rejectFailed"),
+    );
     if (!r.ok) return null;
     applyUpsert(r.data);
     return r.data;
   }
 
   async function handleSubmit(slug: string) {
-    const r = await runSafe(() => submitCoachForReview(slug), "Submit failed.");
+    const r = await runSafe(
+      () => submitCoachForReview(slug),
+      t("common.admin.coaches.errors.submitFailed"),
+    );
     if (!r.ok) return null;
     applyUpsert(r.data);
     return r.data;
   }
 
   async function handleDelete(slug: string): Promise<void> {
-    const r = await runSafe(() => deleteCoach(slug), "Delete failed.");
+    const r = await runSafe(
+      () => deleteCoach(slug),
+      t("common.admin.coaches.errors.deleteFailed"),
+    );
     if (!r.ok) return;
     applyRemove(slug);
     resetSelections();
@@ -118,7 +137,7 @@ export function useCoachesPageMutations(args: {
   async function deleteMany(slugs: string[]): Promise<void> {
     const r = await runSafe(async () => {
       await Promise.all(slugs.map((s) => deleteCoach(s).catch(() => null)));
-    }, "Delete failed.");
+    }, t("common.admin.coaches.errors.deleteFailed"));
 
     if (!r.ok) return;
 
@@ -133,7 +152,7 @@ export function useCoachesPageMutations(args: {
     try {
       const r = await runSafe(
         () => updateCoach(slug, { published: next }),
-        "Save failed.",
+        t("common.admin.coaches.errors.saveFailed"),
       );
       if (!r.ok) return null;
       applyUpsert(r.data);
