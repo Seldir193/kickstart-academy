@@ -67,5 +67,12 @@
   "common.admin.coaches.publishedInfoDialog.favoriteCoach": "Lieblingstrainer",
   "common.admin.coaches.publishedInfoDialog.favoriteTrick": "Lieblingstrick",
 
-  "common.admin.coaches.errors.loadFailed": "Laden fehlgeschlagen."
+  "common.admin.coaches.errors.loadFailed": "Laden fehlgeschlagen.",
+
+  "common.admin.coaches.errors.createFailed": "Erstellen fehlgeschlagen.",
+  "common.admin.coaches.errors.saveFailed": "Speichern fehlgeschlagen.",
+  "common.admin.coaches.errors.approveFailed": "Freigabe fehlgeschlagen.",
+  "common.admin.coaches.errors.rejectFailed": "Ablehnung fehlgeschlagen.",
+  "common.admin.coaches.errors.submitFailed": "Einreichung fehlgeschlagen.",
+  "common.admin.coaches.errors.deleteFailed": "Löschen fehlgeschlagen."
 }

@@ -67,5 +67,12 @@
   "common.admin.coaches.publishedInfoDialog.favoriteCoach": "Favorite coach",
   "common.admin.coaches.publishedInfoDialog.favoriteTrick": "Favorite trick",
 
-  "common.admin.coaches.errors.loadFailed": "Load failed."
+  "common.admin.coaches.errors.loadFailed": "Load failed.",
+
+  "common.admin.coaches.errors.createFailed": "Create failed.",
+  "common.admin.coaches.errors.saveFailed": "Save failed.",
+  "common.admin.coaches.errors.approveFailed": "Approve failed.",
+  "common.admin.coaches.errors.rejectFailed": "Reject failed.",
+  "common.admin.coaches.errors.submitFailed": "Submit failed.",
+  "common.admin.coaches.errors.deleteFailed": "Delete failed."
 }

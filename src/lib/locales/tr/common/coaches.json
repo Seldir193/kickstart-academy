@@ -67,5 +67,12 @@
   "common.admin.coaches.publishedInfoDialog.favoriteCoach": "Favori antrenör",
   "common.admin.coaches.publishedInfoDialog.favoriteTrick": "Favori hareket",
 
-  "common.admin.coaches.errors.loadFailed": "Yükleme başarısız oldu."
+  "common.admin.coaches.errors.loadFailed": "Yükleme başarısız oldu.",
+
+  "common.admin.coaches.errors.createFailed": "Oluşturma başarısız oldu.",
+  "common.admin.coaches.errors.saveFailed": "Kaydetme başarısız oldu.",
+  "common.admin.coaches.errors.approveFailed": "Onay başarısız oldu.",
+  "common.admin.coaches.errors.rejectFailed": "Reddetme başarısız oldu.",
+  "common.admin.coaches.errors.submitFailed": "Gönderim başarısız oldu.",
+  "common.admin.coaches.errors.deleteFailed": "Silme başarısız oldu."
 }
