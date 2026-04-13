@@ -74,5 +74,11 @@
   "common.admin.coaches.errors.approveFailed": "Onay başarısız oldu.",
   "common.admin.coaches.errors.rejectFailed": "Reddetme başarısız oldu.",
   "common.admin.coaches.errors.submitFailed": "Gönderim başarısız oldu.",
-  "common.admin.coaches.errors.deleteFailed": "Silme başarısız oldu."
+  "common.admin.coaches.errors.deleteFailed": "Silme başarısız oldu.",
+
+  "common.admin.coaches.infoDialog.coachPrefix": "Antrenör",
+  "common.admin.coaches.infoDialog.viewOnly": "Sadece görüntüleme",
+  "common.admin.coaches.infoDialog.rejectionReason": "Reddetme nedeni",
+  "common.admin.coaches.infoDialog.reason": "Neden",
+  "common.values.emptyDash": "—"
 }

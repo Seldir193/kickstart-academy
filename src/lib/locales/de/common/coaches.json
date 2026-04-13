@@ -74,5 +74,11 @@
   "common.admin.coaches.errors.approveFailed": "Freigabe fehlgeschlagen.",
   "common.admin.coaches.errors.rejectFailed": "Ablehnung fehlgeschlagen.",
   "common.admin.coaches.errors.submitFailed": "Einreichung fehlgeschlagen.",
-  "common.admin.coaches.errors.deleteFailed": "Löschen fehlgeschlagen."
+  "common.admin.coaches.errors.deleteFailed": "Löschen fehlgeschlagen.",
+
+  "common.admin.coaches.infoDialog.coachPrefix": "Coach",
+  "common.admin.coaches.infoDialog.viewOnly": "Nur Ansicht",
+  "common.admin.coaches.infoDialog.rejectionReason": "Ablehnungsgrund",
+  "common.admin.coaches.infoDialog.reason": "Grund",
+  "common.values.emptyDash": "—"
 }

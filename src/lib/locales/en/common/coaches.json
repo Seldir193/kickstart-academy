@@ -74,5 +74,11 @@
   "common.admin.coaches.errors.approveFailed": "Approve failed.",
   "common.admin.coaches.errors.rejectFailed": "Reject failed.",
   "common.admin.coaches.errors.submitFailed": "Submit failed.",
-  "common.admin.coaches.errors.deleteFailed": "Delete failed."
+  "common.admin.coaches.errors.deleteFailed": "Delete failed.",
+
+  "common.admin.coaches.infoDialog.coachPrefix": "Coach",
+  "common.admin.coaches.infoDialog.viewOnly": "View only",
+  "common.admin.coaches.infoDialog.rejectionReason": "Rejection reason",
+  "common.admin.coaches.infoDialog.reason": "Reason",
+  "common.values.emptyDash": "—"
 }
