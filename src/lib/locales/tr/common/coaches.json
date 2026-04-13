@@ -82,5 +82,10 @@
   "common.admin.coaches.infoDialog.reason": "Neden",
   "common.values.emptyDash": "—",
 
-  "common.admin.coaches.confirmDialog.actionFailed": "İşlem başarısız oldu."
+  "common.admin.coaches.confirmDialog.actionFailed": "İşlem başarısız oldu.",
+
+  "common.admin.coaches.deleteDialog.title": "Antrenörü sil",
+  "common.admin.coaches.deleteDialog.text": "\"{{coachName}}\" adlı antrenörü gerçekten silmek istiyor musunuz?",
+  "common.actions.confirm": "Onayla",
+  "common.actions.cancel": "İptal"
 }

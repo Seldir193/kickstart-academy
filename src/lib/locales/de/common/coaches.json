@@ -82,5 +82,10 @@
   "common.admin.coaches.infoDialog.reason": "Grund",
   "common.values.emptyDash": "—",
 
-  "common.admin.coaches.confirmDialog.actionFailed": "Aktion fehlgeschlagen."
+  "common.admin.coaches.confirmDialog.actionFailed": "Aktion fehlgeschlagen.",
+
+  "common.admin.coaches.deleteDialog.title": "Coach löschen",
+  "common.admin.coaches.deleteDialog.text": "Möchtest du den Coach „{{coachName}}“ wirklich löschen?",
+  "common.actions.confirm": "Bestätigen",
+  "common.actions.cancel": "Abbrechen"
 }

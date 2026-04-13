@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslation } from "react-i18next";
 import ConfirmDialog from "./ConfirmDialog";
 
 type Props = {
@@ -15,13 +16,14 @@ export default function DeleteCoachDialog({
   onClose,
   onConfirm,
 }: Props) {
+  const { t } = useTranslation();
   return (
     <ConfirmDialog
       open={open}
-      title="Delete coach"
-      text={`Do you really want to delete coach "${coachName}"?`}
-      confirmText="Confirm"
-      cancelText="Cancel"
+      title={t("common.admin.coaches.deleteDialog.title")}
+      text={t("common.admin.coaches.deleteDialog.text", { coachName })}
+      confirmText={t("common.actions.confirm")}
+      cancelText={t("common.actions.cancel")}
       danger={false}
       onClose={onClose}
       onConfirm={onConfirm}

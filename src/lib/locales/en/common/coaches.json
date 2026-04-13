@@ -82,5 +82,10 @@
   "common.admin.coaches.infoDialog.reason": "Reason",
   "common.values.emptyDash": "—",
 
-  "common.admin.coaches.confirmDialog.actionFailed": "Action failed."
+  "common.admin.coaches.confirmDialog.actionFailed": "Action failed.",
+
+  "common.admin.coaches.deleteDialog.title": "Delete coach",
+  "common.admin.coaches.deleteDialog.text": "Do you really want to delete coach \"{{coachName}}\"?",
+  "common.actions.confirm": "Confirm",
+  "common.actions.cancel": "Cancel"
 }
