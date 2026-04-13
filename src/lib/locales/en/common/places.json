@@ -9,5 +9,24 @@
   "common.admin.places.pagination.previous": "Previous page",
   "common.admin.places.pagination.next": "Next page",
 
-  "common.admin.places.errors.loadFailed": "Load failed."
+  "common.admin.places.errors.loadFailed": "Load failed.",
+
+  "common.admin.places.list.loading": "Loading...",
+  "common.admin.places.list.empty": "No entries.",
+  "common.admin.places.bulk.toggle": "Select locations",
+  "common.admin.places.bulk.selected": "selected",
+  "common.admin.places.bulk.selectAll": "Select all",
+  "common.admin.places.bulk.clearAll": "Clear all",
+  "common.admin.places.bulk.delete": "Delete",
+  "common.admin.places.bulk.cancel": "Cancel",
+  "common.admin.places.table.name": "Name",
+  "common.admin.places.table.address": "Address",
+  "common.admin.places.table.zip": "ZIP",
+  "common.admin.places.table.city": "City",
+  "common.admin.places.table.action": "Action",
+  "common.admin.places.row.selectAria": "Select: {{name}}",
+  "common.admin.places.row.openAria": "Open: {{name}}",
+  "common.admin.places.row.editAria": "Edit",
+
+  "common.admin.places.table.id": "ID"
 }

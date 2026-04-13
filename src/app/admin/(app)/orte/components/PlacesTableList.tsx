@@ -3,6 +3,7 @@
 
 import type { RefObject } from "react";
 import { useEffect, useMemo, useRef } from "react";
+import { useTranslation } from "react-i18next";
 import type { Place } from "@/types/place";
 import BulkActions from "@/app/admin/(app)/news/components/BulkActions";
 import { useSelection } from "@/app/admin/(app)/news/hooks/useSelection";
@@ -31,6 +32,7 @@ export default function PlacesTableList({
   onDeleteMany,
   toggleBtnRef,
 }: Props) {
+  const { t } = useTranslation();
   const idsOnPage = useMemo(
     () => items.map((p) => idOf(p)).filter(Boolean),
     [items],
@@ -90,7 +92,15 @@ export default function PlacesTableList({
   if (!items.length) {
     return (
       <section className="card">
-        <div className="card__empty">{busy ? "Loading..." : "No entries."}</div>
+        <div className="card__empty">
+          {busy
+            ? t("common.admin.places.list.loading", {
+                defaultValue: "Loading...",
+              })
+            : t("common.admin.places.list.empty", {
+                defaultValue: "No entries.",
+              })}
+        </div>
       </section>
     );
   }
@@ -115,12 +125,24 @@ export default function PlacesTableList({
           onClear={onClearSelection}
           showClear={showClear}
           onDelete={deleteSelected}
-          toggleLabel="Select locations"
-          selectedLabel="selected"
-          selectAllLabel="Select all"
-          clearAllLabel="Clear all"
-          deleteLabel="Delete"
-          cancelLabel="Cancel"
+          toggleLabel={t("common.admin.places.bulk.toggle", {
+            defaultValue: "Select locations",
+          })}
+          selectedLabel={t("common.admin.places.bulk.selected", {
+            defaultValue: "selected",
+          })}
+          selectAllLabel={t("common.admin.places.bulk.selectAll", {
+            defaultValue: "Select all",
+          })}
+          clearAllLabel={t("common.admin.places.bulk.clearAll", {
+            defaultValue: "Clear all",
+          })}
+          deleteLabel={t("common.admin.places.bulk.delete", {
+            defaultValue: "Delete",
+          })}
+          cancelLabel={t("common.admin.places.bulk.cancel", {
+            defaultValue: "Cancel",
+          })}
         />
       </div>
 
@@ -129,11 +151,25 @@ export default function PlacesTableList({
           <div className="news-list__table">
             <div className="news-list__head" aria-hidden="true">
               <div className="news-list__h">ID</div>
-              <div className="news-list__h">Name</div>
-              <div className="news-list__h">Address</div>
-              <div className="news-list__h">ZIP</div>
-              <div className="news-list__h">City</div>
-              <div className="news-list__h news-list__h--right">Action</div>
+              <div className="news-list__h">
+                {t("common.admin.places.table.name", { defaultValue: "Name" })}
+              </div>
+              <div className="news-list__h">
+                {t("common.admin.places.table.address", {
+                  defaultValue: "Address",
+                })}
+              </div>
+              <div className="news-list__h">
+                {t("common.admin.places.table.zip", { defaultValue: "ZIP" })}
+              </div>
+              <div className="news-list__h">
+                {t("common.admin.places.table.city", { defaultValue: "City" })}
+              </div>
+              <div className="news-list__h news-list__h--right">
+                {t("common.admin.places.table.action", {
+                  defaultValue: "Action",
+                })}
+              </div>
             </div>
 
             <ul className="list list--bleed">
@@ -160,8 +196,14 @@ export default function PlacesTableList({
                     aria-pressed={selectMode ? checked : undefined}
                     aria-label={
                       selectMode
-                        ? `Select: ${safeText(p.name)}`
-                        : `Open: ${safeText(p.name)}`
+                        ? t("common.admin.places.row.selectAria", {
+                            defaultValue: "Select: {{name}}",
+                            name: safeText(p.name),
+                          })
+                        : t("common.admin.places.row.openAria", {
+                            defaultValue: "Open: {{name}}",
+                            name: safeText(p.name),
+                          })
                     }
                   >
                     <div className="news-list__cell places-mono">
@@ -200,7 +242,9 @@ export default function PlacesTableList({
                           className="edit-trigger"
                           role="button"
                           tabIndex={0}
-                          aria-label="Edit"
+                          aria-label={t("common.admin.places.row.editAria", {
+                            defaultValue: "Edit",
+                          })}
                         >
                           <img
                             src="/icons/edit.svg"

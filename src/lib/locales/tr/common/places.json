@@ -9,5 +9,22 @@
   "common.admin.places.pagination.previous": "Önceki sayfa",
   "common.admin.places.pagination.next": "Sonraki sayfa",
 
-  "common.admin.places.errors.loadFailed": "Yükleme başarısız oldu."
+  "common.admin.places.errors.loadFailed": "Yükleme başarısız oldu.",
+
+  "common.admin.places.list.loading": "Yükleniyor...",
+  "common.admin.places.list.empty": "Kayıt yok.",
+  "common.admin.places.bulk.toggle": "Konumları seç",
+  "common.admin.places.bulk.selected": "seçildi",
+  "common.admin.places.bulk.selectAll": "Tümünü seç",
+  "common.admin.places.bulk.clearAll": "Tümünü temizle",
+  "common.admin.places.bulk.delete": "Sil",
+  "common.admin.places.bulk.cancel": "İptal",
+  "common.admin.places.table.name": "Ad",
+  "common.admin.places.table.address": "Adres",
+  "common.admin.places.table.zip": "Posta kodu",
+  "common.admin.places.table.city": "Şehir",
+  "common.admin.places.table.action": "İşlem",
+  "common.admin.places.row.selectAria": "Seç: {{name}}",
+  "common.admin.places.row.openAria": "Aç: {{name}}",
+  "common.admin.places.row.editAria": "Düzenle"
 }

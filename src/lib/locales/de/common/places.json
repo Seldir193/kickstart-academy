@@ -9,5 +9,22 @@
   "common.admin.places.pagination.previous": "Vorherige Seite",
   "common.admin.places.pagination.next": "Nächste Seite",
 
-  "common.admin.places.errors.loadFailed": "Laden fehlgeschlagen."
+  "common.admin.places.errors.loadFailed": "Laden fehlgeschlagen.",
+
+  "common.admin.places.list.loading": "Wird geladen...",
+  "common.admin.places.list.empty": "Keine Einträge.",
+  "common.admin.places.bulk.toggle": "Orte auswählen",
+  "common.admin.places.bulk.selected": "ausgewählt",
+  "common.admin.places.bulk.selectAll": "Alle auswählen",
+  "common.admin.places.bulk.clearAll": "Auswahl aufheben",
+  "common.admin.places.bulk.delete": "Löschen",
+  "common.admin.places.bulk.cancel": "Abbrechen",
+  "common.admin.places.table.name": "Name",
+  "common.admin.places.table.address": "Adresse",
+  "common.admin.places.table.zip": "PLZ",
+  "common.admin.places.table.city": "Stadt",
+  "common.admin.places.table.action": "Aktion",
+  "common.admin.places.row.selectAria": "Auswählen: {{name}}",
+  "common.admin.places.row.openAria": "Öffnen: {{name}}",
+  "common.admin.places.row.editAria": "Bearbeiten"
 }
