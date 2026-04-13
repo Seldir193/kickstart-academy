@@ -7,5 +7,7 @@
   "common.admin.places.sort.cityDesc": "City Z–A",
   "common.admin.places.newLocation": "New location",
   "common.admin.places.pagination.previous": "Previous page",
-  "common.admin.places.pagination.next": "Next page"
+  "common.admin.places.pagination.next": "Next page",
+
+  "common.admin.places.errors.loadFailed": "Load failed."
 }
