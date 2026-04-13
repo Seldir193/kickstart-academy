@@ -2,6 +2,8 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import type { TFunction } from "i18next";
+import { useTranslation } from "react-i18next";
 import PlaceDialog from "@/app/components/places/PlaceDialog";
 import type { Place } from "@/types/place";
 import PlacesTableList from "@/app/admin/(app)/orte/components/PlacesTableList";
@@ -12,14 +14,22 @@ import { sortPlaces } from "@/app/admin/(app)/orte/utils";
 
 type SortKey = "newest" | "oldest" | "city_asc" | "city_desc";
 
-function sortLabel(sort: SortKey) {
-  if (sort === "newest") return "Newest first";
-  if (sort === "oldest") return "Oldest first";
-  if (sort === "city_asc") return "City A–Z";
-  return "City Z–A";
+function sortLabel(sort: SortKey, t: TFunction) {
+  if (sort === "newest")
+    return t("common.admin.places.sort.newest", {
+      defaultValue: "Newest first",
+    });
+  if (sort === "oldest")
+    return t("common.admin.places.sort.oldest", {
+      defaultValue: "Oldest first",
+    });
+  if (sort === "city_asc")
+    return t("common.admin.places.sort.cityAsc", { defaultValue: "City A–Z" });
+  return t("common.admin.places.sort.cityDesc", { defaultValue: "City Z–A" });
 }
 
 export default function OrtePage() {
+  const { t } = useTranslation();
   const [page, setPage] = useState(1);
   const [q, setQ] = useState("");
   const qDebounced = useDebouncedValue(q, 250);
@@ -101,7 +111,9 @@ export default function OrtePage() {
                   setQ(e.target.value);
                   setPage(1);
                 }}
-                placeholder="Name, street, city, zip..."
+                placeholder={t("common.admin.places.searchPlaceholder", {
+                  defaultValue: "Name, street, city, zip...",
+                })}
                 onKeyDown={(e) => {
                   if (e.key === "Escape") {
                     setQ("");
@@ -125,10 +137,12 @@ export default function OrtePage() {
                 className="ks-training-select__trigger"
                 onClick={() => setSortOpen((o) => !o)}
                 disabled={busy}
-                aria-label="Sort order"
+                aria-label={t("common.admin.places.sort.ariaLabel", {
+                  defaultValue: "Sort order",
+                })}
               >
                 <span className="ks-training-select__label">
-                  {sortLabel(sort)}
+                  {sortLabel(sort, t)}
                 </span>
                 <span
                   className="ks-training-select__chevron"
@@ -141,7 +155,9 @@ export default function OrtePage() {
                   ref={sortMenuRef}
                   className="ks-training-select__menu"
                   role="listbox"
-                  aria-label="Sort order"
+                  aria-label={t("common.admin.places.sort.ariaLabel", {
+                    defaultValue: "Sort order",
+                  })}
                 >
                   <li>
                     <button
@@ -156,7 +172,9 @@ export default function OrtePage() {
                         setPage(1);
                       }}
                     >
-                      Newest first
+                      {t("common.admin.places.sort.newest", {
+                        defaultValue: "Newest first",
+                      })}
                     </button>
                   </li>
                   <li>
@@ -172,7 +190,9 @@ export default function OrtePage() {
                         setPage(1);
                       }}
                     >
-                      Oldest first
+                      {t("common.admin.places.sort.oldest", {
+                        defaultValue: "Oldest first",
+                      })}
                     </button>
                   </li>
                   <li>
@@ -188,7 +208,9 @@ export default function OrtePage() {
                         setPage(1);
                       }}
                     >
-                      City A–Z
+                      {t("common.admin.places.sort.cityAsc", {
+                        defaultValue: "City A–Z",
+                      })}
                     </button>
                   </li>
                   <li>
@@ -204,7 +226,9 @@ export default function OrtePage() {
                         setPage(1);
                       }}
                     >
-                      City Z–A
+                      {t("common.admin.places.sort.cityDesc", {
+                        defaultValue: "City Z–A",
+                      })}
                     </button>
                   </li>
                 </ul>
@@ -225,7 +249,9 @@ export default function OrtePage() {
                 aria-hidden="true"
                 className="btn__icon"
               />
-              New location
+              {t("common.admin.places.newLocation", {
+                defaultValue: "New location",
+              })}
             </button>
           </div>
         </div>
@@ -264,7 +290,9 @@ export default function OrtePage() {
             <button
               type="button"
               className="btn"
-              aria-label="Previous page"
+              aria-label={t("common.admin.places.pagination.previous", {
+                defaultValue: "Previous page",
+              })}
               disabled={list.loading || page <= 1}
               onClick={() => setPage((p) => Math.max(1, p - 1))}
             >
@@ -283,7 +311,9 @@ export default function OrtePage() {
             <button
               type="button"
               className="btn"
-              aria-label="Next page"
+              aria-label={t("common.admin.places.pagination.next", {
+                defaultValue: "Next page",
+              })}
               disabled={list.loading || page >= pageCount}
               onClick={() => setPage((p) => Math.min(pageCount, p + 1))}
             >

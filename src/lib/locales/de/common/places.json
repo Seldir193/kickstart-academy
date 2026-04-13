@@ -1,0 +1,11 @@
+{
+  "common.admin.places.searchPlaceholder": "Name, Straße, Stadt, PLZ...",
+  "common.admin.places.sort.ariaLabel": "Sortierung",
+  "common.admin.places.sort.newest": "Neueste zuerst",
+  "common.admin.places.sort.oldest": "Älteste zuerst",
+  "common.admin.places.sort.cityAsc": "Stadt A–Z",
+  "common.admin.places.sort.cityDesc": "Stadt Z–A",
+  "common.admin.places.newLocation": "Neuer Ort",
+  "common.admin.places.pagination.previous": "Vorherige Seite",
+  "common.admin.places.pagination.next": "Nächste Seite"
+}

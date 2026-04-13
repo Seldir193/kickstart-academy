@@ -1,0 +1,11 @@
+{
+  "common.admin.places.searchPlaceholder": "Ad, sokak, şehir, posta kodu...",
+  "common.admin.places.sort.ariaLabel": "Sıralama",
+  "common.admin.places.sort.newest": "En yeni önce",
+  "common.admin.places.sort.oldest": "En eski önce",
+  "common.admin.places.sort.cityAsc": "Şehir A–Z",
+  "common.admin.places.sort.cityDesc": "Şehir Z–A",
+  "common.admin.places.newLocation": "Yeni konum",
+  "common.admin.places.pagination.previous": "Önceki sayfa",
+  "common.admin.places.pagination.next": "Sonraki sayfa"
+}

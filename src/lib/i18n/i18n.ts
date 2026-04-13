@@ -12,6 +12,7 @@ import deCustomers from "../locales/de/common/customers.json";
 import deNews from "../locales/de/common/news.json";
 import deFranchiseLocations from "../locales/de/common/franchise-locations.json";
 import deCoaches from "../locales/de/common/coaches.json";
+import dePlaces from "../locales/de/common/places.json";
 
 import enCommonBase from "../locales/en/common/common.json";
 import enBookings from "../locales/en/common/bookings.json";
@@ -22,7 +23,8 @@ import enInvoices from "../locales/en/common/invoices.json";
 import enCustomers from "../locales/en/common/customers.json";
 import enNews from "../locales/en/common/news.json";
 import enFranchiseLocations from "../locales/en/common/franchise-locations.json";
-import enCoaches from "../locales/de/common/coaches.json";
+import enCoaches from "../locales/en/common/coaches.json";
+import enPlaces from "../locales/en/common/places.json";
 
 import trCommonBase from "../locales/tr/common/common.json";
 import trBookings from "../locales/tr/common/bookings.json";
@@ -33,7 +35,8 @@ import trInvoices from "../locales/tr/common/invoices.json";
 import trCustomers from "../locales/tr/common/customers.json";
 import trNews from "../locales/tr/common/news.json";
 import trFranchiseLocations from "../locales/tr/common/franchise-locations.json";
-import trCoaches from "../locales/de/common/coaches.json";
+import trCoaches from "../locales/tr/common/coaches.json";
+import trPlaces from "../locales/tr/common/places.json";
 
 import deBook from "../locales/de/book.json";
 import enBook from "../locales/en/book.json";
@@ -53,6 +56,7 @@ const resources = {
       ...deNews,
       ...deFranchiseLocations,
       ...deCoaches,
+      ...dePlaces,
     },
     book: deBook,
   },
@@ -68,6 +72,7 @@ const resources = {
       ...enNews,
       ...enFranchiseLocations,
       ...enCoaches,
+      ...enPlaces,
     },
     book: enBook,
   },
@@ -83,6 +88,7 @@ const resources = {
       ...trNews,
       ...trFranchiseLocations,
       ...trCoaches,
+      ...trPlaces,
     },
     book: trBook,
   },
