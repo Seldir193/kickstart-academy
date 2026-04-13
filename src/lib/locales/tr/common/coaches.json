@@ -50,5 +50,20 @@
   "common.admin.coaches.bulk.clearSelection": "Seçimi temizle",
   "common.admin.coaches.bulk.selectAll": "Tümünü seç",
   "common.admin.coaches.bulk.delete": "Sil",
-  "common.admin.coaches.bulk.cancel": "İptal"
+  "common.admin.coaches.bulk.cancel": "İptal",
+
+  "common.admin.coaches.publishedInfoDialog.coachPrefix": "Antrenör",
+  "common.admin.coaches.publishedInfoDialog.published": "Yayınlandı",
+  "common.admin.coaches.publishedInfoDialog.viewOnlyPublished": "Sadece görüntüleme (yayınlandı)",
+  "common.admin.coaches.publishedInfoDialog.details": "Detaylar",
+  "common.admin.coaches.publishedInfoDialog.slug": "Slug",
+  "common.admin.coaches.publishedInfoDialog.firstName": "Ad",
+  "common.admin.coaches.publishedInfoDialog.lastName": "Soyad",
+  "common.admin.coaches.publishedInfoDialog.position": "Pozisyon",
+  "common.admin.coaches.publishedInfoDialog.since": "Başlangıç",
+  "common.admin.coaches.publishedInfoDialog.degree": "Diploma",
+  "common.admin.coaches.publishedInfoDialog.favorites": "Favoriler",
+  "common.admin.coaches.publishedInfoDialog.favoriteClub": "Favori kulüp",
+  "common.admin.coaches.publishedInfoDialog.favoriteCoach": "Favori antrenör",
+  "common.admin.coaches.publishedInfoDialog.favoriteTrick": "Favori hareket"
 }

@@ -50,5 +50,20 @@
   "common.admin.coaches.bulk.clearSelection": "Clear selection",
   "common.admin.coaches.bulk.selectAll": "Select all",
   "common.admin.coaches.bulk.delete": "Delete",
-  "common.admin.coaches.bulk.cancel": "Cancel"
+  "common.admin.coaches.bulk.cancel": "Cancel",
+
+  "common.admin.coaches.publishedInfoDialog.coachPrefix": "Coach",
+  "common.admin.coaches.publishedInfoDialog.published": "Published",
+  "common.admin.coaches.publishedInfoDialog.viewOnlyPublished": "View only (published)",
+  "common.admin.coaches.publishedInfoDialog.details": "Details",
+  "common.admin.coaches.publishedInfoDialog.slug": "Slug",
+  "common.admin.coaches.publishedInfoDialog.firstName": "First name",
+  "common.admin.coaches.publishedInfoDialog.lastName": "Last name",
+  "common.admin.coaches.publishedInfoDialog.position": "Position",
+  "common.admin.coaches.publishedInfoDialog.since": "Since",
+  "common.admin.coaches.publishedInfoDialog.degree": "Degree",
+  "common.admin.coaches.publishedInfoDialog.favorites": "Favorites",
+  "common.admin.coaches.publishedInfoDialog.favoriteClub": "Favorite club",
+  "common.admin.coaches.publishedInfoDialog.favoriteCoach": "Favorite coach",
+  "common.admin.coaches.publishedInfoDialog.favoriteTrick": "Favorite trick"
 }
