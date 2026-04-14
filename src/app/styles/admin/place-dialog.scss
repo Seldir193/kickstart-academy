@@ -70,6 +70,22 @@
   }
 }
 
+.place-map-preview {
+  &__map {
+    height: 360px;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+  }
+
+  &__hint {
+    margin-top: 8px;
+  }
+
+  &__address {
+    margin-top: 6px;
+  }
+}
+
 @media (max-width: 920px) {
   .place-dialog {
     .place-dialog__grid {

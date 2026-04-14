@@ -32,7 +32,7 @@
 
   "common.admin.places.dialog.createTitle": "Konum oluştur",
   "common.admin.places.dialog.editTitle": "Konumu düzenle",
-  "common.admin.places.dialog.close": "Kapat",
+  
   "common.admin.places.dialog.locationDetails": "Konum detayları",
   "common.admin.places.dialog.nameLabel": "Kulüp / Konum adı",
   "common.admin.places.dialog.namePlaceholder": "örn. SV Example",
@@ -52,5 +52,10 @@
   "common.admin.places.dialog.errors.addressCheckFailed": "Adres kontrolü başarısız oldu.",
   "common.admin.places.dialog.errors.placeExists": "Konum zaten mevcut (aynı ad/posta kodu/şehir).",
   "common.admin.places.dialog.errors.saveFailed": "Kaydetme başarısız oldu.",
-  "common.admin.places.dialog.errors.saveFailedWithStatus": "Kaydetme başarısız oldu."
+  "common.admin.places.dialog.errors.saveFailedWithStatus": "Kaydetme başarısız oldu.",
+
+  "common.admin.places.map.noCoordinatesPrefix": "Henüz koordinat yok. ",
+  "common.admin.places.map.checkAddress": "Adresi kontrol et",
+  "common.admin.places.map.noCoordinatesSuffix": " düğmesine tıklayarak adresi geokodlayın ve haritayı önizleyin.",
+  "common.admin.places.map.address": "Adres"
 }

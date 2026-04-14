@@ -32,7 +32,7 @@
 
   "common.admin.places.dialog.createTitle": "Ort erstellen",
   "common.admin.places.dialog.editTitle": "Ort bearbeiten",
-  "common.admin.places.dialog.close": "Schließen",
+
   "common.admin.places.dialog.locationDetails": "Standortdetails",
   "common.admin.places.dialog.nameLabel": "Vereins- / Ortsname",
   "common.admin.places.dialog.namePlaceholder": "z. B. SV Beispiel",

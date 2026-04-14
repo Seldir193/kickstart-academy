@@ -352,16 +352,7 @@ export default function PlaceDialog({
                 </div>
 
                 <div className="form__actions place-dialog__actions">
-                  <button
-                    type="button"
-                    className="btn"
-                    onClick={onClose}
-                    disabled={saving || checking}
-                  >
-                    {t("common.admin.places.dialog.close", {
-                      defaultValue: "Close",
-                    })}
-                  </button>
+                  
 
                   <button
                     type="button"
