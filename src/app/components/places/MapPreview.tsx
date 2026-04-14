@@ -1,8 +1,9 @@
 // src/app/components/places/MapPreview.tsx
-'use client';
+"use client";
 
-import React, { useEffect, useRef } from 'react';
-import * as L from 'leaflet'; // works without esModuleInterop
+import React, { useEffect, useRef } from "react";
+import { useTranslation } from "react-i18next";
+import * as L from "leaflet"; // works without esModuleInterop
 
 export default function MapPreview({
   lat,
@@ -13,27 +14,33 @@ export default function MapPreview({
   lng?: number;
   address?: string;
 }) {
+  const { t } = useTranslation();
   const containerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<L.Map | null>(null);
   const markerRef = useRef<L.Marker | null>(null);
-  const hasCoords = typeof lat === 'number' && typeof lng === 'number';
+  const hasCoords = typeof lat === "number" && typeof lng === "number";
 
   useEffect(() => {
     if (!containerRef.current) return;
 
     // init map once
     if (!mapRef.current) {
-      const map = L.map(containerRef.current, { scrollWheelZoom: true, zoomControl: true });
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      const map = L.map(containerRef.current, {
+        scrollWheelZoom: true,
+        zoomControl: true,
+      });
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
         maxZoom: 19,
-        attribution: '© OpenStreetMap',
+        attribution: "© OpenStreetMap",
       }).addTo(map);
 
       // Ensure marker icons work in Next bundling
       L.Icon.Default.mergeOptions({
-        iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
-        iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
-        shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
+        iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
+        iconRetinaUrl:
+          "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png",
+        shadowUrl:
+          "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
       });
 
       mapRef.current = map;
@@ -57,7 +64,9 @@ export default function MapPreview({
   // cleanup on unmount
   useEffect(() => {
     return () => {
-      try { mapRef.current?.remove(); } catch {}
+      try {
+        mapRef.current?.remove();
+      } catch {}
       mapRef.current = null;
       markerRef.current = null;
     };
@@ -67,19 +76,31 @@ export default function MapPreview({
     <div>
       <div
         ref={containerRef}
-        style={{ height: 360, borderRadius: 12, border: '1px solid #e5e7eb' }}
+        style={{ height: 360, borderRadius: 12, border: "1px solid #e5e7eb" }}
       />
       {!hasCoords ? (
         <p className="help" style={{ marginTop: 8 }}>
-          No coordinates yet. Click <strong>Check address</strong> to geocode and preview the map.
+          {t("common.admin.places.map.noCoordinatesPrefix", {
+            defaultValue: "No coordinates yet. Click ",
+          })}
+          <strong>
+            {t("common.admin.places.map.checkAddress", {
+              defaultValue: "Check address",
+            })}
+          </strong>
+          {t("common.admin.places.map.noCoordinatesSuffix", {
+            defaultValue: " to geocode and preview the map.",
+          })}
         </p>
       ) : null}
-      {address ? <p className="help" style={{ marginTop: 6 }}>Address: {address}</p> : null}
+      {address ? (
+        <p className="help" style={{ marginTop: 6 }}>
+          {t("common.admin.places.map.address", {
+            defaultValue: "Address",
+          })}
+          : {address}
+        </p>
+      ) : null}
     </div>
   );
 }
-
-
-
-
-

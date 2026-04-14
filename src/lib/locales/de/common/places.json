@@ -52,5 +52,10 @@
   "common.admin.places.dialog.errors.addressCheckFailed": "Adressprüfung fehlgeschlagen.",
   "common.admin.places.dialog.errors.placeExists": "Ort existiert bereits (gleicher Name/PLZ/Stadt).",
   "common.admin.places.dialog.errors.saveFailed": "Speichern fehlgeschlagen.",
-  "common.admin.places.dialog.errors.saveFailedWithStatus": "Speichern fehlgeschlagen."
+  "common.admin.places.dialog.errors.saveFailedWithStatus": "Speichern fehlgeschlagen.",
+
+  "common.admin.places.map.noCoordinatesPrefix": "Noch keine Koordinaten. Klicke auf ",
+  "common.admin.places.map.checkAddress": "Adresse prüfen",
+  "common.admin.places.map.noCoordinatesSuffix": ", um die Adresse zu geokodieren und die Karte anzuzeigen.",
+  "common.admin.places.map.address": "Adresse"
 }

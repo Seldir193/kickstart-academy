@@ -52,5 +52,10 @@
   "common.admin.places.dialog.errors.addressCheckFailed": "Address check failed",
   "common.admin.places.dialog.errors.placeExists": "Place already exists (same name/ZIP/city).",
   "common.admin.places.dialog.errors.saveFailed": "Save failed",
-  "common.admin.places.dialog.errors.saveFailedWithStatus": "Save failed"
+  "common.admin.places.dialog.errors.saveFailedWithStatus": "Save failed",
+
+  "common.admin.places.map.noCoordinatesPrefix": "No coordinates yet. Click ",
+  "common.admin.places.map.checkAddress": "Check address",
+  "common.admin.places.map.noCoordinatesSuffix": " to geocode and preview the map.",
+  "common.admin.places.map.address": "Address"
 }
