@@ -24,5 +24,7 @@
   "common.admin.vouchers.toast.deactivateFailed": "Deaktivieren fehlgeschlagen.",
   "common.admin.vouchers.toast.deletedCount": "gelöscht.",
   "common.admin.vouchers.toast.activatedCount": "aktiviert.",
-  "common.admin.vouchers.toast.deactivatedCount": "deaktiviert."
+  "common.admin.vouchers.toast.deactivatedCount": "deaktiviert.",
+
+  "common.admin.vouchers.error.loadFailed": "Gutscheine konnten nicht geladen werden."
 }

@@ -1,10 +1,13 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { toastErrorMessage } from "@/lib/toast-messages";
 import { fetchVouchers } from "../api";
 import type { Voucher, VoucherStatus } from "../types";
 
 export function useVouchersList(params: { q: string; status: VoucherStatus }) {
+  const { t } = useTranslation();
   const [items, setItems] = useState<Voucher[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -19,11 +22,13 @@ export function useVouchersList(params: { q: string; status: VoucherStatus }) {
       });
       setItems(Array.isArray(data?.vouchers) ? data.vouchers : []);
     } catch (e: any) {
-      setError(e?.message || "Failed to load vouchers.");
+      setError(
+        toastErrorMessage(t, e, "common.admin.vouchers.error.loadFailed"),
+      );
     } finally {
       setLoading(false);
     }
-  }, [params.q, params.status]);
+  }, [params.q, params.status, t]);
 
   useEffect(() => {
     load();

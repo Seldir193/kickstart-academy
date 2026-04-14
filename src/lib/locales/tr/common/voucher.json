@@ -24,5 +24,7 @@
   "common.admin.vouchers.toast.deactivateFailed": "Devre dışı bırakma başarısız oldu.",
   "common.admin.vouchers.toast.deletedCount": "silindi.",
   "common.admin.vouchers.toast.activatedCount": "etkinleştirildi.",
-  "common.admin.vouchers.toast.deactivatedCount": "devre dışı bırakıldı."
+  "common.admin.vouchers.toast.deactivatedCount": "devre dışı bırakıldı.",
+
+  "common.admin.vouchers.error.loadFailed": "Kuponlar yüklenemedi."
 }
