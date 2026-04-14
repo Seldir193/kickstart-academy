@@ -2,7 +2,7 @@
 "use client";
 
 import React, { useEffect, useMemo, useRef, useState } from "react";
-
+import { useTranslation } from "react-i18next";
 import styles from "@/app/styles/revenue.module.scss";
 
 import {
@@ -32,19 +32,19 @@ type RevenueResponse = {
 type SourceMode = "invoices" | "derived";
 
 const MONTHS = [
-  "JAN",
-  "FEB",
-  "MAR",
-  "APR",
-  "MAI",
-  "JUN",
-  "JUL",
-  "AUG",
-  "SEP",
-  "OKT",
-  "NOV",
-  "DEZ",
-];
+  "jan",
+  "feb",
+  "mar",
+  "apr",
+  "may",
+  "jun",
+  "jul",
+  "aug",
+  "sep",
+  "oct",
+  "nov",
+  "dec",
+] as const;
 
 /** kleines clsx-Helper wie in anderen Files */
 function clsx(...xs: Array<string | false | null | undefined>) {
@@ -79,6 +79,7 @@ function MonthlyTooltip({
   label?: string;
   counts?: Counts;
 }) {
+  const { t } = useTranslation();
   if (!active || !payload || !payload.length) return null;
 
   const monthIdx = MONTHS.findIndex((m) => m === label);
@@ -99,11 +100,21 @@ function MonthlyTooltip({
     >
       <div style={{ fontWeight: 600, marginBottom: 6 }}>{label}</div>
       <div>
-        Umsatz: <strong>{value.toFixed(2)} €</strong>
+        {t("common.admin.revenue.tooltip.revenue", {
+          defaultValue: "Revenue",
+        })}
+        : <strong>{value.toFixed(2)} €</strong>
       </div>
       <div>
-        Buchungen: <strong>{pos}</strong>
-        {sto ? ` (Stornos: ${sto})` : ""}
+        {t("common.admin.revenue.tooltip.bookings", {
+          defaultValue: "Bookings",
+        })}
+        : <strong>{pos}</strong>
+        {sto
+          ? ` (${t("common.admin.revenue.tooltip.cancellations", {
+              defaultValue: "Cancellations",
+            })}: ${sto})`
+          : ""}
       </div>
     </div>
   );
@@ -117,6 +128,7 @@ function YearlyTooltip({
   active?: boolean;
   payload?: any[];
 }) {
+  const { t } = useTranslation();
   if (!active || !payload || !payload.length) return null;
   const row = payload[0].payload as {
     name: string;
@@ -137,12 +149,22 @@ function YearlyTooltip({
     >
       <div style={{ fontWeight: 600, marginBottom: 6 }}>{row.name}</div>
       <div>
-        Umsatz: <strong>{(row.total || 0).toFixed(2)} €</strong>
+        {t("common.admin.revenue.tooltip.revenue", {
+          defaultValue: "Revenue",
+        })}
+        : <strong>{(row.total || 0).toFixed(2)} €</strong>
       </div>
       {"count" in row && (
         <div>
-          Buchungen: <strong>{row.count || 0}</strong>
-          {row.stornoCount ? ` (Stornos: ${row.stornoCount})` : ""}
+          {t("common.admin.revenue.tooltip.bookings", {
+            defaultValue: "Bookings",
+          })}
+          : <strong>{row.count || 0}</strong>
+          {row.stornoCount
+            ? ` (${t("common.admin.revenue.tooltip.cancellations", {
+                defaultValue: "Cancellations",
+              })}: ${row.stornoCount})`
+            : ""}
         </div>
       )}
     </div>
@@ -150,6 +172,7 @@ function YearlyTooltip({
 }
 
 export default function RevenuePage() {
+  const { t } = useTranslation();
   const [source, setSource] = useState<SourceMode>("invoices"); // Umschalter
   const [year, setYear] = useState<number>(new Date().getFullYear());
   const [month, setMonth] = useState<number>(-1); // -1 = alle
@@ -255,11 +278,13 @@ export default function RevenuePage() {
       ? data!.monthly
       : Array(12).fill(0);
     const base = MONTHS.map((m, i) => ({
-      name: m,
+      name: t(`common.admin.revenue.months.${m}`, {
+        defaultValue: m.toUpperCase(),
+      }),
       Umsatz: Number(arr[i] || 0),
     }));
     return month >= 0 ? base.filter((_, i) => i === month) : base;
-  }, [data, month]);
+  }, [data, month, t]);
 
   const monthMaxValue = useMemo(() => {
     const arr = Array.isArray(data?.monthly)
@@ -280,7 +305,6 @@ export default function RevenuePage() {
       : Number(data!.total || 0);
   }, [data, month]);
 
-  // Jahresdiagramm (Totals): alle Jahre oder fokussiertes Jahr
   const yearlyRows = useMemo(() => {
     if (!yearlyTotals.length) return [];
     if (yearView === "all") return yearlyTotals;
@@ -288,7 +312,6 @@ export default function RevenuePage() {
     return hit ? [hit] : [];
   }, [yearlyTotals, yearView]);
 
-  // Für Balken-Farben im Jahresdiagramm:
   const highlightedYearLabel = useMemo(
     () => (yearView === "all" ? String(year) : String(yearView)),
     [yearView, year],
@@ -313,19 +336,33 @@ export default function RevenuePage() {
     Math.max(4, Math.ceil(yMaxYearly / 2000) + 1),
   );
 
-  // Helper: Label für Monat
-  const monthLabel = month >= 0 ? MONTHS[month] : "Alle Monate";
+  const monthLabel =
+    month >= 0
+      ? t(`common.admin.revenue.months.${MONTHS[month]}`, {
+          defaultValue: MONTHS[month].toUpperCase(),
+        })
+      : t("common.admin.revenue.months.all", {
+          defaultValue: "All months",
+        });
 
   return (
     <div className={styles.pageWrap}>
-      <h1 className="text-2xl font-bold m-0">Umsatzübersicht</h1>
+      <h1 className="text-2xl font-bold m-0">
+        {" "}
+        {t("common.admin.revenue.title", {
+          defaultValue: "Revenue overview",
+        })}
+      </h1>
 
       <div className={styles.container}>
-        {/* Source-Umschalter + Jahres-/Monatsfilter */}
         <div className={styles.filtersRow}>
-          {/* Quelle */}
           <div className={styles.filter}>
-            <label htmlFor="rev-source">Quelle:</label>
+            <label htmlFor="rev-source">
+              {" "}
+              {t("common.admin.revenue.filters.source", {
+                defaultValue: "Source:",
+              })}
+            </label>
             <div
               ref={sourceRef}
               className={clsx(
@@ -344,8 +381,12 @@ export default function RevenuePage() {
               >
                 <span className="ks-selectbox__label">
                   {source === "invoices"
-                    ? "Rechnungen (Ist)"
-                    : "Abo (abgeleitet)"}
+                    ? t("common.admin.revenue.source.invoices", {
+                        defaultValue: "Invoices (actual)",
+                      })
+                    : t("common.admin.revenue.source.derived", {
+                        defaultValue: "Subscription (derived)",
+                      })}
                 </span>
                 <span className="ks-selectbox__chevron" aria-hidden="true" />
               </button>
@@ -363,7 +404,9 @@ export default function RevenuePage() {
                       setSourceOpen(false);
                     }}
                   >
-                    Rechnungen (Ist)
+                    {t("common.admin.revenue.source.invoices", {
+                      defaultValue: "Invoices (actual)",
+                    })}
                   </button>
                   <button
                     type="button"
@@ -376,7 +419,9 @@ export default function RevenuePage() {
                       setSourceOpen(false);
                     }}
                   >
-                    Abo (abgeleitet)
+                    {t("common.admin.revenue.source.derived", {
+                      defaultValue: "Subscription (derived)",
+                    })}
                   </button>
                 </div>
               )}
@@ -385,7 +430,12 @@ export default function RevenuePage() {
 
           {/* Jahr */}
           <div className={styles.filter}>
-            <label htmlFor="rev-year">Jahr:</label>
+            <label htmlFor="rev-year">
+              {" "}
+              {t("common.admin.revenue.filters.year", {
+                defaultValue: "Year:",
+              })}
+            </label>
             <div
               ref={yearRef}
               className={clsx(
@@ -434,7 +484,11 @@ export default function RevenuePage() {
 
           {/* Monat */}
           <div className={styles.filter}>
-            <label htmlFor="rev-month">Monat:</label>
+            <label htmlFor="rev-month">
+              {t("common.admin.revenue.filters.month", {
+                defaultValue: "Month:",
+              })}
+            </label>
             <div
               ref={monthRef}
               className={clsx(
@@ -468,7 +522,9 @@ export default function RevenuePage() {
                       setMonthOpen(false);
                     }}
                   >
-                    Alle Monate
+                    {t("common.admin.revenue.months.all", {
+                      defaultValue: "All months",
+                    })}
                   </button>
                   {MONTHS.map((m, i) => (
                     <button
@@ -492,16 +548,28 @@ export default function RevenuePage() {
           </div>
         </div>
 
-        {loading && <p className={styles.loading}>Lade Umsätze …</p>}
+        {loading && (
+          <p className={styles.loading}>
+            {" "}
+            {t("common.admin.revenue.loading", {
+              defaultValue: "Loading revenue…",
+            })}
+          </p>
+        )}
 
         {!loading && data && (
           <>
             <p className={styles.total}>
-              {month >= 0 ? "Monatsumsatz" : "Gesamtumsatz"}:{" "}
-              {totalDisplayed.toFixed(2)} €
+              {month >= 0
+                ? t("common.admin.revenue.total.month", {
+                    defaultValue: "Monthly revenue",
+                  })
+                : t("common.admin.revenue.total.all", {
+                    defaultValue: "Total revenue",
+                  })}
+              : {totalDisplayed.toFixed(2)} €
             </p>
 
-            {/* Monatsdiagramm */}
             <div className={styles.chartWideLarge}>
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart
@@ -516,19 +584,27 @@ export default function RevenuePage() {
                     tickCount={monthTickCount}
                   />
                   <Tooltip content={<MonthlyTooltip counts={data.counts} />} />
-                  <Bar dataKey="Umsatz" fill="#93c5fd" />
+                  <Bar dataKey="revenue" fill="#93c5fd" />
                 </BarChart>
               </ResponsiveContainer>
             </div>
           </>
         )}
 
-        {/* Jahresdiagramm (Totals) */}
-        <h2 className={styles.sectionTitle}>Jahresumsätze (Totals)</h2>
+        <h2 className={styles.sectionTitle}>
+          {" "}
+          {t("common.admin.revenue.yearly.title", {
+            defaultValue: "Yearly revenue (totals)",
+          })}
+        </h2>
 
         <div className={styles.filtersRow}>
           <div className={styles.filter}>
-            <label htmlFor="rev-year-view">Ansicht:</label>
+            <label htmlFor="rev-year-view">
+              {t("common.admin.revenue.filters.view", {
+                defaultValue: "View:",
+              })}
+            </label>
             <div
               ref={yearViewRef}
               className={clsx(
@@ -546,7 +622,11 @@ export default function RevenuePage() {
                 aria-expanded={yearViewOpen}
               >
                 <span className="ks-selectbox__label">
-                  {yearView === "all" ? "Alle Jahre" : String(yearView)}
+                  {yearView === "all"
+                    ? t("common.admin.revenue.yearly.allYears", {
+                        defaultValue: "All years",
+                      })
+                    : String(yearView)}
                 </span>
                 <span className="ks-selectbox__chevron" aria-hidden="true" />
               </button>
@@ -564,7 +644,9 @@ export default function RevenuePage() {
                       setYearViewOpen(false);
                     }}
                   >
-                    Alle Jahre
+                    {t("common.admin.revenue.yearly.allYears", {
+                      defaultValue: "All years",
+                    })}
                   </button>
                   {yearlyTotals.map((r) => (
                     <button
@@ -604,7 +686,12 @@ export default function RevenuePage() {
                 tickCount={yearTickCount}
               />
               <Tooltip content={<YearlyTooltip />} />
-              <Bar dataKey="total" name="Umsatz">
+              <Bar
+                dataKey="total"
+                name={t("common.admin.revenue.tooltip.revenue", {
+                  defaultValue: "Revenue",
+                })}
+              >
                 {yearlyRows.map((r, idx) => (
                   <Cell
                     key={`cell-${idx}`}
