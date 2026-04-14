@@ -3,5 +3,26 @@
   "common.admin.vouchers.toast.updated": "Kupon güncellendi.",
   "common.admin.vouchers.toast.deleted": "Kupon silindi.",
   "common.admin.vouchers.toast.bulkUpdateFailed": "Toplu güncelleme başarısız oldu.",
-  "common.admin.vouchers.toast.bulkDeleteFailed": "Toplu silme başarısız oldu."
+  "common.admin.vouchers.toast.bulkDeleteFailed": "Toplu silme başarısız oldu.",
+
+  "common.admin.vouchers.sort.newest": "En yeniler önce",
+  "common.admin.vouchers.sort.oldest": "En eskiler önce",
+  "common.admin.vouchers.sort.codeAsc": "Kod A–Z",
+  "common.admin.vouchers.sort.codeDesc": "Kod Z–A",
+  "common.admin.vouchers.status.all": "Tümü",
+  "common.admin.vouchers.status.active": "Aktif",
+  "common.admin.vouchers.status.inactive": "Pasif",
+  "common.admin.vouchers.searchPlaceholder": "Kod...",
+  "common.admin.vouchers.aria.status": "Durum",
+  "common.admin.vouchers.aria.sorting": "Sıralama",
+  "common.admin.vouchers.newVoucher": "Yeni kupon",
+  "common.admin.vouchers.count.items": "kayıt",
+  "common.admin.vouchers.toast.createFailed": "Oluşturma başarısız oldu.",
+  "common.admin.vouchers.toast.updateFailed": "Güncelleme başarısız oldu.",
+  "common.admin.vouchers.toast.deleteFailed": "Silme başarısız oldu.",
+  "common.admin.vouchers.toast.activateFailed": "Etkinleştirme başarısız oldu.",
+  "common.admin.vouchers.toast.deactivateFailed": "Devre dışı bırakma başarısız oldu.",
+  "common.admin.vouchers.toast.deletedCount": "silindi.",
+  "common.admin.vouchers.toast.activatedCount": "etkinleştirildi.",
+  "common.admin.vouchers.toast.deactivatedCount": "devre dışı bırakıldı."
 }

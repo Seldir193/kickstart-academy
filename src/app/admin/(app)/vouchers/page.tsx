@@ -2,7 +2,8 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { toastText } from "@/lib/toast-messages";
+import { useTranslation } from "react-i18next";
+import { toastErrorMessage, toastText } from "@/lib/toast-messages";
 import {
   createVoucher,
   deleteVoucher,
@@ -20,17 +21,32 @@ import Pagination from "../members/components/Pagination";
 
 type SortKey = "newest" | "oldest" | "code_asc" | "code_desc";
 
-function sortLabel(sort: SortKey) {
-  if (sort === "newest") return "Newest first";
-  if (sort === "oldest") return "Oldest first";
-  if (sort === "code_asc") return "Code A–Z";
-  return "Code Z–A";
+function sortLabel(t: (key: string) => string, sort: SortKey) {
+  if (sort === "newest") {
+    return toastText(t, "common.admin.vouchers.sort.newest", "Newest first");
+  }
+  if (sort === "oldest") {
+    return toastText(t, "common.admin.vouchers.sort.oldest", "Oldest first");
+  }
+  if (sort === "code_asc") {
+    return toastText(t, "common.admin.vouchers.sort.codeAsc", "Code A–Z");
+  }
+
+  return toastText(t, "common.admin.vouchers.sort.codeDesc", "Code Z–A");
 }
 
-function statusLabel(status: VoucherStatus, total: number) {
-  if (status === "all") return `All (${total})`;
-  if (status === "active") return "Active";
-  return "Inactive";
+function statusLabel(
+  t: (key: string) => string,
+  status: VoucherStatus,
+  total: number,
+) {
+  if (status === "all")
+    return (
+      toastText(t, "common.admin.vouchers.status.all", "All") + ` (${total})`
+    );
+  if (status === "active")
+    return toastText(t, "common.admin.vouchers.status.active", "Active");
+  return toastText(t, "common.admin.vouchers.status.inactive", "Inactive");
 }
 
 function tsOf(v: string) {
@@ -59,6 +75,7 @@ function sortItems(items: Voucher[], sort: SortKey) {
 }
 
 export default function AdminVouchersPage() {
+  const { t } = useTranslation();
   const [q, setQ] = useState("");
   const [status, setStatus] = useState<VoucherStatus>("all");
   const [sort, setSort] = useState<SortKey>("newest");
@@ -173,16 +190,20 @@ export default function AdminVouchersPage() {
   }) {
     setBusy(true);
     try {
-      await createVoucher({
+      await createVoucher(t, {
         code: input.code,
         amount: Number(input.amount),
         active: input.active,
       });
       await list.reload();
       closeDialogs();
-      showOk("Voucher updated.");
+      showOk(
+        toastText(t, "common.admin.vouchers.toast.created", "Voucher created."),
+      );
     } catch (e: any) {
-      showError(e?.message || "Create failed.");
+      showError(
+        toastErrorMessage(t, e, "common.admin.vouchers.toast.createFailed"),
+      );
     } finally {
       setBusy(false);
     }
@@ -194,16 +215,20 @@ export default function AdminVouchersPage() {
   ) {
     setBusy(true);
     try {
-      await updateVoucher(id, {
+      await updateVoucher(t, id, {
         code: input.code,
         amount: Number(input.amount),
         active: input.active,
       });
       await list.reload();
       closeDialogs();
-      showOk("Voucher updated.");
+      showOk(
+        toastText(t, "common.admin.vouchers.toast.updated", "Voucher updated."),
+      );
     } catch (e: any) {
-      showError(e?.message || "Update failed.");
+      showError(
+        toastErrorMessage(t, e, "common.admin.vouchers.toast.updateFailed"),
+      );
     } finally {
       setBusy(false);
     }
@@ -212,12 +237,16 @@ export default function AdminVouchersPage() {
   async function handleDelete(id: string) {
     setBusy(true);
     try {
-      await deleteVoucher(id);
+      await deleteVoucher(t, id);
       await list.reload();
       closeDialogs();
-      showOk("Voucher deleted.");
+      showOk(
+        toastText(t, "common.admin.vouchers.toast.deleted", "Voucher deleted."),
+      );
     } catch (e: any) {
-      showError(e?.message || "Delete failed.");
+      showError(
+        toastErrorMessage(t, e, "common.admin.vouchers.toast.deleteFailed"),
+      );
     } finally {
       setBusy(false);
     }
@@ -227,11 +256,19 @@ export default function AdminVouchersPage() {
     if (!ids.length) return;
     setBusy(true);
     try {
-      await deleteVoucherMany(ids);
+      await deleteVoucherMany(t, ids);
       await list.reload();
-      showOk(`(${ids.length}) deleted.`);
+      showOk(
+        `(${ids.length}) ${toastText(
+          t,
+          "common.admin.vouchers.toast.deletedCount",
+          "deleted.",
+        )}`,
+      );
     } catch (e: any) {
-      showError(e?.message || "Delete failed.");
+      showError(
+        toastErrorMessage(t, e, "common.admin.vouchers.toast.deleteFailed"),
+      );
     } finally {
       setBusy(false);
     }
@@ -241,11 +278,19 @@ export default function AdminVouchersPage() {
     if (!ids.length) return;
     setBusy(true);
     try {
-      await updateVoucherMany(ids, { active: true });
+      await updateVoucherMany(t, ids, { active: true });
       await list.reload();
-      showOk(`(${ids.length}) activated.`);
+      showOk(
+        `${ids.length} ${toastText(
+          t,
+          "common.admin.vouchers.toast.activatedCount",
+          "activated.",
+        )}`,
+      );
     } catch (e: any) {
-      showError(e?.message || "Activate failed.");
+      showError(
+        toastErrorMessage(t, e, "common.admin.vouchers.toast.activateFailed"),
+      );
     } finally {
       setBusy(false);
     }
@@ -255,11 +300,19 @@ export default function AdminVouchersPage() {
     if (!ids.length) return;
     setBusy(true);
     try {
-      await updateVoucherMany(ids, { active: false });
+      await updateVoucherMany(t, ids, { active: false });
       await list.reload();
-      showOk(`(${ids.length}) deactivated.`);
+      showOk(
+        `${ids.length} ${toastText(
+          t,
+          "common.admin.vouchers.toast.deactivatedCount",
+          "deactivated.",
+        )}`,
+      );
     } catch (e: any) {
-      showError(e?.message || "Deactivate failed.");
+      showError(
+        toastErrorMessage(t, e, "common.admin.vouchers.toast.deactivateFailed"),
+      );
     } finally {
       setBusy(false);
     }
@@ -302,7 +355,11 @@ export default function AdminVouchersPage() {
               />
               <input
                 className="input input-with-icon__input"
-                placeholder="Code..."
+                placeholder={toastText(
+                  t,
+                  "common.admin.vouchers.searchPlaceholder",
+                  "Code...",
+                )}
                 value={q}
                 onChange={(e) => setQ(e.target.value)}
                 onKeyDown={(e) => onSearchKeyDown(e.key)}
@@ -323,10 +380,14 @@ export default function AdminVouchersPage() {
                 className="ks-training-select__trigger"
                 onClick={() => setStatusOpen((o) => !o)}
                 disabled={busy}
-                aria-label="Status"
+                aria-label={toastText(
+                  t,
+                  "common.admin.vouchers.aria.status",
+                  "Status",
+                )}
               >
                 <span className="ks-training-select__label">
-                  {statusLabel(status, list.items.length)}
+                  {statusLabel(t, status, list.items.length)}
                 </span>
                 <span className="ks-training-select__chevron" />
               </button>
@@ -336,7 +397,11 @@ export default function AdminVouchersPage() {
                   ref={statusMenuRef}
                   className="ks-training-select__menu"
                   role="listbox"
-                  aria-label="Status"
+                  aria-label={toastText(
+                    t,
+                    "common.admin.vouchers.aria.status",
+                    "Status",
+                  )}
                 >
                   <li>
                     <button
@@ -347,7 +412,7 @@ export default function AdminVouchersPage() {
                       }
                       onClick={() => applyStatus("all")}
                     >
-                      All
+                      {toastText(t, "common.admin.vouchers.status.all", "All")}
                     </button>
                   </li>
                   <li>
@@ -359,7 +424,11 @@ export default function AdminVouchersPage() {
                       }
                       onClick={() => applyStatus("active")}
                     >
-                      Active
+                      {toastText(
+                        t,
+                        "common.admin.vouchers.status.active",
+                        "Active",
+                      )}
                     </button>
                   </li>
                   <li>
@@ -371,7 +440,11 @@ export default function AdminVouchersPage() {
                       }
                       onClick={() => applyStatus("inactive")}
                     >
-                      Inactive
+                      {toastText(
+                        t,
+                        "common.admin.vouchers.status.inactive",
+                        "Inactive",
+                      )}
                     </button>
                   </li>
                 </ul>
@@ -392,10 +465,14 @@ export default function AdminVouchersPage() {
                 className="ks-training-select__trigger"
                 onClick={() => setSortOpen((o) => !o)}
                 disabled={busy}
-                aria-label="Sorting"
+                aria-label={toastText(
+                  t,
+                  "common.admin.vouchers.aria.sorting",
+                  "Sorting",
+                )}
               >
                 <span className="ks-training-select__label">
-                  {sortLabel(sort)}
+                  {sortLabel(t, sort)}
                 </span>
                 <span className="ks-training-select__chevron" />
               </button>
@@ -405,7 +482,11 @@ export default function AdminVouchersPage() {
                   ref={sortMenuRef}
                   className="ks-training-select__menu"
                   role="listbox"
-                  aria-label="Sorting"
+                  aria-label={toastText(
+                    t,
+                    "common.admin.vouchers.aria.sorting",
+                    "Sorting",
+                  )}
                 >
                   <li>
                     <button
@@ -416,7 +497,11 @@ export default function AdminVouchersPage() {
                       }
                       onClick={() => applySort("newest")}
                     >
-                      Newest first
+                      {toastText(
+                        t,
+                        "common.admin.vouchers.sort.newest",
+                        "Newest first",
+                      )}
                     </button>
                   </li>
                   <li>
@@ -428,7 +513,11 @@ export default function AdminVouchersPage() {
                       }
                       onClick={() => applySort("oldest")}
                     >
-                      Oldest first
+                      {toastText(
+                        t,
+                        "common.admin.vouchers.sort.oldest",
+                        "Oldest first",
+                      )}
                     </button>
                   </li>
                   <li>
@@ -440,7 +529,11 @@ export default function AdminVouchersPage() {
                       }
                       onClick={() => applySort("code_asc")}
                     >
-                      Code A–Z
+                      {toastText(
+                        t,
+                        "common.admin.vouchers.sort.codeAsc",
+                        "Code A–Z",
+                      )}
                     </button>
                   </li>
                   <li>
@@ -452,7 +545,11 @@ export default function AdminVouchersPage() {
                       }
                       onClick={() => applySort("code_desc")}
                     >
-                      Code Z–A
+                      {toastText(
+                        t,
+                        "common.admin.vouchers.sort.codeDesc",
+                        "Code Z–A",
+                      )}
                     </button>
                   </li>
                 </ul>
@@ -473,7 +570,7 @@ export default function AdminVouchersPage() {
                 aria-hidden="true"
                 className="btn__icon"
               />
-              New voucher
+              {toastText(t, "common.admin.vouchers.newVoucher", "New voucher")}
             </button>
           </div>
         </div>
@@ -487,7 +584,13 @@ export default function AdminVouchersPage() {
         <section className="news-admin__section">
           <div className="news-admin__section-head-number">
             <span className="news-admin__section-meta">
-              {list.items.length ? `(${list.items.length})` : ""}
+              {list.items.length
+                ? `(${list.items.length} ${toastText(
+                    t,
+                    "common.admin.vouchers.count.items",
+                    "items",
+                  )})`
+                : ""}
             </span>
           </div>
 

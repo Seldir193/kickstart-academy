@@ -3,5 +3,26 @@
   "common.admin.vouchers.toast.updated": "Gutschein aktualisiert.",
   "common.admin.vouchers.toast.deleted": "Gutschein gelöscht.",
   "common.admin.vouchers.toast.bulkUpdateFailed": "Sammelaktualisierung fehlgeschlagen.",
-  "common.admin.vouchers.toast.bulkDeleteFailed": "Sammellöschung fehlgeschlagen."
+  "common.admin.vouchers.toast.bulkDeleteFailed": "Sammellöschung fehlgeschlagen.",
+
+  "common.admin.vouchers.sort.newest": "Neueste zuerst",
+  "common.admin.vouchers.sort.oldest": "Älteste zuerst",
+  "common.admin.vouchers.sort.codeAsc": "Code A–Z",
+  "common.admin.vouchers.sort.codeDesc": "Code Z–A",
+  "common.admin.vouchers.status.all": "Alle",
+  "common.admin.vouchers.status.active": "Aktiv",
+  "common.admin.vouchers.status.inactive": "Inaktiv",
+  "common.admin.vouchers.searchPlaceholder": "Code...",
+  "common.admin.vouchers.aria.status": "Status",
+  "common.admin.vouchers.aria.sorting": "Sortierung",
+  "common.admin.vouchers.newVoucher": "Neuer Gutschein",
+  "common.admin.vouchers.count.items": "Einträge",
+  "common.admin.vouchers.toast.createFailed": "Erstellen fehlgeschlagen.",
+  "common.admin.vouchers.toast.updateFailed": "Aktualisierung fehlgeschlagen.",
+  "common.admin.vouchers.toast.deleteFailed": "Löschen fehlgeschlagen.",
+  "common.admin.vouchers.toast.activateFailed": "Aktivieren fehlgeschlagen.",
+  "common.admin.vouchers.toast.deactivateFailed": "Deaktivieren fehlgeschlagen.",
+  "common.admin.vouchers.toast.deletedCount": "gelöscht.",
+  "common.admin.vouchers.toast.activatedCount": "aktiviert.",
+  "common.admin.vouchers.toast.deactivatedCount": "deaktiviert."
 }
