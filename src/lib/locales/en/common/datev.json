@@ -1,0 +1,18 @@
+{
+  "common.admin.datev.title": "DATEV export (OPOS variant)",
+  "common.admin.datev.fromLabel": "From (incl.)",
+  "common.admin.datev.toLabel": "To (incl.)",
+  "common.admin.datev.datePlaceholder": "dd.mm.yyyy",
+  "common.admin.datev.description.prefix": "Exports ",
+  "common.admin.datev.description.invoices": "invoices",
+  "common.admin.datev.description.creditNotes": "credit notes",
+  "common.admin.datev.description.middle": "as well as ",
+  "common.admin.datev.description.fees": "dunning/payment reminder fees",
+  "common.admin.datev.description.suffix": "as a ZIP with",
+  "common.admin.datev.description.and": "and",
+  "common.admin.datev.note": "Note: Dunning fees are exported as separate booking lines (RLS/MAHN/BEARB) if the amount is greater than 0.",
+  "common.admin.datev.exportRunning": "Export running…",
+  "common.admin.datev.downloadZip": "Download ZIP",
+  "common.admin.datev.errors.exportFailed": "Export failed",
+  "common.admin.datev.errors.exportFallback": "Export error"
+}

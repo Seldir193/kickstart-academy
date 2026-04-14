@@ -13,6 +13,7 @@ import deNews from "../locales/de/common/news.json";
 import deFranchiseLocations from "../locales/de/common/franchise-locations.json";
 import deCoaches from "../locales/de/common/coaches.json";
 import dePlaces from "../locales/de/common/places.json";
+import deDatev from "../locales/de/common/datev.json";
 
 import enCommonBase from "../locales/en/common/common.json";
 import enBookings from "../locales/en/common/bookings.json";
@@ -25,6 +26,7 @@ import enNews from "../locales/en/common/news.json";
 import enFranchiseLocations from "../locales/en/common/franchise-locations.json";
 import enCoaches from "../locales/en/common/coaches.json";
 import enPlaces from "../locales/en/common/places.json";
+import enDatev from "../locales/en/common/datev.json";
 
 import trCommonBase from "../locales/tr/common/common.json";
 import trBookings from "../locales/tr/common/bookings.json";
@@ -37,6 +39,7 @@ import trNews from "../locales/tr/common/news.json";
 import trFranchiseLocations from "../locales/tr/common/franchise-locations.json";
 import trCoaches from "../locales/tr/common/coaches.json";
 import trPlaces from "../locales/tr/common/places.json";
+import trDatev from "../locales/tr/common/datev.json";
 
 import deBook from "../locales/de/book.json";
 import enBook from "../locales/en/book.json";
@@ -57,6 +60,7 @@ const resources = {
       ...deFranchiseLocations,
       ...deCoaches,
       ...dePlaces,
+      ...deDatev,
     },
     book: deBook,
   },
@@ -73,6 +77,7 @@ const resources = {
       ...enFranchiseLocations,
       ...enCoaches,
       ...enPlaces,
+      ...enDatev,
     },
     book: enBook,
   },
@@ -89,6 +94,7 @@ const resources = {
       ...trFranchiseLocations,
       ...trCoaches,
       ...trPlaces,
+      ...trDatev,
     },
     book: trBook,
   },
@@ -118,55 +124,3 @@ if (!i18n.isInitialized) {
 }
 
 export default i18n;
-
-// import i18n from "i18next";
-// import LanguageDetector from "i18next-browser-languagedetector";
-// import { initReactI18next } from "react-i18next";
-
-// import deCommon from "../locales/de/common.json";
-// import enCommon from "../locales/en/common.json";
-// import trCommon from "../locales/tr/common.json";
-// import deBook from "../locales/de/book.json";
-// import enBook from "../locales/en/book.json";
-// import trBook from "../locales/tr/book.json";
-// import { defaultLanguage } from "./settings";
-
-// const resources = {
-//   de: {
-//     common: deCommon,
-//     book: deBook,
-//   },
-//   en: {
-//     common: enCommon,
-//     book: enBook,
-//   },
-//   tr: {
-//     common: trCommon,
-//     book: trBook,
-//   },
-// };
-
-// if (!i18n.isInitialized) {
-//   i18n
-//     .use(LanguageDetector)
-//     .use(initReactI18next)
-//     .init({
-//       resources,
-//       fallbackLng: defaultLanguage,
-//       supportedLngs: ["de", "en", "tr"],
-//       ns: ["common", "book"],
-//       defaultNS: "common",
-//       detection: {
-//         order: ["localStorage", "navigator"],
-//         caches: ["localStorage"],
-//       },
-//       interpolation: {
-//         escapeValue: false,
-//       },
-//       react: {
-//         useSuspense: false,
-//       },
-//     });
-// }
-
-// export default i18n;

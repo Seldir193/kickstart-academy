@@ -1,0 +1,18 @@
+{
+  "common.admin.datev.title": "DATEV dışa aktarma (OPOS varyantı)",
+  "common.admin.datev.fromLabel": "Başlangıç (dahil)",
+  "common.admin.datev.toLabel": "Bitiş (dahil)",
+  "common.admin.datev.datePlaceholder": "gg.aa.yyyy",
+  "common.admin.datev.description.prefix": "",
+  "common.admin.datev.description.invoices": "faturaları",
+  "common.admin.datev.description.creditNotes": "alacak notlarını",
+  "common.admin.datev.description.middle": " ve ",
+  "common.admin.datev.description.fees": "ihtar/ödeme hatırlatma ücretlerini",
+  "common.admin.datev.description.suffix": " içeren ZIP dosyasını dışa aktarır",
+  "common.admin.datev.description.and": "ve",
+  "common.admin.datev.note": "Not: İhtar ücretleri, tutar 0'dan büyükse ayrı muhasebe satırları (RLS/MAHN/BEARB) olarak dışa aktarılır.",
+  "common.admin.datev.exportRunning": "Dışa aktarma sürüyor…",
+  "common.admin.datev.downloadZip": "ZIP indir",
+  "common.admin.datev.errors.exportFailed": "Dışa aktarma başarısız oldu",
+  "common.admin.datev.errors.exportFallback": "Dışa aktarma hatası"
+}

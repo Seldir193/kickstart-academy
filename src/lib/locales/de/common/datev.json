@@ -1,0 +1,18 @@
+{
+  "common.admin.datev.title": "DATEV-Export (OPOS-Variante)",
+  "common.admin.datev.fromLabel": "Von (inkl.)",
+  "common.admin.datev.toLabel": "Bis (inkl.)",
+  "common.admin.datev.datePlaceholder": "tt.mm.jjjj",
+  "common.admin.datev.description.prefix": "Exportiert ",
+  "common.admin.datev.description.invoices": "Rechnungen",
+  "common.admin.datev.description.creditNotes": "Gutschriften",
+  "common.admin.datev.description.middle": "sowie ",
+  "common.admin.datev.description.fees": "Mahn-/Zahlungserinnerungs-Gebühren",
+  "common.admin.datev.description.suffix": "als ZIP mit",
+  "common.admin.datev.description.and": "und",
+  "common.admin.datev.note": "Hinweis: Die Mahngebühren werden als separate Buchungszeilen (RLS/MAHN/BEARB) exportiert, falls der Betrag > 0 ist.",
+  "common.admin.datev.exportRunning": "Export läuft…",
+  "common.admin.datev.downloadZip": "ZIP herunterladen",
+  "common.admin.datev.errors.exportFailed": "Export fehlgeschlagen",
+  "common.admin.datev.errors.exportFallback": "Fehler beim Export"
+}
