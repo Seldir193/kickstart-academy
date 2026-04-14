@@ -28,5 +28,29 @@
   "common.admin.places.row.openAria": "Open: {{name}}",
   "common.admin.places.row.editAria": "Edit",
 
-  "common.admin.places.table.id": "ID"
+  "common.admin.places.table.id": "ID",
+
+  "common.admin.places.dialog.createTitle": "Create place",
+  "common.admin.places.dialog.editTitle": "Edit place",
+  "common.admin.places.dialog.close": "Close",
+  "common.admin.places.dialog.locationDetails": "Location details",
+  "common.admin.places.dialog.nameLabel": "Club / Place name",
+  "common.admin.places.dialog.namePlaceholder": "e.g., SV Example",
+  "common.admin.places.dialog.addressLabel": "Address",
+  "common.admin.places.dialog.addressPlaceholder": "Street and number",
+  "common.admin.places.dialog.zipLabel": "ZIP",
+  "common.admin.places.dialog.zipPlaceholder": "e.g., 47167",
+  "common.admin.places.dialog.cityLabel": "City",
+  "common.admin.places.dialog.cityPlaceholder": "e.g., Duisburg",
+  "common.admin.places.dialog.checking": "Checking…",
+  "common.admin.places.dialog.checkAddress": "Check address",
+  "common.admin.places.dialog.saving": "Saving…",
+  "common.admin.places.dialog.saveChanges": "Save changes",
+  "common.admin.places.dialog.savePlace": "Save place",
+  "common.admin.places.dialog.mapPreview": "Map preview",
+  "common.admin.places.dialog.errors.addressNotFound": "Address not found. Please refine.",
+  "common.admin.places.dialog.errors.addressCheckFailed": "Address check failed",
+  "common.admin.places.dialog.errors.placeExists": "Place already exists (same name/ZIP/city).",
+  "common.admin.places.dialog.errors.saveFailed": "Save failed",
+  "common.admin.places.dialog.errors.saveFailedWithStatus": "Save failed"
 }

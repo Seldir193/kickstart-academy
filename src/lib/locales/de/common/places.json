@@ -26,5 +26,31 @@
   "common.admin.places.table.action": "Aktion",
   "common.admin.places.row.selectAria": "Auswählen: {{name}}",
   "common.admin.places.row.openAria": "Öffnen: {{name}}",
-  "common.admin.places.row.editAria": "Bearbeiten"
+  "common.admin.places.row.editAria": "Bearbeiten",
+
+  "common.admin.places.table.id": "ID",
+
+  "common.admin.places.dialog.createTitle": "Ort erstellen",
+  "common.admin.places.dialog.editTitle": "Ort bearbeiten",
+  "common.admin.places.dialog.close": "Schließen",
+  "common.admin.places.dialog.locationDetails": "Standortdetails",
+  "common.admin.places.dialog.nameLabel": "Vereins- / Ortsname",
+  "common.admin.places.dialog.namePlaceholder": "z. B. SV Beispiel",
+  "common.admin.places.dialog.addressLabel": "Adresse",
+  "common.admin.places.dialog.addressPlaceholder": "Straße und Hausnummer",
+  "common.admin.places.dialog.zipLabel": "PLZ",
+  "common.admin.places.dialog.zipPlaceholder": "z. B. 47167",
+  "common.admin.places.dialog.cityLabel": "Stadt",
+  "common.admin.places.dialog.cityPlaceholder": "z. B. Duisburg",
+  "common.admin.places.dialog.checking": "Wird geprüft…",
+  "common.admin.places.dialog.checkAddress": "Adresse prüfen",
+  "common.admin.places.dialog.saving": "Wird gespeichert…",
+  "common.admin.places.dialog.saveChanges": "Änderungen speichern",
+  "common.admin.places.dialog.savePlace": "Ort speichern",
+  "common.admin.places.dialog.mapPreview": "Kartenvorschau",
+  "common.admin.places.dialog.errors.addressNotFound": "Adresse nicht gefunden. Bitte präzisieren.",
+  "common.admin.places.dialog.errors.addressCheckFailed": "Adressprüfung fehlgeschlagen.",
+  "common.admin.places.dialog.errors.placeExists": "Ort existiert bereits (gleicher Name/PLZ/Stadt).",
+  "common.admin.places.dialog.errors.saveFailed": "Speichern fehlgeschlagen.",
+  "common.admin.places.dialog.errors.saveFailedWithStatus": "Speichern fehlgeschlagen."
 }

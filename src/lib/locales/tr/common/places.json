@@ -26,5 +26,31 @@
   "common.admin.places.table.action": "İşlem",
   "common.admin.places.row.selectAria": "Seç: {{name}}",
   "common.admin.places.row.openAria": "Aç: {{name}}",
-  "common.admin.places.row.editAria": "Düzenle"
+  "common.admin.places.row.editAria": "Düzenle",
+
+  "common.admin.places.table.id": "ID",
+
+  "common.admin.places.dialog.createTitle": "Konum oluştur",
+  "common.admin.places.dialog.editTitle": "Konumu düzenle",
+  "common.admin.places.dialog.close": "Kapat",
+  "common.admin.places.dialog.locationDetails": "Konum detayları",
+  "common.admin.places.dialog.nameLabel": "Kulüp / Konum adı",
+  "common.admin.places.dialog.namePlaceholder": "örn. SV Example",
+  "common.admin.places.dialog.addressLabel": "Adres",
+  "common.admin.places.dialog.addressPlaceholder": "Sokak ve numara",
+  "common.admin.places.dialog.zipLabel": "Posta kodu",
+  "common.admin.places.dialog.zipPlaceholder": "örn. 47167",
+  "common.admin.places.dialog.cityLabel": "Şehir",
+  "common.admin.places.dialog.cityPlaceholder": "örn. Duisburg",
+  "common.admin.places.dialog.checking": "Kontrol ediliyor…",
+  "common.admin.places.dialog.checkAddress": "Adresi kontrol et",
+  "common.admin.places.dialog.saving": "Kaydediliyor…",
+  "common.admin.places.dialog.saveChanges": "Değişiklikleri kaydet",
+  "common.admin.places.dialog.savePlace": "Konumu kaydet",
+  "common.admin.places.dialog.mapPreview": "Harita önizlemesi",
+  "common.admin.places.dialog.errors.addressNotFound": "Adres bulunamadı. Lütfen daha ayrıntılı girin.",
+  "common.admin.places.dialog.errors.addressCheckFailed": "Adres kontrolü başarısız oldu.",
+  "common.admin.places.dialog.errors.placeExists": "Konum zaten mevcut (aynı ad/posta kodu/şehir).",
+  "common.admin.places.dialog.errors.saveFailed": "Kaydetme başarısız oldu.",
+  "common.admin.places.dialog.errors.saveFailedWithStatus": "Kaydetme başarısız oldu."
 }
