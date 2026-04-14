@@ -1,19 +1,12 @@
-/* ===========================
-   Revenue (Umsatz-Modul)
-   =========================== */
-
-/* große, breite Fläche */
+//src\app\styles\revenue.module.scss
 .pageWrap {
   width: 100%;
-  //  max-width: 1280px;      /* gerne auf 1400/1600 erhöhen, wenn du noch breiter willst */
   margin: 0 auto;
-  //padding: 24px 24px 32px;
   padding-bottom: 48px;
 }
 
-/* großes Diagramm – volle Spaltenbreite */
 .chartWideLarge {
-  width: 100%; /* WICHTIG: nicht 100vw */
+  width: 100%;
   height: 420px;
   max-width: 100%;
   background: #fff;
@@ -24,7 +17,6 @@
   margin: 0 0 8px 0;
 }
 
-/* bestehende Elemente kannst du behalten – hier die wichtigen Ergänzungen */
 .filtersRow {
   display: flex;
   gap: 16px;
@@ -41,10 +33,8 @@
 
 .yearDropdown,
 .monthDropdown {
-  /* nur noch Layout, keine eigene Box mehr */
   display: inline-block;
   min-width: 140px;
-  /* keine eigene Border/Background/Padding */
   border: none;
   padding: 0;
   background: transparent;
@@ -65,7 +55,24 @@
   font-weight: 600;
 }
 
-/* Optional: auf sehr großen Screens noch breiter wirken lassen */
+.tooltip {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 8px 10px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+  font-size: 12px;
+}
+
+.tooltipTitle {
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.tooltipLine {
+  line-height: 1.4;
+}
+
 @media (min-width: 1536px) {
   .pageWrap {
     max-width: 1400px;

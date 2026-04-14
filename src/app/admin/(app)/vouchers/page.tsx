@@ -2,6 +2,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import { toastText } from "@/lib/toast-messages";
 import {
   createVoucher,
   deleteVoucher,
@@ -179,7 +180,7 @@ export default function AdminVouchersPage() {
       });
       await list.reload();
       closeDialogs();
-      showOk("Voucher created.");
+      showOk("Voucher updated.");
     } catch (e: any) {
       showError(e?.message || "Create failed.");
     } finally {

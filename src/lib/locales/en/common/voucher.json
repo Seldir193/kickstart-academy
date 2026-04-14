@@ -1,0 +1,7 @@
+{
+  "common.admin.vouchers.toast.created": "Voucher created.",
+  "common.admin.vouchers.toast.updated": "Voucher updated.",
+  "common.admin.vouchers.toast.deleted": "Voucher deleted.",
+  "common.admin.vouchers.toast.bulkUpdateFailed": "Bulk update failed.",
+  "common.admin.vouchers.toast.bulkDeleteFailed": "Bulk delete failed."
+}

@@ -1,0 +1,7 @@
+{
+  "common.admin.vouchers.toast.created": "Kupon oluşturuldu.",
+  "common.admin.vouchers.toast.updated": "Kupon güncellendi.",
+  "common.admin.vouchers.toast.deleted": "Kupon silindi.",
+  "common.admin.vouchers.toast.bulkUpdateFailed": "Toplu güncelleme başarısız oldu.",
+  "common.admin.vouchers.toast.bulkDeleteFailed": "Toplu silme başarısız oldu."
+}

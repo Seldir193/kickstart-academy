@@ -1,0 +1,7 @@
+{
+  "common.admin.vouchers.toast.created": "Gutschein erstellt.",
+  "common.admin.vouchers.toast.updated": "Gutschein aktualisiert.",
+  "common.admin.vouchers.toast.deleted": "Gutschein gelöscht.",
+  "common.admin.vouchers.toast.bulkUpdateFailed": "Sammelaktualisierung fehlgeschlagen.",
+  "common.admin.vouchers.toast.bulkDeleteFailed": "Sammellöschung fehlgeschlagen."
+}

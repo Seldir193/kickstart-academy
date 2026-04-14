@@ -1,6 +1,7 @@
 "use client";
 
 import type { ListResp } from "./types";
+import { toastText } from "@/lib/toast-messages";
 
 export const PAGE_SIZE = 10;
 
@@ -30,11 +31,14 @@ export async function fetchVouchers(params: {
   return data;
 }
 
-export async function createVoucher(input: {
-  code: string;
-  amount: number;
-  active: boolean;
-}) {
+export async function createVoucher(
+  t: (key: string) => string,
+  input: {
+    code: string;
+    amount: number;
+    active: boolean;
+  },
+) {
   const r = await fetch("/api/admin/vouchers", {
     method: "POST",
     credentials: "include",
@@ -49,35 +53,58 @@ export async function createVoucher(input: {
     throw new Error(d?.error || r.statusText);
   }
 
-  return "Voucher created.";
+  return toastText(
+    t,
+    "common.admin.vouchers.toast.created",
+    "Voucher created.",
+  );
 }
 
 export async function updateVoucherMany(
+  t: (key: string) => string,
   ids: string[],
   input: Partial<{ code: string; amount: number; active: boolean }>,
 ) {
   const results = await Promise.allSettled(
-    ids.map((id) => updateVoucher(id, input)),
+    ids.map((id) => updateVoucher(t, id, input)),
   );
   const failed = results.filter((x) => x.status === "rejected");
   if (!failed.length) return;
   const first = failed[0] as PromiseRejectedResult;
   throw first.reason instanceof Error
     ? first.reason
-    : new Error("Bulk update failed");
+    : new Error(
+        toastText(
+          t,
+          "common.admin.vouchers.toast.bulkUpdateFailed",
+          "Bulk update failed",
+        ),
+      );
 }
 
-export async function deleteVoucherMany(ids: string[]) {
-  const results = await Promise.allSettled(ids.map((id) => deleteVoucher(id)));
+export async function deleteVoucherMany(
+  t: (key: string) => string,
+  ids: string[],
+) {
+  const results = await Promise.allSettled(
+    ids.map((id) => deleteVoucher(t, id)),
+  );
   const failed = results.filter((x) => x.status === "rejected");
   if (!failed.length) return;
   const first = failed[0] as PromiseRejectedResult;
   throw first.reason instanceof Error
     ? first.reason
-    : new Error("Bulk delete failed");
+    : new Error(
+        toastText(
+          t,
+          "common.admin.vouchers.toast.bulkDeleteFailed",
+          "Bulk delete failed",
+        ),
+      );
 }
 
 export async function updateVoucher(
+  t: (key: string) => string,
   id: string,
   input: Partial<{ code: string; amount: number; active: boolean }>,
 ) {
@@ -89,15 +116,23 @@ export async function updateVoucher(
   });
   const d = await readJson<any>(r);
   if (!r.ok || d?.ok === false) throw new Error(d?.error || r.statusText);
-  return "Voucher updated.";
+  return toastText(
+    t,
+    "common.admin.vouchers.toast.updated",
+    "Voucher updated.",
+  );
 }
 
-export async function deleteVoucher(id: string) {
+export async function deleteVoucher(t: (key: string) => string, id: string) {
   const r = await fetch(`/api/admin/vouchers/${encodeURIComponent(id)}`, {
     method: "DELETE",
     credentials: "include",
   });
   const d = await readJson<any>(r);
   if (!r.ok || d?.ok === false) throw new Error(d?.error || r.statusText);
-  return "Voucher deleted.";
+  return toastText(
+    t,
+    "common.admin.vouchers.toast.deleted",
+    "Voucher deleted.",
+  );
 }
