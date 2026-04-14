@@ -26,5 +26,16 @@
   "common.admin.vouchers.toast.activatedCount": "aktiviert.",
   "common.admin.vouchers.toast.deactivatedCount": "deaktiviert.",
 
-  "common.admin.vouchers.error.loadFailed": "Gutscheine konnten nicht geladen werden."
+  "common.admin.vouchers.error.loadFailed": "Gutscheine konnten nicht geladen werden.",
+
+  "common.admin.vouchers.dialog.aria.details": "Gutschein-Details",
+  "common.admin.vouchers.dialog.close": "Schließen",
+  "common.admin.vouchers.dialog.editTitle": "Gutschein bearbeiten",
+  "common.admin.vouchers.dialog.newTitle": "Neuer Gutschein",
+  "common.admin.vouchers.dialog.sectionTitle": "Gutschein",
+  "common.admin.vouchers.dialog.code": "Code",
+  "common.admin.vouchers.dialog.amount": "Betrag",
+  "common.admin.vouchers.dialog.active": "Aktiv",
+  "common.admin.vouchers.dialog.delete": "Löschen",
+  "common.admin.vouchers.dialog.save": "Speichern"
 }

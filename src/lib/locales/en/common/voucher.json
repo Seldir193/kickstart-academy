@@ -26,5 +26,16 @@
   "common.admin.vouchers.toast.activatedCount": "activated.",
   "common.admin.vouchers.toast.deactivatedCount": "deactivated.",
 
-  "common.admin.vouchers.error.loadFailed": "Failed to load vouchers."
+  "common.admin.vouchers.error.loadFailed": "Failed to load vouchers.",
+
+  "common.admin.vouchers.dialog.aria.details": "Voucher details",
+  "common.admin.vouchers.dialog.close": "Close",
+  "common.admin.vouchers.dialog.editTitle": "Edit voucher",
+  "common.admin.vouchers.dialog.newTitle": "New voucher",
+  "common.admin.vouchers.dialog.sectionTitle": "Voucher",
+  "common.admin.vouchers.dialog.code": "Code",
+  "common.admin.vouchers.dialog.amount": "Amount",
+  "common.admin.vouchers.dialog.active": "Active",
+  "common.admin.vouchers.dialog.delete": "Delete",
+  "common.admin.vouchers.dialog.save": "Save"
 }

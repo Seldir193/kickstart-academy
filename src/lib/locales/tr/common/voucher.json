@@ -26,5 +26,16 @@
   "common.admin.vouchers.toast.activatedCount": "etkinleştirildi.",
   "common.admin.vouchers.toast.deactivatedCount": "devre dışı bırakıldı.",
 
-  "common.admin.vouchers.error.loadFailed": "Kuponlar yüklenemedi."
+  "common.admin.vouchers.error.loadFailed": "Kuponlar yüklenemedi.",
+
+  "common.admin.vouchers.dialog.aria.details": "Kupon detayları",
+  "common.admin.vouchers.dialog.close": "Kapat",
+  "common.admin.vouchers.dialog.editTitle": "Kuponu düzenle",
+  "common.admin.vouchers.dialog.newTitle": "Yeni kupon",
+  "common.admin.vouchers.dialog.sectionTitle": "Kupon",
+  "common.admin.vouchers.dialog.code": "Kod",
+  "common.admin.vouchers.dialog.amount": "Tutar",
+  "common.admin.vouchers.dialog.active": "Aktif",
+  "common.admin.vouchers.dialog.delete": "Sil",
+  "common.admin.vouchers.dialog.save": "Kaydet"
 }
