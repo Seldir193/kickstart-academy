@@ -233,7 +233,7 @@ export default function MembersFilters(props: Props) {
               ref={sortDd.menuRef}
               className="ks-training-select__menu"
               role="listbox"
-              aria-label="Sort order"
+              aria-label={t("common.admin.members.filters.sortOrder")}
             >
               {sortOptions.map((o) => (
                 <li key={o.value}>

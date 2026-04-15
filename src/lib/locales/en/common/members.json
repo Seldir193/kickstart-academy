@@ -42,5 +42,12 @@
   "common.admin.members.sort.nameAz": "Name A–Z",
   "common.admin.members.sort.nameZa": "Name Z–A",
   "common.admin.members.sort.emailAz": "Email A–Z",
-  "common.admin.members.sort.emailZa": "Email Z–A"
+  "common.admin.members.sort.emailZa": "Email Z–A",
+
+  "common.admin.members.bulk.select": "Select",
+  "common.admin.members.bulk.selected": "selected",
+  "common.admin.members.bulk.clearAll": "Clear all",
+  "common.admin.members.bulk.selectAll": "Select all",
+  "common.admin.members.bulk.delete": "Delete",
+  "common.admin.members.bulk.cancel": "Cancel"
 }

@@ -42,5 +42,12 @@
   "common.admin.members.sort.nameAz": "Ad A–Z",
   "common.admin.members.sort.nameZa": "Ad Z–A",
   "common.admin.members.sort.emailAz": "E-posta A–Z",
-  "common.admin.members.sort.emailZa": "E-posta Z–A"
+  "common.admin.members.sort.emailZa": "E-posta Z–A",
+
+  "common.admin.members.bulk.select": "Seç",
+  "common.admin.members.bulk.selected": "seçildi",
+  "common.admin.members.bulk.clearAll": "Tümünü temizle",
+  "common.admin.members.bulk.selectAll": "Tümünü seç",
+  "common.admin.members.bulk.delete": "Sil",
+  "common.admin.members.bulk.cancel": "İptal"
 }

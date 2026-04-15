@@ -2,6 +2,7 @@
 "use client";
 
 import type { RefObject } from "react";
+import { useTranslation } from "react-i18next";
 
 type Props = {
   toggleRef: RefObject<HTMLButtonElement | null>;
@@ -41,6 +42,7 @@ export default function BulkActions({
   onDelete,
   canDelete = true,
 }: Props) {
+  const { t } = useTranslation();
   function guard(cb: () => void) {
     if (busy) return;
     cb();
@@ -56,7 +58,7 @@ export default function BulkActions({
           onClick={() => guard(onToggleSelectMode)}
           disabled={isEmpty}
         >
-          Auswählen
+          {t("common.admin.members.bulk.select")}
         </button>
       </div>
     );
@@ -68,7 +70,7 @@ export default function BulkActions({
   return (
     <div className="bulkbar">
       <div className="bulkbar__left">
-        <strong>{count}</strong>&nbsp;ausgewählt
+        <strong>{count}</strong>&nbsp;{t("common.admin.members.bulk.selected")}
       </div>
 
       <div className="bulkbar__right">
@@ -80,7 +82,7 @@ export default function BulkActions({
             onClick={() => guard(onClear)}
             disabled={allDisabled}
           >
-            Alles aufheben
+            {t("common.admin.members.bulk.clearAll")}
           </button>
         ) : (
           <button
@@ -89,7 +91,9 @@ export default function BulkActions({
             onClick={() => guard(onToggleAll)}
             disabled={allDisabled}
           >
-            {isAllSelected ? "Alles aufheben" : "Alle auswählen"}
+            {isAllSelected
+              ? t("common.admin.members.bulk.clearAll")
+              : t("common.admin.members.bulk.selectAll")}
           </button>
         )}
 
@@ -100,7 +104,7 @@ export default function BulkActions({
             onClick={() => guard(onDelete)}
             disabled={deleteDisabled}
           >
-            Löschen ({count})
+            {t("common.admin.members.bulk.delete")} ({count})
           </button>
         ) : null}
 
@@ -110,7 +114,7 @@ export default function BulkActions({
           className="btn"
           onClick={() => guard(onToggleSelectMode)}
         >
-          Abbrechen
+          {t("common.admin.members.bulk.cancel")}
         </button>
       </div>
     </div>
