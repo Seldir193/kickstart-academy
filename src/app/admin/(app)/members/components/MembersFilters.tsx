@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import type { MemberRole } from "../api";
 import type { MembersSort } from "../membersAdmin/useMembersAdminState";
 
@@ -43,54 +44,55 @@ function useDropdown() {
 }
 
 export default function MembersFilters(props: Props) {
+  const { t } = useTranslation();
   const roleDd = useDropdown();
   const statusDd = useDropdown();
   const sortDd = useDropdown();
 
   const roleOptions: Opt<MemberRole | "">[] = useMemo(
     () => [
-      { value: "", label: "All" },
-      { value: "provider", label: "Provider" },
-      { value: "super", label: "Superadmin" },
+      { value: "", label: t("common.admin.members.filters.all") },
+      { value: "provider", label: t("common.admin.members.roles.provider") },
+      { value: "super", label: t("common.admin.members.roles.superadmin") },
     ],
-    [],
+    [t],
   );
 
   const statusOptions: Opt<Status>[] = useMemo(
     () => [
-      { value: "", label: "All" },
-      { value: "active", label: "Active" },
-      { value: "inactive", label: "Inactive" },
+      { value: "", label: t("common.admin.members.filters.all") },
+      { value: "active", label: t("common.admin.members.status.active") },
+      { value: "inactive", label: t("common.admin.members.status.inactive") },
     ],
-    [],
+    [t],
   );
 
   const sortOptions: Opt<MembersSort>[] = useMemo(
     () => [
-      { value: "newest", label: "Newest first" },
-      { value: "oldest", label: "Oldest first" },
-      { value: "name_az", label: "Name A–Z" },
-      { value: "name_za", label: "Name Z–A" },
-      { value: "email_az", label: "Email A–Z" },
-      { value: "email_za", label: "Email Z–A" },
+      { value: "newest", label: t("common.admin.members.sort.newest") },
+      { value: "oldest", label: t("common.admin.members.sort.oldest") },
+      { value: "name_az", label: t("common.admin.members.sort.nameAz") },
+      { value: "name_za", label: t("common.admin.members.sort.nameZa") },
+      { value: "email_az", label: t("common.admin.members.sort.emailAz") },
+      { value: "email_za", label: t("common.admin.members.sort.emailZa") },
     ],
-    [],
+    [t],
   );
 
   const roleLabel = useMemo(() => {
     const hit = roleOptions.find((o) => o.value === props.role);
-    return hit?.label || "All";
-  }, [props.role, roleOptions]);
+    return hit?.label || t("common.admin.members.filters.all");
+  }, [props.role, roleOptions, t]);
 
   const statusLabel = useMemo(() => {
     const hit = statusOptions.find((o) => o.value === props.status);
-    return hit?.label || "All";
-  }, [props.status, statusOptions]);
+    return hit?.label || t("common.admin.members.filters.all");
+  }, [props.status, statusOptions, t]);
 
   const sortLabel = useMemo(() => {
     const hit = sortOptions.find((o) => o.value === props.sort);
-    return hit?.label || "Name A–Z";
-  }, [props.sort, sortOptions]);
+    return hit?.label || t("common.admin.members.sort.nameAz");
+  }, [props.sort, sortOptions, t]);
 
   return (
     <div className="members-filters">
@@ -104,7 +106,7 @@ export default function MembersFilters(props: Props) {
           />
           <input
             className="input input-with-icon__input"
-            placeholder="Name or email"
+            placeholder={t("common.admin.members.filters.searchPlaceholder")}
             value={props.q}
             onChange={(e) => props.onChangeQ(e.target.value)}
             onKeyDown={(e) => {
@@ -126,7 +128,7 @@ export default function MembersFilters(props: Props) {
             ref={roleDd.triggerRef}
             className="ks-training-select__trigger"
             onClick={() => roleDd.setOpen((o) => !o)}
-            aria-label="Role"
+            aria-label={t("common.admin.members.filters.role")}
           >
             <span className="ks-training-select__label">{roleLabel}</span>
             <span className="ks-training-select__chevron" aria-hidden="true" />
@@ -137,7 +139,7 @@ export default function MembersFilters(props: Props) {
               ref={roleDd.menuRef}
               className="ks-training-select__menu"
               role="listbox"
-              aria-label="Role"
+              aria-label={t("common.admin.members.filters.role")}
             >
               {roleOptions.map((o) => (
                 <li key={o.value || "all"}>
@@ -173,7 +175,7 @@ export default function MembersFilters(props: Props) {
             ref={statusDd.triggerRef}
             className="ks-training-select__trigger"
             onClick={() => statusDd.setOpen((o) => !o)}
-            aria-label="Status"
+            aria-label={t("common.admin.members.table.status")}
           >
             <span className="ks-training-select__label">{statusLabel}</span>
             <span className="ks-training-select__chevron" aria-hidden="true" />
@@ -184,7 +186,7 @@ export default function MembersFilters(props: Props) {
               ref={statusDd.menuRef}
               className="ks-training-select__menu"
               role="listbox"
-              aria-label="Status"
+              aria-label={t("common.admin.members.table.status")}
             >
               {statusOptions.map((o) => (
                 <li key={o.value || "all"}>
@@ -220,7 +222,7 @@ export default function MembersFilters(props: Props) {
             ref={sortDd.triggerRef}
             className="ks-training-select__trigger"
             onClick={() => sortDd.setOpen((o) => !o)}
-            aria-label="Sort order"
+            aria-label={t("common.admin.members.filters.sortOrder")}
           >
             <span className="ks-training-select__label">{sortLabel}</span>
             <span className="ks-training-select__chevron" aria-hidden="true" />

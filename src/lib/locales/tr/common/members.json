@@ -31,5 +31,16 @@
   "common.admin.members.actions.info": "Bilgi",
   "common.admin.members.actions.changeRole": "Rolü değiştir",
   "common.admin.members.actions.deactivate": "Devre dışı bırak",
-  "common.admin.members.actions.reactivate": "Yeniden etkinleştir"
+  "common.admin.members.actions.reactivate": "Yeniden etkinleştir",
+
+  "common.admin.members.filters.all": "Tümü",
+  "common.admin.members.filters.searchPlaceholder": "Ad veya e-posta",
+  "common.admin.members.filters.role": "Rol",
+  "common.admin.members.filters.sortOrder": "Sıralama",
+  "common.admin.members.sort.newest": "En yeniler önce",
+  "common.admin.members.sort.oldest": "En eskiler önce",
+  "common.admin.members.sort.nameAz": "Ad A–Z",
+  "common.admin.members.sort.nameZa": "Ad Z–A",
+  "common.admin.members.sort.emailAz": "E-posta A–Z",
+  "common.admin.members.sort.emailZa": "E-posta Z–A"
 }

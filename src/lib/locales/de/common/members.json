@@ -31,5 +31,16 @@
   "common.admin.members.actions.info": "Info",
   "common.admin.members.actions.changeRole": "Rolle ändern",
   "common.admin.members.actions.deactivate": "Deaktivieren",
-  "common.admin.members.actions.reactivate": "Reaktivieren"
+  "common.admin.members.actions.reactivate": "Reaktivieren",
+
+  "common.admin.members.filters.all": "Alle",
+  "common.admin.members.filters.searchPlaceholder": "Name oder E-Mail",
+  "common.admin.members.filters.role": "Rolle",
+  "common.admin.members.filters.sortOrder": "Sortierung",
+  "common.admin.members.sort.newest": "Neueste zuerst",
+  "common.admin.members.sort.oldest": "Älteste zuerst",
+  "common.admin.members.sort.nameAz": "Name A–Z",
+  "common.admin.members.sort.nameZa": "Name Z–A",
+  "common.admin.members.sort.emailAz": "E-Mail A–Z",
+  "common.admin.members.sort.emailZa": "E-Mail Z–A"
 }
