@@ -52,5 +52,16 @@
   "common.admin.members.bulk.cancel": "Abbrechen",
 
   "common.admin.members.pagination.previous": "Vorherige Seite",
-  "common.admin.members.pagination.next": "Nächste Seite"
+  "common.admin.members.pagination.next": "Nächste Seite",
+
+  "common.admin.members.info.memberFallback": "Mitglied",
+  "common.admin.members.info.close": "Schließen",
+  "common.admin.members.info.details": "Mitgliedsdetails",
+  "common.admin.members.info.profile": "Profil",
+  "common.admin.members.info.owner": "Owner",
+  "common.admin.members.info.id": "ID",
+  "common.admin.members.info.avatar": "Avatar",
+  "common.admin.members.info.avatarUrl": "Avatar-URL",
+  "common.admin.common.yes": "Ja",
+  "common.admin.common.no": "Nein"
 }

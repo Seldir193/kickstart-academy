@@ -52,5 +52,16 @@
   "common.admin.members.bulk.cancel": "İptal",
 
   "common.admin.members.pagination.previous": "Önceki sayfa",
-  "common.admin.members.pagination.next": "Sonraki sayfa"
+  "common.admin.members.pagination.next": "Sonraki sayfa",
+
+  "common.admin.members.info.memberFallback": "Üye",
+  "common.admin.members.info.close": "Kapat",
+  "common.admin.members.info.details": "Üye detayları",
+  "common.admin.members.info.profile": "Profil",
+  "common.admin.members.info.owner": "Sahip",
+  "common.admin.members.info.id": "ID",
+  "common.admin.members.info.avatar": "Avatar",
+  "common.admin.members.info.avatarUrl": "Avatar URL",
+  "common.admin.common.yes": "Evet",
+  "common.admin.common.no": "Hayır"
 }
