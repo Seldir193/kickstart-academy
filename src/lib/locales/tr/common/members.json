@@ -22,5 +22,14 @@
   "common.admin.members.table.email": "E-posta",
   "common.admin.members.table.status": "Durum",
   "common.admin.members.table.role": "Rol",
-  "common.admin.members.table.action": "İşlem"
+  "common.admin.members.table.action": "İşlem",
+
+  "common.admin.members.status.active": "Aktif",
+  "common.admin.members.status.inactive": "Devre dışı",
+  "common.admin.members.roles.owner": "Sahip",
+
+  "common.admin.members.actions.info": "Bilgi",
+  "common.admin.members.actions.changeRole": "Rolü değiştir",
+  "common.admin.members.actions.deactivate": "Devre dışı bırak",
+  "common.admin.members.actions.reactivate": "Yeniden etkinleştir"
 }

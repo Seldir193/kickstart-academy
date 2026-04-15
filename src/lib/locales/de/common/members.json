@@ -22,5 +22,14 @@
   "common.admin.members.table.email": "E-Mail",
   "common.admin.members.table.status": "Status",
   "common.admin.members.table.role": "Rolle",
-  "common.admin.members.table.action": "Aktion"
+  "common.admin.members.table.action": "Aktion",
+
+  "common.admin.members.status.active": "Aktiv",
+  "common.admin.members.status.inactive": "Deaktiviert",
+  "common.admin.members.roles.owner": "Owner",
+
+  "common.admin.members.actions.info": "Info",
+  "common.admin.members.actions.changeRole": "Rolle ändern",
+  "common.admin.members.actions.deactivate": "Deaktivieren",
+  "common.admin.members.actions.reactivate": "Reaktivieren"
 }

@@ -2,6 +2,7 @@
 "use client";
 
 import React, { useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import type { AdminMember, MemberRole } from "../api";
 import MembersInfoDialog from "../moderation/MembersInfoDialog";
 import ConfirmRoleDialog from "../moderation/ConfirmRoleDialog";
@@ -46,6 +47,7 @@ export default function MembersTableList({
   onSetRole,
   onSetActive,
 }: Props) {
+  const { t } = useTranslation();
   const viewItems = useMemo(() => items, [items]);
 
   const [infoOpen, setInfoOpen] = useState(false);
@@ -108,23 +110,23 @@ export default function MembersTableList({
   }
 
   function roleLockedReason(u: AdminMember) {
-    if (!canEditRoles) return "Nur Owner darf Rollen ändern.";
-    if (u?.isOwner) return "Owner kann nicht geändert werden.";
-    if (busy) return "Bitte warten…";
+    if (!canEditRoles) return t("common.admin.members.locked.roleOwnerOnly");
+    if (u?.isOwner) return t("common.admin.members.locked.ownerRole");
+    if (busy) return t("common.admin.members.locked.pleaseWait");
     return "";
   }
 
   function activeLockedReason(u: AdminMember) {
-    if (!canEditActive) return "Nur Owner darf aktiv/deaktivieren.";
-    if (u?.isOwner) return "Owner kann nicht deaktiviert werden.";
-    if (busy) return "Bitte warten…";
+    if (!canEditActive) return t("common.admin.members.locked.activeOwnerOnly");
+    if (u?.isOwner) return t("common.admin.members.locked.ownerActive");
+    if (busy) return t("common.admin.members.locked.pleaseWait");
     return "";
   }
 
   if (!viewItems.length) {
     return (
       <section className="card">
-        <div className="card__empty">Keine Einträge.</div>
+        <div className="card__empty">{t("common.admin.members.empty")}</div>
       </section>
     );
   }
@@ -135,13 +137,21 @@ export default function MembersTableList({
         <div className="ks-customers-table-scroll">
           <div className="members-list__table">
             <div className="members-list__head" aria-hidden="true">
-              <div className="members-list__h">Name</div>
-              <div className="members-list__h">E-Mail</div>
-              <div className="members-list__h">Status</div>
+              <div className="members-list__h">
+                {t("common.admin.members.table.name")}
+              </div>
+              <div className="members-list__h">
+                {t("common.admin.members.table.email")}
+              </div>
+              <div className="members-list__h">
+                {t("common.admin.members.table.status")}
+              </div>
 
-              <div className="members-list__h">Rolle</div>
+              <div className="members-list__h">
+                {t("common.admin.members.table.role")}
+              </div>
               <div className="members-list__h members-list__h--right">
-                Aktion
+                {t("common.admin.members.table.action")}
               </div>
             </div>
 
@@ -149,6 +159,7 @@ export default function MembersTableList({
               {viewItems.map((u) => {
                 const id = clean(u.id);
                 const acts = actionsFor({
+                  t,
                   u,
                   busy,
                   canEditRoles,
@@ -185,13 +196,13 @@ export default function MembersTableList({
                       <span
                         className={`members-list__status ${statusClass(u)}`}
                       >
-                        {statusLabel(u)}
+                        {statusLabel(t, u)}
                       </span>
                     </div>
 
                     <div className="members-list__cell members-list__cell--role">
                       <span className={`members-list__status ${roleClass(u)}`}>
-                        {roleLabel(u)}
+                        {roleLabel(t, u)}
                       </span>
                     </div>
 

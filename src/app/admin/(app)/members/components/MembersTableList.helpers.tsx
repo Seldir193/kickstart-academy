@@ -17,8 +17,10 @@ function clean(v: unknown) {
   return String(v ?? "").trim();
 }
 
-export function statusLabel(u: AdminMember) {
-  return Boolean(u?.isActive) ? "Aktiv" : "Deaktiviert";
+export function statusLabel(t: (key: string) => string, u: AdminMember) {
+  return Boolean(u?.isActive)
+    ? t("common.admin.members.status.active")
+    : t("common.admin.members.status.inactive");
 }
 
 export function statusClass(u: AdminMember) {
@@ -48,11 +50,11 @@ export function onActionKey(
   run();
 }
 
-export function roleLabel(u: AdminMember) {
-  if (u?.isOwner) return "Owner";
+export function roleLabel(t: (key: string) => string, u: AdminMember) {
+  if (u?.isOwner) return t("common.admin.members.roles.owner");
   const r = clean(u?.role).toLowerCase();
-  if (r === "super") return "Superadmin";
-  return "Provider";
+  if (r === "super") return t("common.admin.members.roles.superadmin");
+  return t("common.admin.members.roles.provider");
 }
 
 export function roleClass(u: AdminMember) {
@@ -67,6 +69,7 @@ function isActive(u: AdminMember) {
 }
 
 export function actionsFor(args: {
+  t: (key: string) => string;
   u: AdminMember;
   busy: boolean;
   canEditRoles: boolean;
@@ -76,6 +79,7 @@ export function actionsFor(args: {
   onEditActive: (u: AdminMember) => void;
 }) {
   const {
+    t,
     u,
     busy,
     canEditRoles,
@@ -90,31 +94,33 @@ export function actionsFor(args: {
   const disabledActive = busy || !canEditActive || locked;
 
   const tipRole = !canEditRoles
-    ? "Nur Owner darf Rollen vergeben"
+    ? t("common.admin.members.locked.roleOwnerOnly")
     : locked
-      ? "Owner kann nicht geändert werden"
+      ? t("common.admin.members.locked.ownerRole")
       : undefined;
 
   const tipActive = !canEditActive
-    ? "Nur Owner darf aktiv/deaktivieren"
+    ? t("common.admin.members.locked.activeOwnerOnly")
     : locked
-      ? "Owner kann nicht deaktiviert werden"
+      ? t("common.admin.members.locked.ownerActive")
       : undefined;
 
-  const titleActive = isActive(u) ? "Deaktivieren" : "Reaktivieren";
+  const titleActive = isActive(u)
+    ? t("common.admin.members.actions.deactivate")
+    : t("common.admin.members.actions.reactivate");
 
   return [
     {
       key: "info",
       icon: "/icons/info.svg",
-      title: "Info",
+      title: t("common.admin.members.actions.info"),
       disabled: busy,
       run: () => onInfo(u),
     },
     {
       key: "role",
       icon: "/icons/edit.svg",
-      title: "Rolle ändern",
+      title: t("common.admin.members.actions.changeRole"),
       disabled: disabledRole,
       tip: tipRole,
       run: () => onEditRole(u),
