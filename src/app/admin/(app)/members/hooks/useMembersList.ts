@@ -2,6 +2,8 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { toastErrorMessage } from "@/lib/toast-messages";
 import type { AdminMember, MemberRole } from "../api";
 import { fetchMembers } from "../api";
 
@@ -64,6 +66,7 @@ export function useMembersList(
   role?: MemberRole | "",
   status?: "active" | "inactive" | "",
 ) {
+  const { t } = useTranslation();
   const args = normArgs(a, search, role, status);
 
   const [state, setState] = useState<State>({
@@ -100,7 +103,7 @@ export function useMembersList(
 
     const { ctrl, reqId } = startRequest();
     try {
-      const data = await fetchMembers({
+      const data = await fetchMembers(t, {
         search: args.search,
         role: args.role,
         status: args.status,
@@ -113,7 +116,11 @@ export function useMembersList(
       if (ctrl.signal.aborted || reqId !== reqIdRef.current) return;
       setState((s) => ({
         ...s,
-        error: e?.message || "Load failed.",
+        error: toastErrorMessage(
+          t,
+          e,
+          "common.admin.members.errors.loadFailed",
+        ),
         items: [],
       }));
     } finally {
@@ -128,6 +135,7 @@ export function useMembersList(
     finish,
     resetDisabled,
     startRequest,
+    t,
   ]);
 
   useEffect(() => {
