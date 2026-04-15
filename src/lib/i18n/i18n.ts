@@ -15,6 +15,8 @@ import deCoaches from "../locales/de/common/coaches.json";
 import dePlaces from "../locales/de/common/places.json";
 import deDatev from "../locales/de/common/datev.json";
 import deRevenue from "../locales/de/common/revenue.json";
+import deVoucher from "../locales/de/common/voucher.json";
+import deMembers from "../locales/de/common/members.json";
 
 import enCommonBase from "../locales/en/common/common.json";
 import enBookings from "../locales/en/common/bookings.json";
@@ -29,6 +31,8 @@ import enCoaches from "../locales/en/common/coaches.json";
 import enPlaces from "../locales/en/common/places.json";
 import enDatev from "../locales/en/common/datev.json";
 import enRevenue from "../locales/en/common/revenue.json";
+import enVoucher from "../locales/en/common/voucher.json";
+import enMembers from "../locales/de/common/members.json";
 
 import trCommonBase from "../locales/tr/common/common.json";
 import trBookings from "../locales/tr/common/bookings.json";
@@ -43,6 +47,8 @@ import trCoaches from "../locales/tr/common/coaches.json";
 import trPlaces from "../locales/tr/common/places.json";
 import trDatev from "../locales/tr/common/datev.json";
 import trRevenue from "../locales/tr/common/revenue.json";
+import trVoucher from "../locales/tr/common/voucher.json";
+import trMembers from "../locales/de/common/members.json";
 
 import deBook from "../locales/de/book.json";
 import enBook from "../locales/en/book.json";
@@ -65,6 +71,8 @@ const resources = {
       ...dePlaces,
       ...deDatev,
       ...deRevenue,
+      ...deVoucher,
+      ...deMembers,
     },
     book: deBook,
   },
@@ -83,6 +91,8 @@ const resources = {
       ...enPlaces,
       ...enDatev,
       ...enRevenue,
+      ...enVoucher,
+      ...enMembers,
     },
     book: enBook,
   },
@@ -101,6 +111,8 @@ const resources = {
       ...trPlaces,
       ...trDatev,
       ...trRevenue,
+      ...trVoucher,
+      ...trMembers,
     },
     book: trBook,
   },

@@ -8,8 +8,10 @@ export function idOf(u: Member) {
   return clean((u as any).id || (u as any)._id);
 }
 
-export function roleLabel(u: Member) {
-  return u.role === "super" ? "Superadmin" : "Provider";
+export function roleLabel(t: (key: string) => string, u: Member) {
+  return u.role === "super"
+    ? t("common.admin.members.roles.superadmin")
+    : t("common.admin.members.roles.provider");
 }
 
 export function matchMember(u: Member, q: string) {
