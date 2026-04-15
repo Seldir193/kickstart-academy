@@ -3,5 +3,24 @@
   "common.admin.members.roles.provider": "Anbieter",
 
   "common.admin.members.readOnly.ownerOnly": "Nur der Eigentümer kann Rollen ändern",
-  "common.admin.members.readOnly.label": "Nur lesen"
+  "common.admin.members.readOnly.label": "Nur lesen",
+
+  "common.admin.members.errors.sessionExpired": "Sitzung abgelaufen. Bitte neu einloggen.",
+  "common.admin.members.errors.accountDisabled": "Account ist deaktiviert.",
+  "common.admin.members.errors.forbidden": "Keine Berechtigung.",
+  "common.admin.members.errors.requestFailed": "Anfrage fehlgeschlagen.",
+  "common.admin.members.errors.loadFailed": "Laden fehlgeschlagen.",
+  "common.admin.members.errors.updateFailed": "Aktualisierung fehlgeschlagen.",
+
+  "common.admin.members.locked.roleOwnerOnly": "Nur der Owner darf Rollen ändern.",
+  "common.admin.members.locked.ownerRole": "Der Owner kann nicht geändert werden.",
+  "common.admin.members.locked.activeOwnerOnly": "Nur der Owner darf aktivieren oder deaktivieren.",
+  "common.admin.members.locked.ownerActive": "Der Owner kann nicht deaktiviert werden.",
+  "common.admin.members.locked.pleaseWait": "Bitte warten…",
+  "common.admin.members.empty": "Keine Einträge.",
+  "common.admin.members.table.name": "Name",
+  "common.admin.members.table.email": "E-Mail",
+  "common.admin.members.table.status": "Status",
+  "common.admin.members.table.role": "Rolle",
+  "common.admin.members.table.action": "Aktion"
 }

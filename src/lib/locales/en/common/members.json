@@ -3,5 +3,24 @@
   "common.admin.members.roles.provider": "Provider",
 
   "common.admin.members.readOnly.ownerOnly": "Only the owner can change roles",
-  "common.admin.members.readOnly.label": "Read only"
+  "common.admin.members.readOnly.label": "Read only",
+
+  "common.admin.members.errors.sessionExpired": "Session expired. Please sign in again.",
+  "common.admin.members.errors.accountDisabled": "Account is disabled.",
+  "common.admin.members.errors.forbidden": "No permission.",
+  "common.admin.members.errors.requestFailed": "Request failed.",
+  "common.admin.members.errors.loadFailed": "Load failed.",
+  "common.admin.members.errors.updateFailed": "Update failed.",
+
+  "common.admin.members.locked.roleOwnerOnly": "Only the owner can change roles.",
+  "common.admin.members.locked.ownerRole": "The owner cannot be changed.",
+  "common.admin.members.locked.activeOwnerOnly": "Only the owner can activate or deactivate.",
+  "common.admin.members.locked.ownerActive": "The owner cannot be deactivated.",
+  "common.admin.members.locked.pleaseWait": "Please wait…",
+  "common.admin.members.empty": "No entries.",
+  "common.admin.members.table.name": "Name",
+  "common.admin.members.table.email": "Email",
+  "common.admin.members.table.status": "Status",
+  "common.admin.members.table.role": "Role",
+  "common.admin.members.table.action": "Action"
 }

@@ -1,4 +1,5 @@
 //src\app\admin\(app)\members\api.ts
+import { toastText } from "@/lib/toast-messages";
 export type MemberRole = "provider" | "super";
 
 export type AdminMember = {
@@ -17,14 +18,39 @@ function clean(v: unknown) {
   return String(v ?? "").trim();
 }
 
-function errorFor(status: number, msg?: string) {
+function errorFor(t: (key: string) => string, status: number, msg?: string) {
   const m = clean(msg).toLowerCase();
   if (status === 401)
-    return new Error("Sitzung abgelaufen. Bitte neu einloggen.");
+    return new Error(
+      toastText(
+        t,
+        "common.admin.members.errors.sessionExpired",
+        "Sitzung abgelaufen. Bitte neu einloggen.",
+      ),
+    );
   if (status === 403 && m.includes("disabled"))
-    return new Error("Account ist deaktiviert.");
-  if (status === 403) return new Error("Keine Berechtigung.");
-  return new Error("Request failed.");
+    return new Error(
+      toastText(
+        t,
+        "common.admin.members.errors.accountDisabled",
+        "Account ist deaktiviert.",
+      ),
+    );
+  if (status === 403)
+    return new Error(
+      toastText(
+        t,
+        "common.admin.members.errors.forbidden",
+        "Keine Berechtigung.",
+      ),
+    );
+  return new Error(
+    toastText(
+      t,
+      "common.admin.members.errors.requestFailed",
+      "Request failed.",
+    ),
+  );
 }
 
 async function readJson(r: Response) {
@@ -36,10 +62,10 @@ async function readJson(r: Response) {
   }
 }
 
-async function assertOk(r: Response) {
+async function assertOk(t: (key: string) => string, r: Response) {
   if (r.ok) return;
   const js = await readJson(r);
-  throw errorFor(r.status, js?.error);
+  throw errorFor(t, r.status, js?.error);
 }
 
 type ListArgs = {
@@ -49,7 +75,7 @@ type ListArgs = {
   signal?: AbortSignal;
 };
 
-export async function fetchMembers(args: ListArgs) {
+export async function fetchMembers(t: (key: string) => string, args: ListArgs) {
   const qs = new URLSearchParams();
   const q = clean(args.search);
   const role = clean(args.role);
@@ -65,15 +91,23 @@ export async function fetchMembers(args: ListArgs) {
     cache: "no-store",
     signal: args.signal,
   });
-  await assertOk(r);
+  await assertOk(t, r);
 
   const js = await readJson(r);
-  if (!js?.ok) throw new Error(clean(js?.error) || "Load failed.");
+  if (!js?.ok)
+    throw new Error(
+      clean(js?.error) ||
+        toastText(t, "common.admin.members.errors.loadFailed", "Load failed."),
+    );
 
   return { items: Array.isArray(js.items) ? (js.items as AdminMember[]) : [] };
 }
 
-export async function setMemberRole(id: string, role: MemberRole) {
+export async function setMemberRole(
+  t: (key: string) => string,
+  id: string,
+  role: MemberRole,
+) {
   const r = await fetch(
     `/api/admin/auth/users/${encodeURIComponent(id)}/role`,
     {
@@ -83,14 +117,26 @@ export async function setMemberRole(id: string, role: MemberRole) {
       cache: "no-store",
     },
   );
-  await assertOk(r);
+  await assertOk(t, r);
 
   const js = await readJson(r);
-  if (!js?.ok) throw new Error(clean(js?.error) || "Update failed.");
+  if (!js?.ok)
+    throw new Error(
+      clean(js?.error) ||
+        toastText(
+          t,
+          "common.admin.members.errors.updateFailed",
+          "Update failed.",
+        ),
+    );
   return js.user as AdminMember;
 }
 
-export async function setMemberActive(id: string, active: boolean) {
+export async function setMemberActive(
+  t: (key: string) => string,
+  id: string,
+  active: boolean,
+) {
   const r = await fetch(
     `/api/admin/auth/users/${encodeURIComponent(id)}/active`,
     {
@@ -100,21 +146,41 @@ export async function setMemberActive(id: string, active: boolean) {
       cache: "no-store",
     },
   );
-  await assertOk(r);
+  await assertOk(t, r);
   const js = await r.json().catch(() => null);
-  if (!js?.ok) throw new Error(clean(js?.error) || "Update failed.");
+  if (!js?.ok)
+    throw new Error(
+      clean(js?.error) ||
+        toastText(
+          t,
+          "common.admin.members.errors.updateFailed",
+          "Update failed.",
+        ),
+    );
   return js.user as AdminMember;
 }
 
-export async function bulkSetMembersActive(ids: string[], active: boolean) {
+export async function bulkSetMembersActive(
+  t: (key: string) => string,
+  ids: string[],
+  active: boolean,
+) {
   const r = await fetch(`/api/admin/auth/users/bulk-active`, {
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ ids, active }),
     cache: "no-store",
   });
-  await assertOk(r);
+  await assertOk(t, r);
   const js = await r.json().catch(() => null);
-  if (!js?.ok) throw new Error(clean(js?.error) || "Update failed.");
+  if (!js?.ok)
+    throw new Error(
+      clean(js?.error) ||
+        toastText(
+          t,
+          "common.admin.members.errors.updateFailed",
+          "Update failed.",
+        ),
+    );
   return { items: Array.isArray(js.items) ? (js.items as AdminMember[]) : [] };
 }

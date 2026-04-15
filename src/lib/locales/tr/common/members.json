@@ -3,5 +3,24 @@
   "common.admin.members.roles.provider": "Sağlayıcı",
 
   "common.admin.members.readOnly.ownerOnly": "Rolleri yalnızca sahip değiştirebilir",
-  "common.admin.members.readOnly.label": "Salt okunur"
+  "common.admin.members.readOnly.label": "Salt okunur",
+
+  "common.admin.members.errors.sessionExpired": "Oturum süresi doldu. Lütfen yeniden giriş yapın.",
+  "common.admin.members.errors.accountDisabled": "Hesap devre dışı bırakıldı.",
+  "common.admin.members.errors.forbidden": "Yetkiniz yok.",
+  "common.admin.members.errors.requestFailed": "İstek başarısız oldu.",
+  "common.admin.members.errors.loadFailed": "Yükleme başarısız oldu.",
+  "common.admin.members.errors.updateFailed": "Güncelleme başarısız oldu.",
+
+  "common.admin.members.locked.roleOwnerOnly": "Rolleri yalnızca sahip değiştirebilir.",
+  "common.admin.members.locked.ownerRole": "Sahip değiştirilemez.",
+  "common.admin.members.locked.activeOwnerOnly": "Etkinleştirme veya devre dışı bırakma işlemini yalnızca sahip yapabilir.",
+  "common.admin.members.locked.ownerActive": "Sahip devre dışı bırakılamaz.",
+  "common.admin.members.locked.pleaseWait": "Lütfen bekleyin…",
+  "common.admin.members.empty": "Kayıt yok.",
+  "common.admin.members.table.name": "Ad",
+  "common.admin.members.table.email": "E-posta",
+  "common.admin.members.table.status": "Durum",
+  "common.admin.members.table.role": "Rol",
+  "common.admin.members.table.action": "İşlem"
 }
