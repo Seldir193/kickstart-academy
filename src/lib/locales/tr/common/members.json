@@ -1,4 +1,7 @@
 {
   "common.admin.members.roles.superadmin": "Süper yönetici",
-  "common.admin.members.roles.provider": "Sağlayıcı"
+  "common.admin.members.roles.provider": "Sağlayıcı",
+
+  "common.admin.members.readOnly.ownerOnly": "Rolleri yalnızca sahip değiştirebilir",
+  "common.admin.members.readOnly.label": "Salt okunur"
 }

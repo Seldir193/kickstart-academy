@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { useTranslation } from "react-i18next";
 import MembersTableList from "./components/MembersTableList";
 import Pagination from "./components/Pagination";
 import { useMembersAdminState } from "./membersAdmin/useMembersAdminState";
@@ -16,7 +17,7 @@ export default function MembersAdminPage() {
     setMutating: s.setMutating,
     reload: s.list.reload,
   });
-
+  const { t } = useTranslation();
   const busy = s.mutating || s.list.loading;
 
   return (
@@ -37,9 +38,11 @@ export default function MembersAdminPage() {
           {!s.canEditRoles ? (
             <span
               className="members-admin__badge"
-              title="Only the owner can change roles"
+              title={t("common.admin.members.readOnly.ownerOnly")}
             >
-              <span className="members-admin__badge-text">Read only</span>
+              <span className="members-admin__badge-text">
+                {t("common.admin.members.readOnly.label")}
+              </span>
             </span>
           ) : null}
         </div>

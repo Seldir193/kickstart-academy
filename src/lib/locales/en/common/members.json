@@ -1,4 +1,7 @@
 {
   "common.admin.members.roles.superadmin": "Superadmin",
-  "common.admin.members.roles.provider": "Provider"
+  "common.admin.members.roles.provider": "Provider",
+
+  "common.admin.members.readOnly.ownerOnly": "Only the owner can change roles",
+  "common.admin.members.readOnly.label": "Read only"
 }
