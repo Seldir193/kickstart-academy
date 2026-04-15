@@ -49,5 +49,8 @@
   "common.admin.members.bulk.clearAll": "Alles aufheben",
   "common.admin.members.bulk.selectAll": "Alle auswählen",
   "common.admin.members.bulk.delete": "Löschen",
-  "common.admin.members.bulk.cancel": "Abbrechen"
+  "common.admin.members.bulk.cancel": "Abbrechen",
+
+  "common.admin.members.pagination.previous": "Vorherige Seite",
+  "common.admin.members.pagination.next": "Nächste Seite"
 }

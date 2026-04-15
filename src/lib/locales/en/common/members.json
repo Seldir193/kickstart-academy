@@ -49,5 +49,8 @@
   "common.admin.members.bulk.clearAll": "Clear all",
   "common.admin.members.bulk.selectAll": "Select all",
   "common.admin.members.bulk.delete": "Delete",
-  "common.admin.members.bulk.cancel": "Cancel"
+  "common.admin.members.bulk.cancel": "Cancel",
+
+  "common.admin.members.pagination.previous": "Previous page",
+  "common.admin.members.pagination.next": "Next page"
 }

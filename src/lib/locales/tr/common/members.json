@@ -49,5 +49,8 @@
   "common.admin.members.bulk.clearAll": "Tümünü temizle",
   "common.admin.members.bulk.selectAll": "Tümünü seç",
   "common.admin.members.bulk.delete": "Sil",
-  "common.admin.members.bulk.cancel": "İptal"
+  "common.admin.members.bulk.cancel": "İptal",
+
+  "common.admin.members.pagination.previous": "Önceki sayfa",
+  "common.admin.members.pagination.next": "Sonraki sayfa"
 }

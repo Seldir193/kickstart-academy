@@ -1,5 +1,7 @@
 "use client";
 
+import { useTranslation } from "react-i18next";
+
 type Props = {
   page: number;
   pages: number;
@@ -34,6 +36,7 @@ function PagerBtn({ disabled, label, flip, onClick }: BtnProps) {
 }
 
 export default function Pagination({ page, pages, onPrev, onNext }: Props) {
+  const { t } = useTranslation();
   const prevDisabled = page <= 1;
   const nextDisabled = page >= pages;
 
@@ -41,14 +44,18 @@ export default function Pagination({ page, pages, onPrev, onNext }: Props) {
     <div className="pager pager--arrows news-pager">
       <PagerBtn
         disabled={prevDisabled}
-        label="Previous page"
+        label={t("common.admin.members.pagination.previous")}
         flip
         onClick={onPrev}
       />
       <div className="pager__count" aria-live="polite" aria-atomic="true">
         {page} / {pages}
       </div>
-      <PagerBtn disabled={nextDisabled} label="Next page" onClick={onNext} />
+      <PagerBtn
+        disabled={nextDisabled}
+        label={t("common.admin.members.pagination.next")}
+        onClick={onNext}
+      />
     </div>
   );
 }
