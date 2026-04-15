@@ -2,6 +2,7 @@
 "use client";
 
 import type { AdminMember, MemberRole } from "../api";
+import { useTranslation } from "react-i18next";
 import { bulkSetMembersActive, setMemberActive, setMemberRole } from "../api";
 
 export function useMembersAdminActions(args: {
@@ -10,6 +11,7 @@ export function useMembersAdminActions(args: {
   setMutating: (v: boolean) => void;
   reload: () => void;
 }) {
+  const { t } = useTranslation();
   const { canEditRoles, canEditActive, setMutating, reload } = args;
 
   async function onSetRole(u: AdminMember, next: MemberRole) {
@@ -18,7 +20,7 @@ export function useMembersAdminActions(args: {
 
     setMutating(true);
     try {
-      await setMemberRole(u.id, next);
+      await setMemberRole(t, u.id, next);
       await reload();
     } finally {
       setMutating(false);
@@ -31,7 +33,7 @@ export function useMembersAdminActions(args: {
 
     setMutating(true);
     try {
-      await setMemberActive(u.id, active);
+      await setMemberActive(t, u.id, active);
       await reload();
     } finally {
       setMutating(false);
@@ -44,7 +46,7 @@ export function useMembersAdminActions(args: {
 
     setMutating(true);
     try {
-      await bulkSetMembersActive(ids, active);
+      await bulkSetMembersActive(t, ids, active);
       await reload();
     } finally {
       setMutating(false);
