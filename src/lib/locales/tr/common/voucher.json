@@ -37,5 +37,24 @@
   "common.admin.vouchers.dialog.amount": "Tutar",
   "common.admin.vouchers.dialog.active": "Aktif",
   "common.admin.vouchers.dialog.delete": "Sil",
-  "common.admin.vouchers.dialog.save": "Kaydet"
+  "common.admin.vouchers.dialog.save": "Kaydet",
+
+  "common.admin.vouchers.list.loading": "Yükleniyor...",
+  "common.admin.vouchers.list.empty": "Kupon bulunamadı.",
+  "common.admin.vouchers.bulk.toggle": "Kuponları seç",
+  "common.admin.vouchers.bulk.selected": "seçildi",
+  "common.admin.vouchers.bulk.selectAll": "Tümünü seç",
+  "common.admin.vouchers.bulk.clearAll": "Seçimi temizle",
+  "common.admin.vouchers.bulk.delete": "Sil",
+  "common.admin.vouchers.bulk.cancel": "İptal",
+  "common.admin.vouchers.bulk.activate": "Etkinleştir",
+  "common.admin.vouchers.bulk.deactivate": "Devre dışı bırak",
+  "common.admin.vouchers.table.code": "Kod",
+  "common.admin.vouchers.table.amount": "Tutar",
+  "common.admin.vouchers.table.status": "Durum",
+  "common.admin.vouchers.table.created": "Oluşturuldu",
+  "common.admin.vouchers.table.action": "İşlem",
+  "common.admin.vouchers.row.select": "Seç",
+  "common.admin.vouchers.row.open": "Aç",
+  "common.admin.vouchers.row.edit": "Düzenle"
 }

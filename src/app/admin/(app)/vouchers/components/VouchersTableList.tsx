@@ -2,9 +2,11 @@
 
 import type { RefObject } from "react";
 import { useEffect, useMemo, useRef } from "react";
+import { useTranslation } from "react-i18next";
 import BulkActions from "@/app/admin/(app)/news/components/BulkActions";
 import { useSelection } from "@/app/admin/(app)/news/hooks/useSelection";
 import type { Voucher } from "../types";
+import { formatDateOnly } from "../utils/dateFormat";
 
 type Props = {
   items: Voucher[];
@@ -22,11 +24,11 @@ function idOf(item: Voucher) {
   return String(item?._id || "").trim();
 }
 
-function formatDateDe(value: string) {
-  const d = new Date(String(value || ""));
-  if (Number.isNaN(d.getTime())) return "—";
-  return new Intl.DateTimeFormat("de-DE").format(d);
-}
+// function formatDateDe(value: string) {
+//   const d = new Date(String(value || ""));
+//   if (Number.isNaN(d.getTime())) return "—";
+//   return new Intl.DateTimeFormat("de-DE").format(d);
+// }
 
 function amountText(value: number) {
   const n = Number(value || 0);
@@ -36,8 +38,10 @@ function amountText(value: number) {
   }).format(n);
 }
 
-function statusText(active: boolean) {
-  return active ? "Active" : "Inactive";
+function statusText(t: (key: string) => string, active: boolean) {
+  return active
+    ? t("common.admin.vouchers.status.active")
+    : t("common.admin.vouchers.status.inactive");
 }
 
 function getInactiveIds(items: Voucher[], ids: Set<string>) {
@@ -59,6 +63,7 @@ export default function VouchersTableList({
   onDeactivateMany,
   toggleBtnRef,
 }: Props) {
+  const { t, i18n } = useTranslation();
   const idsOnPage = useMemo(() => items.map(idOf).filter(Boolean), [items]);
   const sel = useSelection(idsOnPage);
   const cancelBtnRef = useRef<HTMLButtonElement | null>(null);
@@ -131,7 +136,9 @@ export default function VouchersTableList({
     return (
       <section className="card">
         <div className="card__empty">
-          {busy ? "Loading..." : "No vouchers found."}
+          {busy
+            ? t("common.admin.vouchers.list.loading")
+            : t("common.admin.vouchers.list.empty")}
         </div>
       </section>
     );
@@ -160,12 +167,12 @@ export default function VouchersTableList({
           onClear={clearSelection}
           showClear={showClear}
           onDelete={deleteSelected}
-          toggleLabel="Select vouchers"
-          selectedLabel="selected"
-          selectAllLabel="Select all"
-          clearAllLabel="Clear all"
-          deleteLabel="Delete"
-          cancelLabel="Cancel"
+          toggleLabel={t("common.admin.vouchers.bulk.toggle")}
+          selectedLabel={t("common.admin.vouchers.bulk.selected")}
+          selectAllLabel={t("common.admin.vouchers.bulk.selectAll")}
+          clearAllLabel={t("common.admin.vouchers.bulk.clearAll")}
+          deleteLabel={t("common.admin.vouchers.bulk.delete")}
+          cancelLabel={t("common.admin.vouchers.bulk.cancel")}
         />
 
         {selectMode && activateCount ? (
@@ -175,7 +182,7 @@ export default function VouchersTableList({
             disabled={busy}
             onClick={activateSelected}
           >
-            Activate ({activateCount})
+            {t("common.admin.vouchers.bulk.activate")} ({activateCount})
           </button>
         ) : null}
 
@@ -186,7 +193,7 @@ export default function VouchersTableList({
             disabled={busy}
             onClick={deactivateSelected}
           >
-            Deactivate ({deactivateCount})
+            {t("common.admin.vouchers.bulk.deactivate")} ({deactivateCount})
           </button>
         ) : null}
       </div>
@@ -195,11 +202,21 @@ export default function VouchersTableList({
         <section className="card news-list">
           <div className="news-list__table">
             <div className="news-list__head" aria-hidden="true">
-              <div className="news-list__h">Code</div>
-              <div className="news-list__h">Amount</div>
-              <div className="news-list__h">Status</div>
-              <div className="news-list__h">Created</div>
-              <div className="news-list__h news-list__h--right">Action</div>
+              <div className="news-list__h">
+                {t("common.admin.vouchers.table.code")}
+              </div>
+              <div className="news-list__h">
+                {t("common.admin.vouchers.table.amount")}
+              </div>
+              <div className="news-list__h">
+                {t("common.admin.vouchers.table.status")}
+              </div>
+              <div className="news-list__h">
+                {t("common.admin.vouchers.table.created")}
+              </div>
+              <div className="news-list__h news-list__h--right">
+                {t("common.admin.vouchers.table.action")}
+              </div>
             </div>
 
             <ul className="list list--bleed">
@@ -225,7 +242,9 @@ export default function VouchersTableList({
                     role="button"
                     aria-pressed={selectMode ? checked : undefined}
                     aria-label={
-                      selectMode ? `Select: ${item.code}` : `Open: ${item.code}`
+                      selectMode
+                        ? `${t("common.admin.vouchers.row.select")}: ${item.code}`
+                        : `${t("common.admin.vouchers.row.open")}: ${item.code}`
                     }
                   >
                     <div className="news-list__cell">
@@ -238,11 +257,11 @@ export default function VouchersTableList({
                     </div>
 
                     <div className="news-list__cell">
-                      {statusText(item.active)}
+                      {statusText(t, item.active)}
                     </div>
 
                     <div className="news-list__cell">
-                      {formatDateDe(item.createdAt)}
+                      {formatDateOnly(item.createdAt, i18n.language)}
                     </div>
 
                     {!hideEdit ? (
@@ -258,7 +277,7 @@ export default function VouchersTableList({
                           className="edit-trigger"
                           role="button"
                           tabIndex={0}
-                          aria-label="Edit"
+                          aria-label={t("common.admin.vouchers.row.edit")}
                         >
                           <img
                             src="/icons/edit.svg"

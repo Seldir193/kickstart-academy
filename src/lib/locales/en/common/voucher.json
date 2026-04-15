@@ -37,5 +37,24 @@
   "common.admin.vouchers.dialog.amount": "Amount",
   "common.admin.vouchers.dialog.active": "Active",
   "common.admin.vouchers.dialog.delete": "Delete",
-  "common.admin.vouchers.dialog.save": "Save"
+  "common.admin.vouchers.dialog.save": "Save",
+
+  "common.admin.vouchers.list.loading": "Loading...",
+  "common.admin.vouchers.list.empty": "No vouchers found.",
+  "common.admin.vouchers.bulk.toggle": "Select vouchers",
+  "common.admin.vouchers.bulk.selected": "selected",
+  "common.admin.vouchers.bulk.selectAll": "Select all",
+  "common.admin.vouchers.bulk.clearAll": "Clear all",
+  "common.admin.vouchers.bulk.delete": "Delete",
+  "common.admin.vouchers.bulk.cancel": "Cancel",
+  "common.admin.vouchers.bulk.activate": "Activate",
+  "common.admin.vouchers.bulk.deactivate": "Deactivate",
+  "common.admin.vouchers.table.code": "Code",
+  "common.admin.vouchers.table.amount": "Amount",
+  "common.admin.vouchers.table.status": "Status",
+  "common.admin.vouchers.table.created": "Created",
+  "common.admin.vouchers.table.action": "Action",
+  "common.admin.vouchers.row.select": "Select",
+  "common.admin.vouchers.row.open": "Open",
+  "common.admin.vouchers.row.edit": "Edit"
 }
