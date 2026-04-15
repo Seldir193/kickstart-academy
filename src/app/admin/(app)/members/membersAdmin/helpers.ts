@@ -20,11 +20,11 @@ export function displayName(u: AdminMember) {
   return n || clean(u?.email) || "—";
 }
 
-export function roleLabel(u: AdminMember) {
+export function roleLabel(t: (key: string) => string, u: AdminMember) {
   const r = clean(u?.role).toLowerCase();
-  if (u?.isOwner) return "Owner";
-  if (r === "super") return "Superadmin";
-  return "Provider";
+  if (u?.isOwner) return t("common.admin.members.roles.owner");
+  if (r === "super") return t("common.admin.members.roles.superadmin");
+  return t("common.admin.members.roles.provider");
 }
 
 export async function fetchMe(): Promise<Me | null> {
