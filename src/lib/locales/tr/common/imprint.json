@@ -1,0 +1,23 @@
+{
+  "common.imprint.title": "Künye",
+  "common.imprint.scopeTitle": "Kapsam:",
+  "common.imprint.scopeTextBeforePortal": "Bu künye, sağlayıcı portalı",
+  "common.imprint.scopeTextAfterPortal": "(lisans alan/partner alanı) için şu adreste geçerlidir:",
+  "common.imprint.scopePublicWebsite": "Kamusal web sitesinin (rezervasyon/müşteri sayfaları) ayrı yasal sayfaları olabilir.",
+  "common.imprint.section.ddg": "§ 5 DDG uyarınca bilgiler",
+  "common.imprint.section.contact": "İletişim",
+  "common.imprint.section.liabilityContent": "İçerikten sorumluluk",
+  "common.imprint.section.externalLinks": "Harici bağlantılar",
+  "common.imprint.section.copyright": "Telif hakkı",
+  "common.imprint.section.privacy": "Gizlilik",
+  "common.imprint.section.consumerDispute": "Tüketici uyuşmazlık çözümü / evrensel tahkim kurulu",
+  "common.imprint.phone": "Telefon",
+  "common.imprint.email": "E-posta",
+  "common.imprint.liabilityContentText": "Bu portalın içeriğini özenle hazırlıyoruz. Buna rağmen tüm bilgilerin her zaman eksiksiz, doğru veya güncel olduğunu garanti edemeyiz. Kendi içeriklerimizden yasal düzenlemeler çerçevesinde sorumluyuz. İletilen veya depolanan üçüncü taraf bilgilerini genel olarak izleme yükümlülüğümüz yoktur.",
+  "common.imprint.externalLinksText": "Bu portal, üçüncü tarafların harici sayfalarına bağlantılar içerebilir. Bu içerikler üzerinde hiçbir etkimiz yoktur. Bu nedenle bunlar için sorumluluk kabul edemeyiz. Bağlantı verildiği anda yasa dışı bir içerik tespit edilmemiştir. Bağlantı verilen sayfanın sağlayıcısı ilgili içerikten sorumludur.",
+  "common.imprint.copyrightText": "Bu portalın metinleri, görselleri, grafikleri ve tasarımı telif hakkı ile korunmaktadır. Yasal sınırların dışındaki her türlü kullanım (ör. çoğaltma, düzenleme veya yayımlama) önceden onayımızı gerektirir. Üçüncü taraf içerikleri varsa buna göre işaretlenir; haklar ilgili hak sahiplerine aittir.",
+  "common.imprint.privacyTextBeforeLink": "Kişisel verilerin nasıl işlendiğine dair bilgileri",
+  "common.imprint.privacyPolicy": "Gizlilik Politikamızda",
+  "common.imprint.publicWebsite": "kamusal web sitesi",
+  "common.imprint.consumerDisputeText": "Bir tüketici tahkim kurulu önünde uyuşmazlık çözüm prosedürlerine katılmaya hazır ya da yükümlü değiliz."
+}

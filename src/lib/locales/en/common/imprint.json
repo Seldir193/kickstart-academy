@@ -1,0 +1,23 @@
+{
+  "common.imprint.title": "Imprint",
+  "common.imprint.scopeTitle": "Scope:",
+  "common.imprint.scopeTextBeforePortal": "This imprint applies to the provider portal",
+  "common.imprint.scopeTextAfterPortal": "(licensee/partner area) at",
+  "common.imprint.scopePublicWebsite": "The public website (booking/customer pages) may have its own legal pages.",
+  "common.imprint.section.ddg": "Information according to § 5 DDG",
+  "common.imprint.section.contact": "Contact",
+  "common.imprint.section.liabilityContent": "Liability for content",
+  "common.imprint.section.externalLinks": "External links",
+  "common.imprint.section.copyright": "Copyright",
+  "common.imprint.section.privacy": "Privacy",
+  "common.imprint.section.consumerDispute": "Consumer dispute resolution / universal arbitration board",
+  "common.imprint.phone": "Phone",
+  "common.imprint.email": "Email",
+  "common.imprint.liabilityContentText": "We maintain the content of this portal carefully. Nevertheless, we cannot guarantee that all information is always complete, correct, or up to date. We are responsible for our own content in accordance with the legal provisions. There is no general obligation to monitor transmitted or stored third-party information.",
+  "common.imprint.externalLinksText": "This portal may contain links to external third-party websites. We have no influence over their content. Therefore, we cannot accept any responsibility for them. At the time of linking, no illegal content was recognizable. The respective provider of the linked page is always responsible.",
+  "common.imprint.copyrightText": "Texts, images, graphics, and the design of this portal are protected by copyright. Any use beyond the limits permitted by law (e.g. reproduction, editing, or publication) requires our prior consent. Third-party content is marked as such where applicable; the rights remain with the respective rights holders.",
+  "common.imprint.privacyTextBeforeLink": "Information on how we handle personal data can be found in our",
+  "common.imprint.privacyPolicy": "Privacy Policy",
+  "common.imprint.publicWebsite": "public website",
+  "common.imprint.consumerDisputeText": "We are neither willing nor obliged to participate in dispute resolution proceedings before a consumer arbitration board."
+}

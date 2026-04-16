@@ -1,0 +1,23 @@
+{
+  "common.imprint.title": "Impressum",
+  "common.imprint.scopeTitle": "Geltungsbereich:",
+  "common.imprint.scopeTextBeforePortal": "Dieses Impressum gilt für das Anbieter-Portal",
+  "common.imprint.scopeTextAfterPortal": "(Lizenznehmer/Partner-Bereich) unter",
+  "common.imprint.scopePublicWebsite": "Die öffentliche Website (Buchungs-/Kundenseiten) hat ggf. eigene rechtliche Seiten.",
+  "common.imprint.section.ddg": "Angaben gemäß § 5 DDG",
+  "common.imprint.section.contact": "Kontakt",
+  "common.imprint.section.liabilityContent": "Haftung für Inhalte",
+  "common.imprint.section.externalLinks": "Externe Links",
+  "common.imprint.section.copyright": "Urheberrecht",
+  "common.imprint.section.privacy": "Datenschutz",
+  "common.imprint.section.consumerDispute": "Verbraucherstreitbeilegung / Universalschlichtungsstelle",
+  "common.imprint.phone": "Telefon",
+  "common.imprint.email": "E-Mail",
+  "common.imprint.liabilityContentText": "Wir pflegen die Inhalte dieses Portals sorgfältig. Trotzdem können wir keine Gewähr dafür übernehmen, dass sämtliche Informationen jederzeit vollständig, korrekt oder aktuell sind. Für eigene Inhalte sind wir nach den gesetzlichen Vorschriften verantwortlich. Eine allgemeine Pflicht, übermittelte oder gespeicherte fremde Informationen zu überwachen, besteht nicht.",
+  "common.imprint.externalLinksText": "Dieses Portal kann Verknüpfungen zu externen Seiten Dritter enthalten. Auf deren Inhalte haben wir keinen Einfluss. Deshalb können wir hierfür keine Verantwortung übernehmen. Zum Zeitpunkt der Verlinkung waren keine rechtswidrigen Inhalte erkennbar. Verantwortlich ist jeweils der Anbieter der verlinkten Seite.",
+  "common.imprint.copyrightText": "Texte, Bilder, Grafiken und Gestaltung dieses Portals sind urheberrechtlich geschützt. Jede Nutzung außerhalb der gesetzlichen Schranken (z. B. Vervielfältigung, Bearbeitung oder Veröffentlichung) erfordert unsere vorherige Zustimmung. Inhalte von Dritten sind – sofern vorhanden – als solche gekennzeichnet; die Rechte liegen bei den jeweiligen Rechteinhabern.",
+  "common.imprint.privacyTextBeforeLink": "Hinweise zum Umgang mit personenbezogenen Daten findest du in unserer",
+  "common.imprint.privacyPolicy": "Datenschutzerklärung",
+  "common.imprint.publicWebsite": "öffentliche Website",
+  "common.imprint.consumerDisputeText": "Wir sind nicht bereit oder verpflichtet, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen."
+}
