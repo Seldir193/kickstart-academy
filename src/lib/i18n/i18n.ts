@@ -23,6 +23,7 @@ import deFooter from "../locales/de/common/footer.json";
 import deImprint from "../locales/de/common/imprint.json";
 import dePrivacy from "../locales/de/common/privacy.json";
 import deAgb from "../locales/de/common/agb.json";
+import deCoachDialog from "../locales/de/common/coach-dialog.json";
 
 import enCommonBase from "../locales/en/common/common.json";
 import enBookings from "../locales/en/common/bookings.json";
@@ -45,6 +46,7 @@ import enFooter from "../locales/en/common/footer.json";
 import enImprint from "../locales/en/common/imprint.json";
 import enPrivacy from "../locales/en/common/privacy.json";
 import enAgb from "../locales/en/common/agb.json";
+import enCoachDialog from "../locales/en/common/coach-dialog.json";
 
 import trCommonBase from "../locales/tr/common/common.json";
 import trBookings from "../locales/tr/common/bookings.json";
@@ -67,6 +69,7 @@ import trFooter from "../locales/tr/common/footer.json";
 import trImprint from "../locales/tr/common/imprint.json";
 import trPrivacy from "../locales/tr/common/privacy.json";
 import trAgb from "../locales/tr/common/agb.json";
+import trCoachDialog from "../locales/tr/common/coach-dialog.json";
 
 import deBook from "../locales/de/book.json";
 import enBook from "../locales/en/book.json";
@@ -97,6 +100,7 @@ const resources = {
       ...deImprint,
       ...dePrivacy,
       ...deAgb,
+      ...deCoachDialog,
     },
     book: deBook,
   },
@@ -123,6 +127,7 @@ const resources = {
       ...enImprint,
       ...enPrivacy,
       ...enAgb,
+      ...enCoachDialog,
     },
     book: enBook,
   },
@@ -149,6 +154,7 @@ const resources = {
       ...trImprint,
       ...trPrivacy,
       ...trAgb,
+      ...trCoachDialog,
     },
     book: trBook,
   },
