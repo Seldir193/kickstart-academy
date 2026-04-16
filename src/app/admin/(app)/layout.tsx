@@ -11,11 +11,7 @@ export default function AdminLayout({
   return (
     <>
       <HeaderServer />
-      {/* alter Wrapper wieder da */}
       <main className="container">{children}</main>
-      {/* <main className="site-main">
-        <div className="container">{children}</div>
-      </main> */}
       <Footer />
     </>
   );
