@@ -67,5 +67,10 @@
 
   "common.admin.members.dialog.confirmation": "Confirmation",
   "common.admin.members.dialog.details": "Details",
-  "common.admin.members.dialog.confirm": "Confirm"
+  "common.admin.members.dialog.confirm": "Confirm",
+
+  "common.admin.members.actions.reactivateMember": "Reactivate member",
+  "common.admin.members.actions.deactivateMember": "Deactivate member",
+
+  "common.admin.members.dialog.loginBlockedUntilReactivated": "Login will be blocked until reactivated."
 }

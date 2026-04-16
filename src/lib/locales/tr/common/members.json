@@ -67,5 +67,10 @@
 
   "common.admin.members.dialog.confirmation": "Onay",
   "common.admin.members.dialog.details": "Detaylar",
-  "common.admin.members.dialog.confirm": "Onayla"
+  "common.admin.members.dialog.confirm": "Onayla",
+
+  "common.admin.members.actions.reactivateMember": "Üyeyi yeniden etkinleştir",
+  "common.admin.members.actions.deactivateMember": "Üyeyi devre dışı bırak",
+
+  "common.admin.members.dialog.loginBlockedUntilReactivated": "Yeniden etkinleştirilene kadar giriş engellenir."
 }
