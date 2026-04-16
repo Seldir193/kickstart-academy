@@ -21,6 +21,7 @@ import deHome from "../locales/de/common/home.json";
 import deProfile from "../locales/de/common/profile.json";
 import deFooter from "../locales/de/common/footer.json";
 import deImprint from "../locales/de/common/imprint.json";
+import dePrivacy from "../locales/de/common/privacy.json";
 
 import enCommonBase from "../locales/en/common/common.json";
 import enBookings from "../locales/en/common/bookings.json";
@@ -41,6 +42,7 @@ import enHome from "../locales/en/common/home.json";
 import enProfile from "../locales/en/common/profile.json";
 import enFooter from "../locales/en/common/footer.json";
 import enImprint from "../locales/en/common/imprint.json";
+import enPrivacy from "../locales/en/common/privacy.json";
 
 import trCommonBase from "../locales/tr/common/common.json";
 import trBookings from "../locales/tr/common/bookings.json";
@@ -61,6 +63,7 @@ import trHome from "../locales/tr/common/home.json";
 import trProfile from "../locales/tr/common/profile.json";
 import trFooter from "../locales/tr/common/footer.json";
 import trImprint from "../locales/tr/common/imprint.json";
+import trPrivacy from "../locales/tr/common/privacy.json";
 
 import deBook from "../locales/de/book.json";
 import enBook from "../locales/en/book.json";
@@ -89,6 +92,7 @@ const resources = {
       ...deProfile,
       ...deFooter,
       ...deImprint,
+      ...dePrivacy,
     },
     book: deBook,
   },
@@ -113,6 +117,7 @@ const resources = {
       ...enProfile,
       ...enFooter,
       ...enImprint,
+      ...enPrivacy,
     },
     book: enBook,
   },
@@ -137,6 +142,7 @@ const resources = {
       ...trProfile,
       ...trFooter,
       ...trImprint,
+      ...trPrivacy,
     },
     book: trBook,
   },
