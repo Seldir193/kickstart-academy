@@ -2,10 +2,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { toastText } from "@/lib/toast-messages";
 
 type Props = { bookingId: string };
 
 export default function PayClient({ bookingId }: Props) {
+  const { t } = useTranslation();
   const [err, setErr] = useState("");
 
   useEffect(() => {
@@ -24,7 +27,9 @@ export default function PayClient({ bookingId }: Props) {
           bookingId,
           href: window.location.href,
         });
-        setErr("Missing bookingId.");
+        setErr(
+          toastText(t, "common.pay.missingBookingId", "Missing bookingId."),
+        );
         return;
       }
 
@@ -69,7 +74,10 @@ export default function PayClient({ bookingId }: Props) {
       }
 
       if (!r.ok || !d?.ok || !d?.url) {
-        const nextError = d?.error || d?.code || "Checkout failed.";
+        const nextError =
+          d?.error ||
+          d?.code ||
+          toastText(t, "common.pay.checkoutFailed", "Checkout failed.");
 
         console.log("[PayClient] stopping before redirect", {
           reason: nextError,
@@ -90,7 +98,10 @@ export default function PayClient({ bookingId }: Props) {
     }
 
     run().catch((e) => {
-      const nextError = e instanceof Error ? e.message : "Checkout failed.";
+      const nextError =
+        e instanceof Error
+          ? e.message
+          : toastText(t, "common.pay.checkoutFailed", "Checkout failed.");
 
       console.log("[PayClient] run failed", {
         error: nextError,
@@ -112,10 +123,10 @@ export default function PayClient({ bookingId }: Props) {
   return (
     <div className="min-h-[60vh] flex items-center justify-center p-6">
       <div className="max-w-md w-full">
-        <h1 className="text-xl font-bold mb-2">Zahlung wird vorbereitet…</h1>
-        <p className="opacity-80 mb-4">
-          Bitte nicht schließen. Du wirst gleich zu Stripe weitergeleitet.
-        </p>
+        <h1 className="text-xl font-bold mb-2">
+          {t("common.pay.preparingPayment")}
+        </h1>
+        <p className="opacity-80 mb-4">{t("common.pay.redirectNotice")}</p>
         {err ? (
           <div className="p-3 rounded-lg border border-red-300 text-red-700">
             {err}

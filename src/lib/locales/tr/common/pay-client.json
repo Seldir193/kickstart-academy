@@ -1,0 +1,6 @@
+{
+  "common.pay.preparingPayment": "Ödeme hazırlanıyor…",
+  "common.pay.redirectNotice": "Lütfen bu sayfayı kapatmayın. Kısa süre içinde Stripe'a yönlendirileceksiniz.",
+  "common.pay.missingBookingId": "bookingId eksik.",
+  "common.pay.checkoutFailed": "Ödeme işlemi başarısız oldu."
+}

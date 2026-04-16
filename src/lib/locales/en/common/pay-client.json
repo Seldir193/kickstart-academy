@@ -1,0 +1,6 @@
+{
+  "common.pay.preparingPayment": "Preparing payment…",
+  "common.pay.redirectNotice": "Please do not close this page. You will be redirected to Stripe shortly.",
+  "common.pay.missingBookingId": "Missing bookingId.",
+  "common.pay.checkoutFailed": "Checkout failed."
+}
