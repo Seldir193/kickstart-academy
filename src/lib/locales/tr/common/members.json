@@ -63,5 +63,9 @@
   "common.admin.members.info.avatar": "Avatar",
   "common.admin.members.info.avatarUrl": "Avatar URL",
   "common.admin.common.yes": "Evet",
-  "common.admin.common.no": "Hayır"
+  "common.admin.common.no": "Hayır",
+
+  "common.admin.members.dialog.confirmation": "Onay",
+  "common.admin.members.dialog.details": "Detaylar",
+  "common.admin.members.dialog.confirm": "Onayla"
 }

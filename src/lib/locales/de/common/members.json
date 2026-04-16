@@ -63,5 +63,9 @@
   "common.admin.members.info.avatar": "Avatar",
   "common.admin.members.info.avatarUrl": "Avatar-URL",
   "common.admin.common.yes": "Ja",
-  "common.admin.common.no": "Nein"
+  "common.admin.common.no": "Nein",
+
+  "common.admin.members.dialog.confirmation": "Bestätigung",
+  "common.admin.members.dialog.details": "Details",
+  "common.admin.members.dialog.confirm": "Bestätigen"
 }
