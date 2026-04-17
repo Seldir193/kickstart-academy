@@ -2,6 +2,9 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
+import type { TFunction } from "i18next";
+import { toastText } from "@/lib/toast-messages";
 import type {
   ContractDraft,
   ContractInitOk,
@@ -42,16 +45,18 @@ function emptyDraft(): ContractDraft {
   };
 }
 
-function errText(code: string) {
+function errText(code: string, t: TFunction) {
   if (code === "TOKEN_EXPIRED")
-    return "Der Link ist abgelaufen. Bitte fordere einen neuen Link an.";
+    return t("common.weeklyContract.error.tokenExpired");
   if (code === "TOKEN_NOT_FOUND")
-    return "Der Link ist ungültig. Bitte fordere einen neuen Link an.";
+    return t("common.weeklyContract.error.tokenNotFound");
   if (code === "SUBSCRIPTION_NOT_ALLOWED")
-    return "Du bist noch nicht zugelassen. Bitte warte auf die Freigabe.";
+    return t("common.weeklyContract.error.subscriptionNotAllowed");
   if (code === "SUBSCRIPTION_ALREADY_CREATED")
-    return "Das Abo wurde bereits gestartet. Bitte prüfe deine E-Mails.";
-  return code ? `Fehler: ${code}` : "Unbekannter Fehler.";
+    return t("common.weeklyContract.error.subscriptionAlreadyCreated");
+  return code
+    ? t("common.weeklyContract.error.withCode", { code })
+    : t("common.weeklyContract.error.unknown");
 }
 
 function normalizeDraft(base: ContractDraft) {
@@ -61,36 +66,49 @@ function normalizeDraft(base: ContractDraft) {
   return d;
 }
 
-function validateDraft(d: ContractDraft) {
+function validateDraft(d: ContractDraft, t: TFunction) {
   const errors: Record<string, string> = {};
   if (!safeText(d.parent.firstName))
-    errors.parentFirstName = "Bitte Vornamen angeben.";
+    errors.parentFirstName = t(
+      "common.weeklyContract.validation.parentFirstName",
+    );
   if (!safeText(d.parent.lastName))
-    errors.parentLastName = "Bitte Nachnamen angeben.";
+    errors.parentLastName = t(
+      "common.weeklyContract.validation.parentLastName",
+    );
   if (!safeText(d.parent.email) || !safeText(d.parent.email).includes("@"))
-    errors.parentEmail = "Bitte gültige E-Mail angeben.";
-  if (!safeText(d.address.street)) errors.street = "Bitte Straße angeben.";
+    errors.parentEmail = t("common.weeklyContract.validation.parentEmail");
+  if (!safeText(d.address.street))
+    errors.street = t("common.weeklyContract.validation.street");
   if (!safeText(d.address.houseNo))
-    errors.houseNo = "Bitte Hausnummer angeben.";
-  if (!safeText(d.address.zip)) errors.zip = "Bitte PLZ angeben.";
-  if (!safeText(d.address.city)) errors.city = "Bitte Ort angeben.";
+    errors.houseNo = t("common.weeklyContract.validation.houseNo");
+  if (!safeText(d.address.zip))
+    errors.zip = t("common.weeklyContract.validation.zip");
+  if (!safeText(d.address.city))
+    errors.city = t("common.weeklyContract.validation.city");
   if (!safeText(d.child.firstName))
-    errors.childFirstName = "Bitte Kind-Vorname angeben.";
+    errors.childFirstName = t(
+      "common.weeklyContract.validation.childFirstName",
+    );
   if (!safeText(d.child.lastName))
-    errors.childLastName = "Bitte Kind-Nachname angeben.";
+    errors.childLastName = t("common.weeklyContract.validation.childLastName");
   if (!safeText(d.child.birthDate))
-    errors.childBirthDate = "Bitte Geburtsdatum angeben.";
-  if (!d.consents.acceptAgb) errors.acceptAgb = "AGB müssen akzeptiert werden.";
+    errors.childBirthDate = t(
+      "common.weeklyContract.validation.childBirthDate",
+    );
+  if (!d.consents.acceptAgb)
+    errors.acceptAgb = t("common.weeklyContract.validation.acceptAgb");
   if (!d.consents.acceptPrivacy)
-    errors.acceptPrivacy = "Datenschutz muss akzeptiert werden.";
+    errors.acceptPrivacy = t("common.weeklyContract.validation.acceptPrivacy");
   if (!safeText(d.signatureName))
-    errors.signatureName = "Bitte Namen als Unterschrift eintragen.";
+    errors.signatureName = t("common.weeklyContract.validation.signatureName");
   return errors;
 }
 
 type Props = { token: string };
 
 export default function ContractClient({ token }: Props) {
+  const { t } = useTranslation();
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [fatal, setFatal] = useState("");
@@ -192,12 +210,18 @@ export default function ContractClient({ token }: Props) {
     if (submitting) return;
 
     if (!hasRead) {
-      setFatal("Bitte lies den Vertrag vollständig (bis zum Ende scrollen).");
+      setFatal(
+        toastText(
+          t,
+          "common.weeklyContract.readRequired",
+          "Bitte lies den Vertrag vollständig (bis zum Ende scrollen).",
+        ),
+      );
       return;
     }
 
     const norm = normalizeDraft(draft);
-    const v = validateDraft(norm);
+    const v = validateDraft(norm, t);
     setErrors(v);
     if (Object.keys(v).length) return;
 
@@ -233,7 +257,7 @@ export default function ContractClient({ token }: Props) {
           <div className="weekly-contract-loadingRow">
             <span className="weekly-contract-spinner" aria-hidden="true" />
             <span className="weekly-contract-loadingText">
-              Vertrag wird geladen…
+              {t("common.weeklyContract.loading")}
             </span>
           </div>
         </section>
@@ -251,13 +275,15 @@ export default function ContractClient({ token }: Props) {
     return (
       <main className="weekly-contract-page">
         <section className="weekly-contract-card">
-          <h1 className="weekly-contract-title">Vertrag</h1>
+          <h1 className="weekly-contract-title">
+            {t("common.weeklyContract.title")}
+          </h1>
           <p className="weekly-contract-error">
-            {isKnownCode ? errText(fatal) : fatal}
+            {isKnownCode ? errText(fatal, t) : fatal}
           </p>
           <div className="weekly-contract-actions">
             <a className="weekly-contract-primary" href={websiteUrl()}>
-              Zur Website
+              {t("common.weeklyContract.toWebsite")}
             </a>
           </div>
         </section>
@@ -269,30 +295,38 @@ export default function ContractClient({ token }: Props) {
     <main className="weekly-contract-page">
       <section className="weekly-contract-card">
         <h1 className="weekly-contract-title">
-          DFS – Vertrag digital unterschreiben
+          {t("common.weeklyContract.titleMain")}
         </h1>
 
         <div className="weekly-contract-summary">
           <div className="weekly-contract-summaryRow">
-            <span className="weekly-contract-label">Programm</span>
+            <span className="weekly-contract-label">
+              {t("common.weeklyContract.summary.program")}
+            </span>
             <span className="weekly-contract-value">
               {init?.offerTitle || ""}
             </span>
           </div>
           <div className="weekly-contract-summaryRow">
-            <span className="weekly-contract-label">Ort</span>
+            <span className="weekly-contract-label">
+              {t("common.weeklyContract.summary.location")}
+            </span>
             <span className="weekly-contract-value">
               {init?.location || ""}
             </span>
           </div>
           <div className="weekly-contract-summaryRow">
-            <span className="weekly-contract-label">Start</span>
+            <span className="weekly-contract-label">
+              {t("common.weeklyContract.summary.start")}
+            </span>
             <span className="weekly-contract-value">
               {init?.startDate || ""}
             </span>
           </div>
           <div className="weekly-contract-summaryRow">
-            <span className="weekly-contract-label">Zeit</span>
+            <span className="weekly-contract-label">
+              {t("common.weeklyContract.summary.time")}
+            </span>
             <span className="weekly-contract-value">
               {[init?.dayLabel, init?.timeLabel].filter(Boolean).join(" · ")}
             </span>
@@ -301,11 +335,13 @@ export default function ContractClient({ token }: Props) {
 
         <div className="weekly-contract-grid">
           <div className="weekly-contract-block">
-            <h2 className="weekly-contract-subtitle">Angaben zum Kind</h2>
+            <h2 className="weekly-contract-subtitle">
+              {t("common.weeklyContract.childSection")}
+            </h2>
 
             <div className="weekly-contract-row">
               <label className="weekly-contract-field">
-                <span>Vorname</span>
+                <span>{t("common.weeklyContract.fields.firstName")}</span>
                 <input
                   value={draft.child.firstName}
                   onChange={(e) => setField("child.firstName", e.target.value)}
@@ -316,7 +352,7 @@ export default function ContractClient({ token }: Props) {
               </label>
 
               <label className="weekly-contract-field">
-                <span>Nachname</span>
+                <span>{t("common.weeklyContract.fields.lastName")}</span>
                 <input
                   value={draft.child.lastName}
                   onChange={(e) => setField("child.lastName", e.target.value)}
@@ -326,7 +362,7 @@ export default function ContractClient({ token }: Props) {
             </div>
 
             <label className="weekly-contract-field">
-              <span>Geburtsdatum</span>
+              <span>{t("common.weeklyContract.fields.birthDate")}</span>
               <input
                 type="date"
                 value={draft.child.birthDate}
@@ -337,11 +373,13 @@ export default function ContractClient({ token }: Props) {
           </div>
 
           <div className="weekly-contract-block">
-            <h2 className="weekly-contract-subtitle">Angaben zu Eltern</h2>
+            <h2 className="weekly-contract-subtitle">
+              {t("common.weeklyContract.parentSection")}
+            </h2>
 
             <div className="weekly-contract-row">
               <label className="weekly-contract-field">
-                <span>Anrede</span>
+                <span>{t("common.weeklyContract.fields.salutation")}</span>
                 <input
                   value={draft.parent.salutation}
                   onChange={(e) =>
@@ -351,7 +389,7 @@ export default function ContractClient({ token }: Props) {
               </label>
 
               <label className="weekly-contract-field">
-                <span>Telefon</span>
+                <span>{t("common.weeklyContract.fields.phone")}</span>
                 <input
                   value={draft.parent.phone}
                   onChange={(e) => setField("parent.phone", e.target.value)}
@@ -361,7 +399,7 @@ export default function ContractClient({ token }: Props) {
 
             <div className="weekly-contract-row">
               <label className="weekly-contract-field">
-                <span>Vorname</span>
+                <span>{t("common.weeklyContract.fields.firstName")}</span>
                 <input
                   value={draft.parent.firstName}
                   onChange={(e) => setField("parent.firstName", e.target.value)}
@@ -372,7 +410,7 @@ export default function ContractClient({ token }: Props) {
               </label>
 
               <label className="weekly-contract-field">
-                <span>Nachname</span>
+                <span>{t("common.weeklyContract.fields.lastName")}</span>
                 <input
                   value={draft.parent.lastName}
                   onChange={(e) => setField("parent.lastName", e.target.value)}
@@ -384,7 +422,7 @@ export default function ContractClient({ token }: Props) {
             </div>
 
             <label className="weekly-contract-field">
-              <span>E-Mail</span>
+              <span>{t("common.weeklyContract.fields.email")}</span>
               <input
                 value={draft.parent.email}
                 onChange={(e) => setField("parent.email", e.target.value)}
@@ -394,7 +432,7 @@ export default function ContractClient({ token }: Props) {
 
             <div className="weekly-contract-row">
               <label className="weekly-contract-field">
-                <span>Straße</span>
+                <span>{t("common.weeklyContract.fields.street")}</span>
                 <input
                   value={draft.address.street}
                   onChange={(e) => setField("address.street", e.target.value)}
@@ -403,7 +441,7 @@ export default function ContractClient({ token }: Props) {
               </label>
 
               <label className="weekly-contract-field">
-                <span>Hausnr.</span>
+                <span>{t("common.weeklyContract.fields.houseNo")}</span>
                 <input
                   value={draft.address.houseNo}
                   onChange={(e) => setField("address.houseNo", e.target.value)}
@@ -414,7 +452,7 @@ export default function ContractClient({ token }: Props) {
 
             <div className="weekly-contract-row">
               <label className="weekly-contract-field">
-                <span>PLZ</span>
+                <span>{t("common.weeklyContract.fields.zip")}</span>
                 <input
                   value={draft.address.zip}
                   onChange={(e) => setField("address.zip", e.target.value)}
@@ -423,7 +461,7 @@ export default function ContractClient({ token }: Props) {
               </label>
 
               <label className="weekly-contract-field">
-                <span>Ort</span>
+                <span>{t("common.weeklyContract.fields.city")}</span>
                 <input
                   value={draft.address.city}
                   onChange={(e) => setField("address.city", e.target.value)}
@@ -440,10 +478,10 @@ export default function ContractClient({ token }: Props) {
             type="button"
             onClick={openPreview}
           >
-            Vertrag als PDF ansehen
+            {t("common.weeklyContract.previewPdf")}
           </button>
           <span className="weekly-contract-docHint">
-            Bitte lies den Vertrag vollständig. Danach kannst du unterschreiben.
+            {t("common.weeklyContract.readHint")}
           </span>
         </div>
 
@@ -452,16 +490,20 @@ export default function ContractClient({ token }: Props) {
             ref={contractRef}
             className="weekly-contract-contractText"
             onScroll={onContractScroll}
-            aria-label="Vertragstext"
+            aria-label={t("common.weeklyContract.contractTextAria")}
             dangerouslySetInnerHTML={{ __html: weeklyContractHtml }}
           />
           <div className="weekly-contract-readState">
-            {hasRead ? "Gelesen ✓" : "Bitte bis zum Ende scrollen"}
+            {hasRead
+              ? t("common.weeklyContract.readDone")
+              : t("common.weeklyContract.readPending")}
           </div>
         </div>
 
         <div className="weekly-contract-consents">
-          <h2 className="weekly-contract-subtitle">Einwilligungen</h2>
+          <h2 className="weekly-contract-subtitle">
+            {t("common.weeklyContract.consentsTitle")}
+          </h2>
 
           <div className="weekly-contract-checkRow">
             <label className="weekly-contract-check">
@@ -472,14 +514,14 @@ export default function ContractClient({ token }: Props) {
                   setField("consents.acceptAgb", e.target.checked)
                 }
               />
-              <span>Ich akzeptiere die Teilnahmebedingungen (AGB).</span>
+              <span>{t("common.weeklyContract.consents.acceptAgb")}</span>
             </label>
             <button
               type="button"
               className="weekly-contract-docLink"
               onClick={() => openDoc("agb")}
             >
-              Anzeigen
+              {t("common.weeklyContract.showDoc")}
             </button>
           </div>
           {errors.acceptAgb ? (
@@ -495,14 +537,14 @@ export default function ContractClient({ token }: Props) {
                   setField("consents.acceptPrivacy", e.target.checked)
                 }
               />
-              <span>Ich akzeptiere die Datenschutzhinweise.</span>
+              <span>{t("common.weeklyContract.consents.acceptPrivacy")}</span>
             </label>
             <button
               type="button"
               className="weekly-contract-docLink"
               onClick={() => openDoc("privacy")}
             >
-              Anzeigen
+              {t("common.weeklyContract.showDoc")}
             </button>
           </div>
           {errors.acceptPrivacy ? (
@@ -518,27 +560,24 @@ export default function ContractClient({ token }: Props) {
                   setField("consents.consentPhotoVideo", e.target.checked)
                 }
               />
-              <span>
-                Ich erteile die Einwilligung zur Veröffentlichung von Foto/Video
-                (optional).
-              </span>
+              <span>{t("common.weeklyContract.consents.photoVideo")}</span>
             </label>
             <button
               type="button"
               className="weekly-contract-docLink"
               onClick={() => openDoc("photo")}
             >
-              Anzeigen
+              {t("common.weeklyContract.showDoc")}
             </button>
           </div>
 
           <div className="weekly-contract-sign">
             <label className="weekly-contract-field">
-              <span>Unterschrift (Name eintippen)</span>
+              <span>{t("common.weeklyContract.signatureLabel")}</span>
               <input
                 value={draft.signatureName}
                 onChange={(e) => setField("signatureName", e.target.value)}
-                placeholder="Vorname Nachname"
+                placeholder={t("common.weeklyContract.signaturePlaceholder")}
               />
               {errors.signatureName ? <em>{errors.signatureName}</em> : null}
             </label>
@@ -550,19 +589,17 @@ export default function ContractClient({ token }: Props) {
               disabled={submitting || !hasRead}
             >
               {submitting
-                ? "Bitte warten…"
-                : "Vertrag unterschreiben & Abo starten"}
+                ? t("common.weeklyContract.pleaseWait")
+                : t("common.weeklyContract.submit")}
             </button>
 
             <p className="weekly-contract-note">
-              Nach dem Unterschreiben wirst du zur sicheren Zahlung (SEPA oder
-              Karte) bei Stripe weitergeleitet.
+              {t("common.weeklyContract.paymentHint")}
             </p>
 
             {!hasRead ? (
               <p className="weekly-contract-note weekly-contract-noteWarn">
-                Bitte lies den Vertrag vollständig (bis zum Ende scrollen),
-                bevor du unterschreibst.
+                {t("common.weeklyContract.readBeforeSubmit")}
               </p>
             ) : null}
           </div>

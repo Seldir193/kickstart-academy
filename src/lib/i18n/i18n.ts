@@ -25,7 +25,8 @@ import dePrivacy from "../locales/de/common/privacy.json";
 import deAgb from "../locales/de/common/agb.json";
 import deCoachDialog from "../locales/de/common/coach-dialog.json";
 import dePayClient from "../locales/de/common/pay-client.json";
-import deWeekly from "../locales/de/common/weekly.json";
+import deWeeklyCancel from "../locales/de/common/weekly-cancel.json";
+import deWeeklyContract from "../locales/de/common/weekly-contract.json";
 
 import enCommonBase from "../locales/en/common/common.json";
 import enBookings from "../locales/en/common/bookings.json";
@@ -50,7 +51,8 @@ import enPrivacy from "../locales/en/common/privacy.json";
 import enAgb from "../locales/en/common/agb.json";
 import enCoachDialog from "../locales/en/common/coach-dialog.json";
 import enPayClient from "../locales/en/common/pay-client.json";
-import enWeekly from "../locales/en/common/weekly.json";
+import enWeeklyCancel from "../locales/en/common/weekly-cancel.json";
+import enWeeklyContract from "../locales/en/common/weekly-contract.json";
 
 import trCommonBase from "../locales/tr/common/common.json";
 import trBookings from "../locales/tr/common/bookings.json";
@@ -75,7 +77,8 @@ import trPrivacy from "../locales/tr/common/privacy.json";
 import trAgb from "../locales/tr/common/agb.json";
 import trCoachDialog from "../locales/tr/common/coach-dialog.json";
 import trPayClient from "../locales/tr/common/pay-client.json";
-import trWeekly from "../locales/tr/common/weekly.json";
+import trWeeklyCancel from "../locales/tr/common/weekly-cancel.json";
+import trWeeklyContract from "../locales/tr/common/weekly-contract.json";
 
 import deBook from "../locales/de/book.json";
 import enBook from "../locales/en/book.json";
@@ -108,7 +111,8 @@ const resources = {
       ...deAgb,
       ...deCoachDialog,
       ...dePayClient,
-      ...deWeekly,
+      ...deWeeklyCancel,
+      ...deWeeklyContract,
     },
     book: deBook,
   },
@@ -137,7 +141,8 @@ const resources = {
       ...enAgb,
       ...enCoachDialog,
       ...enPayClient,
-      ...enWeekly,
+      ...enWeeklyCancel,
+      ...enWeeklyContract,
     },
     book: enBook,
   },
@@ -166,7 +171,8 @@ const resources = {
       ...trAgb,
       ...trCoachDialog,
       ...trPayClient,
-      ...trWeekly,
+      ...trWeeklyCancel,
+      ...trWeeklyContract,
     },
     book: trBook,
   },
