@@ -3,7 +3,11 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
-//import "./weekly-cancel.css";
+
+import { useTranslation } from "react-i18next";
+import { toastText } from "@/lib/toast-messages";
+import type { TFunction } from "i18next";
+import { formatDateOnly } from "@/app/lib/date-format";
 
 type ViewState = "loading" | "success" | "error";
 
@@ -15,17 +19,11 @@ type CancelResponse = {
   cancelEffectiveAt?: string | null;
 };
 
-function formatDate(value?: string | null) {
-  if (!value) return "";
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return "";
-  return new Intl.DateTimeFormat("de-DE").format(date);
-}
-
 export default function WeeklyCancelPage() {
+  const { t, i18n } = useTranslation();
   const searchParams = useSearchParams();
   const [state, setState] = useState<ViewState>("loading");
-  const [message, setMessage] = useState("Kündigung wird verarbeitet ...");
+  const [message, setMessage] = useState(t("common.weeklyCancel.processing"));
   const [endDate, setEndDate] = useState("");
 
   const token = useMemo(() => {
@@ -50,7 +48,13 @@ export default function WeeklyCancelPage() {
         handleResponse(response.ok, data);
       } catch {
         setState("error");
-        setMessage("Serverfehler bei der Kündigung.");
+        setMessage(
+          toastText(
+            t,
+            "common.weeklyCancel.serverError",
+            "Serverfehler bei der Kündigung.",
+          ),
+        );
       }
     }
 
@@ -59,16 +63,26 @@ export default function WeeklyCancelPage() {
 
   function handleMissingToken() {
     setState("error");
-    setMessage("Der Kündigungslink ist ungültig.");
+    setMessage(
+      toastText(
+        t,
+        "common.weeklyCancel.invalidLink",
+        "Der Kündigungslink ist ungültig.",
+      ),
+    );
   }
 
   function handleResponse(ok: boolean, data: CancelResponse) {
     const nextMessage =
       data?.message ||
       data?.error ||
-      "Die Kündigung konnte nicht verarbeitet werden.";
+      toastText(
+        t,
+        "common.weeklyCancel.processingFailed",
+        "Die Kündigung konnte nicht verarbeitet werden.",
+      );
 
-    setEndDate(formatDate(data?.cancelEffectiveAt));
+    setEndDate(formatDateOnly(data?.cancelEffectiveAt, i18n.language));
 
     if (!ok || !data?.ok) {
       setState("error");
@@ -80,8 +94,8 @@ export default function WeeklyCancelPage() {
     setMessage(nextMessage);
   }
 
-  const title = getTitle(state);
-  const badgeText = getBadgeText(state);
+  const title = getTitle(state, t);
+  const badgeText = getBadgeText(state, t);
   const contentClass = `weekly-cancel__message weekly-cancel__message--${state}`;
 
   return (
@@ -95,15 +109,17 @@ export default function WeeklyCancelPage() {
 
         {endDate ? (
           <div className="weekly-cancel__info">
-            <div className="weekly-cancel__info-label">Vertragsende</div>
+            <div className="weekly-cancel__info-label">
+              {t("common.weeklyCancel.contractEnd")}
+            </div>
             <div className="weekly-cancel__info-value">{endDate}</div>
           </div>
         ) : null}
 
         <div className="weekly-cancel__note">
           {state === "success"
-            ? "Die Kündigung wurde gespeichert. Deine Bestätigung erhältst du zusätzlich per E-Mail."
-            : "Bei Fragen kannst du dich jederzeit an unser Team wenden."}
+            ? t("common.weeklyCancel.successNote")
+            : t("common.weeklyCancel.defaultNote")}
         </div>
 
         <div className="weekly-cancel__actions">
@@ -111,14 +127,14 @@ export default function WeeklyCancelPage() {
             className="weekly-cancel__button weekly-cancel__button--primary"
             href="https://www.dortmunder-fussball-schule.de"
           >
-            Zur Startseite
+            {t("common.weeklyCancel.home")}
           </a>
 
           <a
             className="weekly-cancel__button weekly-cancel__button--secondary"
             href="http://localhost/wordpress/?page_id=143"
           >
-            Kontakt
+            {t("common.weeklyCancel.contact")}
           </a>
         </div>
       </div>
@@ -126,14 +142,14 @@ export default function WeeklyCancelPage() {
   );
 }
 
-function getTitle(state: ViewState) {
-  if (state === "loading") return "Abo kündigen";
-  if (state === "success") return "Kündigung erfolgreich";
-  return "Kündigung nicht möglich";
+function getTitle(state: ViewState, t: TFunction) {
+  if (state === "loading") return t("common.weeklyCancel.titleLoading");
+  if (state === "success") return t("common.weeklyCancel.titleSuccess");
+  return t("common.weeklyCancel.titleError");
 }
 
-function getBadgeText(state: ViewState) {
-  if (state === "loading") return "Bitte warten";
-  if (state === "success") return "Erfolgreich";
-  return "Hinweis";
+function getBadgeText(state: ViewState, t: TFunction) {
+  if (state === "loading") return t("common.weeklyCancel.badgeLoading");
+  if (state === "success") return t("common.weeklyCancel.badgeSuccess");
+  return t("common.weeklyCancel.badgeError");
 }

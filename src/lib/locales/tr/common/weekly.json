@@ -1,0 +1,17 @@
+{
+  "common.weeklyCancel.processing": "İptal işlemi yapılıyor ...",
+  "common.weeklyCancel.serverError": "İptal sırasında sunucu hatası oluştu.",
+  "common.weeklyCancel.invalidLink": "İptal bağlantısı geçersiz.",
+  "common.weeklyCancel.processingFailed": "İptal işlemi gerçekleştirilemedi.",
+  "common.weeklyCancel.contractEnd": "Sözleşme bitiş tarihi",
+  "common.weeklyCancel.successNote": "İptal kaydedildi. Onayı ayrıca e-posta ile alacaksınız.",
+  "common.weeklyCancel.defaultNote": "Sorularınız varsa ekibimizle her zaman iletişime geçebilirsiniz.",
+  "common.weeklyCancel.home": "Ana sayfaya git",
+  "common.weeklyCancel.contact": "İletişim",
+  "common.weeklyCancel.titleLoading": "Aboneliği iptal et",
+  "common.weeklyCancel.titleSuccess": "İptal başarılı",
+  "common.weeklyCancel.titleError": "İptal mümkün değil",
+  "common.weeklyCancel.badgeLoading": "Lütfen bekleyin",
+  "common.weeklyCancel.badgeSuccess": "Başarılı",
+  "common.weeklyCancel.badgeError": "Bilgi"
+}

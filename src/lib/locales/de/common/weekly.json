@@ -1,0 +1,17 @@
+{
+  "common.weeklyCancel.processing": "Kündigung wird verarbeitet ...",
+  "common.weeklyCancel.serverError": "Serverfehler bei der Kündigung.",
+  "common.weeklyCancel.invalidLink": "Der Kündigungslink ist ungültig.",
+  "common.weeklyCancel.processingFailed": "Die Kündigung konnte nicht verarbeitet werden.",
+  "common.weeklyCancel.contractEnd": "Vertragsende",
+  "common.weeklyCancel.successNote": "Die Kündigung wurde gespeichert. Deine Bestätigung erhältst du zusätzlich per E-Mail.",
+  "common.weeklyCancel.defaultNote": "Bei Fragen kannst du dich jederzeit an unser Team wenden.",
+  "common.weeklyCancel.home": "Zur Startseite",
+  "common.weeklyCancel.contact": "Kontakt",
+  "common.weeklyCancel.titleLoading": "Abo kündigen",
+  "common.weeklyCancel.titleSuccess": "Kündigung erfolgreich",
+  "common.weeklyCancel.titleError": "Kündigung nicht möglich",
+  "common.weeklyCancel.badgeLoading": "Bitte warten",
+  "common.weeklyCancel.badgeSuccess": "Erfolgreich",
+  "common.weeklyCancel.badgeError": "Hinweis"
+}

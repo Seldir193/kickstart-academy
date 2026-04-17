@@ -1,0 +1,17 @@
+{
+  "common.weeklyCancel.processing": "Cancellation is being processed ...",
+  "common.weeklyCancel.serverError": "Server error during cancellation.",
+  "common.weeklyCancel.invalidLink": "The cancellation link is invalid.",
+  "common.weeklyCancel.processingFailed": "The cancellation could not be processed.",
+  "common.weeklyCancel.contractEnd": "Contract end",
+  "common.weeklyCancel.successNote": "The cancellation has been saved. You will also receive your confirmation by email.",
+  "common.weeklyCancel.defaultNote": "If you have any questions, you can contact our team at any time.",
+  "common.weeklyCancel.home": "Go to homepage",
+  "common.weeklyCancel.contact": "Contact",
+  "common.weeklyCancel.titleLoading": "Cancel subscription",
+  "common.weeklyCancel.titleSuccess": "Cancellation successful",
+  "common.weeklyCancel.titleError": "Cancellation not possible",
+  "common.weeklyCancel.badgeLoading": "Please wait",
+  "common.weeklyCancel.badgeSuccess": "Successful",
+  "common.weeklyCancel.badgeError": "Notice"
+}
