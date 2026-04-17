@@ -5,7 +5,6 @@ import { useTranslation } from "react-i18next";
 import type { TFunction } from "i18next";
 import { toastText } from "@/lib/toast-messages";
 import { submitRevokeByToken, type RevokeResponse } from "./revokeApi";
-//import "../../styles/weekly-revoke.scss";
 
 type ViewState = "loading" | "success" | "error";
 
@@ -50,7 +49,13 @@ function labelForMode(mode: string, t: TFunction) {
 export default function RevokeClient({ token }: Props) {
   const { t } = useTranslation();
   const [state, setState] = useState<ViewState>("loading");
-  const [message, setMessage] = useState(t("common.weeklyRevoke.processing"));
+  const [message, setMessage] = useState("");
+
+  useEffect(() => {
+    if (state === "loading") {
+      setMessage(t("common.weeklyRevoke.processing"));
+    }
+  }, [state, t]);
   const [mode, setMode] = useState("");
   const [docNo, setDocNo] = useState("");
 
@@ -100,7 +105,7 @@ export default function RevokeClient({ token }: Props) {
     return () => {
       alive = false;
     };
-  }, [token]);
+  }, [token, t]);
 
   const title = getTitle(state, t);
   const badgeText = getBadgeText(state, t);
