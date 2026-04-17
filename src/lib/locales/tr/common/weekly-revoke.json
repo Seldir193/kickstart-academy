@@ -1,0 +1,22 @@
+{
+  "common.weeklyRevoke.processing": "Cayma işlemi yapılıyor ...",
+  "common.weeklyRevoke.invalidLink": "Cayma bağlantısı geçersiz.",
+  "common.weeklyRevoke.processingFailed": "Cayma işlemi gerçekleştirilemedi.",
+  "common.weeklyRevoke.titleLoading": "Sözleşmeden cay",
+  "common.weeklyRevoke.titleSuccess": "Cayma başarılı",
+  "common.weeklyRevoke.titleError": "Cayma mümkün değil",
+  "common.weeklyRevoke.badgeLoading": "Lütfen bekleyin",
+  "common.weeklyRevoke.badgeSuccess": "Başarılı",
+  "common.weeklyRevoke.badgeError": "Bilgi",
+  "common.weeklyRevoke.processingLabel": "İşlem",
+  "common.weeklyRevoke.stornoNo": "İptal no.",
+  "common.weeklyRevoke.creditNoteNo": "Alacak notu no.",
+  "common.weeklyRevoke.successNote": "İşlem tamamlandı. Ek bilgileri ayrıca e-posta ile alacaksınız.",
+  "common.weeklyRevoke.defaultNote": "Sorularınız varsa ekibimizle her zaman iletişime geçebilirsiniz.",
+  "common.weeklyRevoke.home": "Ana sayfaya git",
+  "common.weeklyRevoke.contact": "İletişim",
+  "common.weeklyRevoke.mode.weeklyRefund": "Abonelikten cayma + iade",
+  "common.weeklyRevoke.mode.oneTimeRefund": "Tek seferlik ödemeden cayma + iade",
+  "common.weeklyRevoke.mode.unpaidStorno": "Ödenmemiş rezervasyon iptal edildi",
+  "common.weeklyRevoke.mode.default": "İşlendi"
+}

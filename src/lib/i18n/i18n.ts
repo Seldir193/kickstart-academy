@@ -27,6 +27,7 @@ import deCoachDialog from "../locales/de/common/coach-dialog.json";
 import dePayClient from "../locales/de/common/pay-client.json";
 import deWeeklyCancel from "../locales/de/common/weekly-cancel.json";
 import deWeeklyContract from "../locales/de/common/weekly-contract.json";
+import deWeeklyRevoke from "../locales/de/common/weekly-revoke.json";
 
 import enCommonBase from "../locales/en/common/common.json";
 import enBookings from "../locales/en/common/bookings.json";
@@ -53,6 +54,7 @@ import enCoachDialog from "../locales/en/common/coach-dialog.json";
 import enPayClient from "../locales/en/common/pay-client.json";
 import enWeeklyCancel from "../locales/en/common/weekly-cancel.json";
 import enWeeklyContract from "../locales/en/common/weekly-contract.json";
+import enWeeklyRevoke from "../locales/en/common/weekly-revoke.json";
 
 import trCommonBase from "../locales/tr/common/common.json";
 import trBookings from "../locales/tr/common/bookings.json";
@@ -79,6 +81,7 @@ import trCoachDialog from "../locales/tr/common/coach-dialog.json";
 import trPayClient from "../locales/tr/common/pay-client.json";
 import trWeeklyCancel from "../locales/tr/common/weekly-cancel.json";
 import trWeeklyContract from "../locales/tr/common/weekly-contract.json";
+import trWeeklyRevoke from "../locales/tr/common/weekly-revoke.json";
 
 import deBook from "../locales/de/book.json";
 import enBook from "../locales/en/book.json";
@@ -113,6 +116,7 @@ const resources = {
       ...dePayClient,
       ...deWeeklyCancel,
       ...deWeeklyContract,
+      ...deWeeklyRevoke,
     },
     book: deBook,
   },
@@ -143,6 +147,7 @@ const resources = {
       ...enPayClient,
       ...enWeeklyCancel,
       ...enWeeklyContract,
+      ...enWeeklyRevoke,
     },
     book: enBook,
   },
@@ -173,6 +178,7 @@ const resources = {
       ...trPayClient,
       ...trWeeklyCancel,
       ...trWeeklyContract,
+      ...trWeeklyRevoke,
     },
     book: trBook,
   },

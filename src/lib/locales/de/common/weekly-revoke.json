@@ -1,0 +1,22 @@
+{
+  "common.weeklyRevoke.processing": "Widerruf wird verarbeitet ...",
+  "common.weeklyRevoke.invalidLink": "Der Widerrufslink ist ungültig.",
+  "common.weeklyRevoke.processingFailed": "Der Widerruf konnte nicht verarbeitet werden.",
+  "common.weeklyRevoke.titleLoading": "Vertrag widerrufen",
+  "common.weeklyRevoke.titleSuccess": "Widerruf erfolgreich",
+  "common.weeklyRevoke.titleError": "Widerruf nicht möglich",
+  "common.weeklyRevoke.badgeLoading": "Bitte warten",
+  "common.weeklyRevoke.badgeSuccess": "Erfolgreich",
+  "common.weeklyRevoke.badgeError": "Hinweis",
+  "common.weeklyRevoke.processingLabel": "Verarbeitung",
+  "common.weeklyRevoke.stornoNo": "Storno-Nr.",
+  "common.weeklyRevoke.creditNoteNo": "Gutschrift-Nr.",
+  "common.weeklyRevoke.successNote": "Die Verarbeitung wurde abgeschlossen. Weitere Informationen erhältst du zusätzlich per E-Mail.",
+  "common.weeklyRevoke.defaultNote": "Bei Fragen kannst du dich jederzeit an unser Team wenden.",
+  "common.weeklyRevoke.home": "Zur Startseite",
+  "common.weeklyRevoke.contact": "Kontakt",
+  "common.weeklyRevoke.mode.weeklyRefund": "Abo widerrufen + Rückerstattung",
+  "common.weeklyRevoke.mode.oneTimeRefund": "Einmalzahlung widerrufen + Rückerstattung",
+  "common.weeklyRevoke.mode.unpaidStorno": "Unbezahlte Buchung storniert",
+  "common.weeklyRevoke.mode.default": "Verarbeitet"
+}

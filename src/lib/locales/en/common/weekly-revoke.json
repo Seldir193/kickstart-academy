@@ -1,0 +1,22 @@
+{
+  "common.weeklyRevoke.processing": "Withdrawal is being processed ...",
+  "common.weeklyRevoke.invalidLink": "The withdrawal link is invalid.",
+  "common.weeklyRevoke.processingFailed": "The withdrawal could not be processed.",
+  "common.weeklyRevoke.titleLoading": "Withdraw contract",
+  "common.weeklyRevoke.titleSuccess": "Withdrawal successful",
+  "common.weeklyRevoke.titleError": "Withdrawal not possible",
+  "common.weeklyRevoke.badgeLoading": "Please wait",
+  "common.weeklyRevoke.badgeSuccess": "Successful",
+  "common.weeklyRevoke.badgeError": "Notice",
+  "common.weeklyRevoke.processingLabel": "Processing",
+  "common.weeklyRevoke.stornoNo": "Cancellation no.",
+  "common.weeklyRevoke.creditNoteNo": "Credit note no.",
+  "common.weeklyRevoke.successNote": "Processing has been completed. You will receive further information by email.",
+  "common.weeklyRevoke.defaultNote": "If you have any questions, you can contact our team at any time.",
+  "common.weeklyRevoke.home": "Go to homepage",
+  "common.weeklyRevoke.contact": "Contact",
+  "common.weeklyRevoke.mode.weeklyRefund": "Subscription withdrawn + refund",
+  "common.weeklyRevoke.mode.oneTimeRefund": "One-time payment withdrawn + refund",
+  "common.weeklyRevoke.mode.unpaidStorno": "Unpaid booking canceled",
+  "common.weeklyRevoke.mode.default": "Processed"
+}

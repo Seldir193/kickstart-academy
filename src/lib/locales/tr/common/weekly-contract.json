@@ -60,5 +60,7 @@
 
   "common.weeklyContract.docs.agbHtml": "<h2>Katılım şartları (AGB)</h2><p>AGB metniniz buraya gelecek. İstediğiniz kadar uzun olabilir.</p>",
   "common.weeklyContract.docs.privacyHtml": "<h2>Gizlilik bilgilendirmesi</h2><p>Gizlilik metniniz buraya gelecek. İstediğiniz kadar uzun olabilir.</p>",
-  "common.weeklyContract.docs.photoHtml": "<h2>Fotoğraf/video onayı</h2><p>Fotoğraf/video onay metni buraya gelecek (isteğe bağlı).</p>"
+  "common.weeklyContract.docs.photoHtml": "<h2>Fotoğraf/video onayı</h2><p>Fotoğraf/video onay metni buraya gelecek (isteğe bağlı).</p>",
+
+  "common.weeklyContract.docs.notFoundHtml": "<h2>Belge bulunamadı</h2>"
 }

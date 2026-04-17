@@ -1,8 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import type { TFunction } from "i18next";
+import { toastText } from "@/lib/toast-messages";
 import { submitRevokeByToken, type RevokeResponse } from "./revokeApi";
-import "../../styles/weekly-revoke.scss";
+//import "../../styles/weekly-revoke.scss";
 
 type ViewState = "loading" | "success" | "error";
 
@@ -22,36 +25,45 @@ function contactUrl() {
   return "http://localhost/wordpress/?page_id=143";
 }
 
-function getTitle(state: ViewState) {
-  if (state === "loading") return "Vertrag widerrufen";
-  if (state === "success") return "Widerruf erfolgreich";
-  return "Widerruf nicht möglich";
+function getTitle(state: ViewState, t: TFunction) {
+  if (state === "loading") return t("common.weeklyRevoke.titleLoading");
+  if (state === "success") return t("common.weeklyRevoke.titleSuccess");
+  return t("common.weeklyRevoke.titleError");
 }
 
-function getBadgeText(state: ViewState) {
-  if (state === "loading") return "Bitte warten";
-  if (state === "success") return "Erfolgreich";
-  return "Hinweis";
+function getBadgeText(state: ViewState, t: TFunction) {
+  if (state === "loading") return t("common.weeklyRevoke.badgeLoading");
+  if (state === "success") return t("common.weeklyRevoke.badgeSuccess");
+  return t("common.weeklyRevoke.badgeError");
 }
 
-function labelForMode(mode: string) {
-  if (mode === "weekly_refund") return "Abo widerrufen + Rückerstattung";
+function labelForMode(mode: string, t: TFunction) {
+  if (mode === "weekly_refund")
+    return t("common.weeklyRevoke.mode.weeklyRefund");
   if (mode === "one_time_refund")
-    return "Einmalzahlung widerrufen + Rückerstattung";
-  if (mode === "unpaid_storno") return "Unbezahlte Buchung storniert";
-  return mode || "Verarbeitet";
+    return t("common.weeklyRevoke.mode.oneTimeRefund");
+  if (mode === "unpaid_storno")
+    return t("common.weeklyRevoke.mode.unpaidStorno");
+  return mode || t("common.weeklyRevoke.mode.default");
 }
 
 export default function RevokeClient({ token }: Props) {
+  const { t } = useTranslation();
   const [state, setState] = useState<ViewState>("loading");
-  const [message, setMessage] = useState("Widerruf wird verarbeitet ...");
+  const [message, setMessage] = useState(t("common.weeklyRevoke.processing"));
   const [mode, setMode] = useState("");
   const [docNo, setDocNo] = useState("");
 
   useEffect(() => {
     if (!safeText(token)) {
       setState("error");
-      setMessage("Der Widerrufslink ist ungültig.");
+      setMessage(
+        toastText(
+          t,
+          "common.weeklyRevoke.invalidLink",
+          "Der Widerrufslink ist ungültig.",
+        ),
+      );
       return;
     }
 
@@ -64,7 +76,11 @@ export default function RevokeClient({ token }: Props) {
       const nextMessage =
         data?.message ||
         data?.error ||
-        "Der Widerruf konnte nicht verarbeitet werden.";
+        toastText(
+          t,
+          "common.weeklyRevoke.processingFailed",
+          "Der Widerruf konnte nicht verarbeitet werden.",
+        );
 
       setMode(safeText(data?.mode));
       setDocNo(safeText(data?.creditNoteNo || data?.stornoNo));
@@ -86,8 +102,8 @@ export default function RevokeClient({ token }: Props) {
     };
   }, [token]);
 
-  const title = getTitle(state);
-  const badgeText = getBadgeText(state);
+  const title = getTitle(state, t);
+  const badgeText = getBadgeText(state, t);
   const contentClass = `weekly-revoke__message weekly-revoke__message--${state}`;
 
   return (
@@ -101,9 +117,11 @@ export default function RevokeClient({ token }: Props) {
 
         {state === "success" && mode ? (
           <div className="weekly-revoke__info">
-            <div className="weekly-revoke__info-label">Verarbeitung</div>
+            <div className="weekly-revoke__info-label">
+              {t("common.weeklyRevoke.processingLabel")}
+            </div>
             <div className="weekly-revoke__info-value">
-              {labelForMode(mode)}
+              {labelForMode(mode, t)}
             </div>
           </div>
         ) : null}
@@ -111,7 +129,9 @@ export default function RevokeClient({ token }: Props) {
         {state === "success" && docNo ? (
           <div className="weekly-revoke__info">
             <div className="weekly-revoke__info-label">
-              {mode === "unpaid_storno" ? "Storno-Nr." : "Gutschrift-Nr."}
+              {mode === "unpaid_storno"
+                ? t("common.weeklyRevoke.stornoNo")
+                : t("common.weeklyRevoke.creditNoteNo")}
             </div>
             <div className="weekly-revoke__info-value">{docNo}</div>
           </div>
@@ -119,8 +139,8 @@ export default function RevokeClient({ token }: Props) {
 
         <div className="weekly-revoke__note">
           {state === "success"
-            ? "Die Verarbeitung wurde abgeschlossen. Weitere Informationen erhältst du zusätzlich per E-Mail."
-            : "Bei Fragen kannst du dich jederzeit an unser Team wenden."}
+            ? t("common.weeklyRevoke.successNote")
+            : t("common.weeklyRevoke.defaultNote")}
         </div>
 
         <div className="weekly-revoke__actions">
@@ -128,14 +148,14 @@ export default function RevokeClient({ token }: Props) {
             className="weekly-revoke__button weekly-revoke__button--primary"
             href="https://dortmunder-fussballschule.de"
           >
-            Zur Startseite
+            {t("common.weeklyRevoke.home")}
           </a>
 
           <a
             className="weekly-revoke__button weekly-revoke__button--secondary"
             href={contactUrl()}
           >
-            Kontakt
+            {t("common.weeklyRevoke.contact")}
           </a>
         </div>
       </div>

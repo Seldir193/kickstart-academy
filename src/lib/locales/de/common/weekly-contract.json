@@ -60,5 +60,7 @@
 
   "common.weeklyContract.docs.agbHtml": "<h2>Teilnahmebedingungen (AGB)</h2><p>Hier kommt dein AGB-Text rein. Du kannst ihn beliebig lang machen.</p>",
   "common.weeklyContract.docs.privacyHtml": "<h2>Datenschutzhinweise</h2><p>Hier kommt dein Datenschutz-Text rein. Du kannst ihn beliebig lang machen.</p>",
-  "common.weeklyContract.docs.photoHtml": "<h2>Foto/Video Einwilligung</h2><p>Hier kommt der Text zur Foto/Video Einwilligung rein (optional).</p>"
+  "common.weeklyContract.docs.photoHtml": "<h2>Foto/Video Einwilligung</h2><p>Hier kommt der Text zur Foto/Video Einwilligung rein (optional).</p>",
+
+  "common.weeklyContract.docs.notFoundHtml": "<h2>Dokument nicht gefunden</h2>"
 }
