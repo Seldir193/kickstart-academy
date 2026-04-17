@@ -11,7 +11,7 @@ import type {
   ContractSubmitOk,
 } from "./contractTypes";
 import { fetchContractInit, submitContractAndCheckout } from "./contractApi";
-import { weeklyContractHtml, weeklyContractVersion } from "./contractContent";
+import { weeklyContractVersion } from "./contractContent";
 
 function safeText(v: unknown) {
   return String(v ?? "").trim();
@@ -234,7 +234,7 @@ export default function ContractClient({ token }: Props) {
       returnTo,
       contractDoc: {
         version: weeklyContractVersion,
-        contentHtml: weeklyContractHtml,
+        contentHtml: t("common.weeklyContract.contractHtml"),
       },
     } as any);
 
@@ -491,7 +491,9 @@ export default function ContractClient({ token }: Props) {
             className="weekly-contract-contractText"
             onScroll={onContractScroll}
             aria-label={t("common.weeklyContract.contractTextAria")}
-            dangerouslySetInnerHTML={{ __html: weeklyContractHtml }}
+            dangerouslySetInnerHTML={{
+              __html: t("common.weeklyContract.contractHtml"),
+            }}
           />
           <div className="weekly-contract-readState">
             {hasRead
