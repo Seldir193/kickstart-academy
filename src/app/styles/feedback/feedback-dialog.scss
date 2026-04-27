@@ -1,0 +1,116 @@
+.feedback-dialog {
+  &.dialog-backdrop {
+    inset: var(--header-height, 64px) 0 0 0;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 24px 20px 20px;
+    overflow-y: auto;
+    box-sizing: border-box;
+  }
+
+  .feedback-dialog__dialog {
+    width: min(860px, calc(100% - 40px));
+    max-width: 860px;
+    max-height: calc(100dvh - var(--header-height, 64px) - 48px);
+    grid-template-rows: auto minmax(0, 1fr) auto;
+  }
+
+  .feedback-dialog__head {
+    justify-content: flex-start;
+  }
+
+  .feedback-dialog__head-left {
+    min-width: 0;
+  }
+
+  .feedback-dialog__head-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-left: auto;
+    flex: 0 0 auto;
+  }
+
+  .feedback-dialog__title {
+    word-break: break-word;
+    overflow-wrap: anywhere;
+  }
+
+  .feedback-dialog__subtitle {
+    max-width: 62ch;
+    word-break: break-word;
+  }
+
+  .feedback-dialog__body {
+    overflow: auto;
+    min-height: 0;
+    max-height: calc(100dvh - var(--header-height, 64px) - 210px);
+    padding-top: 14px;
+    padding-bottom: 14px;
+    overscroll-behavior: contain;
+  }
+
+  .feedback-dialog__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px 14px;
+    align-items: start;
+  }
+
+  .feedback-dialog__grid .field {
+    min-width: 0;
+  }
+
+  .feedback-dialog__file {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .feedback-dialog__file-name {
+    flex: 1;
+    min-width: 220px;
+    padding: 10px 12px;
+    border: 1px solid rgba(0, 0, 0, 0.14);
+    border-radius: 12px;
+    background: #fff;
+    font-size: 14px;
+    line-height: 1.2;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    opacity: 0.85;
+  }
+
+  .feedback-dialog__file-name.is-empty {
+    opacity: 0.65;
+  }
+
+  .feedback-dialog__footer {
+    justify-content: flex-end;
+    flex: 0 0 auto;
+  }
+
+  textarea.input {
+    min-height: 92px;
+    resize: vertical;
+  }
+}
+
+@media (max-width: 860px) {
+  .feedback-dialog {
+    .feedback-dialog__grid {
+      grid-template-columns: 1fr;
+    }
+
+    .feedback-dialog__dialog {
+      width: min(100%, calc(100% - 24px));
+    }
+
+    .feedback-dialog__file-name {
+      min-width: 0;
+      width: 100%;
+    }
+  }
+}

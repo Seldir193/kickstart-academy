@@ -39,5 +39,9 @@
   "admin.feedbacks.updatedAt": "Aktualisiert am",
   "admin.feedbacks.confirmDeleteTitle": "Feedback löschen?",
   "admin.feedbacks.confirmDeleteText": "Dieses Feedback wird dauerhaft entfernt.",
-  "admin.feedbacks.confirmDeleteAction": "Feedback löschen"
+  "admin.feedbacks.confirmDeleteAction": "Feedback löschen",
+
+  "admin.feedbacks.saving": "Wird gespeichert...",
+  "admin.feedbacks.chooseFile": "Datei auswählen",
+  "admin.feedbacks.noFileSelected": "Keine Datei ausgewählt"
 }

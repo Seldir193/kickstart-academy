@@ -79,6 +79,8 @@
 @use "./notice-toast.scss" as *;
 @use "./language-dropdown.scss" as *;
 
+@use "./feedback/feedback-dialog.scss" as *;
+
 root {
   --brand-navy: #0f1e2e;
   --text: #222;

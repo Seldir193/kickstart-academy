@@ -306,9 +306,10 @@ export default function Header({ isAdminInitial = false }: Props) {
       "/admin/invoices",
       "/admin/customers",
       "/admin/news",
+      "/admin/feedbacks",
       "/admin/bookings",
       "/admin/franchise-locations",
-       "/admin/franchise-locations",
+       
     ]);
 
     const filtered = adminNav.filter((i) => {

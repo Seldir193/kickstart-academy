@@ -39,5 +39,9 @@
   "admin.feedbacks.updatedAt": "Updated at",
   "admin.feedbacks.confirmDeleteTitle": "Delete feedback?",
   "admin.feedbacks.confirmDeleteText": "This feedback will be permanently removed.",
-  "admin.feedbacks.confirmDeleteAction": "Delete feedback"
+  "admin.feedbacks.confirmDeleteAction": "Delete feedback",
+
+   "admin.feedbacks.saving": "Saving...",
+  "admin.feedbacks.chooseFile": "Choose file",
+  "admin.feedbacks.noFileSelected": "No file selected"
 }

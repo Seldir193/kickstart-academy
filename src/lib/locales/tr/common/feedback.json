@@ -39,5 +39,9 @@
   "admin.feedbacks.updatedAt": "Güncellenme tarihi",
   "admin.feedbacks.confirmDeleteTitle": "Geri bildirim silinsin mi?",
   "admin.feedbacks.confirmDeleteText": "Bu geri bildirim kalıcı olarak silinecek.",
-  "admin.feedbacks.confirmDeleteAction": "Geri bildirimi sil"
+  "admin.feedbacks.confirmDeleteAction": "Geri bildirimi sil",
+
+  "admin.feedbacks.saving": "Kaydediliyor...",
+  "admin.feedbacks.chooseFile": "Dosya seç",
+  "admin.feedbacks.noFileSelected": "Dosya seçilmedi"
 }
