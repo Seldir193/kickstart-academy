@@ -78,10 +78,11 @@
 @use "./customers.scss" as *;
 @use "./notice-toast.scss" as *;
 @use "./language-dropdown.scss" as *;
-
 @use "./feedback/feedback-dialog.scss" as *;
+@use "./feedback/feedback-admin.scss" as *;
 
-root {
+
+:root {
   --brand-navy: #0f1e2e;
   --text: #222;
   /* optional, falls du auch --brand brauchst */
