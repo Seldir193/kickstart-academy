@@ -43,5 +43,49 @@
 
   "admin.feedbacks.saving": "Kaydediliyor...",
   "admin.feedbacks.chooseFile": "Dosya seç",
-  "admin.feedbacks.noFileSelected": "Dosya seçilmedi"
+  "admin.feedbacks.noFileSelected": "Dosya seçilmedi",
+
+  "admin.feedbacks.deleteDialogTitle": "Geri bildirimi sil",
+  "admin.feedbacks.deleteDialogText": "{{feedbackName}} tarafından verilen geri bildirimi gerçekten silmek istiyor musun?",
+
+  "admin.feedbacks.table.image": "Görsel",
+  "admin.feedbacks.table.author": "İsim",
+  "admin.feedbacks.table.category": "Kategori",
+  "admin.feedbacks.table.order": "Sıra",
+  "admin.feedbacks.table.status": "Durum",
+  "admin.feedbacks.table.updated": "Güncellendi",
+  "admin.feedbacks.table.actions": "İşlem",
+  "admin.feedbacks.noImage": "Görsel yok",
+
+  "admin.feedbacks.pagination.previousPage": "Önceki sayfa",
+  "admin.feedbacks.pagination.nextPage": "Sonraki sayfa",
+  "admin.feedbacks.bulk.select": "Geri bildirimleri seç",
+  "admin.feedbacks.bulk.selected": "seçildi",
+  "admin.feedbacks.bulk.selectAll": "Tümünü seç",
+  "admin.feedbacks.bulk.clearSelection": "Seçimi temizle",
+  "admin.feedbacks.bulk.delete": "Sil",
+  "admin.feedbacks.bulk.cancel": "İptal",
+
+    "admin.feedbacks.search.placeholder": "İsim, kategori, metin ara...",
+  "admin.feedbacks.filters.all": "Tümü",
+  "admin.feedbacks.filters.categoryAria": "Geri bildirim kategorisini filtrele",
+  "admin.feedbacks.filters.sortAria": "Geri bildirimi sırala",
+  "admin.feedbacks.sort.newest": "En yeni önce",
+  "admin.feedbacks.sort.oldest": "En eski önce",
+  "admin.feedbacks.table.image": "Görsel",
+  "admin.feedbacks.table.author": "İsim",
+  "admin.feedbacks.table.category": "Kategori",
+  "admin.feedbacks.table.order": "Sıra",
+  "admin.feedbacks.table.status": "Durum",
+  "admin.feedbacks.table.updated": "Güncellendi",
+  "admin.feedbacks.table.actions": "İşlem",
+  "admin.feedbacks.noImage": "Görsel yok",
+  "admin.feedbacks.pagination.previousPage": "Önceki sayfa",
+  "admin.feedbacks.pagination.nextPage": "Sonraki sayfa",
+
+
+  "admin.feedbacks.sort.aToZ": "A–Z",
+  "admin.feedbacks.sort.zToA": "Z–A",
+
+  "admin.feedbacks.bulk.deactivate": "Pasif yap"
 }
