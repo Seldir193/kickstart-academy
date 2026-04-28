@@ -39,5 +39,7 @@
   "admin.partners.sort.zToA": "Z-A",
   "admin.partners.filter.all": "Tümü",
   "admin.partners.pagination.previousPage": "Önceki sayfa",
-  "admin.partners.pagination.nextPage": "Sonraki sayfa"
+  "admin.partners.pagination.nextPage": "Sonraki sayfa",
+
+  "nav.admin.partners": "Partnerler"
 }

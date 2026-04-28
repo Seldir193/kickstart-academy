@@ -39,5 +39,6 @@
   "admin.partners.sort.zToA": "Z-A",
   "admin.partners.filter.all": "All",
   "admin.partners.pagination.previousPage": "Previous page",
-  "admin.partners.pagination.nextPage": "Next page"
+  "admin.partners.pagination.nextPage": "Next page",
+  "nav.admin.partners": "Partners"
 }
