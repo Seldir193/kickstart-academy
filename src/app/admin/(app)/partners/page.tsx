@@ -113,6 +113,8 @@ export default function PartnersAdminPage() {
           onEdit={page.openEdit}
           onDelete={setDeleteTarget}
           onToggle={page.toggleActive}
+          onBulkDelete={page.removeMany}
+          onBulkDeactivate={page.deactivateMany}
         />
       </main>
 

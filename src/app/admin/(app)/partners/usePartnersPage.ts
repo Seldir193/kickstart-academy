@@ -115,6 +115,24 @@ export function usePartnersPage() {
     await refreshPartners();
   }
 
+  async function removeMany(items: Partner[]) {
+    await runMutationTask(
+      async () => removeSelectedPartners(items),
+      "errorDelete",
+    );
+  }
+
+  async function removeSelectedPartners(items: Partner[]) {
+    await Promise.all(items.map(removePartnerByItem));
+    await refreshPartners();
+  }
+
+  async function removePartnerByItem(item: Partner) {
+    const id = getPartnerId(item);
+    if (!id) return;
+    await deletePartner(id);
+  }
+
   async function toggleActive(item: Partner) {
     const id = getPartnerId(item);
     if (!id) return;
@@ -125,6 +143,24 @@ export function usePartnersPage() {
     const id = getPartnerId(item);
     await updatePartner(id, { ...item, isActive: !item.isActive });
     await refreshPartners();
+  }
+
+  async function deactivateMany(items: Partner[]) {
+    await runMutationTask(
+      async () => deactivateSelectedPartners(items),
+      "errorSave",
+    );
+  }
+
+  async function deactivateSelectedPartners(items: Partner[]) {
+    await Promise.all(items.map(deactivatePartnerByItem));
+    await refreshPartners();
+  }
+
+  async function deactivatePartnerByItem(item: Partner) {
+    const id = getPartnerId(item);
+    if (!id) return;
+    await updatePartner(id, { ...item, isActive: false });
   }
 
   async function uploadLogo(file: File) {
@@ -148,7 +184,9 @@ export function usePartnersPage() {
     closeDialog,
     save,
     remove,
+    removeMany,
     toggleActive,
+    deactivateMany,
     uploadLogo,
   };
 }

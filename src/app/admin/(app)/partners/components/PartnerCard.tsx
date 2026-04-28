@@ -5,15 +5,17 @@ import { useTranslation } from "react-i18next";
 import type { Partner } from "../types";
 import { getPartnerId } from "../helpers";
 import { formatDateOnly } from "../../feedbacks/utils";
-
 import PartnerStatusBadge from "./PartnerStatusBadge";
 
 type Props = {
   item: Partner;
   busyItemId: string;
+  selectMode: boolean;
+  selected: boolean;
   onEdit: (item: Partner) => void;
   onDelete: (item: Partner) => void;
   onToggle: (item: Partner) => void;
+  onSelect: (id: string) => void;
 };
 
 type ActionProps = {
@@ -30,12 +32,13 @@ export default function PartnerCard(props: Props) {
 
   return (
     <li
-      className="list__item chip news-list__row partner-admin__row-item is-fullhover is-interactive"
+      className={getRowClass(props)}
       role="button"
       tabIndex={0}
       aria-label={props.item.name || "Partner"}
-      onClick={() => props.onEdit(props.item)}
-      onKeyDown={(event) => activateRow(event, () => props.onEdit(props.item))}
+      aria-pressed={props.selectMode ? props.selected : undefined}
+      onClick={() => handleRowClick(props, id)}
+      onKeyDown={(event) => activateRow(event, () => handleRowClick(props, id))}
     >
       <PartnerPreview logoUrl={props.item.logoUrl} />
       <PartnerName item={props.item} />
@@ -103,8 +106,6 @@ function PartnerCardActions(props: ActionProps) {
   return (
     <div className="news-list__cell partner-admin__actions">
       <PartnerEditButton {...props} />
-      <PartnerToggleButton {...props} />
-      <PartnerDeleteButton {...props} />
     </div>
   );
 }
@@ -130,47 +131,20 @@ function PartnerEditButton(props: ActionProps) {
   );
 }
 
-function PartnerToggleButton(props: ActionProps) {
-  const { t } = useTranslation();
-  const label = props.item.isActive
-    ? t("admin.partners.inactive")
-    : t("admin.partners.active");
+function getRowClass(props: Props) {
+  const selected = props.selected ? " is-selected" : "";
+  const selectMode = props.selectMode ? " is-selectmode" : "";
 
-  function handleClick() {
-    if (props.isBusy) return;
-    props.onToggle(props.item);
-  }
-
-  return (
-    <button
-      className="btn-ghost"
-      type="button"
-      aria-disabled={props.isBusy}
-      onClick={(event) => runAction(event, handleClick)}
-    >
-      {label}
-    </button>
-  );
+  return `list__item chip news-list__row partner-admin__row-item is-fullhover is-interactive${selected}${selectMode}`;
 }
 
-function PartnerDeleteButton(props: ActionProps) {
-  const { t } = useTranslation();
-
-  function handleClick() {
-    if (props.isBusy) return;
-    props.onDelete(props.item);
+function handleRowClick(props: Props, id: string) {
+  if (props.selectMode) {
+    props.onSelect(id);
+    return;
   }
 
-  return (
-    <button
-      className="btn btn--danger"
-      type="button"
-      aria-disabled={props.isBusy}
-      onClick={(event) => runAction(event, handleClick)}
-    >
-      {t("admin.partners.delete")}
-    </button>
-  );
+  props.onEdit(props.item);
 }
 
 function openPartnerEdit(props: ActionProps) {

@@ -40,5 +40,13 @@
   "admin.partners.filter.all": "All",
   "admin.partners.pagination.previousPage": "Previous page",
   "admin.partners.pagination.nextPage": "Next page",
-  "nav.admin.partners": "Partners"
+  "nav.admin.partners": "Partners",
+
+  "admin.partners.bulk.select": "Select",
+  "admin.partners.bulk.selected": "selected",
+  "admin.partners.bulk.selectAll": "Select all",
+  "admin.partners.bulk.clearSelection": "Clear selection",
+  "admin.partners.bulk.deactivate": "Deactivate",
+  "admin.partners.bulk.delete": "Delete",
+  "admin.partners.bulk.cancel": "Cancel"
 }

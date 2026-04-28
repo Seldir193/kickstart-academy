@@ -41,5 +41,13 @@
   "admin.partners.pagination.previousPage": "Önceki sayfa",
   "admin.partners.pagination.nextPage": "Sonraki sayfa",
 
-  "nav.admin.partners": "Partnerler"
+  "nav.admin.partners": "Partnerler",
+
+  "admin.partners.bulk.select": "Seç",
+  "admin.partners.bulk.selected": "seçildi",
+  "admin.partners.bulk.selectAll": "Tümünü seç",
+  "admin.partners.bulk.clearSelection": "Seçimi temizle",
+  "admin.partners.bulk.deactivate": "Pasifleştir",
+  "admin.partners.bulk.delete": "Sil",
+  "admin.partners.bulk.cancel": "İptal"
 }
