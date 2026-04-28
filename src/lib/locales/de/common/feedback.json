@@ -43,5 +43,51 @@
 
   "admin.feedbacks.saving": "Wird gespeichert...",
   "admin.feedbacks.chooseFile": "Datei auswählen",
-  "admin.feedbacks.noFileSelected": "Keine Datei ausgewählt"
+  "admin.feedbacks.noFileSelected": "Keine Datei ausgewählt",
+
+  "admin.feedbacks.deleteDialogTitle": "Feedback löschen",
+  "admin.feedbacks.deleteDialogText": "Möchtest du das Feedback von {{feedbackName}} wirklich löschen?",
+  "admin.feedbacks.table.image": "Bild",
+  "admin.feedbacks.table.author": "Name",
+  "admin.feedbacks.table.category": "Kategorie",
+  "admin.feedbacks.table.order": "Reihenfolge",
+  "admin.feedbacks.table.status": "Status",
+  "admin.feedbacks.table.updated": "Aktualisiert",
+  "admin.feedbacks.table.actions": "Aktion",
+  "admin.feedbacks.noImage": "Kein Bild",
+
+  "admin.feedbacks.pagination.previousPage": "Vorherige Seite",
+  "admin.feedbacks.pagination.nextPage": "Nächste Seite",
+  "admin.feedbacks.bulk.select": "Feedbacks auswählen",
+  "admin.feedbacks.bulk.selected": "ausgewählt",
+  "admin.feedbacks.bulk.selectAll": "Alle auswählen",
+  "admin.feedbacks.bulk.clearSelection": "Auswahl aufheben",
+  "admin.feedbacks.bulk.delete": "Löschen",
+  "admin.feedbacks.bulk.cancel": "Abbrechen",
+
+  "admin.feedbacks.search.placeholder": "Name, Kategorie, Text suchen...",
+  "admin.feedbacks.filters.all": "Alle",
+  "admin.feedbacks.filters.categoryAria": "Feedback-Kategorie filtern",
+  "admin.feedbacks.filters.sortAria": "Feedback sortieren",
+  "admin.feedbacks.sort.newest": "Neueste zuerst",
+  "admin.feedbacks.sort.oldest": "Älteste zuerst",
+  "admin.feedbacks.table.image": "Bild",
+  "admin.feedbacks.table.author": "Name",
+  "admin.feedbacks.table.category": "Kategorie",
+  "admin.feedbacks.table.order": "Reihenfolge",
+  "admin.feedbacks.table.status": "Status",
+  "admin.feedbacks.table.updated": "Aktualisiert",
+  "admin.feedbacks.table.actions": "Aktion",
+  "admin.feedbacks.noImage": "Kein Bild",
+  "admin.feedbacks.pagination.previousPage": "Vorherige Seite",
+  "admin.feedbacks.pagination.nextPage": "Nächste Seite",
+
+  "admin.feedbacks.sort.aToZ": "A–Z",
+  "admin.feedbacks.sort.zToA": "Z–A",
+
+  "admin.feedbacks.bulk.deactivate": "Inaktiv stellen",
+
+  "admin.feedbacks.errorDuplicate": "Dieses Feedback wurde bereits angelegt."
+
+
 }
