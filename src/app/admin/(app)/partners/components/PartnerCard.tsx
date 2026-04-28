@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 import type { Partner } from "../types";
 import { getPartnerId } from "../helpers";
 import { formatDateOnly } from "../../feedbacks/utils";
+
 import PartnerStatusBadge from "./PartnerStatusBadge";
 
 type Props = {
