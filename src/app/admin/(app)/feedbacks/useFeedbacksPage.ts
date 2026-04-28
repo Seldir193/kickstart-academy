@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { toastErrorMessage, toastText } from "@/lib/toast-messages";
 import type { Feedback } from "./types";
 import {
   createFeedback,
@@ -8,34 +9,65 @@ import {
   updateFeedback,
   uploadFeedbackImage,
 } from "./api";
-import { cloneFeedback, getFeedbackId, sortFeedbacks } from "./helpers";
+import {
+  cloneFeedback,
+  getFeedbackId,
+  isDuplicateFeedback,
+  sortFeedbacks,
+} from "./helpers";
 
 export type FeedbackDialogMode = "create" | "edit";
 
 export function useFeedbacksPage() {
   const { t } = useTranslation();
   const [items, setItems] = useState<Feedback[]>([]);
-  const [busy, setBusy] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [busyItemId, setBusyItemId] = useState("");
   const [error, setError] = useState("");
   const [dialogMode, setDialogMode] = useState<FeedbackDialogMode | null>(null);
   const [dialogItem, setDialogItem] = useState<Feedback | null>(null);
 
   const sortedItems = useMemo(() => sortFeedbacks(items), [items]);
 
-  async function load() {
-    await runTask(async () => setItems(await fetchFeedbacks()), "errorLoad");
+  async function refreshFeedbacks() {
+    setItems(await fetchFeedbacks());
   }
 
-  async function runTask(task: () => Promise<void>, key: string) {
+  async function runLoadingTask(task: () => Promise<void>, errorKey: string) {
     setError("");
-    setBusy(true);
+    setLoading(true);
+
     try {
       await task();
-    } catch (err) {
-      setError(err instanceof Error ? err.message : t(`admin.feedbacks.${key}`));
+    } catch (error) {
+      setError(getTaskErrorMessage(error, errorKey));
     } finally {
-      setBusy(false);
+      setLoading(false);
     }
+  }
+
+  async function runMutationTask(
+    task: () => Promise<void>,
+    errorKey: string,
+    itemId = "",
+  ) {
+    setError("");
+    setSaving(true);
+    setBusyItemId(itemId);
+
+    try {
+      await task();
+    } catch (error) {
+      setError(getTaskErrorMessage(error, errorKey));
+    } finally {
+      setSaving(false);
+      setBusyItemId("");
+    }
+  }
+
+  function getTaskErrorMessage(error: unknown, errorKey: string) {
+    return toastErrorMessage(t, error, `admin.feedbacks.${errorKey}`);
   }
 
   function openCreate() {
@@ -53,32 +85,83 @@ export function useFeedbacksPage() {
     setDialogMode(null);
   }
 
-  async function save(item: Feedback) {
-    await runTask(async () => saveFeedback(item), "errorSave");
-  }
+async function save(item: Feedback) {
+  validateUniqueFeedback(item);
+
+  const id = getFeedbackId(item);
+  await runMutationTask(async () => saveFeedback(item), "errorSave", id);
+}
+
+function validateUniqueFeedback(item: Feedback) {
+  if (!isDuplicateFeedback(items, item)) return;
+  throw new Error(toastText(t, "admin.feedbacks.errorDuplicate"));
+}
 
   async function saveFeedback(item: Feedback) {
     const id = getFeedbackId(item);
     if (id) await updateFeedback(id, item);
     else await createFeedback(item);
-    await load();
+    await refreshFeedbacks();
     closeDialog();
   }
 
   async function remove(item: Feedback) {
     const id = getFeedbackId(item);
-    if (!id || !window.confirm(t("admin.feedbacks.confirmDeleteText"))) return;
-    await runTask(async () => removeFeedback(id), "errorDelete");
+    if (!id) return;
+    await runMutationTask(async () => removeFeedback(id), "errorDelete", id);
   }
 
   async function removeFeedback(id: string) {
     await deleteFeedback(id);
-    await load();
+    await refreshFeedbacks();
+  }
+
+  async function removeMany(items: Feedback[]) {
+    await runMutationTask(
+      async () => removeSelectedFeedbacks(items),
+      "errorDelete",
+    );
+  }
+
+  async function removeSelectedFeedbacks(items: Feedback[]) {
+    await Promise.all(items.map(removeFeedbackByItem));
+    await refreshFeedbacks();
+  }
+
+  async function removeFeedbackByItem(item: Feedback) {
+    const id = getFeedbackId(item);
+    if (!id) return;
+    await deleteFeedback(id);
   }
 
   async function toggleActive(item: Feedback) {
-    if (!getFeedbackId(item)) return;
-    await save({ ...item, isActive: !item.isActive });
+    const id = getFeedbackId(item);
+    if (!id) return;
+    await runMutationTask(async () => toggleFeedback(item), "errorSave", id);
+  }
+
+  async function toggleFeedback(item: Feedback) {
+    const id = getFeedbackId(item);
+    await updateFeedback(id, { ...item, isActive: !item.isActive });
+    await refreshFeedbacks();
+  }
+
+  async function deactivateMany(items: Feedback[]) {
+    await runMutationTask(
+      async () => deactivateSelectedFeedbacks(items),
+      "errorSave",
+    );
+  }
+
+  async function deactivateSelectedFeedbacks(items: Feedback[]) {
+    await Promise.all(items.map(deactivateFeedbackByItem));
+    await refreshFeedbacks();
+  }
+
+  async function deactivateFeedbackByItem(item: Feedback) {
+    const id = getFeedbackId(item);
+    if (!id) return;
+    await updateFeedback(id, { ...item, isActive: false });
   }
 
   async function uploadImage(file: File) {
@@ -86,11 +169,13 @@ export function useFeedbacksPage() {
   }
 
   useEffect(() => {
-    load();
+    runLoadingTask(refreshFeedbacks, "errorLoad");
   }, []);
 
   return {
-    busy,
+    loading,
+    saving,
+    busyItemId,
     error,
     dialogMode,
     dialogItem,
@@ -100,7 +185,15 @@ export function useFeedbacksPage() {
     closeDialog,
     save,
     remove,
+    removeMany,
     toggleActive,
+    deactivateMany,
     uploadImage,
   };
 }
+
+
+
+
+
+
