@@ -1,17 +1,12 @@
+"use client";
+
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import type { FormEvent } from "react";
-import type { Feedback, FeedbackCategory, LocalizedText } from "../types";
+import type { FormEvent, MouseEvent } from "react";
+import type { Feedback, LocalizedText } from "../types";
 import type { FeedbackDialogMode } from "../useFeedbacksPage";
-
-import { cloneFeedback} from "../helpers";
-
-import { BaseFields, ImageFields } from "./FeedbackDialogFields";
-import {
-  DialogFooter,
-  MetaFields,
-  QuoteFields,
-} from "./FeedbackDialogTextFields";
+import { cloneFeedback } from "../helpers";
+import FeedbackDialogFields from "./FeedbackDialogFields";
 
 type Props = {
   mode: FeedbackDialogMode;
@@ -23,62 +18,171 @@ type Props = {
 };
 
 export default function FeedbackDialog(props: Props) {
-  const { t } = useTranslation();
   const { mode, item, busy, onClose, onSave, onUpload } = props;
   const [draft, setDraft] = useState<Feedback>(() => cloneFeedback(item));
+  const [formError, setFormError] = useState("");
 
-  function setValue<K extends keyof Feedback>(key: K, value: Feedback[K]) {
+  function updateFeedback<K extends keyof Feedback>(
+    key: K,
+    value: Feedback[K],
+  ) {
     setDraft((current) => ({ ...current, [key]: value }));
+    setFormError("");
   }
 
-  function setLocalized(field: "quote" | "meta", lang: keyof LocalizedText, value: string) {
+  function updateLocalizedText(
+    field: "quote" | "meta",
+    lang: keyof LocalizedText,
+    value: string,
+  ) {
     setDraft((current) => ({
       ...current,
       [field]: { ...current[field], [lang]: value },
     }));
+    setFormError("");
   }
 
-  async function handleUpload(file?: File) {
+  async function uploadImage(file?: File) {
     if (!file) return;
-    setValue("imageUrl", await onUpload(file));
+    updateFeedback("imageUrl", await onUpload(file));
   }
 
-  async function submit(event: FormEvent) {
+  async function submitForm(event: FormEvent) {
     event.preventDefault();
-    await onSave(draft);
+    setFormError("");
+
+    try {
+      await onSave(draft);
+    } catch (error) {
+      setFormError(getSubmitError(error));
+    }
   }
 
   return (
-    <div className="dialog-backdrop" role="presentation">
-      <button className="dialog-backdrop-hit" type="button" aria-label={t("admin.feedbacks.cancel")} onClick={onClose} />
-      <form className="dialog feedback-dialog" onSubmit={submit}>
-        <DialogHead mode={mode} onClose={onClose} />
-        <div className="dialog-body">
-          <div className="feedback-dialog__stack">
-            <BaseFields draft={draft} setValue={setValue} />
-            <ImageFields draft={draft} setValue={setValue} onUpload={handleUpload} />
-            <QuoteFields draft={draft} setLocalized={setLocalized} />
-            <MetaFields draft={draft} setLocalized={setLocalized} />
-          </div>
+    <div
+      className="dialog-backdrop feedback-dialog"
+      role="dialog"
+      aria-modal="true"
+    >
+      <FeedbackDialogBackdrop onClose={onClose} />
+
+      <form className="dialog feedback-dialog__dialog" onSubmit={submitForm}>
+        <FeedbackDialogHead mode={mode} onClose={onClose} />
+
+        <div className="dialog-body feedback-dialog__body">
+          <FeedbackDialogFields
+            draft={draft}
+            updateFeedback={updateFeedback}
+            updateLocalizedText={updateLocalizedText}
+            uploadImage={uploadImage}
+          />
         </div>
-        <DialogFooter busy={busy} onClose={onClose} />
+
+        <FeedbackDialogFooter busy={busy} mode={mode} error={formError} />
       </form>
     </div>
   );
 }
 
-function DialogHead({ mode, onClose }: { mode: FeedbackDialogMode; onClose: () => void }) {
+function FeedbackDialogBackdrop({ onClose }: { onClose: () => void }) {
   const { t } = useTranslation();
 
   return (
-    <div className="dialog-head">
-      <div>
-        <h2 className="dialog-title">{mode === "create" ? t("admin.feedbacks.create") : t("admin.feedbacks.edit")}</h2>
-        <p className="dialog-subtitle">{t("admin.feedbacks.subtitle")}</p>
+    <button
+      type="button"
+      className="dialog-backdrop-hit feedback-dialog__backdrop-hit"
+      aria-label={t("common.close")}
+      onClick={onClose}
+    />
+  );
+}
+
+function FeedbackDialogHead(props: {
+  mode: FeedbackDialogMode;
+  onClose: () => void;
+}) {
+  const { t } = useTranslation();
+  const { mode, onClose } = props;
+
+  return (
+    <div className="dialog-head feedback-dialog__head">
+      <div className="feedback-dialog__head-left">
+        <div className="dialog-title feedback-dialog__title">
+          {mode === "create"
+            ? t("admin.feedbacks.create")
+            : t("admin.feedbacks.edit")}
+        </div>
+        <div className="dialog-subtitle feedback-dialog__subtitle">
+          {t("admin.feedbacks.subtitle")}
+        </div>
       </div>
-      <div className="dialog-head__actions">
-        <button className="dialog-close" type="button" onClick={onClose}>×</button>
+
+      <div className="feedback-dialog__head-right">
+        <div className="dialog-head__actions">
+          <button
+            type="button"
+            className="dialog-close modal__close"
+            aria-label={t("common.close")}
+            onClick={onClose}
+          >
+            <img
+              src="/icons/close.svg"
+              alt=""
+              aria-hidden="true"
+              className="icon-img"
+            />
+          </button>
+        </div>
       </div>
     </div>
   );
+}
+
+function FeedbackDialogFooter(props: {
+  busy: boolean;
+  mode: FeedbackDialogMode;
+  error: string;
+}) {
+  const { t } = useTranslation();
+  const { busy, mode, error } = props;
+  const buttonLabel = getSubmitButtonLabel(t, busy, mode);
+
+  function handleClick(event: MouseEvent<HTMLButtonElement>) {
+    if (!busy) return;
+    event.preventDefault();
+  }
+
+  return (
+    <div className="dialog-footer feedback-dialog__footer">
+      {error ? (
+        <p className="error feedback-dialog__message" role="alert">
+    {error}
+  </p>
+      ) : null}
+
+      <button
+        className="btn"
+        type="submit"
+        aria-disabled={busy}
+        onClick={handleClick}
+      >
+        {buttonLabel}
+      </button>
+    </div>
+  );
+}
+
+function getSubmitError(error: unknown) {
+  if (error instanceof Error) return error.message;
+  return "";
+}
+
+function getSubmitButtonLabel(
+  t: (key: string) => string,
+  busy: boolean,
+  mode: FeedbackDialogMode,
+) {
+  if (busy) return t("admin.feedbacks.saving");
+  if (mode === "create") return t("admin.feedbacks.create");
+  return t("admin.feedbacks.save");
 }
