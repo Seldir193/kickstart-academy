@@ -1,6 +1,6 @@
 .feedback-dialog {
   &.dialog-backdrop {
-    inset: var(--header-height, 64px) 0 0 0;
+    inset: var(--header-height, 64px) 0 0;
     align-items: flex-start;
     justify-content: center;
     padding: 24px 20px 20px;
@@ -8,7 +8,13 @@
     box-sizing: border-box;
   }
 
+  .feedback-dialog__backdrop-hit {
+    z-index: 0;
+  }
+
   .feedback-dialog__dialog {
+    position: relative;
+    z-index: 1;
     width: min(860px, calc(100% - 40px));
     max-width: 860px;
     max-height: calc(100dvh - var(--header-height, 64px) - 48px);
@@ -31,18 +37,19 @@
     flex: 0 0 auto;
   }
 
-  .feedback-dialog__title {
+  .feedback-dialog__title,
+  .feedback-dialog__subtitle {
     word-break: break-word;
     overflow-wrap: anywhere;
   }
 
   .feedback-dialog__subtitle {
     max-width: 62ch;
-    word-break: break-word;
   }
 
   .feedback-dialog__body {
     overflow: auto;
+    overflow-x: hidden;
     min-height: 0;
     max-height: calc(100dvh - var(--header-height, 64px) - 210px);
     padding-top: 14px;
@@ -53,19 +60,42 @@
   .feedback-dialog__grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 12px 14px;
+    gap: 18px 20px;
     align-items: start;
+    overflow-x: hidden;
   }
 
   .feedback-dialog__grid .field {
     min-width: 0;
+    display: grid;
+    gap: 7px;
+  }
+
+  .feedback-dialog__grid .field--full {
+    grid-column: 1 / -1;
+  }
+
+  .feedback-dialog__grid .input {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .feedback-dialog__grid input.input {
+    height: 40px;
+  }
+
+  .feedback-dialog__grid textarea.input {
+    height: auto;
+    min-height: 92px;
+    padding: 10px 12px;
+    resize: vertical;
   }
 
   .feedback-dialog__file {
     display: flex;
     align-items: center;
-    gap: 12px;
     flex-wrap: wrap;
+    gap: 12px;
   }
 
   .feedback-dialog__file-name {
@@ -92,9 +122,16 @@
     flex: 0 0 auto;
   }
 
-  textarea.input {
-    min-height: 92px;
-    resize: vertical;
+  .ks-selectbox {
+    width: 100%;
+  }
+
+  .ks-selectbox__trigger {
+    height: 40px;
+  }
+
+  .ks-selectbox__panel {
+    z-index: 40;
   }
 }
 
@@ -109,8 +146,14 @@
     }
 
     .feedback-dialog__file-name {
-      min-width: 0;
       width: 100%;
+      min-width: 0;
     }
   }
 }
+
+
+
+
+
+
