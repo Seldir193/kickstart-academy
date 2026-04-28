@@ -1,4 +1,8 @@
-import type { InputHTMLAttributes, ReactNode, TextareaHTMLAttributes } from "react";
+import type {
+  InputHTMLAttributes,
+  ReactNode,
+  TextareaHTMLAttributes,
+} from "react";
 
 type FieldProps = {
   label: string;
@@ -18,6 +22,8 @@ export function FeedbackInput(props: InputHTMLAttributes<HTMLInputElement>) {
   return <input className="input" {...props} />;
 }
 
-export function FeedbackTextarea(props: TextareaHTMLAttributes<HTMLTextAreaElement>) {
+export function FeedbackTextarea(
+  props: TextareaHTMLAttributes<HTMLTextAreaElement>,
+) {
   return <textarea className="textarea" rows={3} {...props} />;
 }
