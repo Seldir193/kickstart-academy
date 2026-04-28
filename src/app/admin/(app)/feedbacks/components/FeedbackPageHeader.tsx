@@ -1,3 +1,5 @@
+"use client";
+
 import { useTranslation } from "react-i18next";
 
 type Props = {
@@ -5,20 +7,28 @@ type Props = {
   onCreate: () => void;
 };
 
-export default function FeedbackPageHeader({ busy, onCreate }: Props) {
+export default function FeedbackPageHeader(props: Props) {
   const { t } = useTranslation();
 
   return (
-    <section className="feedback-admin__head">
-      <div>
-        <h1>{t("admin.feedbacks.title")}</h1>
-        <p>{t("admin.feedbacks.subtitle")}</p>
-      </div>
-
-      <button className="btn" type="button" onClick={onCreate} disabled={busy}>
-        <img src="/icons/plus.svg" alt="" aria-hidden="true" className="btn__icon" />
-        {t("admin.feedbacks.create")}
-      </button>
-    </section>
+    <button
+      className="btn feedback-admin__create"
+      type="button"
+      aria-disabled={props.busy}
+      onClick={() => handleCreate(props)}
+    >
+      <img
+        src="/icons/plus.svg"
+        alt=""
+        aria-hidden="true"
+        className="btn__icon"
+      />
+      {t("admin.feedbacks.create")}
+    </button>
   );
+}
+
+function handleCreate(props: Props) {
+  if (props.busy) return;
+  props.onCreate();
 }
