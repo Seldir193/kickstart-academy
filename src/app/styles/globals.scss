@@ -81,6 +81,8 @@
 @use "./feedback/feedback-dialog.scss" as *;
 @use "./feedback/feedback-admin.scss" as *;
 
+@use "./partners/partner-admin";
+@use "./partners/partner-dialog";
 
 :root {
   --brand-navy: #0f1e2e;

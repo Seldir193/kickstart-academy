@@ -29,6 +29,7 @@ import deWeeklyCancel from "../locales/de/common/weekly-cancel.json";
 import deWeeklyContract from "../locales/de/common/weekly-contract.json";
 import deWeeklyRevoke from "../locales/de/common/weekly-revoke.json";
 import deFeedback from "../locales/de/common/feedback.json";
+import dePartners from "../locales/de/common/partners.json";
 
 import enCommonBase from "../locales/en/common/common.json";
 import enBookings from "../locales/en/common/bookings.json";
@@ -57,6 +58,7 @@ import enWeeklyCancel from "../locales/en/common/weekly-cancel.json";
 import enWeeklyContract from "../locales/en/common/weekly-contract.json";
 import enWeeklyRevoke from "../locales/en/common/weekly-revoke.json";
 import enFeedback from "../locales/en/common/feedback.json";
+import enPartners from "../locales/en/common/partners.json";
 
 import trCommonBase from "../locales/tr/common/common.json";
 import trBookings from "../locales/tr/common/bookings.json";
@@ -85,6 +87,7 @@ import trWeeklyCancel from "../locales/tr/common/weekly-cancel.json";
 import trWeeklyContract from "../locales/tr/common/weekly-contract.json";
 import trWeeklyRevoke from "../locales/tr/common/weekly-revoke.json";
 import trFeedback from "../locales/tr/common/feedback.json";
+import trPartners from "../locales/tr/common/partners.json";
 
 import deBook from "../locales/de/book.json";
 import enBook from "../locales/en/book.json";
@@ -121,6 +124,7 @@ const resources = {
       ...deWeeklyContract,
       ...deWeeklyRevoke,
       ...deFeedback,
+      ...dePartners,
     },
     book: deBook,
   },
@@ -153,6 +157,7 @@ const resources = {
       ...enWeeklyContract,
       ...enWeeklyRevoke,
       ...enFeedback,
+      ...enPartners,
     },
     book: enBook,
   },
@@ -185,6 +190,7 @@ const resources = {
       ...trWeeklyContract,
       ...trWeeklyRevoke,
       ...trFeedback,
+      ...trPartners,
     },
     book: trBook,
   },
