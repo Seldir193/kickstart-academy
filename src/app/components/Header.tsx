@@ -47,6 +47,8 @@ const adminNav: AdminNavItem[] = [
   { href: "/admin/customers", labelKey: "nav.admin.customers" },
   { href: "/admin/datev", labelKey: "nav.admin.datev" },
   { href: "/admin/news", labelKey: "nav.admin.news" },
+  
+{ href: "/admin/feedbacks", labelKey: "nav.admin.feedbacks" },
   { href: "/admin/revenue", labelKey: "nav.admin.revenue" },
   { href: "/admin/bookings", labelKey: "nav.admin.bookings" },
   {
@@ -57,8 +59,7 @@ const adminNav: AdminNavItem[] = [
   { href: "/admin/franchise-locations", labelKey: "nav.admin.locations" },
   { href: "/admin/members", labelKey: "nav.admin.members" },
 
-  { href: "/admin/news", labelKey: "nav.admin.news" },
-{ href: "/admin/feedbacks", labelKey: "nav.admin.feedbacks" },
+
 ];
 
 function isMinimalHeaderRoute(pathname: string) {
@@ -306,7 +307,7 @@ export default function Header({ isAdminInitial = false }: Props) {
       "/admin/invoices",
       "/admin/customers",
       "/admin/news",
-      "/admin/feedbacks",
+      
       "/admin/bookings",
       "/admin/franchise-locations",
        
