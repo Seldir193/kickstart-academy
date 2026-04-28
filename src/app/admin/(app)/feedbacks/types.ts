@@ -19,8 +19,11 @@ export type Feedback = {
   updatedAt?: string;
 };
 
-export type FeedbackListResponse = {
+export type ApiResponse = {
   ok?: boolean;
   error?: string;
+};
+
+export type FeedbackListResponse = ApiResponse & {
   items?: Feedback[];
 };
