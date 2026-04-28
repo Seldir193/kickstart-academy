@@ -43,5 +43,51 @@
 
    "admin.feedbacks.saving": "Saving...",
   "admin.feedbacks.chooseFile": "Choose file",
-  "admin.feedbacks.noFileSelected": "No file selected"
+  "admin.feedbacks.noFileSelected": "No file selected",
+
+   "admin.feedbacks.deleteDialogTitle": "Delete feedback",
+  "admin.feedbacks.deleteDialogText": "Do you really want to delete the feedback from {{feedbackName}}?",
+
+  "admin.feedbacks.table.image": "Image",
+  "admin.feedbacks.table.author": "Name",
+  "admin.feedbacks.table.category": "Category",
+  "admin.feedbacks.table.order": "Order",
+  "admin.feedbacks.table.status": "Status",
+  "admin.feedbacks.table.updated": "Updated",
+  "admin.feedbacks.table.actions": "Action",
+  "admin.feedbacks.noImage": "No image",
+
+   "admin.feedbacks.pagination.previousPage": "Previous page",
+  "admin.feedbacks.pagination.nextPage": "Next page",
+  "admin.feedbacks.bulk.select": "Select feedbacks",
+  "admin.feedbacks.bulk.selected": "selected",
+  "admin.feedbacks.bulk.selectAll": "Select all",
+  "admin.feedbacks.bulk.clearSelection": "Clear selection",
+  "admin.feedbacks.bulk.delete": "Delete",
+  "admin.feedbacks.bulk.cancel": "Cancel",
+
+  "admin.feedbacks.search.placeholder": "Search name, category, text...",
+  "admin.feedbacks.filters.all": "All",
+  "admin.feedbacks.filters.categoryAria": "Filter feedback category",
+  "admin.feedbacks.filters.sortAria": "Sort feedback",
+  "admin.feedbacks.sort.newest": "Newest first",
+  "admin.feedbacks.sort.oldest": "Oldest first",
+  "admin.feedbacks.table.image": "Image",
+  "admin.feedbacks.table.author": "Name",
+  "admin.feedbacks.table.category": "Category",
+  "admin.feedbacks.table.order": "Order",
+  "admin.feedbacks.table.status": "Status",
+  "admin.feedbacks.table.updated": "Updated",
+  "admin.feedbacks.table.actions": "Action",
+  "admin.feedbacks.noImage": "No image",
+  "admin.feedbacks.pagination.previousPage": "Previous page",
+  "admin.feedbacks.pagination.nextPage": "Next page",
+
+  "admin.feedbacks.sort.aToZ": "A–Z",
+  "admin.feedbacks.sort.zToA": "Z–A",
+
+  "admin.feedbacks.bulk.deactivate": "Deactivate",
+
+   "admin.feedbacks.errorDuplicate": "This feedback has already been added.",
+   "admin.feedbacks.errorDuplicate": "Bu geri bildirim zaten eklenmiş."
 }
