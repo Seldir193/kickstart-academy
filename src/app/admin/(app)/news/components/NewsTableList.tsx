@@ -103,13 +103,33 @@ export default function NewsTableList({
   const cancelBtnRef = useRef<HTMLButtonElement | null>(null);
   const clearBtnRef = useRef<HTMLButtonElement | null>(null);
 
+  const prevCountRef = useRef(0);
+
   const count = sel.selected.size;
   const showClear = selectMode && count >= 2;
 
   useEffect(() => {
-    if (!selectMode) return;
-    requestAnimationFrame(() => cancelBtnRef.current?.focus());
-  }, [selectMode]);
+    if (!selectMode) {
+      prevCountRef.current = 0;
+      return;
+    }
+
+    const prev = prevCountRef.current;
+    prevCountRef.current = count;
+
+    if (prev < 2 && count >= 2) {
+      requestAnimationFrame(() => clearBtnRef.current?.focus());
+      return;
+    }
+
+    if (count < 2) {
+      requestAnimationFrame(() => {
+        clearBtnRef.current?.blur();
+        cancelBtnRef.current?.blur();
+        toggleBtnRef?.current?.blur();
+      });
+    }
+  }, [selectMode, count, toggleBtnRef]);
 
   async function deleteSelected() {
     if (!onDeleteMany) return;
@@ -125,8 +145,10 @@ export default function NewsTableList({
   }
 
   function onClearSelection() {
+    clearBtnRef.current?.blur();
+    cancelBtnRef.current?.blur();
+    toggleBtnRef?.current?.blur();
     sel.clear();
-    requestAnimationFrame(() => cancelBtnRef.current?.focus());
   }
 
   function rowClick(n: NewsWithProvider) {
@@ -243,7 +265,9 @@ export default function NewsTableList({
                   onPointerDown={onRowPointerDown}
                   onClick={() => rowClick(n)}
                   onKeyDown={(e) => {
-                    if (e.key === "Enter" || e.key === " ") rowClick(n);
+                    if (e.key !== "Enter" && e.key !== " ") return;
+                    e.preventDefault();
+                    rowClick(n);
                   }}
                   tabIndex={0}
                   role="button"
