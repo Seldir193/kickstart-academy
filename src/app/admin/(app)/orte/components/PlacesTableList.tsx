@@ -46,6 +46,25 @@ export default function PlacesTableList({
   const count = sel.selected.size;
   const showClear = selectMode && count >= 2;
 
+  // useEffect(() => {
+  //   if (!selectMode) {
+  //     prevCountRef.current = 0;
+  //     return;
+  //   }
+
+  //   const prev = prevCountRef.current;
+  //   prevCountRef.current = count;
+
+  //   if (count >= 2) {
+  //     requestAnimationFrame(() => clearBtnRef.current?.focus());
+  //     return;
+  //   }
+
+  //   if (prev >= 2 && count < 2) {
+  //     requestAnimationFrame(() => cancelBtnRef.current?.focus());
+  //   }
+  // }, [selectMode, count]);
+
   useEffect(() => {
     if (!selectMode) {
       prevCountRef.current = 0;
@@ -55,13 +74,16 @@ export default function PlacesTableList({
     const prev = prevCountRef.current;
     prevCountRef.current = count;
 
-    if (count >= 2) {
+    if (prev < 2 && count >= 2) {
       requestAnimationFrame(() => clearBtnRef.current?.focus());
       return;
     }
 
     if (prev >= 2 && count < 2) {
-      requestAnimationFrame(() => cancelBtnRef.current?.focus());
+      requestAnimationFrame(() => {
+        clearBtnRef.current?.blur();
+        cancelBtnRef.current?.blur();
+      });
     }
   }, [selectMode, count]);
 
@@ -77,9 +99,15 @@ export default function PlacesTableList({
     sel.isAllSelected ? sel.removeAll() : sel.selectAll();
   }
 
+  // function onClearSelection() {
+  //   sel.clear();
+  //   requestAnimationFrame(() => cancelBtnRef.current?.focus());
+  // }
+
   function onClearSelection() {
+    clearBtnRef.current?.blur();
+    cancelBtnRef.current?.blur();
     sel.clear();
-    requestAnimationFrame(() => cancelBtnRef.current?.focus());
   }
 
   function rowClick(p: Place & { publicId?: number }) {
@@ -150,7 +178,9 @@ export default function PlacesTableList({
         <section className="card news-list">
           <div className="news-list__table">
             <div className="news-list__head" aria-hidden="true">
-              <div className="news-list__h">ID</div>
+              <div className="news-list__h">
+                {t("common.admin.places.table.id", { defaultValue: "ID" })}
+              </div>
               <div className="news-list__h">
                 {t("common.admin.places.table.name", { defaultValue: "Name" })}
               </div>
