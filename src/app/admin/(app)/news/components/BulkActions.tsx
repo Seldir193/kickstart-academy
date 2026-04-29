@@ -72,6 +72,7 @@ export default function BulkActions({
           ref={toggleRef}
           type="button"
           className="btn btn--select-toggle"
+          onMouseDown={(event) => event.preventDefault()}
           onClick={() => guard(onToggleSelectMode)}
           disabled={isEmpty}
         >
@@ -103,6 +104,7 @@ export default function BulkActions({
           </button>
         ) : (
           <button
+            ref={toggleRef}
             type="button"
             className={`btn btn--select-toggle ${isAllSelected ? "is-active" : ""}`}
             onClick={() => guard(onToggleAll)}
@@ -127,6 +129,7 @@ export default function BulkActions({
           ref={cancelRef}
           type="button"
           className="btn"
+          onMouseDown={(event) => event.preventDefault()}
           onClick={() => guard(onToggleSelectMode)}
         >
           {resolvedCancelLabel}
