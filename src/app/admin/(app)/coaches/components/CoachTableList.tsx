@@ -151,15 +151,21 @@ export default function CoachTableList({
     }
 
     const prev = prevCountRef.current;
-    const next = count;
-    prevCountRef.current = next;
+    prevCountRef.current = count;
 
-    if (next >= 2) {
+    if (prev < 2 && count >= 2) {
       rafId = requestAnimationFrame(() => clearBtnRef.current?.focus());
-    } else if (next === 0) {
-      rafId = requestAnimationFrame(() => cancelBtnRef.current?.focus());
-    } else if (prev !== next) {
-      rafId = requestAnimationFrame(() => cancelBtnRef.current?.blur());
+      return () => {
+        if (rafId !== null) cancelAnimationFrame(rafId);
+      };
+    }
+
+    if (count < 2) {
+      rafId = requestAnimationFrame(() => {
+        clearBtnRef.current?.blur();
+        cancelBtnRef.current?.blur();
+        toggleBtnRef?.current?.blur();
+      });
     }
 
     return () => {
@@ -186,8 +192,10 @@ export default function CoachTableList({
   }
 
   function onClearSelection() {
+    clearBtnRef.current?.blur();
+    cancelBtnRef.current?.blur();
+    toggleBtnRef?.current?.blur();
     sel.clear();
-    requestAnimationFrame(() => cancelBtnRef.current?.focus());
   }
 
   function rowClick(c: Coach) {
@@ -290,9 +298,15 @@ export default function CoachTableList({
                   className={`list__item chip coach-list__row is-fullhover is-interactive ${
                     checked ? "is-selected" : ""
                   }`}
+                  onPointerDown={(e) => {
+                    if (!selectMode) return;
+                    e.preventDefault();
+                  }}
                   onClick={() => rowClick(raw)}
                   onKeyDown={(e) => {
-                    if (e.key === "Enter" || e.key === " ") rowClick(raw);
+                    if (e.key !== "Enter" && e.key !== " ") return;
+                    e.preventDefault();
+                    rowClick(raw);
                   }}
                   tabIndex={0}
                   role="button"

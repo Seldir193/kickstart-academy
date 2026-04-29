@@ -2,7 +2,6 @@
 "use client";
 
 import type { RefObject } from "react";
-import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 
 type Props = {
@@ -35,21 +34,6 @@ export default function BulkActions({
   onDelete,
 }: Props) {
   const { t } = useTranslation();
-  useEffect(() => {
-    if (!selectMode) return;
-
-    const cancelEl = cancelRef.current;
-    if (!cancelEl) return;
-
-    const active = document.activeElement;
-
-    if (count === 0) {
-      requestAnimationFrame(() => cancelEl.focus());
-      return;
-    }
-
-    if (active === cancelEl) requestAnimationFrame(() => cancelEl.blur());
-  }, [selectMode, count, cancelRef]);
 
   if (!selectMode) {
     return (
@@ -58,6 +42,7 @@ export default function BulkActions({
           ref={toggleRef}
           type="button"
           className="btn btn--select-toggle"
+          onMouseDown={(event) => event.preventDefault()}
           onClick={onToggleSelectMode}
           disabled={disabled}
         >
@@ -86,6 +71,7 @@ export default function BulkActions({
           </button>
         ) : (
           <button
+            ref={toggleRef}
             type="button"
             className={`btn btn--select-toggle ${isAllSelected ? "is-active" : ""}`}
             onClick={onToggleAll}
@@ -109,7 +95,8 @@ export default function BulkActions({
         <button
           ref={cancelRef}
           type="button"
-          className="btn btn--focus-black"
+          className="btn"
+          onMouseDown={(event) => event.preventDefault()}
           onClick={onToggleSelectMode}
           disabled={disabled}
         >
