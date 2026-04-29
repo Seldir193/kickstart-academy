@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import type { Partner } from "../types";
 import PartnerCard from "./PartnerCard";
@@ -150,12 +150,36 @@ function usePartnerSelection(items: Partner[]) {
   const toggleRef = useRef<HTMLButtonElement | null>(null);
   const cancelRef = useRef<HTMLButtonElement | null>(null);
   const clearRef = useRef<HTMLButtonElement | null>(null);
+  const prevCountRef = useRef(0);
   const ids = useMemo(() => items.map(getPartnerId).filter(Boolean), [items]);
   const isAllSelected = ids.length > 0 && ids.every(isSelected);
+  const selectedCount = selectedIds.size;
 
   function isSelected(id: string) {
     return selectedIds.has(id);
   }
+
+  useEffect(() => {
+    if (!selectMode) {
+      prevCountRef.current = 0;
+      return;
+    }
+
+    const prev = prevCountRef.current;
+    prevCountRef.current = selectedCount;
+
+    if (prev < 2 && selectedCount >= 2) {
+      requestAnimationFrame(() => clearRef.current?.focus());
+      return;
+    }
+
+    if (prev >= 2 && selectedCount < 2) {
+      requestAnimationFrame(() => {
+        clearRef.current?.blur();
+        cancelRef.current?.blur();
+      });
+    }
+  }, [selectMode, selectedCount]);
 
   function toggleSelectMode() {
     setSelectedIds(new Set());
@@ -167,9 +191,10 @@ function usePartnerSelection(items: Partner[]) {
   }
 
   function clearSelection() {
+    clearRef.current?.blur();
+    cancelRef.current?.blur();
     setSelectedIds(new Set());
   }
-
   function toggleOne(id: string) {
     setSelectedIds((current) => toggleSelectedId(current, id));
   }

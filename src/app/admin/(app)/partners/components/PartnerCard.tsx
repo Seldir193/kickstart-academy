@@ -36,6 +36,9 @@ export default function PartnerCard(props: Props) {
       role="button"
       tabIndex={0}
       aria-label={props.item.name || "Partner"}
+      onMouseDown={(event) =>
+        preventRowFocusInSelectMode(event, props.selectMode)
+      }
       aria-pressed={props.selectMode ? props.selected : undefined}
       onClick={() => handleRowClick(props, id)}
       onKeyDown={(event) => activateRow(event, () => handleRowClick(props, id))}
@@ -145,6 +148,14 @@ function handleRowClick(props: Props, id: string) {
   }
 
   props.onEdit(props.item);
+}
+
+function preventRowFocusInSelectMode(
+  event: MouseEvent<HTMLLIElement>,
+  selectMode: boolean,
+) {
+  if (!selectMode) return;
+  event.preventDefault();
 }
 
 function openPartnerEdit(props: ActionProps) {
