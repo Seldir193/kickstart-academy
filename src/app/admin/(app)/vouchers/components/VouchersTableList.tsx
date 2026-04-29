@@ -24,12 +24,6 @@ function idOf(item: Voucher) {
   return String(item?._id || "").trim();
 }
 
-// function formatDateDe(value: string) {
-//   const d = new Date(String(value || ""));
-//   if (Number.isNaN(d.getTime())) return "—";
-//   return new Intl.DateTimeFormat("de-DE").format(d);
-// }
-
 function amountText(value: number) {
   const n = Number(value || 0);
   return new Intl.NumberFormat("de-DE", {
@@ -82,13 +76,16 @@ export default function VouchersTableList({
     const prev = prevCountRef.current;
     prevCountRef.current = count;
 
-    if (count >= 2) {
+    if (prev < 2 && count >= 2) {
       requestAnimationFrame(() => clearBtnRef.current?.focus());
       return;
     }
 
     if (prev >= 2 && count < 2) {
-      requestAnimationFrame(() => cancelBtnRef.current?.focus());
+      requestAnimationFrame(() => {
+        clearBtnRef.current?.blur();
+        cancelBtnRef.current?.blur();
+      });
     }
   }, [selectMode, count]);
 
@@ -121,8 +118,9 @@ export default function VouchersTableList({
   }
 
   function clearSelection() {
+    clearBtnRef.current?.blur();
+    cancelBtnRef.current?.blur();
     sel.clear();
-    requestAnimationFrame(() => cancelBtnRef.current?.focus());
   }
 
   function onRowClick(item: Voucher) {
