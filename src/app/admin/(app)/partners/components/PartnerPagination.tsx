@@ -10,10 +10,8 @@ type Props = {
 };
 
 export default function PartnerPagination(props: Props) {
-  if (props.totalPages <= 1) return null;
-
   return (
-    <div className="partner-admin__pagination">
+    <div className="pager pager--arrows news-pager">
       <PartnerPageButton
         direction="prev"
         disabled={props.page <= 1}
@@ -31,9 +29,9 @@ export default function PartnerPagination(props: Props) {
 
 function PartnerPageCount(props: { page: number; totalPages: number }) {
   return (
-    <span className="partner-admin__pagination-count">
+    <div className="pager__count" aria-live="polite" aria-atomic="true">
       {props.page} / {props.totalPages}
-    </span>
+    </div>
   );
 }
 
@@ -51,9 +49,7 @@ function PartnerPageButton(props: {
   return (
     <button
       type="button"
-      className={`partner-admin__pagination-btn${
-        isPrev ? " is-prev" : " is-next"
-      }`}
+      className="btn"
       aria-label={label}
       disabled={props.disabled}
       onClick={props.onClick}
@@ -62,7 +58,7 @@ function PartnerPageButton(props: {
         src="/icons/arrow_right_alt.svg"
         alt=""
         aria-hidden="true"
-        className="partner-admin__pagination-icon"
+        className={isPrev ? "icon-img icon-img--left" : "icon-img"}
       />
     </button>
   );

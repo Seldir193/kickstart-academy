@@ -246,53 +246,6 @@
     flex-wrap: wrap;
   }
 
-  .partner-admin__pagination {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    gap: 12px;
-    margin-top: 16px;
-  }
-
-  .partner-admin__pagination-count {
-    color: rgba(15, 30, 46, 0.72);
-    font-size: 13px;
-    font-weight: 800;
-  }
-
-  .partner-admin__pagination-btn {
-    width: 40px;
-    height: 40px;
-    border: 0;
-    border-radius: 999px;
-    background: rgba(0, 0, 0, 0.06);
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-  }
-
-  .partner-admin__pagination-btn:hover,
-  .partner-admin__pagination-btn:focus-visible {
-    background: rgba(0, 0, 0, 0.08);
-    outline: none;
-  }
-
-  .partner-admin__pagination-btn:disabled {
-    opacity: 0.45;
-    cursor: default;
-  }
-
-  .partner-admin__pagination-icon {
-    width: 20px;
-    height: 20px;
-    display: block;
-  }
-
-  .partner-admin__pagination-btn.is-prev .partner-admin__pagination-icon {
-    transform: rotate(180deg);
-  }
-
   @media (max-width: 1180px) {
     .partner-admin__head-row,
     .partner-admin__row-item {
