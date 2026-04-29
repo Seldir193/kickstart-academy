@@ -46,25 +46,6 @@ export default function PlacesTableList({
   const count = sel.selected.size;
   const showClear = selectMode && count >= 2;
 
-  // useEffect(() => {
-  //   if (!selectMode) {
-  //     prevCountRef.current = 0;
-  //     return;
-  //   }
-
-  //   const prev = prevCountRef.current;
-  //   prevCountRef.current = count;
-
-  //   if (count >= 2) {
-  //     requestAnimationFrame(() => clearBtnRef.current?.focus());
-  //     return;
-  //   }
-
-  //   if (prev >= 2 && count < 2) {
-  //     requestAnimationFrame(() => cancelBtnRef.current?.focus());
-  //   }
-  // }, [selectMode, count]);
-
   useEffect(() => {
     if (!selectMode) {
       prevCountRef.current = 0;
@@ -98,11 +79,6 @@ export default function PlacesTableList({
   function onToggleAll() {
     sel.isAllSelected ? sel.removeAll() : sel.selectAll();
   }
-
-  // function onClearSelection() {
-  //   sel.clear();
-  //   requestAnimationFrame(() => cancelBtnRef.current?.focus());
-  // }
 
   function onClearSelection() {
     clearBtnRef.current?.blur();

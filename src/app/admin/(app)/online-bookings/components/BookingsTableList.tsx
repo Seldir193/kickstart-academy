@@ -99,13 +99,16 @@ export default function BookingsTableList({
     const prev = prevCountRef.current;
     prevCountRef.current = count;
 
-    if (count >= 2) {
+    if (prev < 2 && count >= 2) {
       requestAnimationFrame(() => clearBtnRef.current?.focus());
       return;
     }
 
     if (prev >= 2 && count < 2) {
-      requestAnimationFrame(() => cancelBtnRef.current?.focus());
+      requestAnimationFrame(() => {
+        clearBtnRef.current?.blur();
+        cancelBtnRef.current?.blur();
+      });
     }
   }, [selectMode, count]);
 
@@ -130,8 +133,9 @@ export default function BookingsTableList({
   }
 
   function clearSelection() {
+    clearBtnRef.current?.blur();
+    cancelBtnRef.current?.blur();
     sel.clear();
-    requestAnimationFrame(() => cancelBtnRef.current?.focus());
   }
 
   function onRowClick(b: Booking) {
