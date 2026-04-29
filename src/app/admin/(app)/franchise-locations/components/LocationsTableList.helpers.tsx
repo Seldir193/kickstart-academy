@@ -45,13 +45,6 @@ export function fullName(it: FranchiseLocation) {
   return `${clean(it.licenseeFirstName)} ${clean(it.licenseeLastName)}`.trim();
 }
 
-// export function fmtDateDe(value?: string) {
-//   if (!value) return "—";
-//   const d = new Date(value);
-//   if (Number.isNaN(d.getTime())) return value;
-//   return new Intl.DateTimeFormat("de-DE", { dateStyle: "medium" }).format(d);
-// }
-
 export function fmtDate(value?: string, lang?: string) {
   return formatDateOnly(value, lang);
 }

@@ -338,6 +338,8 @@ export default function LocationsTableList(p: Props) {
   const cancelBtnRef = useRef<HTMLButtonElement | null>(null);
   const clearBtnRef = useRef<HTMLButtonElement | null>(null);
 
+  const prevCountRef = useRef(0);
+
   const count = sel.selected.size;
   const showClear = p.selectMode && count >= 2;
   const showSwitch = canShowSwitch(p.rowMode);
@@ -345,9 +347,26 @@ export default function LocationsTableList(p: Props) {
   const showHint = !mineRow;
 
   useEffect(() => {
-    if (!p.selectMode) return;
-    requestAnimationFrame(() => cancelBtnRef.current?.focus());
-  }, [p.selectMode]);
+    if (!p.selectMode) {
+      prevCountRef.current = 0;
+      return;
+    }
+
+    const prev = prevCountRef.current;
+    prevCountRef.current = count;
+
+    if (prev < 2 && count >= 2) {
+      requestAnimationFrame(() => clearBtnRef.current?.focus());
+      return;
+    }
+
+    if (count < 2) {
+      requestAnimationFrame(() => {
+        clearBtnRef.current?.blur();
+        cancelBtnRef.current?.blur();
+      });
+    }
+  }, [p.selectMode, count]);
 
   async function deleteSelected() {
     if (!p.onDeleteMany) return;
@@ -379,8 +398,9 @@ export default function LocationsTableList(p: Props) {
             sel.isAllSelected ? sel.removeAll() : sel.selectAll()
           }
           onClear={() => {
+            clearBtnRef.current?.blur();
+            cancelBtnRef.current?.blur();
             sel.clear();
-            requestAnimationFrame(() => cancelBtnRef.current?.focus());
           }}
           showClear={showClear}
           onDelete={() => void deleteSelected()}
