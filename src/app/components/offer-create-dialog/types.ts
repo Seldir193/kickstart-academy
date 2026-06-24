@@ -46,6 +46,7 @@ export type CreateOfferPayload = {
   holidayWeekLabel?: string;
   dateFrom?: string;
   dateTo?: string;
+  day?: string;
 };
 
 export type OfferDialogMode = "create" | "edit";

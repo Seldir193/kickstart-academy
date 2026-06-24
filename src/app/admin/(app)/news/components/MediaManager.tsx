@@ -2,14 +2,14 @@
 
 import { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import type { MediaItem } from "../types";
+import type { MediaItem, NewsUploadPurpose } from "../types";
 
 type UploadResult = { url: string; mimetype: string };
 
 type Props = {
   items: MediaItem[];
   onChange: (next: MediaItem[]) => void;
-  upload: (file: File) => Promise<UploadResult>;
+  upload: (file: File, purpose: NewsUploadPurpose) => Promise<UploadResult>;
 };
 
 function clean(v: unknown) {
@@ -38,7 +38,7 @@ export default function MediaManager({ items, onChange, upload }: Props) {
 
   async function addFile(file?: File) {
     if (!file) return;
-    const up = await upload(file);
+    const up = await upload(file, "news-media");
     onChange([...(items || []), toMedia(up)]);
     if (inputRef.current) inputRef.current.value = "";
     setFileName(t("common.admin.news.mediaManager.noFileSelected"));

@@ -1,6 +1,6 @@
 // src/app/admin/(app)/news/api.ts
 
-import type { ListResponse, News } from "./types";
+import type { ListResponse, News, NewsUploadPurpose } from "./types";
 import { NEWS_API, UPLOAD_API } from "./constants";
 
 export type NewsView =
@@ -21,6 +21,48 @@ function clean(v: unknown) {
   return String(v ?? "").trim();
 }
 
+export async function translateNews(news: News) {
+  const res = await fetch(`${NEWS_API}/translate`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(pickEditableNews(news)),
+  });
+
+  const js = await readJson<any>(res);
+  if (!res.ok || !js?.ok) throw errorFor(res, js);
+
+  return js.i18n as News["i18n"];
+}
+
+function pickTranslation(input: any) {
+  return {
+    title: clean(input?.title),
+    excerpt: clean(input?.excerpt),
+    content: String(input?.content || ""),
+  };
+}
+
+function pickNewsI18n(input: any) {
+  return {
+    en: pickTranslation(input?.i18n?.en),
+    tr: pickTranslation(input?.i18n?.tr),
+  };
+}
+
+// function pickEditableNews(input: any) {
+//   return {
+//     date: clean(input?.date),
+//     title: clean(input?.title),
+//     slug: clean(input?.slug),
+//     category: input?.category,
+//     tags: Array.isArray(input?.tags) ? input.tags : [],
+//     excerpt: clean(input?.excerpt),
+//     content: clean(input?.content),
+//     coverImage: clean(input?.coverImage),
+//     media: Array.isArray(input?.media) ? input.media : [],
+//   };
+// }
+
 function pickEditableNews(input: any) {
   return {
     date: clean(input?.date),
@@ -29,7 +71,8 @@ function pickEditableNews(input: any) {
     category: input?.category,
     tags: Array.isArray(input?.tags) ? input.tags : [],
     excerpt: clean(input?.excerpt),
-    content: clean(input?.content),
+    content: String(input?.content || ""),
+    i18n: pickNewsI18n(input),
     coverImage: clean(input?.coverImage),
     media: Array.isArray(input?.media) ? input.media : [],
   };
@@ -185,17 +228,13 @@ export async function fetchNewsPage(args: {
   return p;
 }
 
-export async function uploadNewsFile(file: File) {
+export async function uploadNewsFile(file: File, purpose: NewsUploadPurpose) {
   const fd = new FormData();
   fd.append("file", file);
   fd.append("filename", file.name);
+  fd.append("purpose", purpose);
 
-  const res = await fetch(UPLOAD_API, {
-    method: "POST",
-    body: fd,
-    credentials: "include",
-  });
-
+  const res = await fetch(UPLOAD_API, { method: "POST", body: fd, credentials: "include" });
   const js = await readJson<any>(res);
   if (!res.ok || !js?.ok) throw errorFor(res, js);
 

@@ -12,10 +12,35 @@ export type MediaItem = {
   mimetype?: string;
 };
 
+export type NewsUploadPurpose = "news-cover" | "news-media";
+
 export type ProviderInfo = {
   id: string;
   fullName: string;
   email: string;
+};
+
+// export type NewsDraft = Partial<{
+//   title: string;
+//   slug: string;
+//   category: Category;
+//   tags: string[];
+//   excerpt: string;
+//   content: string;
+//   coverImage: string;
+//   coverCaption: string;
+//   media: MediaItem[];
+// }>;
+
+export type NewsTranslation = {
+  title: string;
+  excerpt: string;
+  content: string;
+};
+
+export type NewsI18n = {
+  en: NewsTranslation;
+  tr: NewsTranslation;
 };
 
 export type NewsDraft = Partial<{
@@ -25,6 +50,7 @@ export type NewsDraft = Partial<{
   tags: string[];
   excerpt: string;
   content: string;
+  i18n: NewsI18n;
   coverImage: string;
   coverCaption: string;
   media: MediaItem[];
@@ -45,6 +71,7 @@ export type News = {
 
   excerpt: string;
   content: string;
+  i18n?: NewsI18n;
 
   coverImage: string;
   coverCaption?: string;

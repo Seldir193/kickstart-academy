@@ -7,8 +7,8 @@ import InvoicesKsDatePicker from "@/app/admin/(app)/invoices/components/KsDatePi
 type Props = {
   id?: string;
   name: string;
-  value: string; // ISO: YYYY-MM-DD oder ""
-  min?: string; // ISO: YYYY-MM-DD
+  value: string;
+  min?: string;
   placeholder?: string;
   disabled?: boolean;
   onChange: (
@@ -47,31 +47,26 @@ export function KsDatePicker({
       ) as HTMLElement | null;
       if (!panel) return;
 
-      // Reset
       panel.style.transform = "";
 
       const panelRect = panel.getBoundingClientRect();
 
-      // Wir clampen innerhalb des Dialog-Panels (Modal-Card)
       const modalPanel = host.closest(".ks-panel") as HTMLElement | null;
 
-      // Fallback: wenn nicht gefunden, clamp zum Viewport wie vorher
       const boundsRect = modalPanel
         ? modalPanel.getBoundingClientRect()
         : ({ left: 12, right: window.innerWidth - 12 } as DOMRect);
 
-      const pad = 12; // Abstand zum Rand innerhalb der Bounds
+      const pad = 12;
       const leftLimit = boundsRect.left + pad;
       const rightLimit = boundsRect.right - pad;
 
       let dx = 0;
 
-      // rechts raus?
       if (panelRect.right > rightLimit) {
         dx = rightLimit - panelRect.right;
       }
 
-      // links raus? (unter Berücksichtigung von dx)
       if (panelRect.left + dx < leftLimit) {
         dx += leftLimit - (panelRect.left + dx);
       }
@@ -81,13 +76,12 @@ export function KsDatePicker({
       }
     };
 
-    // Reagiert darauf, wenn das Panel in den DOM kommt (open/close)
     const mo = new MutationObserver(() => clampPanel());
     mo.observe(host, { childList: true, subtree: true });
 
     const onResize = () => clampPanel();
     window.addEventListener("resize", onResize);
-    // Capturing=true damit wir auch bei scrollbaren Modals reagieren
+
     window.addEventListener("scroll", onResize, true);
 
     return () => {

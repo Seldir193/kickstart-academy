@@ -128,6 +128,16 @@
       align-items: start;
     }
 
+    .news-dialog__translation-actions {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .news-dialog__translation-actions .btn {
+      width: 100%;
+      flex: 1 1 auto;
+    }
+
     .news-dialog__file {
       align-items: stretch;
     }

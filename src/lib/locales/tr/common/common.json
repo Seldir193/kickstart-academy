@@ -56,5 +56,24 @@
 
   "common.placeholders.dayShort": "GG",
   "common.placeholders.monthShort": "AA",
-  "common.placeholders.yearShort": "YYYY"
+  "common.placeholders.yearShort": "YYYY",
+
+  "common.offerDialog.fields.day": "Antrenman günü",
+  "common.offerDialog.placeholders.day": "Gün seç",
+  "common.offerDialog.weekdays.monday": "Pazartesi",
+  "common.offerDialog.weekdays.tuesday": "Salı",
+  "common.offerDialog.weekdays.wednesday": "Çarşamba",
+  "common.offerDialog.weekdays.thursday": "Perşembe",
+  "common.offerDialog.weekdays.friday": "Cuma",
+  "common.offerDialog.weekdays.saturday": "Cumartesi",
+  "common.offerDialog.weekdays.sunday": "Pazar",
+
+  "common.admin.bookings.dialog.labels.schedule": "Termin",
+
+  "common.admin.news.dialog.translate": "Otomatik çevir",
+  "common.admin.news.dialog.translating": "Çevriliyor...",
+  "common.admin.news.dialog.errorTranslateFailed": "Çeviri başarısız oldu.",
+
+  "common.admin.news.dialog.showTranslations": "Çevirileri göster / düzenle",
+  "common.admin.news.dialog.hideTranslations": "Çevirileri gizle"
 }

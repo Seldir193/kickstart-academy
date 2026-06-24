@@ -32,6 +32,10 @@ function safeText(v: unknown) {
   return String(v ?? "").trim();
 }
 
+function regularCourseLineFromSchedule(value: unknown) {
+  return safeText(value).replace(/^jeden\s+/i, "");
+}
+
 function asStatus(s?: Booking["status"]): Status {
   return (s ?? "pending") as Status;
 }
@@ -253,11 +257,42 @@ export default function BookingDialog({
   const isAdminBooking = booking.source === "admin_booking";
   const programText = useMemo(() => inferProgram(booking), [booking]);
   const venueText = useMemo(() => inferVenue(booking, t), [booking, t]);
+  // const bookingType = useMemo(() => inferBookingType(booking), [booking]);
+  // const isWeeklyType = bookingType === "Weekly";
+
   const bookingType = useMemo(() => inferBookingType(booking), [booking]);
-  const isWeeklyType = bookingType === "Weekly";
+
+  const isWeeklyType = useMemo(() => {
+    const metaCategory = safeText((booking.meta as any)?.offerCategory);
+    const offerCategory = safeText((booking as any)?.offerCategory);
+    const text = [
+      bookingType,
+      metaCategory,
+      offerCategory,
+      booking.offerType,
+      booking.offerTitle,
+      booking.meta?.scheduleLine,
+    ]
+      .filter(Boolean)
+      .join(" ")
+      .toLowerCase();
+
+    return (
+      bookingType === "Weekly" ||
+      metaCategory === "Weekly" ||
+      offerCategory === "Weekly" ||
+      text.includes("weekly")
+    );
+  }, [booking, bookingType]);
   const isOneTimeType = bookingType === "One-Time";
   const isWishDate = /schnuppertraining/i.test(booking.message || "");
   const showInvoiceDetails = booking.paymentStatus === "paid";
+
+  // const scheduleLine = safeText(booking.meta?.scheduleLine);
+
+  const scheduleLine = safeText(booking.meta?.scheduleLine);
+  const regularCourseLine = regularCourseLineFromSchedule(scheduleLine);
+  const hasRegularCourseLine = isWeeklyType && regularCourseLine;
 
   const canShowProcessing = s === "pending" && !isAdminBooking;
   const canShowConfirm =
@@ -466,6 +501,48 @@ export default function BookingDialog({
                       </div>
                       <div className="dialog-value">{venueText}</div>
                     </div>
+
+                    {/* {scheduleLine ? (
+                      <div className="booking-dialog__row booking-dialog__row--full">
+                        <div className="dialog-label">
+                          {t("common.admin.bookings.dialog.labels.schedule")}
+                        </div>
+                        <div className="dialog-value">{scheduleLine}</div>
+                      </div>
+                    ) : null} */}
+
+                    {hasRegularCourseLine ? (
+                      <>
+                        <div className="booking-dialog__row booking-dialog__row--full">
+                          <div className="dialog-label">
+                            {t(
+                              "common.admin.bookings.dialog.labels.regularCourseTime",
+                            )}
+                          </div>
+                          <div className="dialog-value">
+                            {regularCourseLine}
+                          </div>
+                        </div>
+
+                        <div className="booking-dialog__row booking-dialog__row--full">
+                          <div className="dialog-label">
+                            {t("common.admin.bookings.dialog.labels.note")}
+                          </div>
+                          <div className="dialog-value">
+                            {t(
+                              "common.admin.bookings.dialog.weeklyHolidayNotice",
+                            )}
+                          </div>
+                        </div>
+                      </>
+                    ) : scheduleLine ? (
+                      <div className="booking-dialog__row booking-dialog__row--full">
+                        <div className="dialog-label">
+                          {t("common.admin.bookings.dialog.labels.schedule")}
+                        </div>
+                        <div className="dialog-value">{scheduleLine}</div>
+                      </div>
+                    ) : null}
 
                     <div className="booking-dialog__row">
                       <div className="dialog-label">

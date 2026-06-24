@@ -122,5 +122,11 @@
 
   "common.admin.bookings.notice.cancelledConfirmed": "Onaylanmış rezervasyon iptal edildi.",
   "common.admin.bookings.notice.subscriptionUpdated": "Abonelik onayı güncellendi.",
-  "common.admin.bookings.notice.paymentApproved": "Ödeme onaylandı."
+  "common.admin.bookings.notice.paymentApproved": "Ödeme onaylandı.",
+
+  "common.admin.bookings.dialog.labels.regularCourseTime": "Düzenli kurs saati",
+  "common.admin.bookings.dialog.labels.note": "Not",
+  "common.admin.bookings.dialog.weeklyHolidayNotice": "Antrenman okul tatilleri dışında yapılır.",
+
+  "common.admin.bookings.table.head.age": "Yaş"
 }

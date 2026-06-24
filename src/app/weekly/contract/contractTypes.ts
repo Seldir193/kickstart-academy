@@ -40,6 +40,12 @@ export type ContractInitOk = {
   offerTitle: string;
   location: string;
   startDate: string;
+  subscriptionStartText?: string;
+  regularCourseLine?: string;
+  regularCourseLabel?: string;
+  holidayNotice?: string;
+  scheduleLine?: string;
+  scheduleLabel?: string;
   dayLabel: string;
   timeLabel: string;
   parent: Partial<ContractParent>;

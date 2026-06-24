@@ -1,7 +1,8 @@
 import type { Feedback, FeedbackCategory, LocalizedText } from "./types";
 
 export const FEEDBACKS_API = "/api/admin/feedbacks";
-export const UPLOAD_API = "/api/admin/upload";
+// export const UPLOAD_API = "/api/admin/upload";
+export const UPLOAD_API = "/api/uploads/feedbacks";
 
 export const FEEDBACK_CATEGORIES: FeedbackCategory[] = [
   "parents",

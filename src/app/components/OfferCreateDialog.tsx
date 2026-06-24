@@ -14,6 +14,7 @@ import type {
 
 import { clsx } from "./offer-create-dialog/utils";
 import { useOfferCreateDialog } from "./offer-create-dialog/useOfferCreateDialog";
+import { WEEKDAY_OPTIONS } from "./offer-create-dialog/constants";
 
 import {
   CategoryField,
@@ -172,6 +173,32 @@ export default function OfferCreateDialog({
               </div>
             </div>
           </>
+        ) : null}
+
+        {d.showDayField ? (
+          <div className="grid grid--2">
+            <div className="form__group">
+              <label className="label">
+                {t("common.offerDialog.fields.day")}
+              </label>
+              <select
+                className="input"
+                value={d.form.day || ""}
+                onChange={(e) =>
+                  d.setForm((f) => ({ ...f, day: e.target.value }))
+                }
+              >
+                <option value="">
+                  {t("common.offerDialog.placeholders.day")}
+                </option>
+                {WEEKDAY_OPTIONS.map((day) => (
+                  <option key={day} value={day}>
+                    {t(`common.offerDialog.weekdays.${day}`)}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
         ) : null}
 
         <div className="grid grid--2">

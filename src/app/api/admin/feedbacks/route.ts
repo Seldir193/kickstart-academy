@@ -49,6 +49,28 @@ function toObject(v: unknown) {
   return isPlainObject(v) ? { ...(v as Record<string, unknown>) } : {};
 }
 
+function stripLocalOrigin(value: string) {
+  return value.replace(/^https?:\/\/localhost:\d+/i, "");
+}
+
+function legacyAdminUploadPath(value: string) {
+  const match = value.match(/^\/api\/admin\/upload\/([^/?#]+)$/i);
+  if (!match) return "";
+  return `/uploads/news/${decodeURIComponent(match[1])}`;
+}
+
+function normalizeUploadPath(value: unknown) {
+  const imageUrl = stripLocalOrigin(String(value ?? "").trim());
+  if (!imageUrl || imageUrl.startsWith("data:image/")) return "";
+  if (imageUrl.startsWith("/uploads/")) return imageUrl;
+  return legacyAdminUploadPath(imageUrl);
+}
+
+function normalizeFeedbackPayload(value: unknown) {
+  const payload = toObject(value);
+  return { ...payload, imageUrl: normalizeUploadPath(payload.imageUrl) };
+}
+
 async function fetchMe(req: NextRequest): Promise<Me | null> {
   const r = await fetch(new URL("/api/admin/auth/me", req.url), {
     method: "GET",
@@ -122,7 +144,8 @@ export async function POST(req: NextRequest) {
   const auth = await requireSuper(req);
   if (!auth.ok) return json({ ok: false, error: auth.error }, auth.status);
 
-  const payload = toObject(await readJson(req));
+  // const payload = toObject(await readJson(req));
+  const payload = normalizeFeedbackPayload(await readJson(req));
   const result = await proxy("/admin/feedbacks", "POST", auth.me, payload);
 
   return json(result.data, result.status);

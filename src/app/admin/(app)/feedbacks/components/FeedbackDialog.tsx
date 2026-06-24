@@ -156,8 +156,8 @@ function FeedbackDialogFooter(props: {
     <div className="dialog-footer feedback-dialog__footer">
       {error ? (
         <p className="error feedback-dialog__message" role="alert">
-    {error}
-  </p>
+          {error}
+        </p>
       ) : null}
 
       <button

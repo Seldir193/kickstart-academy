@@ -275,4 +275,38 @@
   .news-reject__footer {
     justify-content: flex-end;
   }
+
+  //
+
+  .news-dialog__translation-actions {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+    width: 100%;
+  }
+
+  .news-dialog__translation-actions .btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .news-dialog__translation-fields {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+    width: 100%;
+    min-width: 0;
+  }
+
+  .news-dialog__translation-fields > .field {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .news-dialog__translation-fields .input,
+  .news-dialog__translation-fields textarea {
+    width: 100%;
+    max-width: 100%;
+  }
 }

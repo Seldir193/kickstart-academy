@@ -167,6 +167,7 @@
   "common.admin.news.dialog.save": "Kaydet",
   "common.admin.news.dialog.errorTitleMissing": "Başlık eksik.",
   "common.admin.news.dialog.errorSaveFailed": "Kaydetme başarısız oldu.",
+  "common.admin.news.dialog.errorCoverNotImage": "Kapak görseli bir resim dosyası olmalıdır.",
   "common.admin.news.dialog.template.intro": "Giriş",
   "common.admin.news.dialog.template.introText": "Okuyucuyu yakalayacak 2–4 cümle yazın.",
   "common.admin.news.dialog.template.mainSection": "Ana bölüm",
@@ -207,5 +208,12 @@
   "common.bulkActions.select": "Seç",
   "common.bulkActions.selected": "seçildi",
   "common.bulkActions.selectAll": "Tümünü seç",
-  "common.bulkActions.clearAll": "Tüm seçimi kaldır"
+  "common.bulkActions.clearAll": "Tüm seçimi kaldır",
+
+  "common.admin.news.dialog.translations.enTitle": "İngilizce başlık",
+  "common.admin.news.dialog.translations.enLead": "İngilizce kısa açıklama",
+  "common.admin.news.dialog.translations.enContent": "İngilizce makale içeriği",
+  "common.admin.news.dialog.translations.trTitle": "Türkçe başlık",
+  "common.admin.news.dialog.translations.trLead": "Türkçe kısa açıklama",
+  "common.admin.news.dialog.translations.trContent": "Türkçe makale içeriği"
 }

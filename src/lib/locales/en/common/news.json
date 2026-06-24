@@ -167,6 +167,7 @@
   "common.admin.news.dialog.save": "Save",
   "common.admin.news.dialog.errorTitleMissing": "Title is missing.",
   "common.admin.news.dialog.errorSaveFailed": "Save failed.",
+  "common.admin.news.dialog.errorCoverNotImage": "Cover image must be an image file.",
   "common.admin.news.dialog.template.intro": "Intro",
   "common.admin.news.dialog.template.introText": "Write 2–4 sentences that hook the reader.",
   "common.admin.news.dialog.template.mainSection": "Main section",
@@ -207,5 +208,12 @@
   "common.bulkActions.select": "Select",
   "common.bulkActions.selected": "selected",
   "common.bulkActions.selectAll": "Select all",
-  "common.bulkActions.clearAll": "Clear all"
+  "common.bulkActions.clearAll": "Clear all",
+
+  "common.admin.news.dialog.translations.enTitle": "English title",
+  "common.admin.news.dialog.translations.enLead": "English lead text",
+  "common.admin.news.dialog.translations.enContent": "English article content",
+  "common.admin.news.dialog.translations.trTitle": "Turkish title",
+  "common.admin.news.dialog.translations.trLead": "Turkish lead text",
+  "common.admin.news.dialog.translations.trContent": "Turkish article content"
 }

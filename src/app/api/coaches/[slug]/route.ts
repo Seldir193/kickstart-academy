@@ -3,8 +3,10 @@ import { NextRequest, NextResponse } from "next/server";
 
 const BASE = (process.env.NEXT_BACKEND_API_BASE || "").replace(/\/+$/, "");
 
+type CoachRecord = Record<string, any>;
+type Ctx = { params: Promise<{ slug: string }> };
+
 function cors(res: NextResponse) {
-  // WP-Frontend läuft lokal auf http://localhost
   res.headers.set("Access-Control-Allow-Origin", "http://localhost");
   res.headers.set("Vary", "Origin");
   res.headers.set("Access-Control-Allow-Methods", "GET,OPTIONS");
@@ -12,11 +14,55 @@ function cors(res: NextResponse) {
   return res;
 }
 
+function getPhotoValue(coach: CoachRecord) {
+  return (
+    coach.photoUrl ||
+    coach.imageUrl ||
+    coach.image ||
+    coach.photo ||
+    coach.avatar ||
+    coach.profileImage ||
+    coach.live?.photoUrl ||
+    coach.live?.imageUrl ||
+    coach.draft?.photoUrl ||
+    coach.draft?.imageUrl ||
+    ""
+  );
+}
+
+function normalizePhotoUrl(value: unknown) {
+  const url = String(value || "")
+    .trim()
+    .replaceAll("\\", "/");
+
+  if (!url) return "";
+  if (/^(https?:\/\/|data:image\/)/i.test(url)) return url;
+  if (url.startsWith("/uploads/coach/")) return url;
+  if (url.startsWith("uploads/coach/")) return `/${url}`;
+  if (url.startsWith("/api/uploads/coach/")) return url;
+  if (url.startsWith("api/uploads/coach/")) return `/${url}`;
+
+  return url;
+}
+
+function normalizeCoach(coach: CoachRecord) {
+  return {
+    ...coach,
+    photoUrl: normalizePhotoUrl(getPhotoValue(coach)),
+  };
+}
+
+function parseJson(text: string) {
+  try {
+    return JSON.parse(text);
+  } catch {
+    return null;
+  }
+}
+
 export async function OPTIONS() {
   return cors(new NextResponse(null, { status: 204 }));
 }
-
-type Ctx = { params: Promise<{ slug: string }> };
 
 export async function GET(_: NextRequest, { params }: Ctx) {
   const { slug } = await params;
@@ -24,7 +70,11 @@ export async function GET(_: NextRequest, { params }: Ctx) {
   const upstream = await fetch(`${BASE}/coaches/${encodeURIComponent(slug)}`, {
     cache: "no-store",
   });
-  const body = await upstream.text();
+
+  const text = await upstream.text();
+  const data = parseJson(text);
+  const body = data ? JSON.stringify(normalizeCoach(data)) : text;
+
   return cors(
     new NextResponse(body, {
       status: upstream.status,
@@ -32,6 +82,42 @@ export async function GET(_: NextRequest, { params }: Ctx) {
         "content-type":
           upstream.headers.get("content-type") || "application/json",
       },
-    })
+    }),
   );
 }
+// import { NextRequest, NextResponse } from "next/server";
+
+// const BASE = (process.env.NEXT_BACKEND_API_BASE || "").replace(/\/+$/, "");
+
+// function cors(res: NextResponse) {
+
+//   res.headers.set("Access-Control-Allow-Origin", "http://localhost");
+//   res.headers.set("Vary", "Origin");
+//   res.headers.set("Access-Control-Allow-Methods", "GET,OPTIONS");
+//   res.headers.set("Access-Control-Allow-Headers", "Content-Type");
+//   return res;
+// }
+
+// export async function OPTIONS() {
+//   return cors(new NextResponse(null, { status: 204 }));
+// }
+
+// type Ctx = { params: Promise<{ slug: string }> };
+
+// export async function GET(_: NextRequest, { params }: Ctx) {
+//   const { slug } = await params;
+
+//   const upstream = await fetch(`${BASE}/coaches/${encodeURIComponent(slug)}`, {
+//     cache: "no-store",
+//   });
+//   const body = await upstream.text();
+//   return cors(
+//     new NextResponse(body, {
+//       status: upstream.status,
+//       headers: {
+//         "content-type":
+//           upstream.headers.get("content-type") || "application/json",
+//       },
+//     })
+//   );
+// }

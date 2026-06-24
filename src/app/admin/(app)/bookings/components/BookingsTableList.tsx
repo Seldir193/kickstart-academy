@@ -163,11 +163,23 @@ export default function BookingsTableList(props: Props) {
         <section className="card news-list">
           <div className="news-list__table">
             <div className="news-list__head" aria-hidden="true">
+              {/* <div className="news-list__h">
+                {t("common.admin.bookings.table.head.name")}
+              </div>
+              <div className="news-list__h">
+                {t("common.admin.bookings.table.head.email")}
+              </div>
+              <div className="news-list__h">
+                {t("common.admin.bookings.table.head.date")}
+              </div> */}
               <div className="news-list__h">
                 {t("common.admin.bookings.table.head.name")}
               </div>
               <div className="news-list__h">
                 {t("common.admin.bookings.table.head.email")}
+              </div>
+              <div className="news-list__h">
+                {t("common.admin.bookings.table.head.age")}
               </div>
               <div className="news-list__h">
                 {t("common.admin.bookings.table.head.date")}

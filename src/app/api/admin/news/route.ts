@@ -1,6 +1,5 @@
 // src/app/api/admin/news/route.ts
 export const runtime = "nodejs";
-export const dynamic = "force-dynamic";
 
 import { NextResponse, type NextRequest } from "next/server";
 
@@ -14,11 +13,11 @@ function apiBase() {
   return base.replace(/\/+$/, "");
 }
 
-function toStatus(v: unknown) {
-  return typeof v === "number" && Number.isFinite(v) ? v : 500;
+function toStatus(value: unknown) {
+  return typeof value === "number" && Number.isFinite(value) ? value : 500;
 }
 
-function json(body: any, status?: number) {
+function json(body: unknown, status?: number) {
   return NextResponse.json(body, { status: toStatus(status) });
 }
 
@@ -38,24 +37,61 @@ function roleHeader(me: Me) {
   return me.isSuperAdmin || me.role === "super" ? "super" : "provider";
 }
 
-function isPlainObject(v: unknown) {
-  return Boolean(v) && typeof v === "object" && !Array.isArray(v);
+function isPlainObject(value: unknown) {
+  return Boolean(value) && typeof value === "object" && !Array.isArray(value);
 }
 
-function toObject(v: unknown) {
-  return isPlainObject(v) ? { ...(v as any) } : {};
+function toObject(value: unknown) {
+  return isPlainObject(value) ? { ...(value as Record<string, any>) } : {};
+}
+
+function normalizeAbsoluteAdminUploadUrl(url: string) {
+  return url.replace(
+    /^https?:\/\/[^/]+\/api\/admin\/upload\//i,
+    "/uploads/news/",
+  );
+}
+
+function normalizeNewsImageUrl(value: unknown) {
+  const url = String(value || "")
+    .trim()
+    .replaceAll("\\", "/");
+  const normalizedUrl = normalizeAbsoluteAdminUploadUrl(url);
+
+  if (!normalizedUrl || normalizedUrl.startsWith("data:image/")) return "";
+  if (normalizedUrl.startsWith("/api/admin/upload/")) {
+    return normalizedUrl.replace("/api/admin/upload/", "/uploads/news/");
+  }
+
+  if (normalizedUrl.startsWith("api/admin/upload/")) {
+    return `/${normalizedUrl}`.replace("/api/admin/upload/", "/uploads/news/");
+  }
+
+  if (normalizedUrl.startsWith("uploads/news/")) return `/${normalizedUrl}`;
+  return normalizedUrl;
+}
+
+function normalizeNewsImages(body: unknown) {
+  const next = toObject(body);
+  const keys = ["imageUrl", "image", "coverImage", "thumbnail"];
+
+  keys.forEach((key) => {
+    if (key in next) next[key] = normalizeNewsImageUrl(next[key]);
+  });
+
+  return next;
 }
 
 function stripProviderCreateFields(body: unknown) {
-  const next = toObject(body);
+  const next = normalizeNewsImages(body);
 
-  delete (next as any).submitForReview;
-  delete (next as any).published;
-  delete (next as any).rejectionReason;
-  delete (next as any).rejectedAt;
-  delete (next as any).rejectedBy;
-  delete (next as any).rejectedById;
-  delete (next as any).status;
+  delete next.submitForReview;
+  delete next.published;
+  delete next.rejectionReason;
+  delete next.rejectedAt;
+  delete next.rejectedBy;
+  delete next.rejectedById;
+  delete next.status;
 
   return next;
 }
@@ -66,35 +102,48 @@ function buildProviderCreatePayload(body: unknown) {
 }
 
 async function fetchMe(req: NextRequest): Promise<Me | null> {
-  const r = await fetch(new URL("/api/admin/auth/me", req.url), {
+  const response = await fetch(new URL("/api/admin/auth/me", req.url), {
     method: "GET",
-    headers: {
-      cookie: req.headers.get("cookie") || "",
-      accept: "application/json",
-    },
+    headers: getAuthHeaders(req),
     cache: "no-store",
   });
 
-  const data = parseJson(await r.text());
-  if (!r.ok || !data?.ok || !data?.user?.id) return null;
+  const data = parseJson(await response.text());
+  if (!response.ok || !data?.ok || !data?.user?.id) return null;
 
+  return buildMe(data.user);
+}
+
+function getAuthHeaders(req: NextRequest) {
   return {
-    id: String(data.user.id),
-    role: String(data.user.role || "provider"),
-    isSuperAdmin: Boolean(data.user.isSuperAdmin),
+    cookie: req.headers.get("cookie") || "",
+    accept: "application/json",
+  };
+}
+
+function buildMe(user: any): Me {
+  return {
+    id: String(user.id),
+    role: String(user.role || "provider"),
+    isSuperAdmin: Boolean(user.isSuperAdmin),
   };
 }
 
 async function requireMe(req: NextRequest): Promise<AuthResult> {
   const me = await fetchMe(req);
-  if (!me) return { ok: false, status: 401, error: "Unauthorized" };
+
+  if (!me) {
+    return { ok: false, status: 401, error: "Unauthorized" };
+  }
+
   return { ok: true, me };
 }
 
 function queryString(req: NextRequest) {
   const url = new URL(req.url);
-  const qs = url.searchParams.toString();
-  return qs ? `?${qs}` : "";
+  const query = url.searchParams.toString();
+
+  return query ? `?${query}` : "";
 }
 
 function buildHeaders(me: Me, hasBody: boolean) {
@@ -103,21 +152,32 @@ function buildHeaders(me: Me, hasBody: boolean) {
     "x-provider-id": me.id,
     "x-admin-role": roleHeader(me),
   };
+
   if (hasBody) headers["content-type"] = "application/json";
   return headers;
 }
 
-async function proxy(path: string, method: string, me: Me, payload?: any) {
+async function proxy(path: string, method: string, me: Me, payload?: unknown) {
   const hasBody = payload !== undefined;
-
-  const r = await fetch(`${apiBase()}${path}`, {
+  const response = await fetch(`${apiBase()}${path}`, {
     method,
     headers: buildHeaders(me, hasBody),
     body: hasBody ? JSON.stringify(payload) : undefined,
     cache: "no-store",
   });
 
-  return { status: toStatus(r.status), data: parseJson(await r.text()) };
+  return {
+    status: toStatus(response.status),
+    data: parseJson(await response.text()),
+  };
+}
+
+function buildCreatePayload(me: Me, body: unknown) {
+  if (roleHeader(me) === "provider") {
+    return buildProviderCreatePayload(body);
+  }
+
+  return normalizeNewsImages(body);
 }
 
 export async function GET(req: NextRequest) {
@@ -133,16 +193,11 @@ export async function POST(req: NextRequest) {
   if (!auth.ok) return json({ ok: false, error: auth.error }, auth.status);
 
   const body = await readJson(req);
-  const payload =
-    roleHeader(auth.me) === "provider"
-      ? buildProviderCreatePayload(body)
-      : toObject(body);
-
+  const payload = buildCreatePayload(auth.me, body);
   const result = await proxy("/admin/news", "POST", auth.me, payload);
+
   return json(result.data, result.status);
 }
-
-// // src/app/api/admin/news/route.ts
 // export const runtime = "nodejs";
 // export const dynamic = "force-dynamic";
 
@@ -164,10 +219,6 @@ export async function POST(req: NextRequest) {
 
 // function json(body: any, status?: number) {
 //   return NextResponse.json(body, { status: toStatus(status) });
-// }
-
-// function hasToken(req: NextRequest) {
-//   return Boolean(req.cookies.get("admin_token")?.value || "");
 // }
 
 // function parseJson(text: string) {
@@ -196,6 +247,7 @@ export async function POST(req: NextRequest) {
 
 // function stripProviderCreateFields(body: unknown) {
 //   const next = toObject(body);
+
 //   delete (next as any).submitForReview;
 //   delete (next as any).published;
 //   delete (next as any).rejectionReason;
@@ -203,6 +255,7 @@ export async function POST(req: NextRequest) {
 //   delete (next as any).rejectedBy;
 //   delete (next as any).rejectedById;
 //   delete (next as any).status;
+
 //   return next;
 // }
 
@@ -232,7 +285,6 @@ export async function POST(req: NextRequest) {
 // }
 
 // async function requireMe(req: NextRequest): Promise<AuthResult> {
-//   if (!hasToken(req)) return { ok: false, status: 401, error: "Unauthorized" };
 //   const me = await fetchMe(req);
 //   if (!me) return { ok: false, status: 401, error: "Unauthorized" };
 //   return { ok: true, me };
@@ -256,6 +308,7 @@ export async function POST(req: NextRequest) {
 
 // async function proxy(path: string, method: string, me: Me, payload?: any) {
 //   const hasBody = payload !== undefined;
+
 //   const r = await fetch(`${apiBase()}${path}`, {
 //     method,
 //     headers: buildHeaders(me, hasBody),
@@ -286,302 +339,4 @@ export async function POST(req: NextRequest) {
 
 //   const result = await proxy("/admin/news", "POST", auth.me, payload);
 //   return json(result.data, result.status);
-// }
-
-// // src/app/api/admin/news/route.ts
-// export const runtime = "nodejs";
-// export const dynamic = "force-dynamic";
-
-// import { NextResponse, type NextRequest } from "next/server";
-
-// type Me = { id: string; role: string; isSuperAdmin: boolean };
-// type AuthFail = { ok: false; status: number; error: string };
-// type AuthOk = { ok: true; me: Me };
-// type AuthResult = AuthFail | AuthOk;
-
-// function apiBase() {
-//   const base = process.env.NEXT_BACKEND_API_BASE || "http://127.0.0.1:5000/api";
-//   return base.replace(/\/+$/, "");
-// }
-
-// function toStatus(v: unknown) {
-//   return typeof v === "number" && Number.isFinite(v) ? v : 500;
-// }
-
-// function json(body: any, status?: number) {
-//   return NextResponse.json(body, { status: toStatus(status) });
-// }
-
-// function hasToken(req: NextRequest) {
-//   return Boolean(req.cookies.get("admin_token")?.value || "");
-// }
-
-// function parseJson(text: string) {
-//   try {
-//     return JSON.parse(text);
-//   } catch {
-//     return { ok: false, raw: text };
-//   }
-// }
-
-// async function readJson(req: NextRequest) {
-//   return await req.json().catch(() => ({}));
-// }
-
-// function roleHeader(me: Me) {
-//   return me.isSuperAdmin || me.role === "super" ? "super" : "provider";
-// }
-
-// function isPlainObject(v: unknown) {
-//   return Boolean(v) && typeof v === "object" && !Array.isArray(v);
-// }
-
-// function toObject(v: unknown) {
-//   return isPlainObject(v) ? { ...(v as any) } : {};
-// }
-
-// function stripProviderCreateFields(body: unknown) {
-//   const next = toObject(body);
-//   delete next.submitForReview;
-//   delete next.published;
-//   delete next.rejectionReason;
-//   delete next.rejectedAt;
-//   delete next.rejectedBy;
-//   delete next.rejectedById;
-//   delete next.status;
-//   return next;
-// }
-
-// function buildProviderCreatePayload(body: unknown) {
-//   const base = stripProviderCreateFields(body);
-//   return { ...base, published: false, rejectionReason: "", rejectedAt: null };
-// }
-
-// async function fetchMe(req: NextRequest): Promise<Me | null> {
-//   const r = await fetch(new URL("/api/admin/auth/me", req.url), {
-//     method: "GET",
-//     headers: {
-//       cookie: req.headers.get("cookie") || "",
-//       accept: "application/json",
-//     },
-//     cache: "no-store",
-//   });
-
-//   const data = parseJson(await r.text());
-//   if (!r.ok || !data?.ok || !data?.user?.id) return null;
-
-//   return {
-//     id: String(data.user.id),
-//     role: String(data.user.role || "provider"),
-//     isSuperAdmin: Boolean(data.user.isSuperAdmin),
-//   };
-// }
-
-// async function requireMe(req: NextRequest): Promise<AuthResult> {
-//   if (!hasToken(req)) return { ok: false, status: 401, error: "Unauthorized" };
-//   const me = await fetchMe(req);
-//   if (!me) return { ok: false, status: 401, error: "Unauthorized" };
-//   return { ok: true, me };
-// }
-
-// function queryString(req: NextRequest) {
-//   const url = new URL(req.url);
-//   const qs = url.searchParams.toString();
-//   return qs ? `?${qs}` : "";
-// }
-
-// function buildHeaders(me: Me, hasBody: boolean) {
-//   const headers: Record<string, string> = {
-//     accept: "application/json",
-//     "x-provider-id": me.id,
-//     "x-admin-role": roleHeader(me),
-//   };
-//   if (hasBody) headers["content-type"] = "application/json";
-//   return headers;
-// }
-
-// async function proxy(path: string, method: string, me: Me, payload?: any) {
-//   const hasBody = payload !== undefined;
-//   const r = await fetch(`${apiBase()}${path}`, {
-//     method,
-//     headers: buildHeaders(me, hasBody),
-//     body: hasBody ? JSON.stringify(payload) : undefined,
-//     cache: "no-store",
-//   });
-//   return { status: toStatus(r.status), data: parseJson(await r.text()) };
-// }
-
-// export async function GET(req: NextRequest) {
-//   const auth = await requireMe(req);
-//   if (!auth.ok) return json({ ok: false, error: auth.error }, auth.status);
-
-//   const result = await proxy(`/admin/news${queryString(req)}`, "GET", auth.me);
-//   return json(result.data, result.status);
-// }
-
-// export async function POST(req: NextRequest) {
-//   const auth = await requireMe(req);
-//   if (!auth.ok) return json({ ok: false, error: auth.error }, auth.status);
-
-//   const body = await readJson(req);
-//   const payload =
-//     roleHeader(auth.me) === "provider"
-//       ? buildProviderCreatePayload(body)
-//       : toObject(body);
-
-//   const result = await proxy("/admin/news", "POST", auth.me, payload);
-//   return json(result.data, result.status);
-// }
-
-// //src\app\api\admin\news\route.ts
-// export const runtime = "nodejs";
-// export const dynamic = "force-dynamic";
-
-// import { NextResponse, type NextRequest } from "next/server";
-
-// function apiBase() {
-//   const base = process.env.NEXT_BACKEND_API_BASE || "http://127.0.0.1:5000/api";
-//   return base.replace(/\/+$/, "");
-// }
-
-// async function readBody(req: NextRequest) {
-//   return await req.json().catch(() => ({}));
-// }
-
-// async function getMe(req: NextRequest) {
-//   const meRes = await fetch(new URL("/api/admin/auth/me", req.url), {
-//     method: "GET",
-//     headers: {
-//       cookie: req.headers.get("cookie") || "",
-//       accept: "application/json",
-//     },
-//     cache: "no-store",
-//   });
-
-//   const text = await meRes.text();
-//   let data: any;
-//   try {
-//     data = JSON.parse(text);
-//   } catch {
-//     data = { ok: false, raw: text };
-//   }
-
-//   if (!meRes.ok || !data?.ok || !data?.user?.id) return null;
-
-//   return {
-//     id: String(data.user.id),
-//     role: String(data.user.role || "provider"),
-//     isSuperAdmin: Boolean(data.user.isSuperAdmin),
-//   };
-// }
-
-// function roleHeader(me: { role?: string; isSuperAdmin?: boolean }) {
-//   return me?.isSuperAdmin || me?.role === "super" ? "super" : "provider";
-// }
-
-// function isObject(v: unknown) {
-//   return !!v && typeof v === "object" && !Array.isArray(v);
-// }
-
-// function providerCreatePayload(body: any) {
-//   const next = isObject(body) ? { ...body } : {};
-//   delete (next as any).submitForReview;
-//   delete (next as any).published;
-//   delete (next as any).rejectionReason;
-//   delete (next as any).rejectedAt;
-//   delete (next as any).rejectedBy;
-//   delete (next as any).rejectedById;
-
-//   return {
-//     ...next,
-//     published: false,
-//     rejectionReason: "",
-//     rejectedAt: null,
-//   };
-// }
-
-// export async function GET(req: NextRequest) {
-//   const token = req.cookies.get("admin_token")?.value || "";
-//   if (!token) {
-//     return NextResponse.json(
-//       { ok: false, error: "Unauthorized" },
-//       { status: 401 },
-//     );
-//   }
-
-//   const me = await getMe(req);
-//   if (!me) {
-//     return NextResponse.json(
-//       { ok: false, error: "Unauthorized" },
-//       { status: 401 },
-//     );
-//   }
-
-//   const url = new URL(req.url);
-//   const qs = url.searchParams.toString();
-
-//   const r = await fetch(`${apiBase()}/admin/news${qs ? `?${qs}` : ""}`, {
-//     method: "GET",
-//     headers: {
-//       accept: "application/json",
-//       "x-provider-id": me.id,
-//       "x-admin-role": roleHeader(me),
-//     },
-//     cache: "no-store",
-//   });
-
-//   const text = await r.text();
-//   let data: any;
-//   try {
-//     data = JSON.parse(text);
-//   } catch {
-//     data = { ok: false, raw: text };
-//   }
-
-//   return NextResponse.json(data, { status: r.status });
-// }
-
-// export async function POST(req: NextRequest) {
-//   const token = req.cookies.get("admin_token")?.value || "";
-//   if (!token) {
-//     return NextResponse.json(
-//       { ok: false, error: "Unauthorized" },
-//       { status: 401 },
-//     );
-//   }
-
-//   const me = await getMe(req);
-//   if (!me) {
-//     return NextResponse.json(
-//       { ok: false, error: "Unauthorized" },
-//       { status: 401 },
-//     );
-//   }
-
-//   const body = await readBody(req);
-//   const role = roleHeader(me);
-
-//   const payload = role === "provider" ? providerCreatePayload(body) : body;
-
-//   const r = await fetch(`${apiBase()}/admin/news`, {
-//     method: "POST",
-//     headers: {
-//       "content-type": "application/json",
-//       accept: "application/json",
-//       "x-provider-id": me.id,
-//       "x-admin-role": role,
-//     },
-//     body: JSON.stringify(payload),
-//     cache: "no-store",
-//   });
-
-//   const text = await r.text();
-//   let data: any;
-//   try {
-//     data = JSON.parse(text);
-//   } catch {
-//     data = { ok: false, raw: text };
-//   }
-
-//   return NextResponse.json(data, { status: r.status });
 // }

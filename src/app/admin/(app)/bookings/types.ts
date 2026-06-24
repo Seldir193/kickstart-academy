@@ -49,6 +49,8 @@ export type Booking = {
   paidAt?: string | null;
   returnedAt?: string | null;
   meta?: {
+    scheduleLine?: string | null;
+    scheduleLabel?: string | null;
     subscriptionEligible?: boolean;
     subscriptionEligibleAt?: string | null;
 

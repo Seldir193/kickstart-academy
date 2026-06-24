@@ -32,7 +32,7 @@
 
   "common.admin.places.dialog.createTitle": "Create place",
   "common.admin.places.dialog.editTitle": "Edit place",
-  "common.admin.places.dialog.close": "Close",
+
   "common.admin.places.dialog.locationDetails": "Location details",
   "common.admin.places.dialog.nameLabel": "Club / Place name",
   "common.admin.places.dialog.namePlaceholder": "e.g., SV Example",

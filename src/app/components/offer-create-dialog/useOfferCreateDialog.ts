@@ -63,6 +63,7 @@ export function useOfferCreateDialog({
     holidayWeekLabel: "",
     dateFrom: "",
     dateTo: "",
+    day: "",
   };
 
   const computeInitial = (): CreateOfferPayload => {
@@ -95,6 +96,7 @@ export function useOfferCreateDialog({
       holidayWeekLabel: initial.holidayWeekLabel ?? "",
       dateFrom: initial.dateFrom ?? "",
       dateTo: initial.dateTo ?? "",
+      day: initial.day ?? "",
     };
   };
 
@@ -268,12 +270,14 @@ export function useOfferCreateDialog({
   }, [form, uploading]);
 
   function handleCategoryChange(next: CategoryKey | "") {
+    const keepsDay = next === "Weekly" || next === "Individual";
     setCategoryUI(next);
     setCourseUI("");
     setForm((f) => ({
       ...f,
       category: next,
       sub_type: "",
+      day: keepsDay ? f.day : "",
     }));
   }
 
@@ -290,6 +294,7 @@ export function useOfferCreateDialog({
       type: def.type,
       category: cat,
       sub_type: def.sub_type || "",
+      day: cat === "Weekly" || cat === "Individual" ? f.day : "",
     }));
   }
 
@@ -380,6 +385,7 @@ export function useOfferCreateDialog({
       holidayWeekLabel: finalHolidayName || "",
       dateFrom: form.dateFrom || "",
       dateTo: form.dateTo || "",
+      day: form.day || "",
     };
 
     if (mode === "edit" && initial?._id && onSave) {
@@ -413,6 +419,8 @@ export function useOfferCreateDialog({
   const isHolidayPower =
     form.category === "Holiday" && form.sub_type === "Powertraining";
   const isHolidayOffer = form.category === "Holiday";
+  const showDayField =
+    form.category === "Weekly" || form.category === "Individual";
 
   return {
     panelRef,
@@ -457,6 +465,7 @@ export function useOfferCreateDialog({
     isHolidayCamp,
     isHolidayPower,
     isHolidayOffer,
+    showDayField,
 
     handleCategoryChange,
     handleCourseChange,

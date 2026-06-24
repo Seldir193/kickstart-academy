@@ -196,6 +196,31 @@ export function effectivePosition(c: Coach) {
   return cleanStr((effectiveCoach(c) as any).position);
 }
 
+export async function uploadCoachPhoto(file: File) {
+  const formData = new FormData();
+
+  formData.append("file", file);
+  formData.append("filename", file.name);
+
+  const response = await fetch("/api/uploads/coach", {
+    method: "POST",
+    body: formData,
+    cache: "no-store",
+  });
+
+  const data = await parseJsonSafe(response);
+
+  if (!response.ok || (data as any)?.ok === false) {
+    throw new Error(pickError(data) || "Image upload failed.");
+  }
+
+  const photoUrl = cleanStr((data as any)?.url);
+
+  if (!photoUrl) throw new Error("Image upload failed.");
+
+  return photoUrl;
+}
+
 // //src\app\admin\(app)\coaches\api.ts
 // "use client";
 

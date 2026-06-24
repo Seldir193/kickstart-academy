@@ -24,6 +24,11 @@ type Props = {
   uploadImage: (file?: File) => Promise<void>;
 };
 
+type BaseFieldProps = {
+  draft: Feedback;
+  updateFeedback: UpdateFeedback;
+};
+
 type ImageFieldProps = Props & {
   inputRef: React.RefObject<HTMLInputElement | null>;
   fileName: string;
@@ -41,7 +46,7 @@ export default function FeedbackDialogFields(props: Props) {
   );
 }
 
-function FeedbackBaseFields({ draft, updateFeedback }: Props) {
+function FeedbackBaseFields({ draft, updateFeedback }: BaseFieldProps) {
   return (
     <>
       <FeedbackCategoryField draft={draft} updateFeedback={updateFeedback} />
@@ -52,7 +57,7 @@ function FeedbackBaseFields({ draft, updateFeedback }: Props) {
   );
 }
 
-function FeedbackCategoryField({ draft, updateFeedback }: Props) {
+function FeedbackCategoryField({ draft, updateFeedback }: BaseFieldProps) {
   const { t } = useTranslation();
 
   return (
@@ -75,7 +80,7 @@ function FeedbackCategoryField({ draft, updateFeedback }: Props) {
   );
 }
 
-function FeedbackSortField({ draft, updateFeedback }: Props) {
+function FeedbackSortField({ draft, updateFeedback }: BaseFieldProps) {
   const { t } = useTranslation();
 
   return (
@@ -93,7 +98,7 @@ function FeedbackSortField({ draft, updateFeedback }: Props) {
   );
 }
 
-function FeedbackAuthorField({ draft, updateFeedback }: Props) {
+function FeedbackAuthorField({ draft, updateFeedback }: BaseFieldProps) {
   const { t } = useTranslation();
 
   return (
@@ -109,7 +114,7 @@ function FeedbackAuthorField({ draft, updateFeedback }: Props) {
   );
 }
 
-function FeedbackStatusField({ draft, updateFeedback }: Props) {
+function FeedbackStatusField({ draft, updateFeedback }: BaseFieldProps) {
   const { t } = useTranslation();
 
   return (
@@ -214,7 +219,8 @@ function FeedbackUploadButton({
 
 function FeedbackFileName({ fileName }: { fileName: string }) {
   const { t } = useTranslation();
-  const className = "feedback-dialog__file-name" + (!fileName ? " is-empty" : "");
+  const className =
+    "feedback-dialog__file-name" + (!fileName ? " is-empty" : "");
 
   return (
     <span className={className}>

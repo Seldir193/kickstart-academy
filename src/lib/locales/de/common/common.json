@@ -52,5 +52,24 @@
   "common.placeholders.monthShort": "MM",
   "common.placeholders.yearShort": "JJJJ",
 
-  "common.close": "Schließen"
+  "common.close": "Schließen",
+
+  "common.offerDialog.fields.day": "Trainingstag",
+  "common.offerDialog.placeholders.day": "Tag auswählen",
+  "common.offerDialog.weekdays.monday": "Montag",
+  "common.offerDialog.weekdays.tuesday": "Dienstag",
+  "common.offerDialog.weekdays.wednesday": "Mittwoch",
+  "common.offerDialog.weekdays.thursday": "Donnerstag",
+  "common.offerDialog.weekdays.friday": "Freitag",
+  "common.offerDialog.weekdays.saturday": "Samstag",
+  "common.offerDialog.weekdays.sunday": "Sonntag",
+
+  "common.admin.bookings.dialog.labels.schedule": "Termin",
+
+  "common.admin.news.dialog.translate": "Automatisch übersetzen",
+  "common.admin.news.dialog.translating": "Wird übersetzt...",
+  "common.admin.news.dialog.errorTranslateFailed": "Übersetzung fehlgeschlagen.",
+
+  "common.admin.news.dialog.showTranslations": "Übersetzungen anzeigen / bearbeiten",
+  "common.admin.news.dialog.hideTranslations": "Übersetzungen ausblenden"
 }

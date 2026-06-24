@@ -301,5 +301,9 @@
 
   "common.admin.customers.bookDialog.errors.loadFamily": "Aile yüklenemedi",
 
-  "common.admin.customers.customerDialog.newParentWillBeCreated": "Yeni ebeveyn oluşturulacak"
+  "common.admin.customers.customerDialog.newParentWillBeCreated": "Yeni ebeveyn oluşturulacak",
+
+  "common.admin.customers.bookDialog.regularCourseTime": "Düzenli kurs saati",
+  "common.admin.customers.bookDialog.hint": "Not",
+  "common.admin.customers.bookDialog.weeklyHolidayNotice": "Antrenman okul tatilleri dışında yapılır."
 }

@@ -3,6 +3,7 @@
 
 import React from "react";
 import { useTranslation } from "react-i18next";
+import { uploadCoachPhoto } from "@/app/admin/(app)/coaches/api";
 
 type Coach = {
   slug: string;
@@ -55,11 +56,16 @@ export default function CoachDialog({
       ? t("common.admin.coaches.dialog.createTitle")
       : t("common.admin.coaches.dialog.editTitle");
 
+  // function isValidPhotoUrl(u?: string): boolean {
+  //   if (!u) return false;
+  //   return (
+  //     /^data:image\//.test(u) || /^https?:\/\//.test(u) || u.startsWith("/")
+  //   );
+  // }
+
   function isValidPhotoUrl(u?: string): boolean {
     if (!u) return false;
-    return (
-      /^data:image\//.test(u) || /^https?:\/\//.test(u) || u.startsWith("/")
-    );
+    return /^https?:\/\//.test(u) || u.startsWith("/");
   }
 
   if (!open) return null;
@@ -78,8 +84,10 @@ export default function CoachDialog({
     setFileName(file.name);
     setUploading(true);
     try {
-      const dataUrl = await readFileAsDataURL(file);
-      set("photoUrl", dataUrl as unknown as string);
+      // const dataUrl = await readFileAsDataURL(file);
+      // set("photoUrl", dataUrl as unknown as string);
+      const photoUrl = await uploadCoachPhoto(file);
+      set("photoUrl", photoUrl);
     } catch {
       alert(t("common.admin.coaches.dialog.imageReadAlert"));
     } finally {

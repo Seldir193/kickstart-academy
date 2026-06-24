@@ -167,6 +167,7 @@
   "common.admin.news.dialog.save": "Speichern",
   "common.admin.news.dialog.errorTitleMissing": "Titel fehlt.",
   "common.admin.news.dialog.errorSaveFailed": "Speichern fehlgeschlagen.",
+  "common.admin.news.dialog.errorCoverNotImage": "Das Titelbild muss eine Bilddatei sein.",
   "common.admin.news.dialog.template.intro": "Intro",
   "common.admin.news.dialog.template.introText": "Schreibe 2–4 Sätze, die den Leser direkt abholen.",
   "common.admin.news.dialog.template.mainSection": "Hauptabschnitt",
@@ -206,5 +207,12 @@
   "common.bulkActions.select": "Auswählen",
   "common.bulkActions.selected": "ausgewählt",
   "common.bulkActions.selectAll": "Alle auswählen",
-  "common.bulkActions.clearAll": "Alle abwählen"
+  "common.bulkActions.clearAll": "Alle abwählen",
+
+  "common.admin.news.dialog.translations.enTitle": "Englischer Titel",
+  "common.admin.news.dialog.translations.enLead": "Englischer Kurztext",
+  "common.admin.news.dialog.translations.enContent": "Englischer Artikelinhalt",
+  "common.admin.news.dialog.translations.trTitle": "Türkischer Titel",
+  "common.admin.news.dialog.translations.trLead": "Türkischer Kurztext",
+  "common.admin.news.dialog.translations.trContent": "Türkischer Artikelinhalt"
 }

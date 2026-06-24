@@ -119,12 +119,26 @@ function emailText(c: Customer, t: TFunction) {
   );
 }
 
+// function newsletterLabel(c: Customer, t: TFunction) {
+//   const anyC = c as any;
+//   if (c.newsletter) t("admin.customers.table.newsletter.yes");
+//   if (anyC?.marketingStatus === "pending" || !!anyC?.confirmToken) {
+//     return t("admin.customers.table.newsletter.pending");
+//   }
+//   return t("admin.customers.table.newsletter.no");
+// }
+
 function newsletterLabel(c: Customer, t: TFunction) {
   const anyC = c as any;
-  if (c.newsletter) t("admin.customers.table.newsletter.yes");
+
+  if (c.newsletter === true) {
+    return t("admin.customers.table.newsletter.yes");
+  }
+
   if (anyC?.marketingStatus === "pending" || !!anyC?.confirmToken) {
     return t("admin.customers.table.newsletter.pending");
   }
+
   return t("admin.customers.table.newsletter.no");
 }
 

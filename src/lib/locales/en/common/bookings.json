@@ -125,5 +125,11 @@
 
   "common.admin.bookings.notice.cancelledConfirmed": "Confirmed booking cancelled.",
   "common.admin.bookings.notice.subscriptionUpdated": "Subscription approval updated.",
-  "common.admin.bookings.notice.paymentApproved": "Payment approved."
+  "common.admin.bookings.notice.paymentApproved": "Payment approved.",
+
+  "common.admin.bookings.dialog.labels.regularCourseTime": "Regular course time",
+  "common.admin.bookings.dialog.labels.note": "Note",
+  "common.admin.bookings.dialog.weeklyHolidayNotice": "Training takes place outside school holidays.",
+
+  "common.admin.bookings.table.head.age": "Age"
 }

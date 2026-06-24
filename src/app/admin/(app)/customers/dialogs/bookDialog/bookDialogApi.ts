@@ -4,6 +4,8 @@ import type { FamilyResponse } from "./types";
 type BookingTarget = "self" | "child";
 
 type CampExtras = {
+  scheduleLine?: string;
+  scheduleLabel?: string;
   holidayLabel?: string;
   holidayFrom?: string;
   holidayTo?: string;
@@ -94,6 +96,10 @@ export async function createBooking(
               },
             }
           : undefined,
+        meta: {
+          scheduleLine: extras.scheduleLine || null,
+          scheduleLabel: extras.scheduleLabel || null,
+        },
         ...extras,
       }),
     },

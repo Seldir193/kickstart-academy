@@ -47,8 +47,19 @@ export function renderRow(
         </div>
       </div>
 
+      {/* <div className="news-list__cell news-list__cell--email">
+        {safeText(b.email) || t("common.admin.bookings.row.empty")}
+      </div>
+
+      <div className="news-list__cell news-list__cell--date bookings-mono">
+        {formatDateOnly(b.date, lang)}
+      </div> */}
       <div className="news-list__cell news-list__cell--email">
         {safeText(b.email) || t("common.admin.bookings.row.empty")}
+      </div>
+
+      <div className="news-list__cell news-list__cell--age bookings-mono">
+        {safeText((b as any).age) || "—"}
       </div>
 
       <div className="news-list__cell news-list__cell--date bookings-mono">

@@ -306,7 +306,8 @@ function FeedbackUploadButton({
 
 function FeedbackUploadFileName({ fileName }: { fileName: string }) {
   const { t } = useTranslation();
-  const className = "feedback-dialog__file-name" + (!fileName ? " is-empty" : "");
+  const className =
+    "feedback-dialog__file-name" + (!fileName ? " is-empty" : "");
 
   return (
     <span className={className}>

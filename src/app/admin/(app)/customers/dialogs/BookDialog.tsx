@@ -8,15 +8,17 @@ import type { Customer, Offer } from "../types";
 import {
   GROUPED_COURSE_OPTIONS,
   offerMatchesCourse,
-} from "src/app/lib/courseOptions";
+} from "@/app/lib/courseOptions";
 import KsDatePicker from "@/app/admin/(app)/invoices/components/KsDatePicker";
 import type { FamilyChild, FamilyMember } from "./bookDialog/types";
 import {
   fmtDE,
   fmtEUR,
+  getOfferScheduleLabel,
+  getOfferScheduleLine,
   isNum,
   isWeeklyOffer,
-  prorateForStart,
+  // prorateForStart,
 } from "./bookDialog/bookDialogFormatters";
 import {
   confirmBookingIfPossible,
@@ -40,12 +42,12 @@ type Props = {
 type BookingTarget = "self" | "child";
 type OfferKind = "camp" | "powertraining" | "one_time" | "default";
 
-type ChildOption = {
-  uid: string;
-  label: string;
-  parentId: string;
-  child: FamilyChild;
-};
+// type ChildOption = {
+//   uid: string;
+//   label: string;
+//   parentId: string;
+//   child: FamilyChild;
+// };
 
 function safeText(v: unknown) {
   return String(v ?? "").trim();
@@ -443,16 +445,28 @@ export default function BookDialog({
   const [siblingTShirtSize, setSiblingTShirtSize] = useState("");
   const [siblingGoalkeeperSchool, setSiblingGoalkeeperSchool] = useState(false);
 
+  const [isMainTShirtOpen, setIsMainTShirtOpen] = useState(false);
+  const [isSiblingTShirtOpen, setIsSiblingTShirtOpen] = useState(false);
+
   const parentDropdownRef = useRef<HTMLDivElement | null>(null);
   const childDropdownRef = useRef<HTMLDivElement | null>(null);
   const courseDropdownRef = useRef<HTMLDivElement | null>(null);
   const offerDropdownRef = useRef<HTMLDivElement | null>(null);
+
+  const mainTShirtDropdownRef = useRef<HTMLDivElement | null>(null);
+  const siblingTShirtDropdownRef = useRef<HTMLDivElement | null>(null);
 
   useDropdownOutsideClose([
     { ref: parentDropdownRef, close: () => setIsParentDropdownOpen(false) },
     { ref: childDropdownRef, close: () => setIsChildDropdownOpen(false) },
     { ref: courseDropdownRef, close: () => setIsCourseDropdownOpen(false) },
     { ref: offerDropdownRef, close: () => setIsOfferDropdownOpen(false) },
+
+    { ref: mainTShirtDropdownRef, close: () => setIsMainTShirtOpen(false) },
+    {
+      ref: siblingTShirtDropdownRef,
+      close: () => setIsSiblingTShirtOpen(false),
+    },
   ]);
 
   const childOptions = useMemo(() => buildChildOptions(family, t), [family, t]);
@@ -567,8 +581,24 @@ export default function BookDialog({
   const isPowertraining = offerKind === "powertraining";
   const isOneTimeVoucherOffer = offerKind === "one_time";
 
-  const showVoucherSection =
-    isWeekly || isCamp || isPowertraining || isOneTimeVoucherOffer;
+  const scheduleLine = useMemo(() => {
+    return getOfferScheduleLine(selectedOffer);
+  }, [selectedOffer]);
+
+  const scheduleLabel = useMemo(() => {
+    return getOfferScheduleLabel(selectedOffer);
+  }, [selectedOffer]);
+
+  const regularCourseLine = useMemo(() => {
+    return safeText(scheduleLine).replace(/^jeden\s+/i, "");
+  }, [scheduleLine]);
+
+  const weeklyHolidayNotice = isWeekly
+    ? t("common.admin.customers.bookDialog.weeklyHolidayNotice")
+    : "";
+
+  // const showVoucherSection =
+  //   isWeekly || isCamp || isPowertraining || isOneTimeVoucherOffer;
 
   const holidayLabel = useMemo(() => {
     return resolveHolidayLabel(selectedOffer);
@@ -598,18 +628,23 @@ export default function BookDialog({
     return normalizeGender((activeChild as any)?.gender);
   }, [activeChild]);
 
-  const pro = useMemo(() => {
-    if (!isWeekly) return null;
-    if (!isNum(selectedOffer?.price)) return null;
-    return prorateForStart(selectedDate, selectedOffer.price);
-  }, [isWeekly, selectedDate, selectedOffer?.price]);
+  // const pro = useMemo(() => {
+  //   if (!isWeekly) return null;
+  //   if (!isNum(selectedOffer?.price)) return null;
+  //   return prorateForStart(selectedDate, selectedOffer.price);
+  // }, [isWeekly, selectedDate, selectedOffer?.price]);
 
   const selectedCourseLabel = useMemo(() => {
     if (!courseValue) return t("common.admin.customers.bookDialog.allCourses");
+
     for (const group of GROUPED_COURSE_OPTIONS) {
-      const found = group.items.find((opt) => opt.value === courseValue);
+      const found = group.items.find(
+        (opt: { value: string; label: string }) => opt.value === courseValue,
+      );
+
       if (found) return found.label;
     }
+
     return t("common.admin.customers.bookDialog.allCourses");
   }, [courseValue, t]);
 
@@ -670,6 +705,8 @@ export default function BookDialog({
         childPayload,
         selectedParentPayload,
         {
+          scheduleLine,
+          scheduleLabel,
           holidayLabel: isCamp || isPowertraining ? holidayLabel : "",
           holidayFrom:
             isCamp || isPowertraining
@@ -923,24 +960,82 @@ export default function BookDialog({
                                 "common.admin.customers.bookDialog.tShirtSize",
                               )}
                             </label>
-                            <select
-                              className="input"
-                              value={mainTShirtSize}
-                              onChange={(e) =>
-                                setMainTShirtSize(e.target.value)
+
+                            <div
+                              className={
+                                "ks-training-select" +
+                                (isMainTShirtOpen
+                                  ? " ks-training-select--open"
+                                  : "")
                               }
+                              ref={mainTShirtDropdownRef}
                             >
-                              <option value="">
-                                {t(
-                                  "common.admin.customers.bookDialog.pleaseSelect",
-                                )}
-                              </option>
-                              {T_SHIRT_OPTIONS.map((item) => (
-                                <option key={item} value={item}>
-                                  {item}
-                                </option>
-                              ))}
-                            </select>
+                              <button
+                                type="button"
+                                className="ks-training-select__trigger"
+                                onClick={() =>
+                                  setIsMainTShirtOpen((open) => !open)
+                                }
+                                aria-haspopup="listbox"
+                                aria-expanded={isMainTShirtOpen}
+                              >
+                                <span className="ks-training-select__label">
+                                  {mainTShirtSize ||
+                                    t(
+                                      "common.admin.customers.bookDialog.pleaseSelect",
+                                    )}
+                                </span>
+                                <span
+                                  className="ks-training-select__chevron"
+                                  aria-hidden="true"
+                                />
+                              </button>
+
+                              {isMainTShirtOpen && (
+                                <ul
+                                  className="ks-training-select__menu"
+                                  role="listbox"
+                                >
+                                  <li>
+                                    <button
+                                      type="button"
+                                      className={
+                                        "ks-training-select__option" +
+                                        (!mainTShirtSize ? " is-selected" : "")
+                                      }
+                                      onClick={() => {
+                                        setMainTShirtSize("");
+                                        setIsMainTShirtOpen(false);
+                                      }}
+                                    >
+                                      {t(
+                                        "common.admin.customers.bookDialog.pleaseSelect",
+                                      )}
+                                    </button>
+                                  </li>
+
+                                  {T_SHIRT_OPTIONS.map((item) => (
+                                    <li key={item}>
+                                      <button
+                                        type="button"
+                                        className={
+                                          "ks-training-select__option" +
+                                          (mainTShirtSize === item
+                                            ? " is-selected"
+                                            : "")
+                                        }
+                                        onClick={() => {
+                                          setMainTShirtSize(item);
+                                          setIsMainTShirtOpen(false);
+                                        }}
+                                      >
+                                        {item}
+                                      </button>
+                                    </li>
+                                  ))}
+                                </ul>
+                              )}
+                            </div>
                           </div>
 
                           <div className="field">
@@ -1103,24 +1198,83 @@ export default function BookDialog({
                                     "common.admin.customers.bookDialog.tShirtSize",
                                   )}
                                 </label>
-                                <select
-                                  className="input"
-                                  value={siblingTShirtSize}
-                                  onChange={(e) =>
-                                    setSiblingTShirtSize(e.target.value)
+                                <div
+                                  className={
+                                    "ks-training-select" +
+                                    (isSiblingTShirtOpen
+                                      ? " ks-training-select--open"
+                                      : "")
                                   }
+                                  ref={siblingTShirtDropdownRef}
                                 >
-                                  <option value="">
-                                    {t(
-                                      "common.admin.customers.bookDialog.pleaseSelect",
-                                    )}
-                                  </option>
-                                  {T_SHIRT_OPTIONS.map((item) => (
-                                    <option key={item} value={item}>
-                                      {item}
-                                    </option>
-                                  ))}
-                                </select>
+                                  <button
+                                    type="button"
+                                    className="ks-training-select__trigger"
+                                    onClick={() =>
+                                      setIsSiblingTShirtOpen((open) => !open)
+                                    }
+                                    aria-haspopup="listbox"
+                                    aria-expanded={isSiblingTShirtOpen}
+                                  >
+                                    <span className="ks-training-select__label">
+                                      {siblingTShirtSize ||
+                                        t(
+                                          "common.admin.customers.bookDialog.pleaseSelect",
+                                        )}
+                                    </span>
+                                    <span
+                                      className="ks-training-select__chevron"
+                                      aria-hidden="true"
+                                    />
+                                  </button>
+
+                                  {isSiblingTShirtOpen && (
+                                    <ul
+                                      className="ks-training-select__menu"
+                                      role="listbox"
+                                    >
+                                      <li>
+                                        <button
+                                          type="button"
+                                          className={
+                                            "ks-training-select__option" +
+                                            (!siblingTShirtSize
+                                              ? " is-selected"
+                                              : "")
+                                          }
+                                          onClick={() => {
+                                            setSiblingTShirtSize("");
+                                            setIsSiblingTShirtOpen(false);
+                                          }}
+                                        >
+                                          {t(
+                                            "common.admin.customers.bookDialog.pleaseSelect",
+                                          )}
+                                        </button>
+                                      </li>
+
+                                      {T_SHIRT_OPTIONS.map((item) => (
+                                        <li key={item}>
+                                          <button
+                                            type="button"
+                                            className={
+                                              "ks-training-select__option" +
+                                              (siblingTShirtSize === item
+                                                ? " is-selected"
+                                                : "")
+                                            }
+                                            onClick={() => {
+                                              setSiblingTShirtSize(item);
+                                              setIsSiblingTShirtOpen(false);
+                                            }}
+                                          >
+                                            {item}
+                                          </button>
+                                        </li>
+                                      ))}
+                                    </ul>
+                                  )}
+                                </div>
                               </div>
 
                               <div className="field">
@@ -1375,6 +1529,30 @@ export default function BookDialog({
                         </div>
                       </div>
 
+                      {regularCourseLine && (
+                        <div className="camp-summary-grid">
+                          <div className="camp-summary-item">
+                            <span className="camp-summary-item__label">
+                              {t(
+                                "common.admin.customers.bookDialog.regularCourseTime",
+                              )}
+                            </span>
+                            <span className="camp-summary-item__value">
+                              {regularCourseLine}
+                            </span>
+                          </div>
+
+                          <div className="camp-summary-item">
+                            <span className="camp-summary-item__label">
+                              {t("common.admin.customers.bookDialog.hint")}
+                            </span>
+                            <span className="camp-summary-item__value">
+                              {weeklyHolidayNotice}
+                            </span>
+                          </div>
+                        </div>
+                      )}
+
                       <div className="camp-block camp-block--footer">
                         <div className="camp-block__title">
                           {t(
@@ -1412,7 +1590,7 @@ export default function BookDialog({
               </section>
             )}
 
-            {isNum(selectedOffer?.price) && (
+            {/* {isNum(selectedOffer?.price) && (
               <section className="dialog-section book-dialog__priceSection">
                 <div className="dialog-section__head">
                   <h4 className="dialog-section__title">
@@ -1463,8 +1641,8 @@ export default function BookDialog({
                     </div>
                   )}
                 </div>
-              </section>
-            )}
+              </section> 
+            )} */}
           </div>
         </div>
         <div className="dialog-footer book-dialog__footer">

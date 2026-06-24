@@ -105,6 +105,41 @@ function validateDraft(d: ContractDraft, t: TFunction) {
   return errors;
 }
 
+// function contractScheduleLine(init: ContractInitOk | null) {
+//   const scheduleLine = safeText(init?.scheduleLine);
+//   if (scheduleLine) return scheduleLine;
+
+//   const scheduleLabel = safeText(init?.scheduleLabel);
+//   const dayLabel = safeText(init?.dayLabel);
+//   const timeLabel = safeText(init?.timeLabel);
+
+//   return [scheduleLabel || dayLabel, timeLabel].filter(Boolean).join(" · ");
+// }
+
+function cleanRegularCourseLine(value: unknown) {
+  return safeText(value).replace(/^jeden\s+/i, "");
+}
+
+function contractScheduleLine(init: ContractInitOk | null) {
+  const regularCourseLine = safeText((init as any)?.regularCourseLine);
+  if (regularCourseLine) return cleanRegularCourseLine(regularCourseLine);
+
+  const scheduleLine = safeText(init?.scheduleLine);
+  if (scheduleLine) return cleanRegularCourseLine(scheduleLine);
+
+  const dayLabel = cleanRegularCourseLine(init?.dayLabel);
+  const timeLabel = safeText(init?.timeLabel);
+
+  return [dayLabel, timeLabel].filter(Boolean).join(" · ");
+}
+function subscriptionStartText(t: TFunction) {
+  return t("common.weeklyContract.summary.subscriptionStartText");
+}
+
+function holidayNotice(t: TFunction) {
+  return t("common.weeklyContract.summary.holidayNotice");
+}
+
 type Props = { token: string };
 
 export default function ContractClient({ token }: Props) {
@@ -153,7 +188,7 @@ export default function ContractClient({ token }: Props) {
       }
 
       setInit(out);
-
+      console.log("[weekly-contract-init]", out);
       const next = emptyDraft();
       next.parent.salutation = safeText(out.parent?.salutation);
       next.parent.firstName = safeText(out.parent?.firstName);
@@ -317,19 +352,27 @@ export default function ContractClient({ token }: Props) {
           </div>
           <div className="weekly-contract-summaryRow">
             <span className="weekly-contract-label">
-              {t("common.weeklyContract.summary.start")}
+              {t("common.weeklyContract.summary.subscriptionStart")}
             </span>
             <span className="weekly-contract-value">
-              {init?.startDate || ""}
+              {subscriptionStartText(t)}
             </span>
           </div>
+
           <div className="weekly-contract-summaryRow">
             <span className="weekly-contract-label">
-              {t("common.weeklyContract.summary.time")}
+              {t("common.weeklyContract.summary.regularCourseTime")}
             </span>
             <span className="weekly-contract-value">
-              {[init?.dayLabel, init?.timeLabel].filter(Boolean).join(" · ")}
+              {contractScheduleLine(init)}
             </span>
+          </div>
+
+          <div className="weekly-contract-summaryRow">
+            <span className="weekly-contract-label">
+              {t("common.weeklyContract.summary.notice")}
+            </span>
+            <span className="weekly-contract-value">{holidayNotice(t)}</span>
           </div>
         </div>
 

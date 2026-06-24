@@ -111,3 +111,13 @@ export const HOLIDAY_WEEK_PRESETS = [
   "Herbstferien",
   "Weihnachtsferien",
 ] as const;
+
+export const WEEKDAY_OPTIONS = [
+  "monday",
+  "tuesday",
+  "wednesday",
+  "thursday",
+  "friday",
+  "saturday",
+  "sunday",
+] as const;

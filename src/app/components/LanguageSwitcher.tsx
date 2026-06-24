@@ -80,9 +80,13 @@ export default function LanguageSwitcher() {
         aria-label="Change language"
         onClick={() => setIsOpen((value) => !value)}
       >
+        <span className="language-switcher__icon" aria-hidden="true">
+          <img src="/icons/header/language-globe.svg" alt="" />
+        </span>
         <span className="language-switcher__label">{currentLabel}</span>
-        <span className="ks-selectbox__chevron" aria-hidden="true">
-          ▾
+
+        <span className="language-switcher__caret" aria-hidden="true">
+          <img src="/icons/header/select-caret.svg" alt="" />
         </span>
       </button>
 
