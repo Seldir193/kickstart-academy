@@ -34,14 +34,6 @@ function pickFirst(...vals: any[]) {
   return "";
 }
 
-// function fmtDateDe(value?: string) {
-//   const raw = clean(value);
-//   if (!raw) return "";
-//   const d = new Date(raw);
-//   if (Number.isNaN(d.getTime())) return raw;
-//   return new Intl.DateTimeFormat("de-DE", { dateStyle: "medium" }).format(d);
-// }
-
 function fmtDate(value?: string, lang?: string) {
   const raw = clean(value);
   if (!raw) return "";

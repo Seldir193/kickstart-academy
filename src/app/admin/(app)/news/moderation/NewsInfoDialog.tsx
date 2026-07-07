@@ -21,17 +21,6 @@ function val(v: unknown) {
   return s ? s : "—";
 }
 
-// function fmtDateDE(value?: string | null) {
-//   const v = clean(value);
-//   if (!v) return "—";
-//   const d = new Date(v);
-//   if (isNaN(d.getTime())) return v;
-//   return new Intl.DateTimeFormat("de-DE", {
-//     dateStyle: "medium",
-//     timeStyle: "short",
-//   }).format(d);
-// }
-
 function titleOf(
   n: News,
   t: (key: string, options?: Record<string, unknown>) => string,
@@ -47,18 +36,6 @@ function isRejected(n: News) {
 function isSubmitted(n: News) {
   return clean((n as any)?.submittedAt).length > 0;
 }
-
-// function statusLabel(n: News) {
-//   if (isRejected(n)) return "Abgelehnt";
-//   if (isSubmitted(n)) return "Wartet (zu prüfen)";
-//   return n.published ? "Freigegeben" : "Offline";
-// }
-
-// function statusClass(status: string) {
-//   if (status.includes("Abgelehnt")) return "dialog-status--danger";
-//   if (status.includes("Wartet")) return "dialog-status--warning";
-//   return "dialog-status--success";
-// }
 
 function statusKey(n: News) {
   if (isRejected(n)) return "common.admin.news.infoDialog.statusRejected";
