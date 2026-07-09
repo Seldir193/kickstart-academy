@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
+import type { ChangeEvent, RefObject } from "react";
 import { useTranslation } from "react-i18next";
 import type { MediaItem, NewsUploadPurpose } from "../types";
 
@@ -12,101 +13,113 @@ type Props = {
   upload: (file: File, purpose: NewsUploadPurpose) => Promise<UploadResult>;
 };
 
-function clean(v: unknown) {
-  return String(v ?? "").trim();
+function clean(value: unknown) {
+  return String(value ?? "").trim();
 }
 
 function mediaTypeOf(mimetype: string) {
   return clean(mimetype).startsWith("video/") ? "video" : "image";
 }
 
-function toMedia(up: UploadResult): MediaItem {
-  return {
-    type: mediaTypeOf(up.mimetype),
-    url: clean(up.url),
-    alt: "",
-    title: "",
-  };
+function toMedia(upload: UploadResult): MediaItem {
+  return { type: mediaTypeOf(upload.mimetype), url: clean(upload.url), alt: "", title: "" };
 }
 
 export default function MediaManager({ items, onChange, upload }: Props) {
   const { t } = useTranslation();
   const inputRef = useRef<HTMLInputElement>(null);
-  const [fileName, setFileName] = useState(
-    t("common.admin.news.mediaManager.noFileSelected"),
-  );
+  const emptyLabel = t("common.admin.news.mediaManager.noFileSelected");
+  const [fileName, setFileName] = useState(emptyLabel);
+  const ctx = { items, onChange, upload, inputRef, fileName, setFileName, emptyLabel, t };
+  return <MediaManagerView ctx={ctx} />;
+}
 
-  async function addFile(file?: File) {
-    if (!file) return;
-    const up = await upload(file, "news-media");
-    onChange([...(items || []), toMedia(up)]);
-    if (inputRef.current) inputRef.current.value = "";
-    setFileName(t("common.admin.news.mediaManager.noFileSelected"));
-  }
+type ManagerContext = {
+  items: MediaItem[];
+  onChange: (next: MediaItem[]) => void;
+  upload: Props["upload"];
+  inputRef: RefObject<HTMLInputElement | null>;
+  fileName: string;
+  setFileName: (value: string) => void;
+  emptyLabel: string;
+  t: (key: string) => string;
+};
 
-  function removeIndex(index: number) {
-    const next = [...(items || [])];
-    next.splice(index, 1);
-    onChange(next);
-  }
-
+function MediaManagerView({ ctx }: { ctx: ManagerContext }) {
   return (
     <div className="media-manager">
-      <div className="ks-file">
-        <input
-          ref={inputRef}
-          type="file"
-          accept="image/*,video/*"
-          style={{ display: "none" }}
-          onChange={(e) => {
-            const file = e.target.files?.[0];
-            setFileName(
-              file?.name || t("common.admin.news.mediaManager.noFileSelected"),
-            );
-            addFile(file);
-          }}
-        />
-
-        <button
-          type="button"
-          className="btn ks-file__btn"
-          onClick={() => inputRef.current?.click()}
-        >
-          {t("common.admin.news.mediaManager.chooseFile")}
-        </button>
-
-        <span
-          className={
-            "ks-file__name" +
-            (fileName === t("common.admin.news.mediaManager.noFileSelected")
-              ? " is-empty"
-              : "")
-          }
-          aria-live="polite"
-        >
-          {fileName}
-        </span>
-      </div>
-
-      {items.length ? (
-        <div className="media-manager__list">
-          {items.map((m, i) => (
-            <div className="media-manager__row" key={`${m.url}-${i}`}>
-              <span className="badge">{String(m.type).toUpperCase()}</span>
-              <a className="btn" href={m.url} target="_blank" rel="noreferrer">
-                {t("common.admin.news.mediaManager.open")}
-              </a>
-              <button
-                className="btn"
-                type="button"
-                onClick={() => removeIndex(i)}
-              >
-                {t("common.admin.news.mediaManager.remove")}
-              </button>
-            </div>
-          ))}
-        </div>
-      ) : null}
+      <MediaFilePicker ctx={ctx} />
+      {ctx.items.length ? <MediaList ctx={ctx} /> : null}
     </div>
   );
+}
+
+function MediaFilePicker({ ctx }: { ctx: ManagerContext }) {
+  return (
+    <div className="ks-file">
+      <MediaFileInput ctx={ctx} />
+      <MediaFileButton ctx={ctx} />
+      <MediaFileName ctx={ctx} />
+    </div>
+  );
+}
+
+function MediaFileInput({ ctx }: { ctx: ManagerContext }) {
+  return <input ref={ctx.inputRef} type="file" accept="image/*,video/*" hidden onChange={(event) => handleFileChange(ctx, event)} />;
+}
+
+function MediaFileButton({ ctx }: { ctx: ManagerContext }) {
+  return <button type="button" className="btn ks-file__btn" onClick={() => ctx.inputRef.current?.click()}>{ctx.t("common.admin.news.mediaManager.chooseFile")}</button>;
+}
+
+function MediaFileName({ ctx }: { ctx: ManagerContext }) {
+  return <span className={fileNameClass(ctx)} aria-live="polite">{ctx.fileName}</span>;
+}
+
+function MediaList({ ctx }: { ctx: ManagerContext }) {
+  return <div className="media-manager__list">{ctx.items.map((item, index) => <MediaRow ctx={ctx} item={item} index={index} key={`${item.url}-${index}`} />)}</div>;
+}
+
+function MediaRow({ ctx, item, index }: MediaRowProps) {
+  return (
+    <div className="media-manager__row">
+      <span className="badge">{String(item.type).toUpperCase()}</span>
+      <a className="btn" href={item.url} target="_blank" rel="noreferrer">{ctx.t("common.admin.news.mediaManager.open")}</a>
+      <button className="btn" type="button" onClick={() => removeIndex(ctx, index)}>{ctx.t("common.admin.news.mediaManager.remove")}</button>
+    </div>
+  );
+}
+
+type MediaRowProps = {
+  ctx: ManagerContext;
+  item: MediaItem;
+  index: number;
+};
+
+async function addFile(ctx: ManagerContext, file?: File) {
+  if (!file) return;
+  const uploaded = await ctx.upload(file, "news-media");
+  ctx.onChange([...(ctx.items || []), toMedia(uploaded)]);
+  resetFileInput(ctx);
+}
+
+function resetFileInput(ctx: ManagerContext) {
+  if (ctx.inputRef.current) ctx.inputRef.current.value = "";
+  ctx.setFileName(ctx.emptyLabel);
+}
+
+function removeIndex(ctx: ManagerContext, index: number) {
+  const next = [...(ctx.items || [])];
+  next.splice(index, 1);
+  ctx.onChange(next);
+}
+
+function handleFileChange(ctx: ManagerContext, event: ChangeEvent<HTMLInputElement>) {
+  const file = event.target.files?.[0];
+  ctx.setFileName(file?.name || ctx.emptyLabel);
+  addFile(ctx, file);
+}
+
+function fileNameClass(ctx: ManagerContext) {
+  return "ks-file__name" + (ctx.fileName === ctx.emptyLabel ? " is-empty" : "");
 }

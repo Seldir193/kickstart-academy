@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { GROUPED_COURSE_OPTIONS } from "src/app/lib/courseOptions";
+import { GROUPED_COURSE_OPTIONS } from "@/app/lib/courseOptions";
 
 type Props = {
   courseValue: string;

@@ -1,4 +1,4 @@
-// src/app/admin/agb/page.tsx
+// src/app/admin/agb/page.tsxooo
 "use client";
 
 import { useTranslation } from "react-i18next";

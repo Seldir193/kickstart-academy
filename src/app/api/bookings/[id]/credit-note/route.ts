@@ -8,10 +8,11 @@ function backendBase() {
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } },
+  context: { params: Promise<{ id: string }> },
 ) {
-  const id = String(params.id || "").trim();
-  const url = `${backendBase()}/admin/bookings/${encodeURIComponent(id)}/credit-note.pdf`;
+  const { id } = await context.params;
+  const cleanId = String(id || "").trim();
+  const url = `${backendBase()}/admin/bookings/${encodeURIComponent(cleanId)}/credit-note.pdf`;
 
   const provider = req.headers.get("x-provider-id") || "";
   const r = await fetch(url, {

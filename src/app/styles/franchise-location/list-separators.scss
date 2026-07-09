@@ -1,0 +1,19 @@
+.franchise-locations .news-list .list.list--bleed > .list__item {
+  border-bottom: 0 !important;
+  box-shadow: none !important;
+}
+
+.franchise-locations .news-list .list.list--bleed > .list__item + .list__item {
+  border-top: 1px solid var(--admin-sep) !important;
+}
+
+.franchise-locations .news-list .list.list--bleed .list__item.is-fullhover:hover,
+.franchise-locations .news-list .list.list--bleed .list__item.is-fullhover:focus,
+.franchise-locations .news-list .list.list--bleed .list__item.is-fullhover:focus-visible,
+.franchise-locations .news-list .list.list--bleed .list__item.is-fullhover:focus-within {
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  outline: none !important;
+  border-top-color: var(--admin-sep) !important;
+  border-bottom: 0 !important;
+}
