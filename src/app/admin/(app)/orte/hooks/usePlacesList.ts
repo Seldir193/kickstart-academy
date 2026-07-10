@@ -1,4 +1,3 @@
-//src\app\admin\(app)\orte\hooks\usePlacesList.ts
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
@@ -21,35 +20,49 @@ export function usePlacesList({ page, q, sort }: Params) {
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
   const pageSize = 10;
-  const pageCount = useMemo(
-    () => Math.max(1, Math.ceil(total / pageSize)),
-    [total],
-  );
-
+  const pageCount = useMemo(() => Math.max(1, Math.ceil(total / pageSize)), [total]);
   const load = useCallback(async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const res = await fetchPlaces({ page, pageSize, q, sort });
-      setItems(res.items as any);
-      setTotal(res.total);
-    } catch (e) {
-      setItems([]);
-      setTotal(0);
-      setError(
-        toastErrorMessage(t, e, "common.admin.places.errors.loadFailed"),
-      );
-    } finally {
-      setLoading(false);
-    }
-  }, [page, pageSize, q, sort]);
+    await loadPlaces({ page, pageSize, q, sort, t, setItems, setTotal, setError, setLoading });
+  }, [page, pageSize, q, sort, t]);
 
   useEffect(() => {
-    const t = setTimeout(load, 150);
-    return () => clearTimeout(t);
+    const timer = setTimeout(load, 150);
+    return () => clearTimeout(timer);
   }, [load]);
 
   return { items, total, loading, error, reload: load, pageCount };
+}
+
+type LoadPlacesArgs = Params & {
+  pageSize: number;
+  t: ReturnType<typeof useTranslation>["t"];
+  setItems: (items: Array<Place & { publicId?: number }>) => void;
+  setTotal: (total: number) => void;
+  setError: (error: string | null) => void;
+  setLoading: (loading: boolean) => void;
+};
+
+async function loadPlaces(args: LoadPlacesArgs) {
+  args.setLoading(true);
+  args.setError(null);
+  try {
+    await applyPlacesResponse(args);
+  } catch (error) {
+    applyPlacesError(args, error);
+  } finally {
+    args.setLoading(false);
+  }
+}
+
+async function applyPlacesResponse(args: LoadPlacesArgs) {
+  const response = await fetchPlaces(args);
+  args.setItems(response.items);
+  args.setTotal(response.total);
+}
+
+function applyPlacesError(args: LoadPlacesArgs, error: unknown) {
+  args.setItems([]);
+  args.setTotal(0);
+  args.setError(toastErrorMessage(args.t, error, "common.admin.places.errors.loadFailed"));
 }

@@ -75,6 +75,14 @@
   padding: 10px;
 }
 
+.ks-datepicker__panel--floating {
+  position: fixed;
+  left: var(--ks-datepicker-left);
+  top: var(--ks-datepicker-top);
+  width: var(--ks-datepicker-width);
+  scrollbar-width: thin;
+}
+
 .ks-datepicker--up .ks-datepicker__panel {
   top: auto;
   bottom: calc(100% + 8px);

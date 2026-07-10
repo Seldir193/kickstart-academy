@@ -1,7 +1,13 @@
-//src\app\admin\(app)\orte\api.ts
 "use client";
 
+import type { Place } from "@/types/place";
+
 type SortKey = "newest" | "oldest" | "city_asc" | "city_desc";
+
+type PlacesApiResponse = {
+  items?: Place[];
+  total?: number;
+};
 
 export async function fetchPlaces({
   page,
@@ -21,36 +27,51 @@ export async function fetchPlaces({
   params.set("limit", String(pageSize));
   params.set("sort", sort);
 
-  const r = await fetch(`/api/admin/places?${params.toString()}`, {
+  const response = await fetch(`/api/admin/places?${params.toString()}`, {
     cache: "no-store",
   });
-  const j = await r.json().catch(() => ({}));
-
-  const list: any[] = Array.isArray(j?.items) ? j.items : [];
-  const total = Number(j?.total || list.length || 0);
+  const data = await readPlacesResponse(response);
+  const list = Array.isArray(data.items) ? data.items : [];
+  const total = Number(data.total || list.length || 0);
 
   return { items: list, total };
 }
 
 export async function deletePlace(id: string) {
-  const r = await fetch(`/api/admin/places/${encodeURIComponent(id)}`, {
+  const response = await fetch(`/api/admin/places/${encodeURIComponent(id)}`, {
     method: "DELETE",
     cache: "no-store",
   });
 
-  if (r.status === 409) {
-    const j = await r.json().catch(() => ({}));
-    throw new Error(j?.error || "Cannot delete: place is in use.");
-  }
-
-  if (!r.ok) {
-    const j = await r.json().catch(() => ({}));
-    throw new Error(j?.error || `Delete failed (${r.status})`);
-  }
+  if (response.status === 409) await throwDeleteConflict(response);
+  if (!response.ok) await throwDeleteFailure(response);
 }
 
 export async function deletePlacesBulk(ids: string[]) {
   const results = await Promise.allSettled(ids.map((id) => deletePlace(id)));
-  const failed = results.filter((x) => x.status === "rejected");
+  const failed = results.filter((result) => result.status === "rejected");
   if (!failed.length) return;
+}
+
+async function readPlacesResponse(response: Response): Promise<PlacesApiResponse> {
+  return response.json().catch(() => ({}));
+}
+
+async function throwDeleteConflict(response: Response) {
+  const data = await response.json().catch(() => ({}));
+  throw new Error(readError(data) || "Cannot delete: place is in use.");
+}
+
+async function throwDeleteFailure(response: Response) {
+  const data = await response.json().catch(() => ({}));
+  throw new Error(readError(data) || `Delete failed (${response.status})`);
+}
+
+function readError(data: unknown) {
+  if (!isRecord(data) || typeof data.error !== "string") return "";
+  return data.error;
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null;
 }

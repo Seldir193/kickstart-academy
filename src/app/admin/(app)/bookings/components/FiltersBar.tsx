@@ -1,6 +1,7 @@
 "use client";
 
-import type { CSSProperties } from "react";
+import type { ReactNode } from "react";
+import { useTranslation } from "react-i18next";
 import type { ProgramFilter, StatusOrAll } from "../types";
 import type { useBookingsList } from "../hooks/useBookingsList";
 import SearchInput from "./SearchInput";
@@ -8,17 +9,15 @@ import SelectBox from "./SelectBox";
 import SelectGroup from "./SelectGroup";
 import SelectOption from "./SelectOption";
 import type { useDropdown } from "./useDropdown";
-import { useTranslation } from "react-i18next";
 
 type SortKey = "newest" | "oldest" | "nameAsc" | "nameDesc";
+type Translate = (key: string) => string;
+type FilterKind = "booking-search" | "booking-select" | "booking-sort";
 
 type Props = {
   q: string;
   onSearchChange: (v: string) => void;
   onSearchKeyDown: (key: string) => void;
-  searchItemStyle: CSSProperties;
-  ddItemStyle: CSSProperties;
-  sortItemStyle: CSSProperties;
   programDd: ReturnType<typeof useDropdown>;
   statusDd: ReturnType<typeof useDropdown>;
   sortDd: ReturnType<typeof useDropdown>;
@@ -34,17 +33,46 @@ type Props = {
   onSort: (v: SortKey) => void;
 };
 
+const weeklyOptions: ProgramOption[] = [
+  ["weekly_foerdertraining", "weeklyFoerdertraining"],
+  ["weekly_kindergarten", "weeklyKindergarten"],
+  ["weekly_goalkeeper", "weeklyGoalkeeper"],
+  ["weekly_development_athletik", "weeklyDevelopmentAthletik"],
+];
+
+const individualOptions: ProgramOption[] = [
+  ["ind_1to1", "individual1to1"],
+  ["ind_1to1_athletik", "individual1to1Athletik"],
+  ["ind_1to1_goalkeeper", "individual1to1Goalkeeper"],
+];
+
+const clubOptions: ProgramOption[] = [
+  ["club_rentacoach", "clubRentACoach"],
+  ["club_trainingcamps", "clubTrainingCamps"],
+  ["club_coacheducation", "clubCoachEducation"],
+];
+
+const statusOptions: StatusOrAll[] = [
+  "all",
+  "pending",
+  "processing",
+  "confirmed",
+  "cancelled",
+  "deleted",
+];
+
+const sortOptions: SortKey[] = ["newest", "oldest", "nameAsc", "nameDesc"];
+
+type ProgramOption = [ProgramFilter, string];
+
+type OptionsProps = Props & { t: Translate };
+
 export default function FiltersBar(props: Props) {
   const { t } = useTranslation();
 
   return (
     <div className="news-admin__filters">
-      <SearchFilter
-        value={props.q}
-        style={props.searchItemStyle}
-        onChange={props.onSearchChange}
-        onKeyDown={props.onSearchKeyDown}
-      />
+      <SearchFilter {...props} />
       <ProgramFilterBox {...props} t={t} />
       <StatusFilterBox {...props} t={t} />
       <SortFilterBox {...props} t={t} />
@@ -52,26 +80,25 @@ export default function FiltersBar(props: Props) {
   );
 }
 
-function SearchFilter(props: {
-  value: string;
-  style: React.CSSProperties;
-  onChange: (v: string) => void;
-  onKeyDown: (key: string) => void;
-}) {
+function filterClass(kind: FilterKind) {
+  return `news-admin__filter news-admin__filter--${kind}`;
+}
+
+function SearchFilter(props: Props) {
   return (
-    <div className="news-admin__filter" style={props.style}>
+    <div className={filterClass("booking-search")}>
       <SearchInput
-        value={props.value}
-        onChange={props.onChange}
-        onKeyDown={props.onKeyDown}
+        value={props.q}
+        onChange={props.onSearchChange}
+        onKeyDown={props.onSearchKeyDown}
       />
     </div>
   );
 }
 
-function ProgramFilterBox(props: Props & { t: (key: string) => string }) {
+function ProgramFilterBox(props: OptionsProps) {
   return (
-    <div className="news-admin__filter" style={props.ddItemStyle}>
+    <FilterBox kind="booking-select">
       <SelectBox
         dd={props.programDd}
         label={props.programLabel}
@@ -80,103 +107,73 @@ function ProgramFilterBox(props: Props & { t: (key: string) => string }) {
       >
         <ProgramOptions {...props} />
       </SelectBox>
-    </div>
+    </FilterBox>
   );
 }
 
-function ProgramOptions(props: Props & { t: (key: string) => string }) {
+function ProgramOptions(props: OptionsProps) {
   return (
     <>
-      <SelectOption
-        active={props.program === "all"}
-        onClick={() => props.onProgram("all")}
-        text={props.t("common.admin.bookings.filters.program.all")}
+      <ProgramOptionRow value="all" labelKey="all" props={props} />
+      <ProgramGroup
+        labelKey="weeklyGroup"
+        options={weeklyOptions}
+        props={props}
       />
-      <SelectGroup
-        label={props.t("common.admin.bookings.filters.program.weeklyGroup")}
-      >
-        <SelectOption
-          active={props.program === "weekly_foerdertraining"}
-          onClick={() => props.onProgram("weekly_foerdertraining")}
-          text={props.t(
-            "common.admin.bookings.filters.program.weeklyFoerdertraining",
-          )}
-        />
-        <SelectOption
-          active={props.program === "weekly_kindergarten"}
-          onClick={() => props.onProgram("weekly_kindergarten")}
-          text={props.t(
-            "common.admin.bookings.filters.program.weeklyKindergarten",
-          )}
-        />
-        <SelectOption
-          active={props.program === "weekly_goalkeeper"}
-          onClick={() => props.onProgram("weekly_goalkeeper")}
-          text={props.t(
-            "common.admin.bookings.filters.program.weeklyGoalkeeper",
-          )}
-        />
-        <SelectOption
-          active={props.program === "weekly_development_athletik"}
-          onClick={() => props.onProgram("weekly_development_athletik")}
-          text={props.t(
-            "common.admin.bookings.filters.program.weeklyDevelopmentAthletik",
-          )}
-        />
-      </SelectGroup>
-      <SelectGroup
-        label={props.t("common.admin.bookings.filters.program.individualGroup")}
-      >
-        <SelectOption
-          active={props.program === "ind_1to1"}
-          onClick={() => props.onProgram("ind_1to1")}
-          text={props.t("common.admin.bookings.filters.program.individual1to1")}
-        />
-        <SelectOption
-          active={props.program === "ind_1to1_athletik"}
-          onClick={() => props.onProgram("ind_1to1_athletik")}
-          text={props.t(
-            "common.admin.bookings.filters.program.individual1to1Athletik",
-          )}
-        />
-        <SelectOption
-          active={props.program === "ind_1to1_goalkeeper"}
-          onClick={() => props.onProgram("ind_1to1_goalkeeper")}
-          text={props.t(
-            "common.admin.bookings.filters.program.individual1to1Goalkeeper",
-          )}
-        />
-      </SelectGroup>
-      <SelectGroup
-        label={props.t("common.admin.bookings.filters.program.clubGroup")}
-      >
-        <SelectOption
-          active={props.program === "club_rentacoach"}
-          onClick={() => props.onProgram("club_rentacoach")}
-          text={props.t("common.admin.bookings.filters.program.clubRentACoach")}
-        />
-        <SelectOption
-          active={props.program === "club_trainingcamps"}
-          onClick={() => props.onProgram("club_trainingcamps")}
-          text={props.t(
-            "common.admin.bookings.filters.program.clubTrainingCamps",
-          )}
-        />
-        <SelectOption
-          active={props.program === "club_coacheducation"}
-          onClick={() => props.onProgram("club_coacheducation")}
-          text={props.t(
-            "common.admin.bookings.filters.program.clubCoachEducation",
-          )}
-        />
-      </SelectGroup>
+      <ProgramGroup
+        labelKey="individualGroup"
+        options={individualOptions}
+        props={props}
+      />
+      <ProgramGroup labelKey="clubGroup" options={clubOptions} props={props} />
     </>
   );
 }
 
-function StatusFilterBox(props: Props & { t: (key: string) => string }) {
+function ProgramGroup(args: ProgramGroupProps) {
   return (
-    <div className="news-admin__filter" style={props.ddItemStyle}>
+    <SelectGroup label={programText(args.props.t, args.labelKey)}>
+      {args.options.map(([value, labelKey]) => (
+        <ProgramOptionRow
+          key={value}
+          value={value}
+          labelKey={labelKey}
+          props={args.props}
+        />
+      ))}
+    </SelectGroup>
+  );
+}
+
+type ProgramGroupProps = {
+  labelKey: string;
+  options: ProgramOption[];
+  props: OptionsProps;
+};
+
+function ProgramOptionRow(args: ProgramOptionRowProps) {
+  return (
+    <SelectOption
+      active={args.props.program === args.value}
+      onClick={() => args.props.onProgram(args.value)}
+      text={programText(args.props.t, args.labelKey)}
+    />
+  );
+}
+
+type ProgramOptionRowProps = {
+  value: ProgramFilter;
+  labelKey: string;
+  props: OptionsProps;
+};
+
+function programText(t: Translate, key: string) {
+  return t(`common.admin.bookings.filters.program.${key}`);
+}
+
+function StatusFilterBox(props: OptionsProps) {
+  return (
+    <FilterBox kind="booking-select">
       <SelectBox
         dd={props.statusDd}
         label={props.statusLabel}
@@ -185,52 +182,41 @@ function StatusFilterBox(props: Props & { t: (key: string) => string }) {
       >
         <StatusOptions {...props} />
       </SelectBox>
-    </div>
+    </FilterBox>
   );
 }
 
-function StatusOptions(props: Props & { t: (key: string) => string }) {
-  const totalAll = props.list.totalAll ?? props.list.total;
-
+function StatusOptions(props: OptionsProps) {
   return (
     <>
-      <SelectOption
-        active={props.status === "all"}
-        onClick={() => props.onStatus("all")}
-        text={`${props.t("common.admin.bookings.filters.status.all")} (${totalAll})`}
-      />
-      <SelectOption
-        active={props.status === "pending"}
-        onClick={() => props.onStatus("pending")}
-        text={`${props.t("common.admin.bookings.filters.status.pending")} (${props.list.counts.pending ?? 0})`}
-      />
-      <SelectOption
-        active={props.status === "processing"}
-        onClick={() => props.onStatus("processing")}
-        text={`${props.t("common.admin.bookings.filters.status.processing")} (${props.list.counts.processing ?? 0})`}
-      />
-      <SelectOption
-        active={props.status === "confirmed"}
-        onClick={() => props.onStatus("confirmed")}
-        text={`${props.t("common.admin.bookings.filters.status.confirmed")} (${props.list.counts.confirmed ?? 0})`}
-      />
-      <SelectOption
-        active={props.status === "cancelled"}
-        onClick={() => props.onStatus("cancelled")}
-        text={`${props.t("common.admin.bookings.filters.status.cancelled")} (${props.list.counts.cancelled ?? 0})`}
-      />
-      <SelectOption
-        active={props.status === "deleted"}
-        onClick={() => props.onStatus("deleted")}
-        text={`${props.t("common.admin.bookings.filters.status.deleted")} (${props.list.counts.deleted ?? 0})`}
-      />
+      {statusOptions.map((status) => (
+        <SelectOption
+          key={status}
+          active={props.status === status}
+          onClick={() => props.onStatus(status)}
+          text={statusText(props, status)}
+        />
+      ))}
     </>
   );
 }
 
-function SortFilterBox(props: Props & { t: (key: string) => string }) {
+function statusText(props: OptionsProps, status: StatusOrAll) {
+  const count = status === "all" ? totalAll(props) : props.list.counts[status];
+  return `${statusLabel(props.t, status)} (${count ?? 0})`;
+}
+
+function totalAll(props: OptionsProps) {
+  return props.list.totalAll ?? props.list.total;
+}
+
+function statusLabel(t: Translate, status: StatusOrAll) {
+  return t(`common.admin.bookings.filters.status.${status}`);
+}
+
+function SortFilterBox(props: OptionsProps) {
   return (
-    <div className="news-admin__filter" style={props.sortItemStyle}>
+    <FilterBox kind="booking-sort">
       <SelectBox
         dd={props.sortDd}
         label={props.sortLabel}
@@ -239,33 +225,25 @@ function SortFilterBox(props: Props & { t: (key: string) => string }) {
       >
         <SortOptions {...props} />
       </SelectBox>
-    </div>
+    </FilterBox>
   );
 }
 
-function SortOptions(props: Props & { t: (key: string) => string }) {
+function SortOptions(props: OptionsProps) {
   return (
     <>
-      <SelectOption
-        active={props.sort === "newest"}
-        onClick={() => props.onSort("newest")}
-        text={props.t("common.admin.bookings.sort.newest")}
-      />
-      <SelectOption
-        active={props.sort === "oldest"}
-        onClick={() => props.onSort("oldest")}
-        text={props.t("common.admin.bookings.sort.oldest")}
-      />
-      <SelectOption
-        active={props.sort === "nameAsc"}
-        onClick={() => props.onSort("nameAsc")}
-        text={props.t("common.admin.bookings.sort.nameAsc")}
-      />
-      <SelectOption
-        active={props.sort === "nameDesc"}
-        onClick={() => props.onSort("nameDesc")}
-        text={props.t("common.admin.bookings.sort.nameDesc")}
-      />
+      {sortOptions.map((sort) => (
+        <SelectOption
+          key={sort}
+          active={props.sort === sort}
+          onClick={() => props.onSort(sort)}
+          text={props.t(`common.admin.bookings.sort.${sort}`)}
+        />
+      ))}
     </>
   );
+}
+
+function FilterBox(props: { kind: FilterKind; children: ReactNode }) {
+  return <div className={filterClass(props.kind)}>{props.children}</div>;
 }

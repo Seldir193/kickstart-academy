@@ -1,4 +1,3 @@
-// src/app/admin/new-password/NewPasswordClient.tsx
 "use client";
 
 import { useState } from "react";
@@ -7,7 +6,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 export default function NewPasswordClient() {
   const router = useRouter();
   const sp = useSearchParams();
-  const tokenParam = sp.get("token") || ""; // kommt i.d.R. per E-Mail-Link
+  const tokenParam = sp.get("token") || "";
   const emailParam = sp.get("email") || "";
 
   const [password, setPassword] = useState("");
@@ -39,13 +38,12 @@ export default function NewPasswordClient() {
       if (!r.ok || data?.ok === false) {
         throw new Error(data?.error || "Passwort konnte nicht geändert werden");
       }
-      // Erfolgreich -> zurück zum Login, E-Mail ggf. vorfüllen
       const next = emailParam
         ? `/admin/login?email=${encodeURIComponent(emailParam)}`
         : "/admin/login";
       router.replace(next);
-    } catch (err: any) {
-      setFormError(err?.message || "Passwort konnte nicht geändert werden");
+    } catch (err) {
+      setFormError(errorMessage(err));
     } finally {
       setLoading(false);
     }
@@ -58,7 +56,7 @@ export default function NewPasswordClient() {
         <p>Bitte neues Passwort eingeben und bestätigen.</p>
 
         {formError && (
-          <div className="error" style={{ marginTop: 8 }}>
+          <div className="error error--top-space">
             {formError}
           </div>
         )}
@@ -117,4 +115,9 @@ export default function NewPasswordClient() {
       </div>
     </div>
   );
+}
+
+function errorMessage(error: unknown) {
+  if (error instanceof Error) return error.message;
+  return "Passwort konnte nicht geändert werden";
 }

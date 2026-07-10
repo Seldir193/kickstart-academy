@@ -1,4 +1,3 @@
-//src\app\admin\(app)\invoices\components\invoices-top-selects\DocsOverlay.tsx
 "use client";
 
 import React from "react";
@@ -23,153 +22,115 @@ type Props = {
   docsSelect: FixedSelect;
 };
 
-export default function DocsOverlay({
-  items,
-  fmtDate,
-  openPdf,
-  docsSelect,
-}: Props) {
+type Translate = ReturnType<typeof useTranslation>["t"];
+
+type OptionProps = {
+  item: DocItem;
+  fmtDate: (iso: string) => string;
+  openPdf: (d: DocItem) => void;
+  close: () => void;
+  t: Translate;
+};
+
+export default function DocsOverlay(props: Props) {
   const { t } = useTranslation();
-  if (!docsSelect.open || !items.length) return null;
+  if (!props.docsSelect.open || !props.items.length) return null;
 
   return (
+    <DocsPanel docsSelect={props.docsSelect}>
+      {props.items.map((item) => (
+        <DocsOption
+          key={item.id}
+          item={item}
+          {...props}
+          close={closeDocs(props)}
+          t={t}
+        />
+      ))}
+    </DocsPanel>
+  );
+}
+
+function closeDocs(props: Props) {
+  return () => props.docsSelect.setOpen(false);
+}
+
+function DocsPanel(props: {
+  docsSelect: FixedSelect;
+  children: React.ReactNode;
+}) {
+  return (
     <div
-      ref={docsSelect.menuRef}
+      ref={props.docsSelect.menuRef}
       role="listbox"
       className="ks-selectbox__panel ks-documents-overlay ks-documents-overlay--docs ks-scroll-thin ks-invoices__overlay"
       style={cssVars(
-        docsSelect.pos.left,
-        docsSelect.pos.top,
-        docsSelect.pos.width,
+        props.docsSelect.pos.left,
+        props.docsSelect.pos.top,
+        props.docsSelect.pos.width,
       )}
       onWheel={(e) => e.stopPropagation()}
       onScroll={(e) => e.stopPropagation()}
     >
-      {items.map((d) => (
-        <button
-          key={d.id}
-          type="button"
-          role="option"
-          className="ks-selectbox__option ks-documents-option ks-doc-select__option ks-storno__option ks-invoices__cursorPointer"
-          onClick={() => {
-            docsSelect.setOpen(false);
-            openPdf(d);
-          }}
-        >
-          <div className="ks-doc-select__row">
-            <div className="ks-doc-select__top ks-doc-select__top--single">
-              <div className="ks-doc-select__title" title={d.title}>
-                <span className="ks-doc-select__typeIcon" aria-hidden="true">
-                  <img src={iconForType(d.type)} alt="" />
-                </span>
-
-                <div className="ks-invoices__docTextCol">
-                  <div className="ks-doc-select__bottom">
-                    {metaLine(d, fmtDate, t)}
-                  </div>
-                </div>
-              </div>
-
-              <div className="ks-doc-select__badgeCol" aria-hidden>
-                <span className="ks-doc-select__badge">
-                  {docNoFrom(d) || ""}
-                </span>
-              </div>
-            </div>
-          </div>
-        </button>
-      ))}
+      {props.children}
     </div>
   );
 }
 
-// //src\app\admin\(app)\invoices\components\invoices-top-selects\DocsOverlay.tsx
-// "use client";
+function DocsOption(props: OptionProps) {
+  return (
+    <button
+      type="button"
+      role="option"
+      className="ks-selectbox__option ks-documents-option ks-doc-select__option ks-storno__option ks-invoices__cursorPointer"
+      onClick={() => pickDoc(props)}
+    >
+      <DocsOptionContent {...props} />
+    </button>
+  );
+}
 
-// import React from "react";
-// import type { DocItem } from "../../utils/invoiceUi";
-// import {
-//   displayTitle,
-//   docNoFrom,
-//   iconForType,
-//   metaLine,
-// } from "../../utils/invoiceUi";
-// import { cssVars } from "./topSelectsUi";
+function pickDoc(props: OptionProps) {
+  props.close();
+  props.openPdf(props.item);
+}
 
-// type FixedSelect = {
-//   open: boolean;
-//   setOpen: (v: boolean) => void;
-//   openMenu: () => void;
-//   triggerRef: React.RefObject<HTMLButtonElement | null>;
-//   menuRef: React.RefObject<HTMLDivElement | null>;
-//   pos: { left: number; top: number; width: number };
-// };
+function DocsOptionContent(props: OptionProps) {
+  return (
+    <div className="ks-doc-select__row">
+      <div className="ks-doc-select__top ks-doc-select__top--single">
+        <DocsTitle {...props} />
+        <DocsBadge item={props.item} />
+      </div>
+    </div>
+  );
+}
 
-// type Props = {
-//   items: DocItem[];
-//   fmtDate: (iso: string) => string;
-//   openPdf: (d: DocItem) => void;
-//   docsSelect: FixedSelect;
-// };
+function DocsTitle(props: OptionProps) {
+  return (
+    <div className="ks-doc-select__title" title={props.item.title}>
+      <span className="ks-doc-select__typeIcon" aria-hidden="true">
+        <img src={iconForType(props.item.type)} alt="" />
+      </span>
+      <DocsMeta {...props} />
+    </div>
+  );
+}
 
-// export default function DocsOverlay({
-//   items,
-//   fmtDate,
-//   openPdf,
-//   docsSelect,
-// }: Props) {
-//   if (!docsSelect.open || !items.length) return null;
+function DocsMeta(props: OptionProps) {
+  return (
+    <div className="ks-invoices__docTextCol">
+      <div className="ks-doc-select__bottom">
+        {metaLine(props.item, props.fmtDate, props.t)}
+      </div>
+    </div>
+  );
+}
 
-//   return (
-//     <div
-//       ref={docsSelect.menuRef}
-//       role="listbox"
-//       className="ks-selectbox__panel ks-documents-overlay ks-documents-overlay--docs ks-scroll-thin ks-invoices__overlay"
-//       style={cssVars(
-//         docsSelect.pos.left,
-//         docsSelect.pos.top,
-//         docsSelect.pos.width,
-//       )}
-//       onWheel={(e) => e.stopPropagation()}
-//       onScroll={(e) => e.stopPropagation()}
-//     >
-//       {items.map((d) => (
-//         <button
-//           key={d.id}
-//           type="button"
-//           role="option"
-//           className="ks-selectbox__option ks-documents-option ks-doc-select__option ks-storno__option ks-invoices__cursorPointer"
-//           onClick={() => {
-//             docsSelect.setOpen(false);
-//             openPdf(d);
-//           }}
-//         >
-//           <div className="ks-doc-select__row">
-//             <div className="ks-doc-select__top ks-doc-select__top--single">
-//               <div className="ks-doc-select__title" title={d.title}>
-//                 <span className="ks-doc-select__typeIcon" aria-hidden="true">
-//                   <img src={iconForType(d.type)} alt="" />
-//                 </span>
-
-//                 <div className="ks-invoices__docTextCol">
-//                   <span className="ks-doc-select__titleText">
-//                     {displayTitle(d)}
-//                   </span>
-//                   <div className="ks-doc-select__bottom">
-//                     {metaLine(d, fmtDate)}
-//                   </div>
-//                 </div>
-//               </div>
-
-//               <div className="ks-doc-select__badgeCol" aria-hidden>
-//                 <span className="ks-doc-select__badge">
-//                   {docNoFrom(d) || ""}
-//                 </span>
-//               </div>
-//             </div>
-//           </div>
-//         </button>
-//       ))}
-//     </div>
-//   );
-// }
+function DocsBadge({ item }: { item: DocItem }) {
+  return (
+    <div className="ks-doc-select__badgeCol" aria-hidden>
+      <span className="ks-doc-select__badge">{docNoFrom(item) || ""}</span>
+    </div>
+  );
+}

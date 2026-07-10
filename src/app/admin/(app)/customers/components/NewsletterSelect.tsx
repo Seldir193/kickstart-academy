@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo, useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import type { NewsletterFilter } from "../hooks/useCustomersList";
 import { useOutsideClick } from "../hooks/useOutsideClick";
@@ -17,150 +17,91 @@ type Props = {
   onAnyChange: () => void;
 };
 
-export default function NewsletterSelect({
-  value,
-  onChange,
-  onAnyChange,
-}: Props) {
+type SelectProps = Props & {
+  open: boolean;
+  setOpen: (v: boolean | ((current: boolean) => boolean)) => void;
+  t: (key: string) => string;
+};
+
+export default function NewsletterSelect(props: Props) {
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement | null>(null);
-
-  const label = useMemo(() => {
-    if (value === "true") {
-      return t("admin.customers.newsletterSelect.yes");
-    }
-    if (value === "false") {
-      return t("admin.customers.newsletterSelect.no");
-    }
-    return t("admin.customers.newsletterSelect.all");
-  }, [t, value]);
-
   useOutsideClick(open, ref, () => setOpen(false));
-
-  function pick(v: NewsletterFilter) {
-    onAnyChange();
-    onChange(v);
-    setOpen(false);
-  }
 
   return (
     <div className="ks-customers-toolbar-select">
-      <div
-        ref={ref}
-        className={`ks-filter-select ${open ? "ks-filter-select--open" : ""}`}
-      >
-        <button
-          type="button"
-          className="ks-filter-select__trigger"
-          onClick={() => setOpen((o) => !o)}
-          aria-label={t("admin.customers.newsletterSelect.ariaLabel")}
-          title={t("admin.customers.newsletterSelect.ariaLabel")}
-        >
-          <span className="ks-filter-select__label">{label}</span>
-          <span className="ks-filter-select__chevron" aria-hidden="true" />
-        </button>
-
-        {open && (
-          <ul className="ks-filter-select__menu">
-            {options.map((opt) => (
-              <li key={`${opt.value}-${opt.labelKey}`}>
-                <button
-                  type="button"
-                  className={
-                    "ks-filter-select__option" +
-                    (value === opt.value ? " is-selected" : "")
-                  }
-                  onClick={() => pick(opt.value)}
-                >
-                  {t(opt.labelKey)}
-                </button>
-              </li>
-            ))}
-          </ul>
-        )}
+      <div ref={ref} className={selectClass(open)}>
+        <NewsletterTrigger {...props} open={open} setOpen={setOpen} t={t} />
+        <NewsletterMenu {...props} open={open} setOpen={setOpen} t={t} />
       </div>
     </div>
   );
 }
 
-// //src\app\admin\(app)\customers\components\NewsletterSelect.tsx
-// "use client";
+function selectClass(open: boolean) {
+  return `ks-filter-select ${open ? "ks-filter-select--open" : ""}`;
+}
 
-// import React, { useMemo, useRef, useState } from "react";
-// import type { NewsletterFilter } from "../hooks/useCustomersList";
-// import { useOutsideClick } from "../hooks/useOutsideClick";
+function NewsletterTrigger(props: SelectProps) {
+  const label = useNewsletterLabel(props.value, props.t);
+  return (
+    <button
+      type="button"
+      className="ks-filter-select__trigger"
+      onClick={() => props.setOpen((open) => !open)}
+      aria-label={props.t("admin.customers.newsletterSelect.ariaLabel")}
+      title={props.t("admin.customers.newsletterSelect.ariaLabel")}
+    >
+      <span className="ks-filter-select__label">{label}</span>
+      <span className="ks-filter-select__chevron" aria-hidden="true" />
+    </button>
+  );
+}
 
-// const options: { value: NewsletterFilter; label: string }[] = [
-//   { value: "all", label: "All" },
-//   { value: "true", label: "Yes" },
-//   { value: "false", label: "No" },
-// ];
+function useNewsletterLabel(value: NewsletterFilter, t: SelectProps["t"]) {
+  return useMemo(() => {
+    if (value === "true") return t("admin.customers.newsletterSelect.yes");
+    if (value === "false") return t("admin.customers.newsletterSelect.no");
+    return t("admin.customers.newsletterSelect.all");
+  }, [t, value]);
+}
 
-// type Props = {
-//   value: NewsletterFilter;
-//   onChange: (v: NewsletterFilter) => void;
-//   onAnyChange: () => void;
-// };
+function NewsletterMenu(props: SelectProps) {
+  if (!props.open) return null;
+  return (
+    <ul className="ks-filter-select__menu">
+      {options.map((option) => (
+        <NewsletterOption key={option.value} option={option} {...props} />
+      ))}
+    </ul>
+  );
+}
 
-// export default function NewsletterSelect({
-//   value,
-//   onChange,
-//   onAnyChange,
-// }: Props) {
-//   const [open, setOpen] = useState(false);
-//   const ref = useRef<HTMLDivElement | null>(null);
+function NewsletterOption(
+  args: {
+    option: (typeof options)[number];
+  } & SelectProps,
+) {
+  return (
+    <li>
+      <button
+        type="button"
+        className={optionClass(args.value === args.option.value)}
+        onClick={() => pick(args, args.option.value)}
+      >
+        {args.t(args.option.labelKey)}
+      </button>
+    </li>
+  );
+}
 
-//   const label = useMemo(() => {
-//     if (value === "true") return "Yes";
-//     if (value === "false") return "No";
-//     return "All";
-//   }, [value]);
+function optionClass(active: boolean) {
+  return "ks-filter-select__option" + (active ? " is-selected" : "");
+}
 
-//   useOutsideClick(open, ref, () => setOpen(false));
-
-//   function pick(v: NewsletterFilter) {
-//     onAnyChange();
-//     onChange(v);
-//     setOpen(false);
-//   }
-
-//   return (
-//     <div>
-//       <label className="block text-sm text-gray-600">Newsletter</label>
-
-//       <div
-//         ref={ref}
-//         className={`ks-filter-select ${open ? "ks-filter-select--open" : ""}`}
-//       >
-//         <button
-//           type="button"
-//           className="ks-filter-select__trigger"
-//           onClick={() => setOpen((o) => !o)}
-//         >
-//           <span className="ks-filter-select__label">{label}</span>
-//           <span className="ks-filter-select__chevron" aria-hidden="true" />
-//         </button>
-
-//         {open && (
-//           <ul className="ks-filter-select__menu">
-//             {options.map((opt) => (
-//               <li key={`${opt.value}-${opt.label}`}>
-//                 <button
-//                   type="button"
-//                   className={
-//                     "ks-filter-select__option" +
-//                     (value === opt.value ? " is-selected" : "")
-//                   }
-//                   onClick={() => pick(opt.value)}
-//                 >
-//                   {opt.label}
-//                 </button>
-//               </li>
-//             ))}
-//           </ul>
-//         )}
-//       </div>
-//     </div>
-//   );
-// }
+function pick(props: SelectProps, value: NewsletterFilter) {
+  props.onAnyChange();
+  props.onChange(value);
+  props.setOpen(false);
+}

@@ -18,13 +18,7 @@ import {
   restoreBulk,
   setBookingStatus,
 } from "./api";
-import type {
-  Booking,
-  BookingDetail,
-  ProgramFilter,
-  Status,
-  StatusOrAll,
-} from "./types";
+import type { Booking, ProgramFilter, Status, StatusOrAll } from "./types";
 import { programLabel, statusLabel } from "./utils";
 import { sortBookings } from "./page.helpers";
 import { useDropdown } from "./components/useDropdown";
@@ -32,12 +26,16 @@ import { useTranslation } from "react-i18next";
 
 type SortKey = "newest" | "oldest" | "nameAsc" | "nameDesc";
 
+function detailLoadError(e: unknown, fallback: string) {
+  if (e instanceof Error) return e.message || fallback;
+  return fallback;
+}
+
 type Busy =
   | { kind: "row"; id: string }
   | { kind: "bulk_delete" }
   | { kind: "bulk_restore" }
   | null;
-
 
 function sortLabel(sort: SortKey, t: (key: string) => string) {
   const map: Record<SortKey, string> = {
@@ -58,7 +56,7 @@ export default function AdminBookingsPage() {
   const [page, setPage] = useState(1);
   const [selectMode, setSelectMode] = useState(false);
   const toggleBtnRef = useRef<HTMLButtonElement | null>(null);
-  
+
   const [sel, setSel] = useState<Booking | null>(null);
   const { notice, showOk, showError } = useNotice(5000);
 
@@ -69,8 +67,6 @@ export default function AdminBookingsPage() {
   const statusDd = useDropdown();
   const sortDd = useDropdown();
   const { t } = useTranslation();
-
- 
 
   const computedStatusLabel = useMemo(
     () =>
@@ -145,7 +141,6 @@ export default function AdminBookingsPage() {
       await list.reload();
       setSelectMode(false);
     });
-   
 
     showOk(`${t("common.admin.bookings.notice.deleted")} (${ids.length}).`);
   }
@@ -157,7 +152,7 @@ export default function AdminBookingsPage() {
       await list.reload();
       setSelectMode(false);
     });
-    
+
     showOk(`${t("common.admin.bookings.notice.restored")} (${ids.length}).`);
   }
 
@@ -173,9 +168,10 @@ export default function AdminBookingsPage() {
         ...b,
         detail: data?.detail || null,
       });
-    } catch (e: any) {
-      showError(e?.message || t("common.admin.bookings.error.detailsLoad"));
-     
+    } catch (e: unknown) {
+      showError(
+        detailLoadError(e, t("common.admin.bookings.error.detailsLoad")),
+      );
       setSel(b);
     }
   }
@@ -217,10 +213,6 @@ export default function AdminBookingsPage() {
     setPage((p) => Math.min(list.pages, p + 1));
   }
 
-  const searchItemStyle = { flex: "1 1 420px", minWidth: 320 } as const;
-  const ddItemStyle = { flex: "0 0 200px", minWidth: 180 } as const;
-  const sortItemStyle = { flex: "0 0 180px", minWidth: 160 } as const;
-
   const busyRowId = busy?.kind === "row" ? busy.id : null;
   const busyBulkDelete = busy?.kind === "bulk_delete";
   const busyBulkRestore = busy?.kind === "bulk_restore";
@@ -235,16 +227,13 @@ export default function AdminBookingsPage() {
             q={q}
             onSearchChange={onSearchChange}
             onSearchKeyDown={onSearchKeyDown}
-            searchItemStyle={searchItemStyle}
-            ddItemStyle={ddItemStyle}
-            sortItemStyle={sortItemStyle}
             programDd={programDd}
             statusDd={statusDd}
             sortDd={sortDd}
             programLabel={programLabel(program, t)}
             statusLabel={computedStatusLabel}
             sortLabel={sortLabel(sort, t)}
-           
+
             program={program}
             status={status}
             sort={sort}

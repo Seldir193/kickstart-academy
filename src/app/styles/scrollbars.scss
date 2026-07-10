@@ -47,14 +47,6 @@ body,
 .site-main {
   @include ks_scroll_thin;
 }
-
-:root {
-  --ks-scrollbar-thumb: rgba(0, 0, 0, 0.28);
-  --ks-scrollbar-thumb-hover: rgba(0, 0, 0, 0.38);
-  --ks-scrollbar-track: transparent;
-  --ks-scrollbar-size: 8px;
-}
-
 :where(
     .book-embed,
     .book-embed

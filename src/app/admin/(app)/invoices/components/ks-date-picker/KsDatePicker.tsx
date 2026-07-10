@@ -47,7 +47,6 @@ export default function KsDatePicker(props: KsDatePickerProps) {
   const [viewMonth, setViewMonth] = useState(() => initViewMonth(selected));
 
   const { pos, computePos } = useDatePickerPosition();
-  //const label = useMemo(() => dateLabelFromIso(props.value), [props.value]);
 
   const label = useMemo(
     () => dateLabelFromIso(props.value, i18n.language),
@@ -112,6 +111,11 @@ export default function KsDatePicker(props: KsDatePickerProps) {
 
   useEffect(() => {
     if (!open) return;
+    applyPanelPosition(panelRef.current, pos);
+  }, [open, pos]);
+
+  useEffect(() => {
+    if (!open) return;
 
     const onPointerDown = (e: MouseEvent | TouchEvent) => {
       const target = e.target as Node | null;
@@ -160,16 +164,9 @@ export default function KsDatePicker(props: KsDatePickerProps) {
       {open && (
         <div
           ref={panelRef}
-          className="ks-datepicker__panel ks-scroll-thin"
+          className="ks-datepicker__panel ks-datepicker__panel--floating ks-scroll-thin"
           role="dialog"
           aria-label={t("common.datePicker.selectDate")}
-          style={{
-            position: "fixed",
-            left: pos.left,
-            top: pos.top,
-            width: pos.width,
-            scrollbarWidth: "thin",
-          }}
           onWheel={(e) => e.stopPropagation()}
           onScroll={(e) => e.stopPropagation()}
         >
@@ -216,7 +213,6 @@ export default function KsDatePicker(props: KsDatePickerProps) {
                 className="ks-datepicker__yearlist ks-scroll-thin"
                 role="listbox"
                 aria-label={t("common.datePicker.years")}
-                style={{ scrollbarWidth: "thin" }}
               >
                 {filteredYears.map((y) => (
                   <button
@@ -331,4 +327,13 @@ export default function KsDatePicker(props: KsDatePickerProps) {
       )}
     </div>
   );
+}
+function applyPanelPosition(
+  panel: HTMLDivElement | null,
+  pos: { left: number; top: number; width: number },
+) {
+  if (!panel) return;
+  panel.style.setProperty("--ks-datepicker-left", `${pos.left}px`);
+  panel.style.setProperty("--ks-datepicker-top", `${pos.top}px`);
+  panel.style.setProperty("--ks-datepicker-width", `${pos.width}px`);
 }

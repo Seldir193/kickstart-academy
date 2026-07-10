@@ -1,4 +1,3 @@
-//src\app\admin\(app)\invoices\components\KsTimeSelect.tsx
 "use client";
 
 import React, { useEffect, useMemo, useRef, useState } from "react";
@@ -65,8 +64,7 @@ export default function KsTimeSelect({
 
       {open && (
         <div
-          className="ks-selectbox__panel ks-scroll-thin"
-          style={{ maxHeight: 240, overflow: "auto", scrollbarWidth: "thin" }}
+          className="ks-selectbox__panel ks-selectbox__panel--time ks-scroll-thin"
           role="listbox"
         >
           <button

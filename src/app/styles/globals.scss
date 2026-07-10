@@ -1,5 +1,3 @@
-//src\app\styles\globals.scss
-
 @use "./foundation" as *;
 @use "./globals.base" as *;
 @use "./header" as *;
@@ -13,18 +11,11 @@
 @use "./admin/voucher-dialog.scss" as *;
 @use "./admin/booking-dialog.scss" as *;
 @use "./admin/online-bookings-dialog.scss" as *;
-//@use "./bookDialog" as *;
-// @use "./customerDialog" as *;
 @use "./profile" as *;
 @use "./footer" as *;
 @use "./home" as *;
 
-//@use "./coaches" as *;
-//@use "./invoices" as *;
-//@use "./customers" as *;
-//@use "./trainingCard" as *;
 @use "./admin-forms" as *;
-//@import "./buttons";
 @use "./buttons" as *;
 @use "./ks-datepicker" as *;
 @use "./invoices" as *;
@@ -63,6 +54,8 @@
 @use "./franchise-location/list-separators.scss" as *;
 @use "./admin/void.scss" as *;
 @use "./admin/documents-dialog.scss" as *;
+@use "./admin/inline-style-cleanups.scss" as *;
+@use "./admin/bookings-filters.scss" as *;
 @use "./admin/customer-dialog.scss" as *;
 @use "./invoices/invoices-dialog.scss" as *;
 @use "./training-card.scss" as *;

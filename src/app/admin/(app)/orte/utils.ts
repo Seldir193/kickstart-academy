@@ -1,35 +1,16 @@
-//src\app\admin\(app)\orte\utils.ts
 "use client";
 
 import type { Place } from "@/types/place";
 
-export function displayPlaceId(p: Place & { publicId?: number }) {
-  if (
-    typeof (p as any).publicId === "number" &&
-    Number.isFinite((p as any).publicId)
-  ) {
-    return String((p as any).publicId);
-  }
-  const hex = String((p as any)._id || "");
-  return "1" + hex.slice(-7).toUpperCase();
+type PlaceLike = Place & { publicId?: number };
+
+export function displayPlaceId(place: PlaceLike) {
+  if (isFiniteNumber(place.publicId)) return String(place.publicId);
+  return "1" + String(place._id || "").slice(-7).toUpperCase();
 }
 
-export function safeText(v: unknown) {
-  return String(v ?? "").trim();
-}
-
-function timeFromObjectIdHex(id?: unknown) {
-  const hex = String(id || "").trim();
-  if (hex.length < 8) return 0;
-  const sec = parseInt(hex.slice(0, 8), 16);
-  return Number.isFinite(sec) ? sec * 1000 : 0;
-}
-
-function safeTime(p: any) {
-  const iso = p?.createdAt || p?.updatedAt || p?.date;
-  const t = iso ? new Date(iso).getTime() : 0;
-  if (Number.isFinite(t) && t > 0) return t;
-  return timeFromObjectIdHex(p?._id);
+export function safeText(value: unknown) {
+  return String(value ?? "").trim();
 }
 
 export function sortPlaces<T extends Place>(
@@ -37,16 +18,44 @@ export function sortPlaces<T extends Place>(
   sort: "newest" | "oldest" | "city_asc" | "city_desc",
 ) {
   const next = [...items];
-  if (sort === "newest")
-    return next.sort((a: any, b: any) => safeTime(b) - safeTime(a));
-  if (sort === "oldest")
-    return next.sort((a: any, b: any) => safeTime(a) - safeTime(b));
+  if (sort === "newest") return sortByTime(next, "desc");
+  if (sort === "oldest") return sortByTime(next, "asc");
+  return sortByCity(next, sort);
+}
 
+function isFiniteNumber(value: unknown): value is number {
+  return typeof value === "number" && Number.isFinite(value);
+}
+
+function timeFromObjectIdHex(id?: unknown) {
+  const hex = String(id || "").trim();
+  if (hex.length < 8) return 0;
+  const seconds = parseInt(hex.slice(0, 8), 16);
+  return Number.isFinite(seconds) ? seconds * 1000 : 0;
+}
+
+function safeTime(place: Place) {
+  const iso = place.createdAt || place.updatedAt || readDateValue(place);
+  const time = iso ? new Date(iso).getTime() : 0;
+  if (Number.isFinite(time) && time > 0) return time;
+  return timeFromObjectIdHex(place._id);
+}
+
+function readDateValue(place: Place) {
+  const record = place as Record<string, unknown>;
+  return typeof record.date === "string" ? record.date : "";
+}
+
+function sortByTime<T extends Place>(items: T[], direction: "asc" | "desc") {
+  const multiplier = direction === "asc" ? 1 : -1;
+  return items.sort((a, b) => multiplier * (safeTime(a) - safeTime(b)));
+}
+
+function sortByCity<T extends Place>(
+  items: T[],
+  sort: "city_asc" | "city_desc",
+) {
   const collator = new Intl.Collator("de", { sensitivity: "base" });
-  const dir = sort === "city_asc" ? 1 : -1;
-
-  return next.sort(
-    (a: any, b: any) =>
-      dir * collator.compare(safeText(a?.city), safeText(b?.city)),
-  );
+  const direction = sort === "city_asc" ? 1 : -1;
+  return items.sort((a, b) => direction * collator.compare(safeText(a.city), safeText(b.city)));
 }
