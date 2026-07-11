@@ -11,6 +11,18 @@ import PlacesTable from "./PlacesTable";
 import type { PlacesTableProps } from "./types";
 
 export default function PlacesTableListContent(props: PlacesTableProps) {
+  const model = usePlacesTableContent(props);
+  if (!props.items.length) return <PlacesEmptyState busy={props.busy} t={model.t} />;
+
+  return (
+    <div className="news-table">
+      <PlacesBulkActions props={props} selection={model.selection} count={model.count} cancelRef={model.cancelRef} clearRef={model.clearRef} t={model.t} />
+      <PlacesTable props={props} selection={model.selection} t={model.t} />
+    </div>
+  );
+}
+
+function usePlacesTableContent(props: PlacesTableProps) {
   const { t } = useTranslation();
   const idsOnPage = useMemo(() => props.items.map(idOf).filter(Boolean), [props.items]);
   const selection = useSelection(idsOnPage);
@@ -19,13 +31,5 @@ export default function PlacesTableListContent(props: PlacesTableProps) {
   const count = selection.selected.size;
 
   usePlacesSelectionFocus(props.selectMode, count, clearRef, cancelRef);
-
-  if (!props.items.length) return <PlacesEmptyState busy={props.busy} t={t} />;
-
-  return (
-    <div className="news-table">
-      <PlacesBulkActions props={props} selection={selection} count={count} cancelRef={cancelRef} clearRef={clearRef} t={t} />
-      <PlacesTable props={props} selection={selection} t={t} />
-    </div>
-  );
+  return { t, selection, cancelRef, clearRef, count };
 }
