@@ -13,12 +13,18 @@ export default function PlacesSortSelect(props: PlacesSortSelectProps) {
 
   return (
     <div className={"ks-training-select" + (props.open ? " ks-training-select--open" : "")}>
-      <button type="button" ref={props.triggerRef} className="ks-training-select__trigger" onClick={() => props.setOpen((open) => !open)} disabled={props.busy} aria-label={sortAria(props)}>
-        <span className="ks-training-select__label">{getPlaceSortLabel(props.sort, props.t)}</span>
-        <span className="ks-training-select__chevron" aria-hidden="true" />
-      </button>
+      <SortTrigger {...props} />
       {props.open ? <SortMenu {...props} /> : null}
     </div>
+  );
+}
+
+function SortTrigger(props: PlacesSortSelectProps) {
+  return (
+    <button type="button" ref={props.triggerRef} className="ks-training-select__trigger" onClick={() => props.setOpen((open) => !open)} disabled={props.busy} aria-label={sortAria(props)}>
+      <span className="ks-training-select__label">{getPlaceSortLabel(props.sort, props.t)}</span>
+      <span className="ks-training-select__chevron" aria-hidden="true" />
+    </button>
   );
 }
 
