@@ -9,31 +9,34 @@ type PlacesApiResponse = {
   total?: number;
 };
 
-export async function fetchPlaces({
-  page,
-  pageSize,
-  q,
-  sort,
-}: {
+type FetchPlacesArgs = {
   page: number;
   pageSize: number;
   q: string;
   sort: SortKey;
-}) {
+};
+
+export async function fetchPlaces(args: FetchPlacesArgs) {
+  const params = createPlacesParams(args);
+  const response = await fetch(`/api/admin/places?${params.toString()}`, {
+    cache: "no-store",
+  });
+  return normalizePlacesResponse(await readPlacesResponse(response));
+}
+
+function createPlacesParams({ page, pageSize, q, sort }: FetchPlacesArgs) {
   const params = new URLSearchParams();
   if (q.trim().length >= 2) params.set("q", q.trim());
   params.set("page", String(page));
   params.set("pageSize", String(pageSize));
   params.set("limit", String(pageSize));
   params.set("sort", sort);
+  return params;
+}
 
-  const response = await fetch(`/api/admin/places?${params.toString()}`, {
-    cache: "no-store",
-  });
-  const data = await readPlacesResponse(response);
+function normalizePlacesResponse(data: PlacesApiResponse) {
   const list = Array.isArray(data.items) ? data.items : [];
   const total = Number(data.total || list.length || 0);
-
   return { items: list, total };
 }
 
