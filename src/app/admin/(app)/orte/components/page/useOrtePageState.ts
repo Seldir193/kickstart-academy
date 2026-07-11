@@ -9,6 +9,13 @@ import { sortPlaces } from "@/app/admin/(app)/orte/utils";
 import type { PlacesSortKey } from "./types";
 
 export function useOrtePageState() {
+  const filters = usePlacesFilters();
+  const data = useOrtePageData(filters);
+  const handleDeleteMany = createDeleteHandler(data);
+  return createPageModel(filters, data, handleDeleteMany);
+}
+
+function usePlacesFilters() {
   const [page, setPage] = useState(1);
   const [q, setQ] = useState("");
   const qDebounced = useDebouncedValue(q, 250);
@@ -16,35 +23,53 @@ export function useOrtePageState() {
   const [sortOpen, setSortOpen] = useState(false);
   const sortTriggerRef = useRef<HTMLButtonElement | null>(null);
   const sortMenuRef = useRef<HTMLUListElement | null>(null);
+  return { page, setPage, q, setQ, qDebounced, sort, setSort, sortOpen, setSortOpen, sortTriggerRef, sortMenuRef };
+}
+
+function useOrtePageData(filters: ReturnType<typeof usePlacesFilters>) {
   const dialog = usePlacesDialog();
-  const selection = usePlacesSelectionReset(page, qDebounced, sort);
-  const list = usePlacesList({ page, q: qDebounced, sort });
+  const selection = usePlacesSelectionReset(filters.page, filters.qDebounced, filters.sort);
+  const list = usePlacesList({ page: filters.page, q: filters.qDebounced, sort: filters.sort });
   const [mutating, setMutating] = useState(false);
-  const sortedItems = useMemo(() => sortPlaces(list.items, sort), [list.items, sort]);
+  const sortedItems = useMemo(() => sortPlaces(list.items, filters.sort), [list.items, filters.sort]);
+  return { dialog, selection, list, mutating, setMutating, sortedItems };
+}
 
-  async function handleDeleteMany(ids: string[]) {
+function createDeleteHandler(data: ReturnType<typeof useOrtePageData>) {
+  return async (ids: string[]) => {
     if (!ids.length) return;
-    await mutatePlaces(ids, list.reload, setMutating, selection.close);
-  }
+    await mutatePlaces(ids, data.list.reload, data.setMutating, data.selection.close);
+  };
+}
 
+function createPageModel(
+  filters: ReturnType<typeof usePlacesFilters>,
+  data: ReturnType<typeof useOrtePageData>,
+  handleDeleteMany: (ids: string[]) => Promise<void>,
+) {
   return {
-    page,
-    q,
-    sort,
-    sortOpen,
-    sortTriggerRef,
-    sortMenuRef,
-    list,
-    sortedItems,
-    busy: mutating,
-    dialog,
-    selection,
-    setSortOpen,
-    changeQuery: (value: string) => updateQuery(value, setQ, setPage),
-    clearQuery: () => updateQuery("", setQ, setPage),
-    changeSort: (next: PlacesSortKey) => changeSort(next, setSort, setSortOpen, setPage),
-    previousPage: () => setPage((current) => Math.max(1, current - 1)),
-    nextPage: () => setPage((current) => Math.min(list.pageCount, current + 1)),
+    ...pageStateValues(filters),
+    ...pageDataValues(data),
+    ...pageActions(filters, data, handleDeleteMany),
+  };
+}
+
+function pageStateValues(filters: ReturnType<typeof usePlacesFilters>) {
+  return { page: filters.page, q: filters.q, sort: filters.sort, sortOpen: filters.sortOpen, sortTriggerRef: filters.sortTriggerRef, sortMenuRef: filters.sortMenuRef };
+}
+
+function pageDataValues(data: ReturnType<typeof useOrtePageData>) {
+  return { list: data.list, sortedItems: data.sortedItems, busy: data.mutating, dialog: data.dialog, selection: data.selection };
+}
+
+function pageActions(filters: ReturnType<typeof usePlacesFilters>, data: ReturnType<typeof useOrtePageData>, handleDeleteMany: (ids: string[]) => Promise<void>) {
+  return {
+    setSortOpen: filters.setSortOpen,
+    changeQuery: (value: string) => updateQuery(value, filters.setQ, filters.setPage),
+    clearQuery: () => updateQuery("", filters.setQ, filters.setPage),
+    changeSort: (next: PlacesSortKey) => changeSort(next, filters.setSort, filters.setSortOpen, filters.setPage),
+    previousPage: () => filters.setPage((current) => Math.max(1, current - 1)),
+    nextPage: () => filters.setPage((current) => Math.min(data.list.pageCount, current + 1)),
     handleDeleteMany,
   };
 }
