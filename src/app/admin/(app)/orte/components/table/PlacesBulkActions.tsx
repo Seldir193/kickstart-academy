@@ -17,24 +17,41 @@ type Props = {
 export default function PlacesBulkActions(input: Props) {
   return (
     <div className="news-admin__top-actions">
-      <BulkActions
-        toggleRef={input.props.toggleBtnRef as RefObject<HTMLButtonElement | null>}
-        cancelRef={input.cancelRef}
-        clearRef={input.clearRef}
-        selectMode={input.props.selectMode}
-        onToggleSelectMode={() => toggleSelectMode(input)}
-        count={input.count}
-        isAllSelected={input.selection.isAllSelected}
-        busy={input.props.busy}
-        isEmpty={input.props.items.length === 0}
-        onToggleAll={() => toggleAll(input.selection)}
-        onClear={() => clearSelection(input)}
-        showClear={input.props.selectMode && input.count >= 2}
-        onDelete={() => deleteSelected(input)}
-        {...bulkLabels(input.t)}
-      />
+      <PlacesBulkActionControl input={input} />
     </div>
   );
+}
+
+function PlacesBulkActionControl({ input }: { input: Props }) {
+  const actionProps = {
+    ...bulkState(input),
+    ...bulkHandlers(input),
+    ...bulkLabels(input.t),
+  };
+  return <BulkActions {...actionProps} />;
+}
+
+function bulkState(input: Props) {
+  return {
+    toggleRef: input.props.toggleBtnRef as RefObject<HTMLButtonElement | null>,
+    cancelRef: input.cancelRef,
+    clearRef: input.clearRef,
+    selectMode: input.props.selectMode,
+    count: input.count,
+    isAllSelected: input.selection.isAllSelected,
+    busy: input.props.busy,
+    isEmpty: input.props.items.length === 0,
+    showClear: input.props.selectMode && input.count >= 2,
+  };
+}
+
+function bulkHandlers(input: Props) {
+  return {
+    onToggleSelectMode: () => toggleSelectMode(input),
+    onToggleAll: () => toggleAll(input.selection),
+    onClear: () => clearSelection(input),
+    onDelete: () => deleteSelected(input),
+  };
 }
 
 function bulkLabels(t: TFunction) {
