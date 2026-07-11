@@ -13,12 +13,23 @@ export default function OrtePageContent() {
 
   return (
     <div className="news-admin ks places-admin">
-      <main className="container">
-        <PlacesToolbar model={model} t={t} />
-        <PlacesError error={model.list.error} />
-        <PlacesSection model={model} t={t} />
-      </main>
+      <PlacesMain model={model} t={t} />
       <PlacesDialogMount model={model} />
     </div>
+  );
+}
+
+type MainProps = {
+  model: ReturnType<typeof useOrtePageState>;
+  t: ReturnType<typeof useTranslation>["t"];
+};
+
+function PlacesMain({ model, t }: MainProps) {
+  return (
+    <main className="container">
+      <PlacesToolbar model={model} t={t} />
+      <PlacesError error={model.list.error} />
+      <PlacesSection model={model} t={t} />
+    </main>
   );
 }

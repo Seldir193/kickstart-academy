@@ -21,13 +21,21 @@ export default function PlacesTableRow(input: Props) {
 
   return (
     <li className={rowClassName(checked, input.props.selectMode)} onClick={() => openRow(input)} onKeyDown={(event) => handleKey(event, input)} tabIndex={0} role="button" aria-pressed={input.props.selectMode ? checked : undefined} aria-label={rowAriaLabel(input.place, input.props.selectMode, input.t)}>
-      <div className="news-list__cell places-mono">{displayPlaceId(input.place)}</div>
-      <PlaceNameCell place={input.place} />
-      <div className="news-list__cell news-list__cell--addr">{safeText(input.place.address) || "—"}</div>
-      <div className="news-list__cell places-mono">{safeText(input.place.zip) || "—"}</div>
-      <div className="news-list__cell news-list__cell--city">{safeText(input.place.city) || "—"}</div>
+      <PlaceCells place={input.place} />
       {input.props.selectMode || checked ? <PlacesHiddenActionCell /> : <PlacesEditCell place={input.place} onOpen={input.props.onOpen} t={input.t} />}
     </li>
+  );
+}
+
+function PlaceCells({ place }: { place: PlacesTableItem }) {
+  return (
+    <>
+      <div className="news-list__cell places-mono">{displayPlaceId(place)}</div>
+      <PlaceNameCell place={place} />
+      <div className="news-list__cell news-list__cell--addr">{safeText(place.address) || "—"}</div>
+      <div className="news-list__cell places-mono">{safeText(place.zip) || "—"}</div>
+      <div className="news-list__cell news-list__cell--city">{safeText(place.city) || "—"}</div>
+    </>
   );
 }
 

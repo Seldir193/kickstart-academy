@@ -31,16 +31,19 @@ function PlacesSectionCount({ total }: { total: number }) {
 function PlacesTableBox({ model }: { model: ReturnType<typeof useOrtePageState> }) {
   return (
     <div className={tableBoxClassName(model.busy, model.list.items.length)}>
-      <PlacesTableList
-        items={model.sortedItems}
-        selectMode={model.selection.selectMode}
-        onToggleSelectMode={model.selection.toggle}
-        busy={model.busy}
-        onOpen={model.dialog.edit}
-        onDeleteMany={model.handleDeleteMany}
-        toggleBtnRef={model.selection.toggleBtnRef}
-      />
+      <PlacesTable model={model} />
     </div>
+  );
+}
+
+function PlacesTable({ model }: { model: ReturnType<typeof useOrtePageState> }) {
+  return (
+    <PlacesTableList
+      items={model.sortedItems} selectMode={model.selection.selectMode}
+      onToggleSelectMode={model.selection.toggle} busy={model.busy}
+      onOpen={model.dialog.edit} onDeleteMany={model.handleDeleteMany}
+      toggleBtnRef={model.selection.toggleBtnRef}
+    />
   );
 }
 
