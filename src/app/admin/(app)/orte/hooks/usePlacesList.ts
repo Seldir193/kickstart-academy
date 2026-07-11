@@ -16,22 +16,29 @@ type Params = {
 
 export function usePlacesList({ page, q, sort }: Params) {
   const { t } = useTranslation();
+  const state = usePlacesListState();
+  const pageSize = 10;
+  const pageCount = useMemo(() => Math.max(1, Math.ceil(state.total / pageSize)), [state.total]);
+  const load = useCallback(async () => {
+    await loadPlaces({ page, pageSize, q, sort, t, setItems: state.setItems, setTotal: state.setTotal, setError: state.setError, setLoading: state.setLoading });
+  }, [page, pageSize, q, sort, t, state.setItems, state.setTotal, state.setError, state.setLoading]);
+  usePlacesReload(load);
+  return { items: state.items, total: state.total, loading: state.loading, error: state.error, reload: load, pageCount };
+}
+
+function usePlacesListState() {
   const [items, setItems] = useState<Array<Place & { publicId?: number }>>([]);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const pageSize = 10;
-  const pageCount = useMemo(() => Math.max(1, Math.ceil(total / pageSize)), [total]);
-  const load = useCallback(async () => {
-    await loadPlaces({ page, pageSize, q, sort, t, setItems, setTotal, setError, setLoading });
-  }, [page, pageSize, q, sort, t]);
+  return { items, setItems, total, setTotal, loading, setLoading, error, setError };
+}
 
+function usePlacesReload(load: () => Promise<void>) {
   useEffect(() => {
     const timer = setTimeout(load, 150);
     return () => clearTimeout(timer);
   }, [load]);
-
-  return { items, total, loading, error, reload: load, pageCount };
 }
 
 type LoadPlacesArgs = Params & {
