@@ -14,15 +14,21 @@ export function useStageDropdown(
 ) {
   useEffect(() => {
     if (!open) return;
-
-    function onPointerDown(ev: PointerEvent) {
-      const target = ev.target as Node;
-      if (refs.triggerRef.current?.contains(target)) return;
-      if (refs.menuRef.current?.contains(target)) return;
-      onClose();
-    }
-
+    const onPointerDown = (event: PointerEvent) =>
+      handlePointerDown(event, refs.triggerRef, refs.menuRef, onClose);
     document.addEventListener("pointerdown", onPointerDown);
     return () => document.removeEventListener("pointerdown", onPointerDown);
   }, [open, onClose, refs.menuRef, refs.triggerRef]);
+}
+
+function handlePointerDown(
+  event: PointerEvent,
+  triggerRef: Refs["triggerRef"],
+  menuRef: Refs["menuRef"],
+  onClose: () => void,
+) {
+  const target = event.target as Node;
+  if (triggerRef.current?.contains(target)) return;
+  if (menuRef.current?.contains(target)) return;
+  onClose();
 }
