@@ -1,12 +1,20 @@
-export function cssVars(left: number, top: number, width: number) {
-  return {
-    ["--ksLeft" as any]: `${left}px`,
-    ["--ksTop" as any]: `${top}px`,
-    ["--ksWidth" as any]: `${width}px`,
-  };
-}
-
 import type { TFunction } from "i18next";
+import type { CSSProperties } from "react";
+
+type OverlayCssVars = CSSProperties & {
+  "--ksLeft": string;
+  "--ksTop": string;
+  "--ksWidth": string;
+};
+
+export function cssVars(left: number, top: number, width: number) {
+  const vars: OverlayCssVars = {
+    "--ksLeft": `${left}px`,
+    "--ksTop": `${top}px`,
+    "--ksWidth": `${width}px`,
+  };
+  return vars;
+}
 
 export function docsLabel(
   loading: boolean,
