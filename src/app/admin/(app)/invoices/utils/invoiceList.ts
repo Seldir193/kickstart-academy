@@ -1,4 +1,3 @@
-// //src\app\admin\(app)\invoices\utils\invoiceList.ts
 export type DunningStage = "reminder" | "dunning1" | "dunning2" | "final";
 
 export type InvoicePaymentStatus = "open" | "paid" | "returned";
@@ -60,12 +59,12 @@ export type ListResponse<T> =
 
 export function asList<T>(raw: ListResponse<T>): { items: T[]; total: number } {
   if (Array.isArray(raw)) return { items: raw, total: raw.length };
-  const items = Array.isArray((raw as any).items) ? (raw as any).items : [];
-  const total = Number((raw as any).total ?? items.length ?? 0);
+  const items: T[] = Array.isArray(raw.items) ? raw.items : [];
+  const total = Number(raw.total ?? items.length ?? 0);
   return { items, total };
 }
 
-export function qs(params: Record<string, any>) {
+export function qs(params: Record<string, unknown>) {
   const sp = new URLSearchParams();
   for (const [k, v] of Object.entries(params)) {
     if (v === undefined || v === null || v === "") continue;
