@@ -2,14 +2,6 @@
 import type { TFunction } from "i18next";
 import type { DunningStage } from "./invoiceList";
 
-// export function stageLabel(stage?: string | null) {
-//   if (stage === "reminder") return "Zahlungserinnerung";
-//   if (stage === "dunning1") return "1. Mahnung";
-//   if (stage === "dunning2") return "2. Mahnung";
-//   if (stage === "final") return "Letzte Mahnung";
-//   return "Mahnung";
-// }
-
 export function stageLabel(
   stage: DunningStage | string | null | undefined,
   t: TFunction,
@@ -28,14 +20,6 @@ export function stageLabel(
   }
   return t("common.admin.invoices.stage.default");
 }
-
-// export function stageLabel(stage?: string | null) {
-//   if (stage === "reminder") return "Payment reminder";
-//   if (stage === "dunning1") return "1st reminder";
-//   if (stage === "dunning2") return "2nd reminder";
-//   if (stage === "final") return "Final reminder";
-//   return "Reminder";
-// }
 
 export function moneyInputToNumber(value: string): number {
   const raw = String(value || "")

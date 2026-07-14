@@ -13,31 +13,55 @@ export function useOutsideClose(
   onClose: () => void,
   onReposition: () => void,
 ) {
-  useEffect(() => {
-    if (!open) return;
+  useEffect(
+    () =>
+      setupOutsideClose(
+        open,
+        refs.triggerRef,
+        refs.panelRef,
+        onClose,
+        onReposition,
+      ),
+    [open, onClose, onReposition, refs.panelRef, refs.triggerRef],
+  );
+}
 
-    function onDown(e: MouseEvent) {
-      const t = e.target as Node;
-      if (refs.triggerRef.current?.contains(t)) return;
-      if (refs.panelRef.current?.contains(t)) return;
-      onClose();
-    }
+function setupOutsideClose(
+  open: boolean,
+  triggerRef: Refs["triggerRef"],
+  panelRef: Refs["panelRef"],
+  onClose: () => void,
+  onReposition: () => void,
+) {
+  if (!open) return;
+  const onDown = (event: MouseEvent) =>
+    handleMouseDown(event, triggerRef, panelRef, onClose);
+  const onResize = () => onReposition();
+  const onScroll = () => onClose();
+  document.addEventListener("mousedown", onDown);
+  window.addEventListener("resize", onResize);
+  window.addEventListener("scroll", onScroll, true);
+  return () => removeListeners(onDown, onResize, onScroll);
+}
 
-    function onResize() {
-      onReposition();
-    }
+function handleMouseDown(
+  event: MouseEvent,
+  triggerRef: Refs["triggerRef"],
+  panelRef: Refs["panelRef"],
+  onClose: () => void,
+) {
+  const target = event.target as Node;
+  if (triggerRef.current?.contains(target)) return;
+  if (panelRef.current?.contains(target)) return;
+  onClose();
+}
 
-    function onScroll() {
-      onClose();
-    }
-
-    document.addEventListener("mousedown", onDown);
-    window.addEventListener("resize", onResize);
-    window.addEventListener("scroll", onScroll, true);
-    return () => {
-      document.removeEventListener("mousedown", onDown);
-      window.removeEventListener("resize", onResize);
-      window.removeEventListener("scroll", onScroll, true);
-    };
-  }, [open, onClose, onReposition, refs.panelRef, refs.triggerRef]);
+function removeListeners(
+  onDown: (event: MouseEvent) => void,
+  onResize: () => void,
+  onScroll: () => void,
+) {
+  document.removeEventListener("mousedown", onDown);
+  window.removeEventListener("resize", onResize);
+  window.removeEventListener("scroll", onScroll, true);
 }
