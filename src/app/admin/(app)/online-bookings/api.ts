@@ -1,4 +1,3 @@
-//src\app\admin\(app)\online-bookings\api.ts
 "use client";
 
 import type { ListResp, ProgramFilter, Status, StatusOrAll } from "./types";
@@ -72,7 +71,7 @@ export async function deleteBooking(id: string) {
   });
   const d = await readJson<any>(r);
   if (!r.ok || d?.ok === false) throw new Error(d?.error || r.statusText);
- return d;
+  return d;
 }
 
 export async function cancelConfirmedBooking(id: string) {
@@ -129,5 +128,5 @@ export async function approvePayment(id: string) {
   );
   const d = await readJson<any>(r);
   if (!r.ok || d?.ok === false) throw new Error(d?.error || r.statusText);
- return d;
+  return d;
 }

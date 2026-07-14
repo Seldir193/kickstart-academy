@@ -1,5 +1,3 @@
-//src\app\admin\(app)\invoices\components\InvoicePaymentDunningFilters.tsx
-
 "use client";
 
 import React from "react";

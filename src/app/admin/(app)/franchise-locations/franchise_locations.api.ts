@@ -1,4 +1,3 @@
-//src\app\admin\(app)\franchise-locations\franchise_locations.api.ts
 "use client";
 
 import type { FranchiseLocation, LocationPayload } from "./types";

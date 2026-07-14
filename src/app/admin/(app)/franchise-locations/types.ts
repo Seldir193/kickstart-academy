@@ -1,4 +1,3 @@
-// src/app/admin/franchise-locations/types.ts
 export type LocationStatus = "pending" | "approved" | "rejected";
 
 export type OwnerUser = {

@@ -1,4 +1,3 @@
-//src\app\admin\(app)\bookings\types.ts
 "use client";
 
 export type Status =

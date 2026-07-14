@@ -1,4 +1,3 @@
-// src/app/admin/news/constants.ts
 import type { Category } from "./types";
 
 export const PAGE_LIMIT = 10;

@@ -1,4 +1,3 @@
-//src\app\admin\(app)\bookings\api.ts
 "use client";
 
 import type { ListResp, ProgramFilter, Status, StatusOrAll } from "./types";

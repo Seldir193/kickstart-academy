@@ -1,4 +1,3 @@
-//src\app\admin\(app)\customers\dialogs\customerDialog\formatters.ts
 import type { FamilyMember } from "./types";
 
 export function dateLocale(lang?: string) {
@@ -107,23 +106,3 @@ function childBase(first?: string, last?: string, t?: (key: string) => string) {
       : "(Kind ohne Namen)")
   );
 }
-
-// function childBirth(birthDate?: string | null) {
-//   if (!birthDate) return "";
-//   const d = new Date(birthDate);
-//   if (isNaN(d.getTime())) return "";
-//   return new Intl.DateTimeFormat("de-DE", {
-//     timeZone: "Europe/Berlin",
-//     dateStyle: "medium",
-//   }).format(d);
-// }
-
-// function childBirth(birthDate?: string | null, lang?: string) {
-//   if (!birthDate) return "";
-//   const d = new Date(birthDate);
-//   if (isNaN(d.getTime())) return "";
-//   return new Intl.DateTimeFormat(dateLocale(lang), {
-//     timeZone: "Europe/Berlin",
-//     dateStyle: "medium",
-//   }).format(d);
-// }

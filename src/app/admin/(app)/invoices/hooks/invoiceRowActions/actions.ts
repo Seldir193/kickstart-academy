@@ -1,4 +1,3 @@
-//src\app\admin\(app)\invoices\hooks\invoiceRowActions\actions.ts
 "use client";
 import type { TFunction } from "i18next";
 import type { InvoiceRow } from "../../utils/invoiceList";

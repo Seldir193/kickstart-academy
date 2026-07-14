@@ -1,4 +1,3 @@
-//src\app\admin\(app)\members\components\BulkActions.tsx
 "use client";
 
 import type { RefObject } from "react";

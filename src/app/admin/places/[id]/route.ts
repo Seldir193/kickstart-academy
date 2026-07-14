@@ -1,4 +1,3 @@
-// src/app/api/admin/places/[id]/route.ts
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
@@ -15,14 +14,13 @@ function apiBase() {
 
 type RouteCtx = { params: Promise<{ id: string }> };
 
-// GET /api/admin/places/:id  →  GET {BASE}/places/:id
 export async function GET(_req: NextRequest, { params }: RouteCtx) {
   try {
     const pid = await getProviderIdFromCookies();
     if (!pid)
       return NextResponse.json(
         { ok: false, error: "Unauthorized" },
-        { status: 401 }
+        { status: 401 },
       );
 
     const { id } = await params;
@@ -45,19 +43,18 @@ export async function GET(_req: NextRequest, { params }: RouteCtx) {
     console.error("[places:id GET] proxy error:", msg);
     return NextResponse.json(
       { ok: false, error: "Proxy error" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
 
-// PUT /api/admin/places/:id  →  PUT {BASE}/places/:id
 export async function PUT(req: NextRequest, { params }: RouteCtx) {
   try {
     const pid = await getProviderIdFromCookies();
     if (!pid)
       return NextResponse.json(
         { ok: false, error: "Unauthorized" },
-        { status: 401 }
+        { status: 401 },
       );
 
     const { id } = await params;
@@ -86,19 +83,18 @@ export async function PUT(req: NextRequest, { params }: RouteCtx) {
     console.error("[places:id PUT] proxy error:", msg);
     return NextResponse.json(
       { ok: false, error: "Proxy error" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
 
-// DELETE /api/admin/places/:id  →  DELETE {BASE}/places/:id
 export async function DELETE(_req: NextRequest, { params }: RouteCtx) {
   try {
     const pid = await getProviderIdFromCookies();
     if (!pid)
       return NextResponse.json(
         { ok: false, error: "Unauthorized" },
-        { status: 401 }
+        { status: 401 },
       );
 
     const { id } = await params;
@@ -121,7 +117,7 @@ export async function DELETE(_req: NextRequest, { params }: RouteCtx) {
     console.error("[places:id DELETE] proxy error:", msg);
     return NextResponse.json(
       { ok: false, error: "Proxy error" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

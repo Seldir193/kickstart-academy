@@ -1,4 +1,3 @@
-// customers/dialogs/components/KsBirthDateSelect.tsx
 "use client";
 
 import React, { useEffect, useMemo, useRef, useState } from "react";
@@ -135,7 +134,6 @@ export default function KsBirthDateSelect({
 
   useOnClickOutside(rootRef, () => setOpenKey(null));
 
-  // Wenn von außen ein Wert kommt (Edit-Modus / Customer wechseln) → UI syncen
   useEffect(() => {
     setDraft(toParts(value));
   }, [value]);

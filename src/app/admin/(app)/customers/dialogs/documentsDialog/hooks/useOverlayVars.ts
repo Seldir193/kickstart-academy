@@ -1,4 +1,3 @@
-//src\app\admin\(app)\customers\dialogs\documentsDialog\hooks\useOverlayVars.ts
 import { useEffect } from "react";
 
 type SelectboxLike = {

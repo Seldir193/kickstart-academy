@@ -1,4 +1,3 @@
-//src\app\admin\(app)\online-bookings\hooks\useNotice.ts
 "use client";
 
 import { useCallback, useState } from "react";

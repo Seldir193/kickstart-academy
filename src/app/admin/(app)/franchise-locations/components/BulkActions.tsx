@@ -1,4 +1,3 @@
-// src/app/admin/(app)/franchise-locations/components/BulkActions.tsx
 "use client";
 
 import type { RefObject } from "react";

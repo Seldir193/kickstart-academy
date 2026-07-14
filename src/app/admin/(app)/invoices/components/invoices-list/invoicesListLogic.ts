@@ -1,4 +1,3 @@
-//src\app\admin\(app)\invoices\components\invoices-list\invoicesListLogic.ts
 import type { TFunction } from "i18next";
 import type { InvoiceRow } from "../../utils/invoiceList";
 

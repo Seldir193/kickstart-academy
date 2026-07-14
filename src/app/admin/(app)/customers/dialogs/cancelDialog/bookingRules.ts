@@ -1,4 +1,3 @@
-// src/app/admin/(app)/customers/dialogs/cancelDialog/bookingRules.ts
 import type { BookingRef } from "../../types";
 
 export function labelFor(

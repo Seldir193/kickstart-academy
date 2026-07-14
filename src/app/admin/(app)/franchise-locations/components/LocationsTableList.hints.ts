@@ -1,4 +1,3 @@
-// src/app/admin/(app)/franchise-locations/components/LocationsTableList.hints.ts
 "use client";
 
 type TFn = (key: string) => string;

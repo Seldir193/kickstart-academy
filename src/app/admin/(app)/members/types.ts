@@ -1,5 +1,3 @@
-//src\app\admin\(app)\members\types.ts
-
 export type Me = {
   id: string;
   isSuperAdmin: boolean;

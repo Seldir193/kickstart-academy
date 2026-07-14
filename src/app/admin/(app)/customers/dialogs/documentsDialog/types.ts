@@ -1,4 +1,3 @@
-// //src\app\admin\(app)\customers\dialogs\documentsDialog\types.ts
 export type DocType =
   | "participation"
   | "cancellation"

@@ -1,4 +1,3 @@
-//src\app\admin\(app)\franchise-locations\utils\dateFormat.ts
 export function dateLocale(lang?: string) {
   if (lang === "tr") return "tr-TR";
   if (lang === "en") return "en-US";

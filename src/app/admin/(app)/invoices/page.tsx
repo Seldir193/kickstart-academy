@@ -1,4 +1,3 @@
-// src/app/admin/(app)/invoices/page.tsx
 "use client";
 
 import React, { useCallback, useMemo } from "react";

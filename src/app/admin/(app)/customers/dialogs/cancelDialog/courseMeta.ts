@@ -1,5 +1,3 @@
-//src\app\admin\(app)\customers\dialogs\cancelDialog\courseMeta.ts
-
 type CourseMeta = {
   mode: "type" | "subtype";
   value: string;

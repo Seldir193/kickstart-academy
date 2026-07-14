@@ -1,4 +1,3 @@
-// src/app/admin/(app)/coaches/components/Pagination.tsx
 "use client";
 import { useTranslation } from "react-i18next";
 type Props = {

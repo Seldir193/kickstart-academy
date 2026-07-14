@@ -1,4 +1,3 @@
-// src/app/admin/(app)/invoices/components/invoices-top-selects/InvoicesTopSelects.tsx
 "use client";
 
 import React from "react";

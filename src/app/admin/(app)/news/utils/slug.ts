@@ -1,4 +1,3 @@
-// src/app/admin/news/utils/slug.ts
 export function safeSlug(value: string) {
   return (value || "")
     .toLowerCase()

@@ -1,4 +1,3 @@
-// src/app/admin/news/news.ts
 import type { News } from "./types";
 import { normalizeIsoDate } from "./date";
 import { safeSlug } from "./utils/slug";

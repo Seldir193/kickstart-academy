@@ -1,4 +1,3 @@
-//src\app\admin\(app)\customers\hooks\useFixedSelectbox.ts
 "use client";
 
 import { useEffect, useRef, useState } from "react";

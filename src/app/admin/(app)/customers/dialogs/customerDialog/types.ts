@@ -1,5 +1,3 @@
-// // src/app/admin/(app)/customers/dialogs/customerDialog/types.ts
-
 export type FamilyMember = {
   _id: string;
   userId: number | null;

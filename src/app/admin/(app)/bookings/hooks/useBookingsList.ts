@@ -1,4 +1,3 @@
-//src\app\admin\(app)\bookings\hooks\useBookingsList.ts
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";

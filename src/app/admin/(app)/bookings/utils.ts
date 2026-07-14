@@ -1,4 +1,3 @@
-//src\app\admin\(app)\bookings\utils.ts
 "use client";
 
 import type { Booking, ProgramFilter, Status, StatusOrAll } from "./types";

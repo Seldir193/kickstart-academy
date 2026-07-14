@@ -1,4 +1,3 @@
-// src/app/admin/franchise-locations/components/SortSelect.tsx
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";

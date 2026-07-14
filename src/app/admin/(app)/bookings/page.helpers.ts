@@ -1,4 +1,3 @@
-//src\app\admin\(app)\bookings\page.helpers.ts
 import type { Booking } from "./types";
 
 type SortKey = "newest" | "oldest" | "nameAsc" | "nameDesc";

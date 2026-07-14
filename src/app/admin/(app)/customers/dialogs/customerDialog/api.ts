@@ -1,4 +1,3 @@
-//src\app\admin\(app)\customers\dialogs\customerDialog\api.ts
 import type { Customer, Offer } from "../../types";
 import type { FamilyApiResponse } from "./types";
 

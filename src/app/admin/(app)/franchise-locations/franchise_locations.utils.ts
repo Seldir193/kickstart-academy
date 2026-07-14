@@ -1,4 +1,3 @@
-// src/app/admin/franchise-locations/utils.ts
 import type { FranchiseLocation } from "./types";
 
 export type Status = "pending" | "approved" | "rejected";
@@ -46,17 +45,6 @@ export function isRejected(it: FranchiseLocation) {
   return clean(it.rejectionReason).length > 0;
 }
 
-// export function pendingReviewLabel(
-//   it: FranchiseLocation,
-//   t: (key: string) => string,
-// ) {
-//   if (isApproved(it) && it.submittedAt)
-//     return t("common.admin.franchiseLocations.hints.changeSubmitted");
-//   return isPending(it)
-//     ? t("common.admin.franchiseLocations.status.awaitingApproval")
-//     : "";
-// }
-
 export function pendingReviewLabel(it: FranchiseLocation) {
   if (isApproved(it) && it.submittedAt) return "Change submitted";
   return isPending(it) ? "Awaiting approval" : "";
@@ -88,15 +76,6 @@ export function canSubmitUpdate(it: FranchiseLocation) {
 export function canTogglePublished(it: FranchiseLocation) {
   return isApproved(it) && !it.submittedAt;
 }
-
-// export function providerLabel(
-//   it: FranchiseLocation,
-//   t: (key: string) => string,
-// ) {
-//   const u = it.ownerUser;
-//   const name = clean(u?.fullName) || clean(it.ownerName) || "";
-//   return name || t("common.admin.franchiseLocations.table.licence");
-// }
 
 export function providerLabel(it: FranchiseLocation) {
   const u = it.ownerUser;

@@ -1,4 +1,3 @@
-//src\app\admin\(app)\invoices\hooks\invoiceRowActions\api.ts
 "use client";
 
 function getProviderIdHeader(): Record<string, string> {

@@ -1,4 +1,3 @@
-// src/app/admin/(app)/invoices/components/TypeChips.tsx
 "use client";
 
 import React from "react";

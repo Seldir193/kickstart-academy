@@ -1,4 +1,3 @@
-//src\app\admin\(app)\invoices\hooks\invoiceRowActions\state.ts
 import type { DunningStage, InvoiceRow } from "../../utils/invoiceList";
 
 type RowActionMode = "returned" | "dunning" | "refund" | "withdraw" | null;

@@ -1,4 +1,3 @@
-//src\app\admin\(app)\customers\dialogs\cancelDialog\bookingDisplay.ts
 import type { StatusFilter } from "./constants";
 
 type Display = {

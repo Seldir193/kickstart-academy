@@ -1,4 +1,3 @@
-//src\app\admin\(app)\customers\dialogs\documentsDialog\components\TypeChips.tsx
 "use client";
 
 import React from "react";

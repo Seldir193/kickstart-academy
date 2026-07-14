@@ -1,5 +1,3 @@
-// src/app/admin/franchise-locations/components/PendingLocationsList.tsx
-
 "use client";
 
 import React from "react";
@@ -49,12 +47,6 @@ function changeAtRaw(it: FranchiseLocation) {
     x.modified_at,
   );
 }
-
-// function formatDateDe(raw: string) {
-//   const d = new Date(raw);
-//   if (Number.isNaN(d.getTime())) return raw;
-//   return d.toLocaleDateString("de-DE");
-// }
 
 function dateLabel(it: FranchiseLocation, t: (key: string) => string) {
   return hasReviewChange(it)

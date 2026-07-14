@@ -1,4 +1,3 @@
-// app/admin/customers/types.ts
 export type Address = {
   street?: string;
   houseNo?: string;

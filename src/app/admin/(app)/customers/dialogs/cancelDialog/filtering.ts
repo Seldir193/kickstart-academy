@@ -1,4 +1,3 @@
-//src\app\admin\(app)\customers\dialogs\cancelDialog\filtering.ts
 import type { SortOrder, StatusFilter } from "./constants";
 
 export function applyStatusAndSort(

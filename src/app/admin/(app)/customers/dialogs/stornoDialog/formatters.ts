@@ -1,4 +1,3 @@
-//src\app\admin\(app)\customers\dialogs\stornoDialog\formatters.ts
 import type { BookingRef } from "../../types";
 
 export function rawType(b?: Partial<BookingRef> | null) {

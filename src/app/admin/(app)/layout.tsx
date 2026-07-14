@@ -1,4 +1,3 @@
-// src/app/admin/layout.tsx
 import React from "react";
 import HeaderServer from "../../components/HeaderServer";
 import Footer from "../../components/Footer";

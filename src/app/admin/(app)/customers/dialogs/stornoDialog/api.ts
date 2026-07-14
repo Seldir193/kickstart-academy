@@ -1,4 +1,3 @@
-//src\app\admin\(app)\customers\dialogs\stornoDialog\api.ts
 import type { Customer } from "../../types";
 
 export async function fetchOffers(limit: number) {

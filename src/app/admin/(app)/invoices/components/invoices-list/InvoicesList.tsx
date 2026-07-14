@@ -1,4 +1,3 @@
-//src\app\admin\(app)\invoices\components\invoices-list\InvoicesList.tsx
 "use client";
 
 import React, { useMemo } from "react";

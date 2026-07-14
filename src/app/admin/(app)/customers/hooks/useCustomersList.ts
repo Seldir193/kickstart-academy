@@ -1,4 +1,3 @@
-//src\app\admin\(app)\customers\hooks\useCustomersList.ts
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";

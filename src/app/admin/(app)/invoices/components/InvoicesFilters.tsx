@@ -1,4 +1,3 @@
-// src/app/admin/(app)/invoices/components/InvoicesFilters.tsx
 "use client";
 
 import React, { useMemo } from "react";

@@ -1,5 +1,3 @@
-// src/app/admin/(app)/news/api.ts
-
 import type { ListResponse, News, NewsUploadPurpose } from "./types";
 import { NEWS_API, UPLOAD_API } from "./constants";
 

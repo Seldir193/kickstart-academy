@@ -1,4 +1,3 @@
-//src\app\admin\(app)\customers\dialogs\cancelDialog\constants.ts
 export type StatusFilter = "active" | "cancelled" | "all";
 export type SortOrder = "newest" | "oldest";
 

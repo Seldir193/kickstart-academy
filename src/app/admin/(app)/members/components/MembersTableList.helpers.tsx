@@ -1,4 +1,3 @@
-//src\app\admin\(app)\members\components\MembersTableList.helpers.tsx
 "use client";
 
 import type React from "react";

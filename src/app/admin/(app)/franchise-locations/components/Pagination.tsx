@@ -1,4 +1,3 @@
-// src/app/admin/franchise-locations/components/Pagination.tsx
 "use client";
 
 import React from "react";

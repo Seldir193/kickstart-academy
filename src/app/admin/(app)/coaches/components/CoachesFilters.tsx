@@ -1,4 +1,3 @@
-//src\app\admin\(app)\coaches\components\CoachesFilters.tsx
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";

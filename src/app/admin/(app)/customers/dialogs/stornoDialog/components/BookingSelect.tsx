@@ -1,4 +1,3 @@
-//src\app\admin\(app)\customers\dialogs\stornoDialog\components\BookingSelect.tsx
 "use client";
 
 import React, { useMemo } from "react";

@@ -9,11 +9,6 @@ export function isWeeklyOffer(o?: Offer | null) {
   return o.type === "Foerdertraining" || o.type === "Kindergarten";
 }
 
-// export function isIndividualOffer(o?: Offer | null) {
-//   return o?.category === "Individual";
-// }
-
-// const DAY_ALIASES: Record<string, string> = {
 export function isIndividualOffer(o?: Offer | null) {
   const category = String((o as any)?.category ?? "").trim();
   const type = String((o as any)?.type ?? "")
@@ -73,13 +68,6 @@ const DAY_LONG_DE: Record<string, string> = {
   So: "Sonntag",
 };
 
-// function normalizeDay(value: unknown) {
-//   const key = String(value ?? "")
-//     .trim()
-//     .toLowerCase();
-//   return DAY_ALIASES[key] || "";
-// }
-
 function normalizeDay(value: unknown) {
   const key = String(value ?? "")
     .trim()
@@ -94,30 +82,6 @@ function normalizeDay(value: unknown) {
 
   return hit ? DAY_ALIASES[hit] : "";
 }
-
-// export function getOfferDayLabel(offer?: Offer | null) {
-//   const directDay = normalizeDay((offer as any)?.day);
-//   const days = Array.isArray((offer as any)?.days) ? (offer as any).days : [];
-//   const fallbackDay = normalizeDay(days[0]);
-//   const day = directDay || fallbackDay;
-//   return day ? DAY_LONG_DE[day] || day : "";
-// }
-
-// export function getOfferTimeLine(offer?: Offer | null) {
-//   const from = String((offer as any)?.timeFrom ?? "").trim();
-//   const to = String((offer as any)?.timeTo ?? "").trim();
-//   return from && to ? `${from} – ${to}` : from || to;
-// }
-
-// export function getOfferScheduleLabel(offer?: Offer | null) {
-//   const day = getOfferDayLabel(offer);
-//   if (!day) return "";
-
-//   if (isWeeklyOffer(offer)) return `Jeden ${day}`;
-//   if (isIndividualOffer(offer)) return day;
-
-//   return "";
-// }
 
 function firstDayEntry(offer?: Offer | null) {
   const days = Array.isArray((offer as any)?.days) ? (offer as any).days : [];

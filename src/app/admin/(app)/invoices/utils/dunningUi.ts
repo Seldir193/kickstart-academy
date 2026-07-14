@@ -1,4 +1,3 @@
-//src\app\admin\(app)\invoices\utils\dunningUi.ts
 import type { TFunction } from "i18next";
 import type { DunningStage } from "./invoiceList";
 

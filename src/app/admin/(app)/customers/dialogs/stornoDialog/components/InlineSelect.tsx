@@ -1,4 +1,3 @@
-//src\app\admin\(app)\customers\dialogs\stornoDialog\components\InlineSelect.tsx
 "use client";
 
 import React from "react";

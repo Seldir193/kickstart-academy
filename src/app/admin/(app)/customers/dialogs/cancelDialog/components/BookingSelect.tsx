@@ -1,4 +1,3 @@
-//src\app\admin\(app)\customers\dialogs\cancelDialog\components\BookingSelect.tsx
 "use client";
 
 import React, { useMemo } from "react";
@@ -67,9 +66,6 @@ export function BookingSelect({
           aria-haspopup="listbox"
           aria-expanded={open}
         >
-          {/* <span className="ks-selectbox__label ks-booking-select__triggerLabel">
-            {triggerNode}
-          </span> */}
           <div className="ks-selectbox__label ks-booking-select__triggerLabel">
             {triggerNode}
           </div>

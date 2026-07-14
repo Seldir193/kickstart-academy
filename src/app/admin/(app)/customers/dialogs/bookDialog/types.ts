@@ -1,4 +1,3 @@
-//src\app\admin\(app)\customers\dialogs\bookDialog\types.ts
 export type Tab = "customers" | "newsletter" | "all";
 export type NewsletterFilter = "all" | "true" | "false";
 

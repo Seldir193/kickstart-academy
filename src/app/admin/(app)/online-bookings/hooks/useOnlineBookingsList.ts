@@ -1,4 +1,3 @@
-//src\app\admin\(app)\online-bookings\hooks\useOnlineBookingsList.ts
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";

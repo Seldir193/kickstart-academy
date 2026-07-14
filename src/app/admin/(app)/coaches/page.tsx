@@ -1,4 +1,3 @@
-//src\app\admin\(app)\coaches\page.tsx
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 

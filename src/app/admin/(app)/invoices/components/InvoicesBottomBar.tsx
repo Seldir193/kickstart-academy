@@ -1,4 +1,3 @@
-//src\app\admin\(app)\invoices\components\InvoicesBottomBar.tsx
 "use client";
 
 import React, { useEffect, useState } from "react";

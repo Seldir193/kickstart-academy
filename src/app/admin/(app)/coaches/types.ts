@@ -1,4 +1,3 @@
-// src/app/admin/(app)/coaches/types.ts
 export type Me = {
   id: string;
   isSuperAdmin: boolean;
