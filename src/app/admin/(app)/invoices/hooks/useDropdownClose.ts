@@ -17,15 +17,21 @@ export function useDropdownClose({
 }: Params) {
   useEffect(() => {
     if (!open) return;
-
-    function onPointerDown(ev: PointerEvent) {
-      const target = ev.target as Node;
-      if (triggerRef.current?.contains(target)) return;
-      if (menuRef.current?.contains(target)) return;
-      onClose();
-    }
-
+    const onPointerDown = (event: PointerEvent) =>
+      handlePointerDown(event, triggerRef, menuRef, onClose);
     document.addEventListener("pointerdown", onPointerDown);
     return () => document.removeEventListener("pointerdown", onPointerDown);
   }, [open, triggerRef, menuRef, onClose]);
+}
+
+function handlePointerDown(
+  event: PointerEvent,
+  triggerRef: Params["triggerRef"],
+  menuRef: Params["menuRef"],
+  onClose: () => void,
+) {
+  const target = event.target as Node;
+  if (triggerRef.current?.contains(target)) return;
+  if (menuRef.current?.contains(target)) return;
+  onClose();
 }
