@@ -2,13 +2,6 @@ import type { TFunction } from "i18next";
 import type { DunningStage, InvoiceRow } from "../../utils/invoiceList";
 import type { RowActionState } from "../../hooks/useInvoiceRowActions";
 
-// export function stageLabel(value: DunningStage) {
-//   if (value === "reminder") return "Payment reminder";
-//   if (value === "dunning1") return "1st dunning notice";
-//   if (value === "dunning2") return "2nd dunning notice";
-//   return "Final dunning notice";
-// }
-
 export function stageLabel(value: DunningStage, t: TFunction): string {
   if (value === "reminder") {
     return t("common.admin.invoices.stage.reminder");
