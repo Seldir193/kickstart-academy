@@ -1,4 +1,3 @@
-// src/app/admin/(app)/invoices/utils/dunningDocs.ts
 export type DunningDocApiItem = {
   _id: string;
   kind: "dunning";
@@ -31,14 +30,6 @@ export function dunningStageLabel(stage?: string | null) {
   if (stage === "final") return "Letzte Mahnung";
   return "Mahnung";
 }
-
-// export function dunningStageLabel(stage?: string | null) {
-//   if (stage === "reminder") return "Payment reminder";
-//   if (stage === "dunning1") return "1st dunning notice";
-//   if (stage === "dunning2") return "2nd dunning notice";
-//   if (stage === "final") return "Final dunning notice";
-//   return "Dunning notice";
-// }
 
 export function mapDunningDocToRow(item: DunningDocApiItem) {
   const id = `dunning:${String(item._id || "")}`;
