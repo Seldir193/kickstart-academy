@@ -1,4 +1,3 @@
-//src\app\admin\(app)\invoices\utils\invoiceUi.ts
 "use client";
 import type { TFunction } from "i18next";
 export type SortOrder = "newest" | "oldest";
@@ -65,18 +64,18 @@ export function iconForType(t: string) {
 }
 
 export function customerNoFrom(d: DocItem) {
-  const v = (d as any)?.customerNumber;
+  const v = d?.customerNumber;
   return v == null ? "" : String(v).trim();
 }
 
 export function docNoFrom(d: DocItem) {
   return String(
-    (d as any)?.creditNoteNo ||
-      (d as any)?.invoiceNo ||
-      (d as any)?.invoiceNumber ||
-      (d as any)?.cancellationNo ||
-      (d as any)?.stornoNo ||
-      (d as any)?.stornoNumber ||
+    d?.creditNoteNo ||
+      d?.invoiceNo ||
+      d?.invoiceNumber ||
+      d?.cancellationNo ||
+      d?.stornoNo ||
+      d?.stornoNumber ||
       "",
   ).trim();
 }
