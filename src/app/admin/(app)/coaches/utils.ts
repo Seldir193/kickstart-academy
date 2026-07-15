@@ -4,13 +4,19 @@ import { formatDateOnly } from "./utils/dateFormat";
 
 type Translate = TFunction;
 
+type CoachWithLegacySummary = Coach & {
+  draftSummary?: unknown;
+  changeTitle?: unknown;
+  changeLine?: unknown;
+};
+
 export function isAbortError(e: unknown) {
   return (
     (e instanceof DOMException && e.name === "AbortError") ||
     (typeof e === "object" &&
       e !== null &&
       "name" in e &&
-      (e as any).name === "AbortError")
+      e.name === "AbortError")
   );
 }
 
@@ -27,7 +33,7 @@ export function fullName(c: Coach) {
 }
 
 export function providerLabel(c: Coach) {
-  const p = (c as any).provider;
+  const p = c.provider;
   const name = cleanStr(p?.fullName);
   if (name) return name;
   const mail = cleanStr(p?.email);
@@ -36,7 +42,7 @@ export function providerLabel(c: Coach) {
 }
 
 export function getSlug(c: Coach) {
-  return cleanStr((c as any).slug);
+  return cleanStr(c.slug);
 }
 
 export function msValue(v: unknown) {
@@ -46,19 +52,19 @@ export function msValue(v: unknown) {
 }
 
 export function everApproved(c: Coach) {
-  return msValue((c as any).approvedAt) > 0;
+  return msValue(c.approvedAt) > 0;
 }
 
 export function isApproved(c: Coach) {
-  return cleanStr((c as any).status) === "approved";
+  return cleanStr(c.status) === "approved";
 }
 
 export function isRejected(c: Coach) {
-  return cleanStr((c as any).status) === "rejected";
+  return cleanStr(c.status) === "rejected";
 }
 
 export function isPending(c: Coach) {
-  return cleanStr((c as any).status) === "pending";
+  return cleanStr(c.status) === "pending";
 }
 
 export function pendingReviewLabel(c: Coach, t: Translate) {
@@ -68,26 +74,18 @@ export function pendingReviewLabel(c: Coach, t: Translate) {
 }
 
 export function displaySince(c: Coach) {
-  const raw = cleanStr((c as any).since);
+  const raw = cleanStr(c.since);
   if (!raw) return "—";
   return /^\d{4}-\d{2}-\d{2}/.test(raw) ? raw.slice(0, 4) : raw;
 }
 
 export function canSubmitUpdate(c: Coach) {
-  const draftAt = msValue((c as any).draftUpdatedAt);
+  const draftAt = msValue(c.draftUpdatedAt);
   if (!draftAt) return false;
-  if (isApproved(c)) return draftAt > msValue((c as any).liveUpdatedAt);
-  if (isRejected(c)) return draftAt > msValue((c as any).rejectedAt);
+  if (isApproved(c)) return draftAt > msValue(c.liveUpdatedAt);
+  if (isRejected(c)) return draftAt > msValue(c.rejectedAt);
   return false;
 }
-
-// export function fmtDateDE(value?: string | null, lang?: string) {
-//   const s = cleanStr(value);
-//   if (!s) return "";
-//   const d = new Date(s);
-//   if (Number.isNaN(d.getTime())) return s;
-//   return new Intl.DateTimeFormat("de-DE", { dateStyle: "medium" }).format(d);
-// }
 
 export function fmtDateDE(value?: string | null, lang?: string) {
   const s = cleanStr(value);
@@ -96,7 +94,7 @@ export function fmtDateDE(value?: string | null, lang?: string) {
 }
 
 export function tsValue(c: Coach) {
-  const t = (c as any).createdAt || (c as any).updatedAt;
+  const t = c.createdAt || c.updatedAt;
   const ms = t ? new Date(t).getTime() : 0;
   return Number.isFinite(ms) ? ms : 0;
 }
@@ -104,58 +102,58 @@ export function tsValue(c: Coach) {
 export function matchCoach(c: Coach, q: string) {
   const s = q.trim().toLowerCase();
   if (!s) return true;
+  return coachSearchText(c).includes(s);
+}
 
-  const hay = [
+function coachSearchText(c: Coach) {
+  return [
     fullName(c),
-    cleanStr((c as any).slug),
-    cleanStr((c as any).position),
-    cleanStr((c as any).firstName),
-    cleanStr((c as any).lastName),
-    cleanStr((c as any).name),
+    cleanStr(c.slug),
+    cleanStr(c.position),
+    cleanStr(c.firstName),
+    cleanStr(c.lastName),
+    cleanStr(c.name),
   ]
     .filter(Boolean)
     .join(" ")
     .toLowerCase();
-
-  return hay.includes(s);
 }
 
 export function sortCoaches(items: Coach[], sort: SortKey) {
-  const arr = [...items];
+  return [...items].sort(coachComparator(sort));
+}
 
-  if (sort === "newest") {
-    arr.sort(
-      (a, b) =>
-        tsValue(b) - tsValue(a) ||
-        String((b as any)._id || "").localeCompare(
-          String((a as any)._id || ""),
-        ),
-    );
-    return arr;
-  }
+function coachComparator(sort: SortKey) {
+  if (sort === "newest") return compareNewest;
+  if (sort === "oldest") return compareOldest;
+  if (sort === "name_asc") return compareNameAsc;
+  return compareNameDesc;
+}
 
-  if (sort === "oldest") {
-    arr.sort(
-      (a, b) =>
-        tsValue(a) - tsValue(b) ||
-        String((a as any)._id || "").localeCompare(
-          String((b as any)._id || ""),
-        ),
-    );
-    return arr;
-  }
-
-  if (sort === "name_asc") {
-    arr.sort((a, b) =>
-      fullName(a).localeCompare(fullName(b), "de", { sensitivity: "base" }),
-    );
-    return arr;
-  }
-
-  arr.sort((a, b) =>
-    fullName(b).localeCompare(fullName(a), "de", { sensitivity: "base" }),
+function compareNewest(a: Coach, b: Coach) {
+  return (
+    tsValue(b) - tsValue(a) ||
+    String(b._id || "").localeCompare(String(a._id || ""))
   );
-  return arr;
+}
+
+function compareOldest(a: Coach, b: Coach) {
+  return (
+    tsValue(a) - tsValue(b) ||
+    String(a._id || "").localeCompare(String(b._id || ""))
+  );
+}
+
+function compareNameAsc(a: Coach, b: Coach) {
+  return fullName(a).localeCompare(fullName(b), "de", {
+    sensitivity: "base",
+  });
+}
+
+function compareNameDesc(a: Coach, b: Coach) {
+  return fullName(b).localeCompare(fullName(a), "de", {
+    sensitivity: "base",
+  });
 }
 
 export function paginate<T>(items: T[], page: number, limit: number) {
@@ -177,11 +175,14 @@ export function toSet(ids: string[]) {
 }
 
 export function draftSummary(c: Coach) {
-  const s = cleanStr((c as any).lastChangeSummary);
+  const s = cleanStr(c.lastChangeSummary);
   if (s) return s;
 
+  const legacyCoach = c as CoachWithLegacySummary;
   const legacy = cleanStr(
-    (c as any).draftSummary || (c as any).changeTitle || (c as any).changeLine,
+    legacyCoach.draftSummary ||
+      legacyCoach.changeTitle ||
+      legacyCoach.changeLine,
   );
   return legacy;
 }
