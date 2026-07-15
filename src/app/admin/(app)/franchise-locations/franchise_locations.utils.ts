@@ -50,7 +50,7 @@ export function pendingReviewLabel(it: FranchiseLocation) {
   return isPending(it) ? "Awaiting approval" : "";
 }
 
-function ms(v: any) {
+function ms(v: string | null | undefined) {
   const t = v ? new Date(v).getTime() : 0;
   return Number.isFinite(t) ? t : 0;
 }
