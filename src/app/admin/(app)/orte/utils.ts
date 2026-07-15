@@ -6,7 +6,12 @@ type PlaceLike = Place & { publicId?: number };
 
 export function displayPlaceId(place: PlaceLike) {
   if (isFiniteNumber(place.publicId)) return String(place.publicId);
-  return "1" + String(place._id || "").slice(-7).toUpperCase();
+  return (
+    "1" +
+    String(place._id || "")
+      .slice(-7)
+      .toUpperCase()
+  );
 }
 
 export function safeText(value: unknown) {
@@ -57,5 +62,7 @@ function sortByCity<T extends Place>(
 ) {
   const collator = new Intl.Collator("de", { sensitivity: "base" });
   const direction = sort === "city_asc" ? 1 : -1;
-  return items.sort((a, b) => direction * collator.compare(safeText(a.city), safeText(b.city)));
+  return items.sort(
+    (a, b) => direction * collator.compare(safeText(a.city), safeText(b.city)),
+  );
 }
