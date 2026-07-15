@@ -1,11 +1,14 @@
 import type { Member } from "./types";
 
+type MemberWithFallbackId = Member & { _id?: string };
+
 export function clean(v: unknown) {
   return String(v ?? "").trim();
 }
 
 export function idOf(u: Member) {
-  return clean((u as any).id || (u as any)._id);
+  const member = u as MemberWithFallbackId;
+  return clean(member.id || member._id);
 }
 
 export function roleLabel(t: (key: string) => string, u: Member) {
