@@ -32,29 +32,45 @@ function AdminHomeStatCard({ card }: { card: StatCard }) {
 
 function statCards(counts: AdminHomeCounts, t: (key: string) => string) {
   return [
-    {
-      title: t("common.admin.home.cards.coursesOnline"),
-      value: counts.onlineCount,
-      href: "/trainings",
-      action: t("common.admin.home.cards.allCourses"),
-    },
-    {
-      title: t("common.admin.home.cards.places"),
-      value: counts.placesCount,
-      href: "/orte",
-      action: t("common.admin.home.cards.managePlaces"),
-    },
-    {
-      title: t("common.admin.home.cards.newsletterLeads"),
-      value: counts.newsletterLeads,
-      href: "/customers?tab=newsletter",
-      action: t("common.admin.home.cards.viewLeads"),
-    },
-    {
-      title: t("common.admin.home.cards.openRequests"),
-      value: counts.openBookingsCount,
-      href: "/admin/bookings",
-      action: t("common.admin.home.cards.goToBookings"),
-    },
+    coursesCard(counts, t),
+    placesCard(counts, t),
+    newsletterCard(counts, t),
+    requestsCard(counts, t),
   ];
+}
+
+function coursesCard(counts: AdminHomeCounts, t: Props["t"]): StatCard {
+  return {
+    title: t("common.admin.home.cards.coursesOnline"),
+    value: counts.onlineCount,
+    href: "/trainings",
+    action: t("common.admin.home.cards.allCourses"),
+  };
+}
+
+function placesCard(counts: AdminHomeCounts, t: Props["t"]): StatCard {
+  return {
+    title: t("common.admin.home.cards.places"),
+    value: counts.placesCount,
+    href: "/orte",
+    action: t("common.admin.home.cards.managePlaces"),
+  };
+}
+
+function newsletterCard(counts: AdminHomeCounts, t: Props["t"]): StatCard {
+  return {
+    title: t("common.admin.home.cards.newsletterLeads"),
+    value: counts.newsletterLeads,
+    href: "/customers?tab=newsletter",
+    action: t("common.admin.home.cards.viewLeads"),
+  };
+}
+
+function requestsCard(counts: AdminHomeCounts, t: Props["t"]): StatCard {
+  return {
+    title: t("common.admin.home.cards.openRequests"),
+    value: counts.openBookingsCount,
+    href: "/admin/bookings",
+    action: t("common.admin.home.cards.goToBookings"),
+  };
 }
