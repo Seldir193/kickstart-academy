@@ -156,9 +156,3 @@ function getSelectAllLabel(props: Props, t: (key: string) => string) {
   if (props.isAllSelected) return t("admin.feedbacks.bulk.clearSelection");
   return t("admin.feedbacks.bulk.selectAll");
 }
-
-
-
-
-
-
