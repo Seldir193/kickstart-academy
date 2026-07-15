@@ -12,14 +12,20 @@ export default function CreateCoachButton({ busy, onOpen }: Props) {
       type="button"
       onClick={() => openWhenReady(busy, onOpen)}
     >
-      <img
-        src="/icons/plus.svg"
-        alt=""
-        aria-hidden="true"
-        className="btn__icon"
-      />
+      {renderPlusIcon()}
       {t("common.admin.coaches.page.newCoach")}
     </button>
+  );
+}
+
+function renderPlusIcon() {
+  return (
+    <img
+      src="/icons/plus.svg"
+      alt=""
+      aria-hidden="true"
+      className="btn__icon"
+    />
   );
 }
 
