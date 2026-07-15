@@ -1,6 +1,7 @@
 "use client";
 
 import type { RefObject } from "react";
+import type { TFunction } from "i18next";
 import { useTranslation } from "react-i18next";
 
 type Props = {
@@ -47,10 +48,7 @@ function FeedbackBulkBar(props: Props) {
 
   return (
     <div className="bulkbar">
-      <div className="bulkbar__left">
-        <strong>{props.count}</strong>&nbsp;
-        {t("admin.feedbacks.bulk.selected")}
-      </div>
+      {renderSelectedSummary(props.count, t)}
 
       <div className="bulkbar__right">
         <ClearOrSelectAllButton {...props} />
@@ -58,6 +56,15 @@ function FeedbackBulkBar(props: Props) {
         <DeleteButton {...props} />
         <CancelButton {...props} />
       </div>
+    </div>
+  );
+}
+
+function renderSelectedSummary(count: number, t: TFunction) {
+  return (
+    <div className="bulkbar__left">
+      <strong>{count}</strong>&nbsp;
+      {t("admin.feedbacks.bulk.selected")}
     </div>
   );
 }
@@ -149,3 +156,9 @@ function getSelectAllLabel(props: Props, t: (key: string) => string) {
   if (props.isAllSelected) return t("admin.feedbacks.bulk.clearSelection");
   return t("admin.feedbacks.bulk.selectAll");
 }
+
+
+
+
+
+
