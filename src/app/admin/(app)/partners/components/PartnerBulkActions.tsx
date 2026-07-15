@@ -1,6 +1,7 @@
 "use client";
 
 import type { RefObject } from "react";
+import type { TFunction } from "i18next";
 import { useTranslation } from "react-i18next";
 
 type Props = {
@@ -47,10 +48,7 @@ function PartnerBulkBar(props: Props) {
 
   return (
     <div className="bulkbar">
-      <div className="bulkbar__left">
-        <strong>{props.count}</strong>&nbsp;
-        {t("admin.partners.bulk.selected")}
-      </div>
+      {renderSelectedSummary(props.count, t)}
 
       <div className="bulkbar__right">
         <ClearOrSelectAllButton {...props} />
@@ -58,6 +56,15 @@ function PartnerBulkBar(props: Props) {
         <DeleteButton {...props} />
         <CancelButton {...props} />
       </div>
+    </div>
+  );
+}
+
+function renderSelectedSummary(count: number, t: TFunction) {
+  return (
+    <div className="bulkbar__left">
+      <strong>{count}</strong>&nbsp;
+      {t("admin.partners.bulk.selected")}
     </div>
   );
 }
