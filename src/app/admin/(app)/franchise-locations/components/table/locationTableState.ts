@@ -10,12 +10,15 @@ export function isMineRow(rowMode: RowMode) {
   return rowMode.startsWith("mine_");
 }
 
-export function isSwitchBusy(publishedBusyId: string | null | undefined, id: string) {
+export function isSwitchBusy(
+  publishedBusyId: string | null | undefined,
+  id: string,
+) {
   return Boolean(publishedBusyId && publishedBusyId === id);
 }
 
 export function getPublished(it: FranchiseLocation) {
-  return Boolean((it as any)?.published);
+  return Boolean(it?.published);
 }
 
 export function getCanToggle(it: FranchiseLocation, mineRow: boolean) {
