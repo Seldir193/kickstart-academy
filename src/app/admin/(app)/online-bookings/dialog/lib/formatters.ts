@@ -4,7 +4,13 @@ import { formatDateOnlyDE } from "../../utils";
 import type { Translate } from "../types";
 import { pickValue, safeText } from "./text";
 
-const META = (booking: Booking) => (booking as any)?.meta ?? {};
+type BookingDisplayMeta = NonNullable<Booking["meta"]> & {
+  holidayFrom?: unknown;
+  holidayTo?: unknown;
+  childGender?: unknown;
+};
+
+const META = (booking: Booking) => (booking?.meta ?? {}) as BookingDisplayMeta;
 
 export function stripProgramTitle(raw?: string) {
   const text = safeText(raw);
@@ -54,7 +60,9 @@ export function buildKindLine(map: Record<string, string>, booking: Booking) {
 }
 
 function buildFallbackKind(booking: Booking) {
-  const name = [booking.firstName, booking.lastName].filter(Boolean).join(" ").trim() || "-";
+  const name =
+    [booking.firstName, booking.lastName].filter(Boolean).join(" ").trim() ||
+    "-";
   const gender = safeText(META(booking).childGender);
   return gender ? `${name} (${gender})` : name;
 }
