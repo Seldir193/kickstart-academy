@@ -12,15 +12,29 @@ type Props = {
 };
 
 export function OnlineBookingDialogView({ props, state }: Props) {
-  return <ModalPortal><DialogBackdrop props={props} state={state} /></ModalPortal>;
+  return (
+    <ModalPortal>
+      <DialogBackdrop props={props} state={state} />
+    </ModalPortal>
+  );
 }
 
 function DialogBackdrop({ props, state }: Props) {
   const { booking, onClose } = props;
   const { t } = state;
   return (
-    <div className="dialog-backdrop online-booking-dialog" role="dialog" aria-modal="true" aria-label={t("common.admin.onlineBookings.dialog.ariaLabel")}>
-      <button type="button" className="dialog-backdrop-hit" aria-label={t("common.admin.onlineBookings.dialog.close")} onClick={onClose} />
+    <div
+      className="dialog-backdrop online-booking-dialog"
+      role="dialog"
+      aria-modal="true"
+      aria-label={t("common.admin.onlineBookings.dialog.ariaLabel")}
+    >
+      <button
+        type="button"
+        className="dialog-backdrop-hit"
+        aria-label={t("common.admin.onlineBookings.dialog.close")}
+        onClick={onClose}
+      />
       <div className="dialog online-booking-dialog__dialog">
         <OnlineBookingDialogHeader booking={booking} onClose={onClose} t={t} />
         <DialogBody props={props} state={state} />

@@ -10,10 +10,7 @@ export function useLicenseeInfoSections(
   language: string,
   t: TFunction,
 ) {
-  return useMemo(
-    () => buildSections(item, language, t),
-    [item, language, t],
-  );
+  return useMemo(() => buildSections(item, language, t), [item, language, t]);
 }
 
 function buildSections(
@@ -34,11 +31,18 @@ function createSections(
   t: TFunction,
 ): LicenseeInfoSections {
   return {
-    header: { title: t("common.admin.franchiseLocations.infoDialog.title", { name: ownerLabel(item) }) },
+    header: {
+      title: t("common.admin.franchiseLocations.infoDialog.title", {
+        name: ownerLabel(item),
+      }),
+    },
     location: locationData(item),
     contact: contactData(item),
     meta: { status, updated },
-    reject: status.toLowerCase() === "rejected" ? { reason: item.rejectionReason } : null,
+    reject:
+      status.toLowerCase() === "rejected"
+        ? { reason: item.rejectionReason }
+        : null,
   };
 }
 

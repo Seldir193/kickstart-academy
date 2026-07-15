@@ -40,10 +40,18 @@ export default function MembersTable(props: Props) {
 function MembersTableHead({ t }: { t: Props["t"] }) {
   return (
     <div className="members-list__head" aria-hidden="true">
-      <div className="members-list__h">{t("common.admin.members.table.name")}</div>
-      <div className="members-list__h">{t("common.admin.members.table.email")}</div>
-      <div className="members-list__h">{t("common.admin.members.table.status")}</div>
-      <div className="members-list__h">{t("common.admin.members.table.role")}</div>
+      <div className="members-list__h">
+        {t("common.admin.members.table.name")}
+      </div>
+      <div className="members-list__h">
+        {t("common.admin.members.table.email")}
+      </div>
+      <div className="members-list__h">
+        {t("common.admin.members.table.status")}
+      </div>
+      <div className="members-list__h">
+        {t("common.admin.members.table.role")}
+      </div>
       <div className="members-list__h members-list__h--right">
         {t("common.admin.members.table.action")}
       </div>

@@ -3,10 +3,26 @@ import { actionsFor } from "../lib/actions";
 import { stop } from "../lib/events";
 import { NewsActionTrigger } from "./NewsActionTrigger";
 
-export function NewsActionCell({ row, hideActions }: { row: RowProps; hideActions: boolean }) {
+export function NewsActionCell({
+  row,
+  hideActions,
+}: {
+  row: RowProps;
+  hideActions: boolean;
+}) {
   if (hideActions) return hiddenActions();
   const actions = actionsFor(actionArgs(row));
-  return <div className="news-list__cell news-list__cell--action" onClick={stop} onMouseDown={stop}>{actions.map((action) => <NewsActionTrigger key={action.key} action={action} />)}</div>;
+  return (
+    <div
+      className="news-list__cell news-list__cell--action"
+      onClick={stop}
+      onMouseDown={stop}
+    >
+      {actions.map((action) => (
+        <NewsActionTrigger key={action.key} action={action} />
+      ))}
+    </div>
+  );
 }
 
 function actionArgs(row: RowProps) {
@@ -25,5 +41,10 @@ function actionArgs(row: RowProps) {
 }
 
 function hiddenActions() {
-  return <div className="news-list__cell news-list__cell--action news-list__actions--hidden" aria-hidden="true" />;
+  return (
+    <div
+      className="news-list__cell news-list__cell--action news-list__actions--hidden"
+      aria-hidden="true"
+    />
+  );
 }

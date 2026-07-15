@@ -2,10 +2,16 @@ import type { Booking } from "../../../types";
 import type { Translator } from "../types";
 
 export function renderPayment(t: Translator, b: Booking) {
-  const payment = String(b?.paymentStatus || "").trim().toLowerCase();
+  const payment = String(b?.paymentStatus || "")
+    .trim()
+    .toLowerCase();
   if (!payment) return "—";
 
-  return <span className={paymentClassName(payment)}>{paymentLabel(t, payment)}</span>;
+  return (
+    <span className={paymentClassName(payment)}>
+      {paymentLabel(t, payment)}
+    </span>
+  );
 }
 
 function paymentClassName(payment: string) {

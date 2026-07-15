@@ -4,7 +4,10 @@ function containsTarget(ref: RefObject<HTMLDivElement | null>, target: Node) {
   return Boolean(ref.current?.contains(target));
 }
 
-function isOutside(ref: RefObject<HTMLDivElement | null>, target: EventTarget | null) {
+function isOutside(
+  ref: RefObject<HTMLDivElement | null>,
+  target: EventTarget | null,
+) {
   return target instanceof Node && !containsTarget(ref, target);
 }
 

@@ -233,7 +233,6 @@ export default function AdminBookingsPage() {
             programLabel={programLabel(program, t)}
             statusLabel={computedStatusLabel}
             sortLabel={sortLabel(sort, t)}
-
             program={program}
             status={status}
             sort={sort}

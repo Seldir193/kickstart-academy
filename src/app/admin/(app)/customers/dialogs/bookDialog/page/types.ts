@@ -13,7 +13,12 @@ export type BookingTarget = "self" | "child";
 export type OfferKind = "camp" | "powertraining" | "one_time" | "default";
 export type TFunc = (key: string, options?: Record<string, unknown>) => string;
 
-export type ChildOption = { uid: string; label: string; parentId: string; child: FamilyChild };
+export type ChildOption = {
+  uid: string;
+  label: string;
+  parentId: string;
+  child: FamilyChild;
+};
 export type ParentOption = { id: string; label: string };
 
 export type OpenControl = {
@@ -112,4 +117,11 @@ export type BookDetailsState = {
 };
 
 export type BookSubmitState = { saving: boolean; submit: () => Promise<void> };
-export type BookDialogController = { t: TFunc; family: BookFamilyScope; offers: BookOfferScope; details: BookDetailsState; dropdowns: BookDropdowns; submit: BookSubmitState };
+export type BookDialogController = {
+  t: TFunc;
+  family: BookFamilyScope;
+  offers: BookOfferScope;
+  details: BookDetailsState;
+  dropdowns: BookDropdowns;
+  submit: BookSubmitState;
+};

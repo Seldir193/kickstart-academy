@@ -4,7 +4,10 @@ import type { RefObject } from "react";
 import { useTranslation } from "react-i18next";
 import BulkActions from "@/app/admin/(app)/news/components/BulkActions";
 import type { Voucher } from "../../types";
-import { getActiveVoucherIds, getInactiveVoucherIds } from "./vouchersTable.helpers";
+import {
+  getActiveVoucherIds,
+  getInactiveVoucherIds,
+} from "./vouchersTable.helpers";
 
 export type VoucherBulkActionsProps = {
   items: Voucher[];
@@ -26,8 +29,14 @@ export type VoucherBulkActionsProps = {
 
 export default function VoucherBulkActions(props: VoucherBulkActionsProps) {
   const { t } = useTranslation();
-  const activateCount = getInactiveVoucherIds(props.items, props.selected).length;
-  const deactivateCount = getActiveVoucherIds(props.items, props.selected).length;
+  const activateCount = getInactiveVoucherIds(
+    props.items,
+    props.selected,
+  ).length;
+  const deactivateCount = getActiveVoucherIds(
+    props.items,
+    props.selected,
+  ).length;
 
   return (
     <div className="news-admin__top-actions">
@@ -77,12 +86,22 @@ function VoucherStatusButtons(props: {
   return (
     <>
       {props.selectMode && props.activateCount ? (
-        <button type="button" className="btn" disabled={props.busy} onClick={props.onActivate}>
+        <button
+          type="button"
+          className="btn"
+          disabled={props.busy}
+          onClick={props.onActivate}
+        >
           {t("common.admin.vouchers.bulk.activate")} ({props.activateCount})
         </button>
       ) : null}
       {props.selectMode && props.deactivateCount ? (
-        <button type="button" className="btn" disabled={props.busy} onClick={props.onDeactivate}>
+        <button
+          type="button"
+          className="btn"
+          disabled={props.busy}
+          onClick={props.onDeactivate}
+        >
           {t("common.admin.vouchers.bulk.deactivate")} ({props.deactivateCount})
         </button>
       ) : null}

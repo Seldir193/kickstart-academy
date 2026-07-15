@@ -17,13 +17,22 @@ export type CoachTableListProps = {
   onResubmit?: (c: Coach) => void;
   canResubmit?: (c: Coach) => boolean;
   onDelete?: (c: Coach) => void;
-  onTogglePublished?: (c: Coach, nextPublished: boolean) => void | Promise<void>;
+  onTogglePublished?: (
+    c: Coach,
+    nextPublished: boolean,
+  ) => void | Promise<void>;
   publishedBusyId?: string | null;
 };
 
 export type CoachRowActionProps = Pick<
   CoachTableListProps,
-  "busy" | "onOpen" | "onInfo" | "onUnapprove" | "onReject" | "onResubmit" | "onDelete"
+  | "busy"
+  | "onOpen"
+  | "onInfo"
+  | "onUnapprove"
+  | "onReject"
+  | "onResubmit"
+  | "onDelete"
 >;
 
 export type CoachRowMeta = {

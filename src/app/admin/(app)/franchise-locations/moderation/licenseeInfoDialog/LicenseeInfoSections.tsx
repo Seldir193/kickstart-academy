@@ -24,11 +24,23 @@ export function LicenseeInfoSectionGrid({ sections, t }: Props) {
 }
 
 function LocationSection({ sections, t }: Props) {
-  return <InfoSection title={sectionLabel(t, "location")} fields={locationFields(sections)} t={t} />;
+  return (
+    <InfoSection
+      title={sectionLabel(t, "location")}
+      fields={locationFields(sections)}
+      t={t}
+    />
+  );
 }
 
 function ContactSection({ sections, t }: Props) {
-  return <InfoSection title={sectionLabel(t, "contact")} fields={contactFields(sections)} t={t} />;
+  return (
+    <InfoSection
+      title={sectionLabel(t, "contact")}
+      fields={contactFields(sections)}
+      t={t}
+    />
+  );
 }
 
 function StatusSection({ sections, t }: Props) {
@@ -37,7 +49,11 @@ function StatusSection({ sections, t }: Props) {
       <SectionHead title={sectionLabel(t, "status")} />
       <div className="dialog-section__body fl-info__list">
         <StatusRow status={sections.meta.status} t={t} />
-        <LicenseeInfoRow label={fieldLabel(t, "updated")} value={sections.meta.updated} mono />
+        <LicenseeInfoRow
+          label={fieldLabel(t, "updated")}
+          value={sections.meta.updated}
+          mono
+        />
       </div>
     </section>
   );
@@ -48,20 +64,29 @@ function RejectionSection({ sections, t }: Props) {
   return (
     <InfoSection
       title={sectionLabel(t, "rejection")}
-      fields={[{ key: "reason", value: sections.reject.reason, multiline: true }]}
+      fields={[
+        { key: "reason", value: sections.reject.reason, multiline: true },
+      ]}
       t={t}
       danger
     />
   );
 }
 
-function InfoSection(props: { title: string; fields: Field[]; t: TFunction; danger?: boolean }) {
+function InfoSection(props: {
+  title: string;
+  fields: Field[];
+  t: TFunction;
+  danger?: boolean;
+}) {
   const className = `dialog-section fl-info__section${props.danger ? " fl-info__section--danger" : ""}`;
   return (
     <section className={className}>
       <SectionHead title={props.title} />
       <div className="dialog-section__body fl-info__list">
-        {props.fields.map((field) => <FieldRow key={field.key} field={field} t={props.t} />)}
+        {props.fields.map((field) => (
+          <FieldRow key={field.key} field={field} t={props.t} />
+        ))}
       </div>
     </section>
   );
@@ -73,7 +98,11 @@ function FieldRow({ field, t }: { field: Field; t: TFunction }) {
 }
 
 function SectionHead({ title }: { title: string }) {
-  return <div className="dialog-section__head"><div className="dialog-section__title">{title}</div></div>;
+  return (
+    <div className="dialog-section__head">
+      <div className="dialog-section__title">{title}</div>
+    </div>
+  );
 }
 
 function StatusRow({ status, t }: { status: string; t: TFunction }) {
@@ -81,7 +110,9 @@ function StatusRow({ status, t }: { status: string; t: TFunction }) {
     <div className="fl-info__status-row">
       <div className="dialog-label">{fieldLabel(t, "status")}</div>
       <div className="dialog-value">
-        <span className={`dialog-status ${statusClass(status)}`}>{displayValue(status)}</span>
+        <span className={`dialog-status ${statusClass(status)}`}>
+          {displayValue(status)}
+        </span>
       </div>
     </div>
   );

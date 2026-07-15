@@ -22,7 +22,10 @@ export function rowLabel(t: Translator, b: Booking, selectMode: boolean) {
   return `${t(`common.admin.onlineBookings.table.row.${key}`)}: ${fullName}`;
 }
 
-export function onKeyActivate(e: KeyboardEvent<HTMLLIElement>, run: () => void) {
+export function onKeyActivate(
+  e: KeyboardEvent<HTMLLIElement>,
+  run: () => void,
+) {
   if (e.key !== "Enter" && e.key !== " ") return;
   e.preventDefault();
   run();

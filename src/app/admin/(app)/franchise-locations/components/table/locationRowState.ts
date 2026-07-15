@@ -1,7 +1,17 @@
 import type { KeyboardEvent } from "react";
 import type { FranchiseLocation } from "../../types";
-import { actionsFor, idOf, statusParts, type RowMode } from "../LocationsTableList.helpers";
-import { getCanToggle, getPublished, isMineRow, isSwitchBusy } from "./locationTableState";
+import {
+  actionsFor,
+  idOf,
+  statusParts,
+  type RowMode,
+} from "../LocationsTableList.helpers";
+import {
+  getCanToggle,
+  getPublished,
+  isMineRow,
+  isSwitchBusy,
+} from "./locationTableState";
 import type { RowCallbacks, SelectionState } from "./types";
 
 type Args = RowCallbacks & {
@@ -33,7 +43,10 @@ function getSwitchDisabled(a: Args, id: string) {
   return a.busy || swBusy || !getCanToggle(a.item, isMineRow(a.rowMode));
 }
 
-export function activateRow(args: Pick<Args, "item" | "selectMode" | "selection" | "onOpen">, id: string) {
+export function activateRow(
+  args: Pick<Args, "item" | "selectMode" | "selection" | "onOpen">,
+  id: string,
+) {
   if (!id) return;
   if (args.selectMode) return void args.selection.toggleOne(id);
   args.onOpen(args.item);

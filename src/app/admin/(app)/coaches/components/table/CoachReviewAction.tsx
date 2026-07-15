@@ -11,13 +11,32 @@ export default function CoachReviewAction(props: Props) {
 }
 
 function SubmitAction({ meta, onResubmit, t }: Props) {
-  return <CoachRowActionButton title={t("common.admin.coaches.table.submitForReview")} icon="/icons/arrow_right_alt.svg" iconClassName="icon-img icon-img--left" disabled={meta.submitDisabled} tip={submitTip(meta, t)} onRun={() => onResubmit?.(meta.raw)} />;
+  return (
+    <CoachRowActionButton
+      title={t("common.admin.coaches.table.submitForReview")}
+      icon="/icons/arrow_right_alt.svg"
+      iconClassName="icon-img icon-img--left"
+      disabled={meta.submitDisabled}
+      tip={submitTip(meta, t)}
+      onRun={() => onResubmit?.(meta.raw)}
+    />
+  );
 }
 
 function submitTip(meta: CoachRowMeta, t: TFunction) {
-  return meta.submitDisabled ? t("common.admin.coaches.table.updateFirst") : undefined;
+  return meta.submitDisabled
+    ? t("common.admin.coaches.table.updateFirst")
+    : undefined;
 }
 
 function RejectAction({ meta, busy, onReject, t }: Props) {
-  return <CoachRowActionButton title={t("common.admin.coaches.table.reject")} icon="/icons/arrow_right_alt.svg" iconClassName="icon-img icon-img--left" disabled={busy} onRun={() => onReject?.(meta.raw)} />;
+  return (
+    <CoachRowActionButton
+      title={t("common.admin.coaches.table.reject")}
+      icon="/icons/arrow_right_alt.svg"
+      iconClassName="icon-img icon-img--left"
+      disabled={busy}
+      onRun={() => onReject?.(meta.raw)}
+    />
+  );
 }

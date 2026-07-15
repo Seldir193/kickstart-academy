@@ -3,8 +3,17 @@
 import type { KeyboardEvent } from "react";
 import type { TFunction } from "i18next";
 import { displayPlaceId, safeText } from "@/app/admin/(app)/orte/utils";
-import { idOf, rowAriaLabel, rowClassName, toggleOrOpen } from "./lib/placeTable";
-import type { PlacesSelection, PlacesTableItem, PlacesTableProps } from "./types";
+import {
+  idOf,
+  rowAriaLabel,
+  rowClassName,
+  toggleOrOpen,
+} from "./lib/placeTable";
+import type {
+  PlacesSelection,
+  PlacesTableItem,
+  PlacesTableProps,
+} from "./types";
 import PlacesEditCell from "./PlacesEditCell";
 import PlacesHiddenActionCell from "./PlacesHiddenActionCell";
 
@@ -20,9 +29,25 @@ export default function PlacesTableRow(input: Props) {
   const checked = input.selection.selected.has(id);
 
   return (
-    <li className={rowClassName(checked, input.props.selectMode)} onClick={() => openRow(input)} onKeyDown={(event) => handleKey(event, input)} tabIndex={0} role="button" aria-pressed={input.props.selectMode ? checked : undefined} aria-label={rowAriaLabel(input.place, input.props.selectMode, input.t)}>
+    <li
+      className={rowClassName(checked, input.props.selectMode)}
+      onClick={() => openRow(input)}
+      onKeyDown={(event) => handleKey(event, input)}
+      tabIndex={0}
+      role="button"
+      aria-pressed={input.props.selectMode ? checked : undefined}
+      aria-label={rowAriaLabel(input.place, input.props.selectMode, input.t)}
+    >
       <PlaceCells place={input.place} />
-      {input.props.selectMode || checked ? <PlacesHiddenActionCell /> : <PlacesEditCell place={input.place} onOpen={input.props.onOpen} t={input.t} />}
+      {input.props.selectMode || checked ? (
+        <PlacesHiddenActionCell />
+      ) : (
+        <PlacesEditCell
+          place={input.place}
+          onOpen={input.props.onOpen}
+          t={input.t}
+        />
+      )}
     </li>
   );
 }
@@ -32,9 +57,15 @@ function PlaceCells({ place }: { place: PlacesTableItem }) {
     <>
       <div className="news-list__cell places-mono">{displayPlaceId(place)}</div>
       <PlaceNameCell place={place} />
-      <div className="news-list__cell news-list__cell--addr">{safeText(place.address) || "—"}</div>
-      <div className="news-list__cell places-mono">{safeText(place.zip) || "—"}</div>
-      <div className="news-list__cell news-list__cell--city">{safeText(place.city) || "—"}</div>
+      <div className="news-list__cell news-list__cell--addr">
+        {safeText(place.address) || "—"}
+      </div>
+      <div className="news-list__cell places-mono">
+        {safeText(place.zip) || "—"}
+      </div>
+      <div className="news-list__cell news-list__cell--city">
+        {safeText(place.city) || "—"}
+      </div>
     </>
   );
 }

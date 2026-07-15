@@ -8,13 +8,24 @@ export default function BookingsTableHead({ t }: Props) {
   return (
     <div className="news-list__head" aria-hidden="true">
       {headKeys().map((key) => renderHeadCell(t, key))}
-      <div className="news-list__h news-list__h--right">{headLabel(t, "action")}</div>
+      <div className="news-list__h news-list__h--right">
+        {headLabel(t, "action")}
+      </div>
     </div>
   );
 }
 
 function headKeys() {
-  return ["name", "email", "age", "date", "program", "status", "payment", "created"];
+  return [
+    "name",
+    "email",
+    "age",
+    "date",
+    "program",
+    "status",
+    "payment",
+    "created",
+  ];
 }
 
 function renderHeadCell(t: Translator, key: string) {

@@ -1,6 +1,16 @@
-import type { NewsWithProvider, RowMode, StatusParts, Translate } from "../types";
+import type {
+  NewsWithProvider,
+  RowMode,
+  StatusParts,
+  Translate,
+} from "../types";
 import { clean } from "./ids";
-import { draftOf, getReviewStatus, isSubmitted, wasEverApproved } from "./review";
+import {
+  draftOf,
+  getReviewStatus,
+  isSubmitted,
+  wasEverApproved,
+} from "./review";
 
 export function isRejected(item: unknown) {
   if (getReviewStatus(item) === "rejected") return true;
@@ -55,7 +65,10 @@ export function canShowSwitch(rowMode: RowMode) {
   return rowMode === "mine_approved" || rowMode === "provider_approved";
 }
 
-export function filterItemsForView<T extends unknown>(items: T[], rowMode: RowMode) {
+export function filterItemsForView<T extends unknown>(
+  items: T[],
+  rowMode: RowMode,
+) {
   if (!canShowSwitch(rowMode)) return items;
   return items.filter((item) => !isSubmitted(item));
 }
@@ -78,7 +91,9 @@ function isUpdateReview(item: unknown) {
 }
 
 function minePendingParts(item: unknown, t: Translate) {
-  return emptyParts(isUpdateReview(item) ? underReview(t) : awaitingApproval(t));
+  return emptyParts(
+    isUpdateReview(item) ? underReview(t) : awaitingApproval(t),
+  );
 }
 
 function approvedParts(item: unknown, t: Translate) {

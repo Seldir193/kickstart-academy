@@ -11,7 +11,11 @@ type Props = {
   t: TFunction;
 };
 
-export default function FranchiseLocationDialogView({ props, model, t }: Props) {
+export default function FranchiseLocationDialogView({
+  props,
+  model,
+  t,
+}: Props) {
   return (
     <div className="dialog-backdrop fl-dialog" role="dialog" aria-modal="true">
       <BackdropCloseButton onClose={props.onClose} t={t} />
@@ -24,7 +28,10 @@ export default function FranchiseLocationDialogView({ props, model, t }: Props) 
   );
 }
 
-function BackdropCloseButton({ onClose, t }: Pick<Props["props"], "onClose"> & { t: TFunction }) {
+function BackdropCloseButton({
+  onClose,
+  t,
+}: Pick<Props["props"], "onClose"> & { t: TFunction }) {
   return (
     <button
       type="button"

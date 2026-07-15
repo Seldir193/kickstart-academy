@@ -8,10 +8,24 @@ import { NewsStatusCell } from "./NewsStatusCell";
 import { NewsAuthorCell } from "./NewsAuthorCell";
 import { NewsActionCell } from "./NewsActionCell";
 
-
 export function NewsTableRow(row: RowProps) {
   const model = rowModel(row);
-  return <li {...rowAttrs(row, model)}><NewsTitleCell item={row.item} t={row.t} /><NewsCategoryCell item={row.item} t={row.t} /><NewsDateCell item={row.item} t={row.t} lang={row.lang} /><NewsStatusCell item={row.item} props={row.props} t={row.t} showSwitch={row.showSwitch} id={model.id} /><NewsAuthorCell item={row.item} /><NewsActionCell row={row} hideActions={model.hideActions} /></li>;
+  return (
+    <li {...rowAttrs(row, model)}>
+      <NewsTitleCell item={row.item} t={row.t} />
+      <NewsCategoryCell item={row.item} t={row.t} />
+      <NewsDateCell item={row.item} t={row.t} lang={row.lang} />
+      <NewsStatusCell
+        item={row.item}
+        props={row.props}
+        t={row.t}
+        showSwitch={row.showSwitch}
+        id={model.id}
+      />
+      <NewsAuthorCell item={row.item} />
+      <NewsActionCell row={row} hideActions={model.hideActions} />
+    </li>
+  );
 }
 
 function rowModel({ item, state, props }: RowProps) {
@@ -23,7 +37,8 @@ function rowModel({ item, state, props }: RowProps) {
 function rowAttrs(row: RowProps, model: ReturnType<typeof rowModel>) {
   return {
     className: rowClass(model.checked),
-    onPointerDown: (event: PointerEvent) => onRowPointerDown(event, row.props.selectMode),
+    onPointerDown: (event: PointerEvent) =>
+      onRowPointerDown(event, row.props.selectMode),
     onClick: () => rowClick(row, model.id),
     onKeyDown: (event: KeyboardEvent) => onRowKey(event, row, model.id),
     tabIndex: 0,

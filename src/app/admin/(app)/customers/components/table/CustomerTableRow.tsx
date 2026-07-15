@@ -1,7 +1,11 @@
 import type { KeyboardEvent } from "react";
 import { handleRowKey } from "./CustomerEditAction";
 import { rowType } from "./customerTableData";
-import { CustomerActionCell, CustomerBadgeCells, CustomerIdentityCells } from "./CustomerRowCells";
+import {
+  CustomerActionCell,
+  CustomerBadgeCells,
+  CustomerIdentityCells,
+} from "./CustomerRowCells";
 import type { CustomerTableRowProps } from "./types";
 
 function rowProps(props: CustomerTableRowProps) {
@@ -10,7 +14,8 @@ function rowProps(props: CustomerTableRowProps) {
     role: "button" as const,
     tabIndex: 0,
     onClick: () => props.onOpenEdit(props.customer),
-    onKeyDown: (event: KeyboardEvent<HTMLDivElement>) => handleRowKey(event, () => props.onOpenEdit(props.customer)),
+    onKeyDown: (event: KeyboardEvent<HTMLDivElement>) =>
+      handleRowKey(event, () => props.onOpenEdit(props.customer)),
   };
 }
 

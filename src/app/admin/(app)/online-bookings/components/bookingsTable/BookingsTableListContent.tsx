@@ -9,7 +9,9 @@ import BookingsTableEmptyState from "./components/BookingsTableEmptyState";
 import BookingsTableSection from "./components/BookingsTableSection";
 import type { BookingsTableListProps } from "./types";
 
-export default function BookingsTableListContent(props: BookingsTableListProps) {
+export default function BookingsTableListContent(
+  props: BookingsTableListProps,
+) {
   const i18n = useTranslation();
   const table = useBookingsTableSelection(props.items, props.selectMode);
   const onRowClick = createRowClick(props, table);
@@ -24,15 +26,28 @@ function renderContent(
   t: ReturnType<typeof useTranslation>["t"],
   language: string,
 ) {
-  if (!props.items.length) return <BookingsTableEmptyState busy={props.busy} t={t} />;
+  if (!props.items.length)
+    return <BookingsTableEmptyState busy={props.busy} t={t} />;
 
-  return <TableView props={props} table={table} onRowClick={onRowClick} t={t} language={language} />;
+  return (
+    <TableView
+      props={props}
+      table={table}
+      onRowClick={onRowClick}
+      t={t}
+      language={language}
+    />
+  );
 }
 
 function TableView(props: ViewProps) {
   return (
     <div className="news-table">
-      <BookingsTableBulkActions {...props.props} table={props.table} t={props.t} />
+      <BookingsTableBulkActions
+        {...props.props}
+        table={props.table}
+        t={props.t}
+      />
       <BookingsTableSection {...sectionProps(props)} />
     </div>
   );

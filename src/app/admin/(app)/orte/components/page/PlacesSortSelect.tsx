@@ -12,7 +12,11 @@ export default function PlacesSortSelect(props: PlacesSortSelectProps) {
   useDropdownOutsideClose(props.open, props.triggerRef, props.menuRef, close);
 
   return (
-    <div className={"ks-training-select" + (props.open ? " ks-training-select--open" : "")}>
+    <div
+      className={
+        "ks-training-select" + (props.open ? " ks-training-select--open" : "")
+      }
+    >
       <SortTrigger {...props} />
       {props.open ? <SortMenu {...props} /> : null}
     </div>
@@ -21,8 +25,17 @@ export default function PlacesSortSelect(props: PlacesSortSelectProps) {
 
 function SortTrigger(props: PlacesSortSelectProps) {
   return (
-    <button type="button" ref={props.triggerRef} className="ks-training-select__trigger" onClick={() => props.setOpen((open) => !open)} disabled={props.busy} aria-label={sortAria(props)}>
-      <span className="ks-training-select__label">{getPlaceSortLabel(props.sort, props.t)}</span>
+    <button
+      type="button"
+      ref={props.triggerRef}
+      className="ks-training-select__trigger"
+      onClick={() => props.setOpen((open) => !open)}
+      disabled={props.busy}
+      aria-label={sortAria(props)}
+    >
+      <span className="ks-training-select__label">
+        {getPlaceSortLabel(props.sort, props.t)}
+      </span>
       <span className="ks-training-select__chevron" aria-hidden="true" />
     </button>
   );
@@ -30,14 +43,27 @@ function SortTrigger(props: PlacesSortSelectProps) {
 
 function SortMenu(props: PlacesSortSelectProps) {
   return (
-    <ul ref={props.menuRef} className="ks-training-select__menu" role="listbox" aria-label={sortAria(props)}>
+    <ul
+      ref={props.menuRef}
+      className="ks-training-select__menu"
+      role="listbox"
+      aria-label={sortAria(props)}
+    >
       {PLACE_SORT_OPTIONS.map((option) => (
-        <PlacesSortOption key={option.value} option={option} active={props.sort === option.value} t={props.t} onSelect={props.onSortChange} />
+        <PlacesSortOption
+          key={option.value}
+          option={option}
+          active={props.sort === option.value}
+          t={props.t}
+          onSelect={props.onSortChange}
+        />
       ))}
     </ul>
   );
 }
 
 function sortAria({ t }: PlacesSortSelectProps) {
-  return t("common.admin.places.sort.ariaLabel", { defaultValue: "Sort order" });
+  return t("common.admin.places.sort.ariaLabel", {
+    defaultValue: "Sort order",
+  });
 }

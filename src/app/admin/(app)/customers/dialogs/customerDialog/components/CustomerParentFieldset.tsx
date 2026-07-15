@@ -7,5 +7,14 @@ import type { CustomerParentFieldsetProps } from "./customerParentFieldset/custo
 
 export default function CustomerParentFieldset(p: CustomerParentFieldsetProps) {
   const { t } = useTranslation();
-  return <fieldset className="card"><legend className="font-bold"> {t("common.admin.customers.customerDialog.parent")}</legend><CustomerParentIdentityFields p={p} t={t} /><CustomerParentContactFields p={p} t={t} /></fieldset>;
+  return (
+    <fieldset className="card">
+      <legend className="font-bold">
+        {" "}
+        {t("common.admin.customers.customerDialog.parent")}
+      </legend>
+      <CustomerParentIdentityFields p={p} t={t} />
+      <CustomerParentContactFields p={p} t={t} />
+    </fieldset>
+  );
 }

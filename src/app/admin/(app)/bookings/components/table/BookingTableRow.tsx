@@ -1,12 +1,7 @@
 import type { KeyboardEvent } from "react";
 import type { Booking } from "../../types";
 import type { BookingRowContext } from "./types";
-import {
-  idOf,
-  labelOpen,
-  labelSelect,
-  onKeyActivate,
-} from "./bookingRowUtils";
+import { idOf, labelOpen, labelSelect, onKeyActivate } from "./bookingRowUtils";
 import { BookingRowAction } from "./BookingRowAction";
 import {
   BookingAgeCell,
@@ -21,11 +16,21 @@ import {
 
 type RowModel = ReturnType<typeof rowModel>;
 
-export function BookingTableRow({ b, ctx }: { b: Booking; ctx: BookingRowContext }) {
+export function BookingTableRow({
+  b,
+  ctx,
+}: {
+  b: Booking;
+  ctx: BookingRowContext;
+}) {
   return <BookingRowShell b={b} ctx={ctx} model={rowModel(b, ctx)} />;
 }
 
-function BookingRowShell(props: { b: Booking; ctx: BookingRowContext; model: RowModel }) {
+function BookingRowShell(props: {
+  b: Booking;
+  ctx: BookingRowContext;
+  model: RowModel;
+}) {
   const { b, ctx, model } = props;
   return (
     <li key={model.id} {...rowProps(b, ctx, model)}>
@@ -50,9 +55,21 @@ function BookingCells({ b, ctx }: { b: Booking; ctx: BookingRowContext }) {
   );
 }
 
-function BookingAction(props: { b: Booking; ctx: BookingRowContext; model: RowModel }) {
+function BookingAction(props: {
+  b: Booking;
+  ctx: BookingRowContext;
+  model: RowModel;
+}) {
   const { b, ctx, model } = props;
-  return <BookingRowAction b={b} hidden={model.hideEdit} rowBusy={model.rowBusy} onOpen={ctx.onOpen} t={ctx.t} />;
+  return (
+    <BookingRowAction
+      b={b}
+      hidden={model.hideEdit}
+      rowBusy={model.rowBusy}
+      onOpen={ctx.onOpen}
+      t={ctx.t}
+    />
+  );
 }
 
 function rowModel(b: Booking, ctx: BookingRowContext) {
@@ -76,5 +93,9 @@ function rowProps(b: Booking, ctx: BookingRowContext, model: RowModel) {
 
 function rowClass(checked: boolean, selectMode: boolean) {
   const base = "list__item chip news-list__row is-fullhover is-interactive";
-  return [base, checked ? "is-selected" : "", selectMode ? "is-selectmode" : ""].join(" ");
+  return [
+    base,
+    checked ? "is-selected" : "",
+    selectMode ? "is-selectmode" : "",
+  ].join(" ");
 }

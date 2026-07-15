@@ -125,12 +125,6 @@ export default function CustomerFamilySection(p: Props) {
         {t("common.admin.customers.customerDialog.familyChildren")}
       </legend>
 
-      {/* {p.familyLoading ? (
-        <div className="text-xs text-gray-600 mb-1">
-          {t("common.admin.customers.customerDialog.loadingFamily")}
-        </div>
-      ) : null} */}
-
       {p.familyError ? (
         <div className="text-xs text-red-600 mb-1">{p.familyError}</div>
       ) : null}

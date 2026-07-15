@@ -31,7 +31,13 @@ export function buildOpenAction(
   onOpen: (it: FranchiseLocation) => void,
   t: TFn,
 ): Action {
-  return action("open", "/icons/edit.svg", t("common.admin.franchiseLocations.actions.edit"), busy, () => onOpen(it));
+  return action(
+    "open",
+    "/icons/edit.svg",
+    t("common.admin.franchiseLocations.actions.edit"),
+    busy,
+    () => onOpen(it),
+  );
 }
 
 export function buildInfoAction(
@@ -40,7 +46,13 @@ export function buildInfoAction(
   onInfo: (it: FranchiseLocation) => void,
   t: TFn,
 ): Action {
-  return action("info", "/icons/info.svg", t("common.admin.franchiseLocations.actions.info"), busy, () => onInfo(it));
+  return action(
+    "info",
+    "/icons/info.svg",
+    t("common.admin.franchiseLocations.actions.info"),
+    busy,
+    () => onInfo(it),
+  );
 }
 
 export function buildDeleteAction(
@@ -49,7 +61,13 @@ export function buildDeleteAction(
   onDelete: (it: FranchiseLocation) => void,
   t: TFn,
 ): Action {
-  return action("delete", "/icons/delete.svg", t("common.admin.franchiseLocations.actions.delete"), busy, () => onDelete(it));
+  return action(
+    "delete",
+    "/icons/delete.svg",
+    t("common.admin.franchiseLocations.actions.delete"),
+    busy,
+    () => onDelete(it),
+  );
 }
 
 export function buildRejectAction(
@@ -58,12 +76,23 @@ export function buildRejectAction(
   onReject: (it: FranchiseLocation) => void,
   t: TFn,
 ): Action {
-  return { ...action("reject", "/icons/arrow_right_alt.svg", t("common.admin.franchiseLocations.actions.reject"), busy, () => onReject(it)), left: true };
+  return {
+    ...action(
+      "reject",
+      "/icons/arrow_right_alt.svg",
+      t("common.admin.franchiseLocations.actions.reject"),
+      busy,
+      () => onReject(it),
+    ),
+    left: true,
+  };
 }
 
 function submitState(it: FranchiseLocation, busy: boolean, t: TFn) {
   const allowed = canSubmitUpdate(it);
-  const tip = allowed ? undefined : t("common.admin.franchiseLocations.actions.updateFirst");
+  const tip = allowed
+    ? undefined
+    : t("common.admin.franchiseLocations.actions.updateFirst");
   return { disabled: busy || !allowed, tip };
 }
 
@@ -76,7 +105,13 @@ function reviewAction(
   t: TFn,
 ): Action {
   const state = submitState(it, busy, t);
-  const base = action(key, "/icons/arrow_right_alt.svg", t(titleKey), state.disabled, run);
+  const base = action(
+    key,
+    "/icons/arrow_right_alt.svg",
+    t(titleKey),
+    state.disabled,
+    run,
+  );
   return { ...base, left: true, tip: state.tip };
 }
 
@@ -124,7 +159,9 @@ function mineApproved(args: ActionArgs) {
   return compact([
     buildOpenAction(it, busy, onOpen, t),
     optionalAction(onInfo, (cb) => buildInfoAction(it, busy, cb, t)),
-    optionalAction(onSubmitForReview, (cb) => buildSubmitForReviewAction(it, busy, cb, t)),
+    optionalAction(onSubmitForReview, (cb) =>
+      buildSubmitForReviewAction(it, busy, cb, t),
+    ),
     optionalAction(onDeleteOne, (cb) => buildDeleteAction(it, busy, cb, t)),
   ]);
 }

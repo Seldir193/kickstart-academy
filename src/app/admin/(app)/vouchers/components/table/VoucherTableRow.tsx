@@ -20,16 +20,22 @@ export default function VoucherTableRow(props: {
     <li
       className={rowClassName(checked, selectMode)}
       onClick={() => props.onRowClick(item)}
-      onKeyDown={(event) => handleRowKeyDown(event, () => props.onRowClick(item))}
+      onKeyDown={(event) =>
+        handleRowKeyDown(event, () => props.onRowClick(item))
+      }
       tabIndex={0}
       role="button"
       aria-pressed={selectMode ? checked : undefined}
       aria-label={rowLabel(t, item, selectMode)}
     >
       <VoucherCodeCell item={item} />
-      <div className="news-list__cell bookings-mono">{formatVoucherAmount(item.amount)}</div>
+      <div className="news-list__cell bookings-mono">
+        {formatVoucherAmount(item.amount)}
+      </div>
       <div className="news-list__cell">{statusText(t, item.active)}</div>
-      <div className="news-list__cell">{formatDateOnly(item.createdAt, i18n.language)}</div>
+      <div className="news-list__cell">
+        {formatDateOnly(item.createdAt, i18n.language)}
+      </div>
       <VoucherActionCell hidden={hideEdit} item={item} onOpen={props.onOpen} />
     </li>
   );
@@ -58,8 +64,18 @@ function VoucherActionCell(props: {
       onClick={(event) => openFromAction(event, props)}
       onMouseDown={(event) => event.stopPropagation()}
     >
-      <span className="edit-trigger" role="button" tabIndex={0} aria-label={t("common.admin.vouchers.row.edit")}>
-        <img src="/icons/edit.svg" alt="" aria-hidden="true" className="icon-img" />
+      <span
+        className="edit-trigger"
+        role="button"
+        tabIndex={0}
+        aria-label={t("common.admin.vouchers.row.edit")}
+      >
+        <img
+          src="/icons/edit.svg"
+          alt=""
+          aria-hidden="true"
+          className="icon-img"
+        />
       </span>
     </div>
   );
@@ -99,7 +115,9 @@ function rowLabel(
   item: Voucher,
   selectMode: boolean,
 ) {
-  const key = selectMode ? "common.admin.vouchers.row.select" : "common.admin.vouchers.row.open";
+  const key = selectMode
+    ? "common.admin.vouchers.row.select"
+    : "common.admin.vouchers.row.open";
   return `${t(key)}: ${item.code}`;
 }
 

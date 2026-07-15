@@ -20,7 +20,9 @@ export function getRoleLabel(t: TFunction, item: AdminMember) {
 
 export function getBadgeClass(item: AdminMember) {
   if (item.isOwner) return "is-owner";
-  return clean(item.role).toLowerCase() === "super" ? "is-super" : "is-provider";
+  return clean(item.role).toLowerCase() === "super"
+    ? "is-super"
+    : "is-provider";
 }
 
 function getTitle(t: TFunction, item: AdminMember) {
@@ -28,8 +30,15 @@ function getTitle(t: TFunction, item: AdminMember) {
   return title !== "—" ? title : t("common.admin.members.info.memberFallback");
 }
 
-export function buildMembersInfoData(t: TFunction, item: AdminMember): MembersInfoData {
-  const source = item as AdminMember & { avatarUrl?: unknown; id?: unknown; _id?: unknown };
+export function buildMembersInfoData(
+  t: TFunction,
+  item: AdminMember,
+): MembersInfoData {
+  const source = item as AdminMember & {
+    avatarUrl?: unknown;
+    id?: unknown;
+    _id?: unknown;
+  };
   return {
     title: getTitle(t, item),
     email: valueOrDash(item.email),

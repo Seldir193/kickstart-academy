@@ -23,12 +23,18 @@ export default function PlacesSection({ model, t }: Props) {
 function PlacesSectionCount({ total }: { total: number }) {
   return (
     <div className="news-admin__section-head-number">
-      <span className="news-admin__section-meta">{total ? `(${total})` : ""}</span>
+      <span className="news-admin__section-meta">
+        {total ? `(${total})` : ""}
+      </span>
     </div>
   );
 }
 
-function PlacesTableBox({ model }: { model: ReturnType<typeof useOrtePageState> }) {
+function PlacesTableBox({
+  model,
+}: {
+  model: ReturnType<typeof useOrtePageState>;
+}) {
   return (
     <div className={tableBoxClassName(model.busy, model.list.items.length)}>
       <PlacesTable model={model} />
@@ -36,17 +42,27 @@ function PlacesTableBox({ model }: { model: ReturnType<typeof useOrtePageState> 
   );
 }
 
-function PlacesTable({ model }: { model: ReturnType<typeof useOrtePageState> }) {
+function PlacesTable({
+  model,
+}: {
+  model: ReturnType<typeof useOrtePageState>;
+}) {
   return (
     <PlacesTableList
-      items={model.sortedItems} selectMode={model.selection.selectMode}
-      onToggleSelectMode={model.selection.toggle} busy={model.busy}
-      onOpen={model.dialog.edit} onDeleteMany={model.handleDeleteMany}
+      items={model.sortedItems}
+      selectMode={model.selection.selectMode}
+      onToggleSelectMode={model.selection.toggle}
+      busy={model.busy}
+      onOpen={model.dialog.edit}
+      onDeleteMany={model.handleDeleteMany}
       toggleBtnRef={model.selection.toggleBtnRef}
     />
   );
 }
 
 function tableBoxClassName(busy: boolean, itemCount: number) {
-  return "news-admin__box news-admin__box--scroll3" + (!busy && !itemCount ? " is-empty" : "");
+  return (
+    "news-admin__box news-admin__box--scroll3" +
+    (!busy && !itemCount ? " is-empty" : "")
+  );
 }

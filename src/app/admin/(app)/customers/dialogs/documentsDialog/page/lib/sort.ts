@@ -1,7 +1,9 @@
 import type { SortOrder } from "../types";
 
 export function sortLabel(order: SortOrder, t: (key: string) => string) {
-  return order === "oldest" ? t("admin.customers.documents.sort.oldest") : t("admin.customers.documents.sort.newest");
+  return order === "oldest"
+    ? t("admin.customers.documents.sort.oldest")
+    : t("admin.customers.documents.sort.newest");
 }
 
 export function nextPage(page: number, totalPages: number) {

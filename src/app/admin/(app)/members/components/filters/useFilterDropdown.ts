@@ -8,16 +8,27 @@ export function useFilterDropdown() {
   return { open, setOpen, triggerRef, menuRef };
 }
 
-function useOutsideClose(open: boolean, setOpen: (value: boolean) => void, triggerRef: React.RefObject<HTMLButtonElement | null>, menuRef: React.RefObject<HTMLUListElement | null>) {
+function useOutsideClose(
+  open: boolean,
+  setOpen: (value: boolean) => void,
+  triggerRef: React.RefObject<HTMLButtonElement | null>,
+  menuRef: React.RefObject<HTMLUListElement | null>,
+) {
   useEffect(() => {
     if (!open) return;
-    const close = (event: PointerEvent) => closeOutside(event, setOpen, triggerRef, menuRef);
+    const close = (event: PointerEvent) =>
+      closeOutside(event, setOpen, triggerRef, menuRef);
     document.addEventListener("pointerdown", close);
     return () => document.removeEventListener("pointerdown", close);
   }, [menuRef, open, setOpen, triggerRef]);
 }
 
-function closeOutside(event: PointerEvent, setOpen: (value: boolean) => void, triggerRef: React.RefObject<HTMLButtonElement | null>, menuRef: React.RefObject<HTMLUListElement | null>) {
+function closeOutside(
+  event: PointerEvent,
+  setOpen: (value: boolean) => void,
+  triggerRef: React.RefObject<HTMLButtonElement | null>,
+  menuRef: React.RefObject<HTMLUListElement | null>,
+) {
   const target = event.target as Node;
   if (triggerRef.current?.contains(target)) return;
   if (menuRef.current?.contains(target)) return;

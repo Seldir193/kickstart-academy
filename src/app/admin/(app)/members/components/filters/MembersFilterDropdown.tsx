@@ -9,25 +9,98 @@ type Props<T extends string> = {
   onChange: (value: T) => void;
 };
 
-export default function MembersFilterDropdown<T extends string>(props: Props<T>) {
+export default function MembersFilterDropdown<T extends string>(
+  props: Props<T>,
+) {
   const dropdown = useFilterDropdown();
-  const label = props.options.find((option) => option.value === props.value)?.label ?? "";
-  return <div className={props.className ?? "members-filters__dd"}><div className={selectClass(dropdown.open)}><Trigger label={label} ariaLabel={props.ariaLabel} dropdown={dropdown} />{dropdown.open && <Options {...props} close={() => dropdown.setOpen(false)} menuRef={dropdown.menuRef} />}</div></div>;
+  const label =
+    props.options.find((option) => option.value === props.value)?.label ?? "";
+  return (
+    <div className={props.className ?? "members-filters__dd"}>
+      <div className={selectClass(dropdown.open)}>
+        <Trigger
+          label={label}
+          ariaLabel={props.ariaLabel}
+          dropdown={dropdown}
+        />
+        {dropdown.open && (
+          <Options
+            {...props}
+            close={() => dropdown.setOpen(false)}
+            menuRef={dropdown.menuRef}
+          />
+        )}
+      </div>
+    </div>
+  );
 }
 
-function Trigger(props: { label: string; ariaLabel: string; dropdown: ReturnType<typeof useFilterDropdown> }) {
-  return <button type="button" ref={props.dropdown.triggerRef} className="ks-training-select__trigger" onClick={() => props.dropdown.setOpen((open) => !open)} aria-label={props.ariaLabel}><span className="ks-training-select__label">{props.label}</span><span className="ks-training-select__chevron" aria-hidden="true" /></button>;
+function Trigger(props: {
+  label: string;
+  ariaLabel: string;
+  dropdown: ReturnType<typeof useFilterDropdown>;
+}) {
+  return (
+    <button
+      type="button"
+      ref={props.dropdown.triggerRef}
+      className="ks-training-select__trigger"
+      onClick={() => props.dropdown.setOpen((open) => !open)}
+      aria-label={props.ariaLabel}
+    >
+      <span className="ks-training-select__label">{props.label}</span>
+      <span className="ks-training-select__chevron" aria-hidden="true" />
+    </button>
+  );
 }
 
-function Options<T extends string>(props: Props<T> & { close: () => void; menuRef: React.RefObject<HTMLUListElement | null> }) {
-  return <ul ref={props.menuRef} className="ks-training-select__menu" role="listbox" aria-label={props.ariaLabel}>{props.options.map((option) => <Option key={option.value || "all"} option={option} selected={props.value === option.value} onSelect={() => selectOption(option.value, props)} />)}</ul>;
+function Options<T extends string>(
+  props: Props<T> & {
+    close: () => void;
+    menuRef: React.RefObject<HTMLUListElement | null>;
+  },
+) {
+  return (
+    <ul
+      ref={props.menuRef}
+      className="ks-training-select__menu"
+      role="listbox"
+      aria-label={props.ariaLabel}
+    >
+      {props.options.map((option) => (
+        <Option
+          key={option.value || "all"}
+          option={option}
+          selected={props.value === option.value}
+          onSelect={() => selectOption(option.value, props)}
+        />
+      ))}
+    </ul>
+  );
 }
 
-function Option<T extends string>(props: { option: FilterOption<T>; selected: boolean; onSelect: () => void }) {
-  return <li><button type="button" className={`ks-training-select__option${props.selected ? " is-selected" : ""}`} onClick={props.onSelect}>{props.option.label}</button></li>;
+function Option<T extends string>(props: {
+  option: FilterOption<T>;
+  selected: boolean;
+  onSelect: () => void;
+}) {
+  return (
+    <li>
+      <button
+        type="button"
+        className={`ks-training-select__option${props.selected ? " is-selected" : ""}`}
+        onClick={props.onSelect}
+      >
+        {props.option.label}
+      </button>
+    </li>
+  );
 }
 
-function selectOption<T extends string>(value: T, props: Props<T> & { close: () => void }) {
+function selectOption<T extends string>(
+  value: T,
+  props: Props<T> & { close: () => void },
+) {
   props.onChange(value);
   props.close();
 }

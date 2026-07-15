@@ -21,7 +21,11 @@ export function filteredCancelableBookings(args: FilterArgs) {
   if (args.courseValueIsNonCancelable) return [];
   const base = args.bookings.filter((b) => bookingMatches(b, args));
   const byCourse = filterByCourse(base, args.courseValue, args.offersById);
-  return applyStatusAndSort(dedupeBookings(byCourse), args.statusFilter, args.sortOrder);
+  return applyStatusAndSort(
+    dedupeBookings(byCourse),
+    args.statusFilter,
+    args.sortOrder,
+  );
 }
 
 export function buildOffersMap(offers: any[]) {
@@ -48,7 +52,9 @@ export function syncSelected(
 
 function bookingMatches(b: any, args: FilterArgs) {
   if (!isBookingCancellable(b, args.offersById)) return false;
-  return args.bookingTarget === "child" ? childBookingMatches(b, args) : selfBookingMatches(b, args);
+  return args.bookingTarget === "child"
+    ? childBookingMatches(b, args)
+    : selfBookingMatches(b, args);
 }
 
 function childBookingMatches(b: any, args: FilterArgs) {
@@ -66,9 +72,15 @@ function parentEmailMatches(b: any, activeParentEmail: string) {
   return safeText(b?.parentEmail).toLowerCase() === activeParentEmail;
 }
 
-function filterByCourse(items: any[], courseValue: string, offersById: Map<string, any>) {
+function filterByCourse(
+  items: any[],
+  courseValue: string,
+  offersById: Map<string, any>,
+) {
   if (!courseValue) return items;
-  return items.filter((b: any) => courseValueFromBooking(b, offersById) === courseValue);
+  return items.filter(
+    (b: any) => courseValueFromBooking(b, offersById) === courseValue,
+  );
 }
 
 function mergeBooking(map: Map<string, any>, item: any) {
@@ -100,5 +112,8 @@ function dateRank(b: any) {
 }
 
 function nextSelected(filtered: any[]) {
-  return filtered.find((b: any) => String(b.status || "") !== "cancelled") || filtered[0];
+  return (
+    filtered.find((b: any) => String(b.status || "") !== "cancelled") ||
+    filtered[0]
+  );
 }

@@ -10,10 +10,19 @@ type Props = {
   onSelect: (value: PlacesSortKey) => void;
 };
 
-export default function PlacesSortOption({ option, active, t, onSelect }: Props) {
+export default function PlacesSortOption({
+  option,
+  active,
+  t,
+  onSelect,
+}: Props) {
   return (
     <li>
-      <button type="button" className={optionClassName(active)} onClick={() => onSelect(option.value)}>
+      <button
+        type="button"
+        className={optionClassName(active)}
+        onClick={() => onSelect(option.value)}
+      >
         {t(option.labelKey, { defaultValue: option.defaultValue })}
       </button>
     </li>

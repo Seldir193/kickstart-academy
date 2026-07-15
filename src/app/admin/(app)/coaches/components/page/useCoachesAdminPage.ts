@@ -35,13 +35,24 @@ function useCoachRefs(): CoachRefs {
   const myPendingToggleRef = useRef<HTMLButtonElement | null>(null);
   const myApprovedToggleRef = useRef<HTMLButtonElement | null>(null);
   const myRejectedToggleRef = useRef<HTMLButtonElement | null>(null);
-  return { approvedProvidersToggleRef, rejectedProvidersToggleRef, myPendingToggleRef, myApprovedToggleRef, myRejectedToggleRef };
+  return {
+    approvedProvidersToggleRef,
+    rejectedProvidersToggleRef,
+    myPendingToggleRef,
+    myApprovedToggleRef,
+    myRejectedToggleRef,
+  };
 }
 
 function useCoachBusyState(): CoachBusyState {
   const [pendingBusySlug, setPendingBusySlug] = useState<string | null>(null);
   const [publishedBusyId, setPublishedBusyId] = useState<string | null>(null);
-  return { pendingBusySlug, setPendingBusySlug, publishedBusyId, setPublishedBusyId };
+  return {
+    pendingBusySlug,
+    setPendingBusySlug,
+    publishedBusyId,
+    setPublishedBusyId,
+  };
 }
 
 function useCoachDialogState(): CoachDialogState {
@@ -54,11 +65,38 @@ function useCoachDialogState(): CoachDialogState {
   const [rejectInfoOpen, setRejectInfoOpen] = useState(false);
   const [rejectInfoTarget, setRejectInfoTarget] = useState<Coach | null>(null);
   const [publishedInfoOpen, setPublishedInfoOpen] = useState(false);
-  const [publishedInfoTarget, setPublishedInfoTarget] = useState<Coach | null>(null);
-  return { createOpen, setCreateOpen, editItem, setEditItem, deleteOpen, setDeleteOpen, deleteTarget, setDeleteTarget, rejectOpen, setRejectOpen, rejectTarget, setRejectTarget, rejectInfoOpen, setRejectInfoOpen, rejectInfoTarget, setRejectInfoTarget, publishedInfoOpen, setPublishedInfoOpen, publishedInfoTarget, setPublishedInfoTarget };
+  const [publishedInfoTarget, setPublishedInfoTarget] = useState<Coach | null>(
+    null,
+  );
+  return {
+    createOpen,
+    setCreateOpen,
+    editItem,
+    setEditItem,
+    deleteOpen,
+    setDeleteOpen,
+    deleteTarget,
+    setDeleteTarget,
+    rejectOpen,
+    setRejectOpen,
+    rejectTarget,
+    setRejectTarget,
+    rejectInfoOpen,
+    setRejectInfoOpen,
+    rejectInfoTarget,
+    setRejectInfoTarget,
+    publishedInfoOpen,
+    setPublishedInfoOpen,
+    publishedInfoTarget,
+    setPublishedInfoTarget,
+  };
 }
 
-function syncSplitState(isSuper: boolean, resp: unknown, state: ReturnType<typeof useCoachesPageState>) {
+function syncSplitState(
+  isSuper: boolean,
+  resp: unknown,
+  state: ReturnType<typeof useCoachesPageState>,
+) {
   if (!isSuper) {
     state.setSplitFromResponse(null);
     return;
@@ -66,19 +104,32 @@ function syncSplitState(isSuper: boolean, resp: unknown, state: ReturnType<typeo
   if (resp) state.setSplitFromResponse(resp);
 }
 
-function syncMineState(isSuper: boolean, items: Coach[], state: ReturnType<typeof useCoachesPageState>) {
+function syncMineState(
+  isSuper: boolean,
+  items: Coach[],
+  state: ReturnType<typeof useCoachesPageState>,
+) {
   if (isSuper) return;
   state.setMineFromItems(Array.isArray(items) ? items : []);
 }
 
-function useSyncedCoachState(isSuper: boolean, meId: string, resp: unknown, items: Coach[]) {
+function useSyncedCoachState(
+  isSuper: boolean,
+  meId: string,
+  resp: unknown,
+  items: Coach[],
+) {
   const state = useCoachesPageState({ isSuper, meId });
   useEffect(() => syncSplitState(isSuper, resp, state), [isSuper, resp]);
   useEffect(() => syncMineState(isSuper, items, state), [isSuper, items]);
   return state;
 }
 
-function useCoachMutations(isSuper: boolean, meId: string, state: ReturnType<typeof useCoachesPageState>) {
+function useCoachMutations(
+  isSuper: boolean,
+  meId: string,
+  state: ReturnType<typeof useCoachesPageState>,
+) {
   return useCoachesPageMutations({
     isSuper,
     isProviderItem: (coach) => isOtherProviderItem(coach, meId),
@@ -101,7 +152,21 @@ export function useCoachesAdminPage() {
   const busy = useCoachBusyState();
   const refs = useCoachRefs();
   const pendingCount = meta.isSuper ? state.providersPendingAll.length : 0;
-  return { state, muts, dialogs, busy, refs, isSuper: meta.isSuper, loading, error, meLabel: meta.meLabel, pendingCount, openDelete: (coach: Coach) => openDelete(dialogs, coach), togglePublished: (coach: Coach, next: boolean) => togglePublished(coach, next, muts, busy) };
+  return {
+    state,
+    muts,
+    dialogs,
+    busy,
+    refs,
+    isSuper: meta.isSuper,
+    loading,
+    error,
+    meLabel: meta.meLabel,
+    pendingCount,
+    openDelete: (coach: Coach) => openDelete(dialogs, coach),
+    togglePublished: (coach: Coach, next: boolean) =>
+      togglePublished(coach, next, muts, busy),
+  };
 }
 
 function openDelete(dialogs: CoachDialogState, coach: Coach) {
@@ -109,7 +174,12 @@ function openDelete(dialogs: CoachDialogState, coach: Coach) {
   dialogs.setDeleteOpen(true);
 }
 
-async function togglePublished(coach: Coach, next: boolean, muts: ReturnType<typeof useCoachesPageMutations>, busy: CoachBusyState) {
+async function togglePublished(
+  coach: Coach,
+  next: boolean,
+  muts: ReturnType<typeof useCoachesPageMutations>,
+  busy: CoachBusyState,
+) {
   const id = coachRowId(coach);
   if (!id || muts.mutating) return;
   busy.setPublishedBusyId(id);

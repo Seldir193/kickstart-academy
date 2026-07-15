@@ -8,7 +8,11 @@ type Props = {
   t: TFunction;
 };
 
-export default function FranchiseLocationDialogFooter({ model, onDelete, t }: Props) {
+export default function FranchiseLocationDialogFooter({
+  model,
+  onDelete,
+  t,
+}: Props) {
   return (
     <div className="dialog-footer fl-dialog__footer">
       <div className="fl-dialog__footer-left">
@@ -24,7 +28,12 @@ export default function FranchiseLocationDialogFooter({ model, onDelete, t }: Pr
 function DeleteSlot({ model, onDelete, t }: Props) {
   if (!onDelete || !model.isEdit) return <span />;
   return (
-    <button className="btn btn--danger" onClick={model.actions.handleDelete} disabled={model.busy} type="button">
+    <button
+      className="btn btn--danger"
+      onClick={model.actions.handleDelete}
+      disabled={model.busy}
+      type="button"
+    >
       {t("common.admin.franchiseLocations.formDialog.delete")}
     </button>
   );
@@ -32,7 +41,12 @@ function DeleteSlot({ model, onDelete, t }: Props) {
 
 function SaveButton({ model, t }: Pick<Props, "model" | "t">) {
   return (
-    <button className="btn" onClick={model.actions.submit} disabled={model.busy} type="button">
+    <button
+      className="btn"
+      onClick={model.actions.submit}
+      disabled={model.busy}
+      type="button"
+    >
       {saveLabel(model.busy, t)}
     </button>
   );

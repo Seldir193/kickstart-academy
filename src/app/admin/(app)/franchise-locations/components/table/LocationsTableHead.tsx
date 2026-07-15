@@ -12,7 +12,9 @@ type Props = {
 };
 
 function headerClass(key: (typeof HEADER_KEYS)[number]) {
-  return key === "actions" ? "news-list__h news-list__h--right" : "news-list__h";
+  return key === "actions"
+    ? "news-list__h news-list__h--right"
+    : "news-list__h";
 }
 
 function headerLabel(key: (typeof HEADER_KEYS)[number], t: Props["t"]) {
@@ -23,7 +25,9 @@ export default function LocationsTableHead({ t }: Props) {
   return (
     <div className="news-list__head" aria-hidden="true">
       {HEADER_KEYS.map((key) => (
-        <div key={key} className={headerClass(key)}>{headerLabel(key, t)}</div>
+        <div key={key} className={headerClass(key)}>
+          {headerLabel(key, t)}
+        </div>
       ))}
     </div>
   );

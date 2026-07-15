@@ -74,7 +74,9 @@ function canAfterReject(record: Record<string, unknown> | null) {
 function canAfterApproval(record: Record<string, unknown> | null) {
   const draftUpdatedAt = timeOf(record?.draftUpdatedAt);
   const liveUpdatedAt = timeOf(record?.liveUpdatedAt);
-  return Boolean(draftUpdatedAt && (!liveUpdatedAt || draftUpdatedAt > liveUpdatedAt));
+  return Boolean(
+    draftUpdatedAt && (!liveUpdatedAt || draftUpdatedAt > liveUpdatedAt),
+  );
 }
 
 function normStr(value: unknown) {
@@ -107,7 +109,11 @@ function buildMediaOut(record: Record<string, unknown>) {
   return out;
 }
 
-function addMediaMeta(out: Record<string, unknown>, key: string, value: unknown) {
+function addMediaMeta(
+  out: Record<string, unknown>,
+  key: string,
+  value: unknown,
+) {
   const cleanValue = normStr(value);
   if (cleanValue) out[key] = cleanValue;
 }
@@ -132,7 +138,11 @@ function hasDraftChanges(item: unknown) {
   return DRAFT_FIELDS.some((field) => changedField(item, draft, field));
 }
 
-function changedField(item: unknown, draft: Record<string, unknown>, field: string) {
+function changedField(
+  item: unknown,
+  draft: Record<string, unknown>,
+  field: string,
+) {
   const live = getRecord(item);
   const left = normComparableByField(field, draft[field]);
   const right = normComparableByField(field, live?.[field]);

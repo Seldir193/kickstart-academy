@@ -15,8 +15,12 @@ export default function MembersTableListContent(props: MembersTableProps) {
 
   const roleItem = dialogs.roleItem;
   const activeItem = dialogs.activeItem;
-  const canEditRole = roleItem ? canEdit(roleItem, props.busy, props.canEditRoles) : false;
-  const canEditActive = activeItem ? canEdit(activeItem, props.busy, props.canEditActive) : false;
+  const canEditRole = roleItem
+    ? canEdit(roleItem, props.busy, props.canEditRoles)
+    : false;
+  const canEditActive = activeItem
+    ? canEdit(activeItem, props.busy, props.canEditActive)
+    : false;
 
   return (
     <>
@@ -37,13 +41,27 @@ export default function MembersTableListContent(props: MembersTableProps) {
         activeNext={dialogs.activeNext}
         canEditRole={canEditRole}
         canEditActive={canEditActive}
-        roleLockedReason={lockedReason(t, roleItem, props.busy, props.canEditRoles, "role")}
-        activeLockedReason={lockedReason(t, activeItem, props.busy, props.canEditActive, "active")}
+        roleLockedReason={lockedReason(
+          t,
+          roleItem,
+          props.busy,
+          props.canEditRoles,
+          "role",
+        )}
+        activeLockedReason={lockedReason(
+          t,
+          activeItem,
+          props.busy,
+          props.canEditActive,
+          "active",
+        )}
         onCloseInfo={dialogs.closeInfo}
         onCloseRole={dialogs.closeRole}
         onCloseActive={dialogs.closeActive}
         onConfirmRole={() => confirmRole(props, roleItem, dialogs.roleNext)}
-        onConfirmActive={() => confirmActive(props, activeItem, dialogs.activeNext)}
+        onConfirmActive={() =>
+          confirmActive(props, activeItem, dialogs.activeNext)
+        }
       />
     </>
   );
@@ -70,7 +88,8 @@ function lockedReason(
 ) {
   if (!member) return "";
   if (!allowed) return t(`common.admin.members.locked.${kind}OwnerOnly`);
-  if (member.isOwner) return t(`common.admin.members.locked.owner${capitalize(kind)}`);
+  if (member.isOwner)
+    return t(`common.admin.members.locked.owner${capitalize(kind)}`);
   if (busy) return t("common.admin.members.locked.pleaseWait");
   return "";
 }

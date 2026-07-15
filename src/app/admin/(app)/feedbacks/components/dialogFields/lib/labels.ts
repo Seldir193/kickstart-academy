@@ -12,7 +12,9 @@ export function statusLabel(active: boolean, t: Translate) {
 }
 
 export function activeOptionClass(isActive: boolean) {
-  return "ks-selectbox__option" + (isActive ? " ks-selectbox__option--active" : "");
+  return (
+    "ks-selectbox__option" + (isActive ? " ks-selectbox__option--active" : "")
+  );
 }
 
 export function openSelectClass(isOpen: boolean) {

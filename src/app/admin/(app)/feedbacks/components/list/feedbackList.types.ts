@@ -1,4 +1,4 @@
-import type { Feedback } from '../../types';
+import type { Feedback } from "../../types";
 
 export type FeedbackListProps = {
   items: Feedback[];

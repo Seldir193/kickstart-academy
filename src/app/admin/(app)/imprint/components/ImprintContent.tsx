@@ -16,8 +16,7 @@ function ImprintScope({ links, t }: Props) {
   return (
     <p className="text-gray-700">
       <strong>{t("common.imprint.scopeTitle")}</strong>{" "}
-      {t("common.imprint.scopeTextBeforePortal")}{" "}
-      <strong>DFSMANAGER</strong>{" "}
+      {t("common.imprint.scopeTextBeforePortal")} <strong>DFSMANAGER</strong>{" "}
       {t("common.imprint.scopeTextAfterPortal")}{" "}
       <strong>{links.portalUrl}</strong>.
       <br />
@@ -31,10 +30,14 @@ function ImprintAddress({ t }: TranslationProps) {
     <>
       <h2>{t("common.imprint.section.ddg")}</h2>
       <p>
-        Selcuk Kocyigit<br />
-        Dortmunder Fussballschule<br />
-        Hochfelder Straße 33<br />
-        47226 Duisburg<br />
+        Selcuk Kocyigit
+        <br />
+        Dortmunder Fussballschule
+        <br />
+        Hochfelder Straße 33
+        <br />
+        47226 Duisburg
+        <br />
         Deutschland
       </p>
     </>
@@ -46,15 +49,22 @@ function ImprintContact({ t }: TranslationProps) {
     <>
       <h2>{t("common.imprint.section.contact")}</h2>
       <p>
-        {t("common.imprint.phone")}: <a href="tel:+4917643203362">+49 176 4320 3362</a>
+        {t("common.imprint.phone")}:{" "}
+        <a href="tel:+4917643203362">+49 176 4320 3362</a>
         <br />
-        {t("common.imprint.email")}: <a href="mailto:fussballschule@selcuk-kocyigit.de">fussballschule@selcuk-kocyigit.de</a>
+        {t("common.imprint.email")}:{" "}
+        <a href="mailto:fussballschule@selcuk-kocyigit.de">
+          fussballschule@selcuk-kocyigit.de
+        </a>
       </p>
     </>
   );
 }
 
-type TextSectionProps = TranslationProps & { titleKey: string; textKey: string };
+type TextSectionProps = TranslationProps & {
+  titleKey: string;
+  textKey: string;
+};
 
 function TextSection({ t, titleKey, textKey }: TextSectionProps) {
   return (
@@ -68,9 +78,21 @@ function TextSection({ t, titleKey, textKey }: TextSectionProps) {
 function LegalTextSections({ t }: TranslationProps) {
   return (
     <>
-      <TextSection t={t} titleKey="common.imprint.section.liabilityContent" textKey="common.imprint.liabilityContentText" />
-      <TextSection t={t} titleKey="common.imprint.section.externalLinks" textKey="common.imprint.externalLinksText" />
-      <TextSection t={t} titleKey="common.imprint.section.copyright" textKey="common.imprint.copyrightText" />
+      <TextSection
+        t={t}
+        titleKey="common.imprint.section.liabilityContent"
+        textKey="common.imprint.liabilityContentText"
+      />
+      <TextSection
+        t={t}
+        titleKey="common.imprint.section.externalLinks"
+        textKey="common.imprint.externalLinksText"
+      />
+      <TextSection
+        t={t}
+        titleKey="common.imprint.section.copyright"
+        textKey="common.imprint.copyrightText"
+      />
     </>
   );
 }
@@ -79,10 +101,12 @@ function PublicPrivacyLink({ links, t }: Props) {
   if (!links.publicPrivacyUrl) return <>.</>;
   return (
     <>
-      {" "}({t("common.imprint.publicWebsite")}: {" "}
+      {" "}
+      ({t("common.imprint.publicWebsite")}:{" "}
       <a href={links.publicPrivacyUrl} target="_blank" rel="noreferrer">
         {t("common.imprint.privacyPolicy")}
-      </a>).
+      </a>
+      ).
     </>
   );
 }
@@ -116,7 +140,11 @@ function ImprintLegal({ links, t }: Props) {
     <>
       <LegalTextSections t={t} />
       <PrivacySection links={links} t={t} />
-      <TextSection t={t} titleKey="common.imprint.section.consumerDispute" textKey="common.imprint.consumerDisputeText" />
+      <TextSection
+        t={t}
+        titleKey="common.imprint.section.consumerDispute"
+        textKey="common.imprint.consumerDisputeText"
+      />
     </>
   );
 }

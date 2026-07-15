@@ -2,7 +2,6 @@
 
 import { useTranslation } from "react-i18next";
 
-
 import ConfirmDialog from "../../coaches/moderation/ConfirmDialog";
 
 type Props = {

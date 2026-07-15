@@ -13,7 +13,17 @@ type Args = {
 };
 
 export function useCoachTableFocus(args: Args) {
-  useEffect(() => focusSelectionControls(args), [args.selectMode, args.count, args.prevCountRef, args.clearBtnRef, args.cancelBtnRef, args.toggleBtnRef]);
+  useEffect(
+    () => focusSelectionControls(args),
+    [
+      args.selectMode,
+      args.count,
+      args.prevCountRef,
+      args.clearBtnRef,
+      args.cancelBtnRef,
+      args.toggleBtnRef,
+    ],
+  );
 }
 
 function focusSelectionControls(args: Args) {

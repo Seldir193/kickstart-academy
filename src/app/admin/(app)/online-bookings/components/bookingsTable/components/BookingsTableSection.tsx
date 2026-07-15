@@ -19,7 +19,9 @@ export default function BookingsTableSection(props: Props) {
       <section className="card news-list">
         <div className="news-list__table">
           <BookingsTableHead t={props.t} />
-          <ul className="list list--bleed">{props.items.map((b) => renderRow(props, b))}</ul>
+          <ul className="list list--bleed">
+            {props.items.map((b) => renderRow(props, b))}
+          </ul>
         </div>
       </section>
     </div>

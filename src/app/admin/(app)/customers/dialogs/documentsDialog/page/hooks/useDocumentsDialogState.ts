@@ -7,14 +7,32 @@ import { useDocumentTypes } from "./useDocumentTypes";
 import { useDocumentsList } from "./useDocumentsList";
 import { useFamilyScope } from "./useFamilyScope";
 
-export function useDocumentsDialogState(props: DocumentsDialogProps): DocumentsDialogState {
+export function useDocumentsDialogState(
+  props: DocumentsDialogProps,
+): DocumentsDialogState {
   const { t } = useTranslation();
   const filters = useDocumentFilters();
   const types = useDocumentTypes();
   const scope = useFamilyScope(props.customerId, t);
   const selects = useDialogSelectboxes();
-  const list = useDocumentsList({ customerId: props.customerId, t, filters, scope, selectedTypes: types.selectedTypes, filterItems: types.filterItems });
-  return { t, onClose: props.onClose, types: types.chipState, selectedTypes: types.selectedTypes, filters, scope, list, ...selects };
+  const list = useDocumentsList({
+    customerId: props.customerId,
+    t,
+    filters,
+    scope,
+    selectedTypes: types.selectedTypes,
+    filterItems: types.filterItems,
+  });
+  return {
+    t,
+    onClose: props.onClose,
+    types: types.chipState,
+    selectedTypes: types.selectedTypes,
+    filters,
+    scope,
+    list,
+    ...selects,
+  };
 }
 
 function useDialogSelectboxes() {

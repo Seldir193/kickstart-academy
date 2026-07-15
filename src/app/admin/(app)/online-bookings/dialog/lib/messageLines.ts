@@ -30,7 +30,10 @@ const BREAKERS = MESSAGE_BREAKS.map(
 
 export function messageToLines(msg?: string): string[] {
   const normalized = BREAKERS.reduce(normalizeBreak, safeText(msg));
-  return normalized.split("\n").map((s) => s.trim()).filter(Boolean);
+  return normalized
+    .split("\n")
+    .map((s) => s.trim())
+    .filter(Boolean);
 }
 
 function normalizeBreak(text: string, regex: RegExp, index: number) {

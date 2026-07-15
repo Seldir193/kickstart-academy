@@ -14,7 +14,10 @@ export function renderStatus(t: Translate, status?: Booking["status"]) {
   return t(`common.admin.onlineBookings.status.${value}`);
 }
 
-export function renderPaymentStatus(t: Translate, status?: Booking["paymentStatus"]) {
+export function renderPaymentStatus(
+  t: Translate,
+  status?: Booking["paymentStatus"],
+) {
   if (!status) return "—";
   if (!PAYMENT_STATUSES.includes(status)) return status;
   return t(`common.admin.onlineBookings.payment.${status}`);
@@ -22,7 +25,9 @@ export function renderPaymentStatus(t: Translate, status?: Booking["paymentStatu
 
 export function statusBadgeClass(status?: Booking["status"]) {
   const value = asStatus(status);
-  return value === "cancelled" || value === "deleted" ? "badge badge-muted" : "badge";
+  return value === "cancelled" || value === "deleted"
+    ? "badge badge-muted"
+    : "badge";
 }
 
 export function paymentBadgeClass(status?: Booking["paymentStatus"]) {

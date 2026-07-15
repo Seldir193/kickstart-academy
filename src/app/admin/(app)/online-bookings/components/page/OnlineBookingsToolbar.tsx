@@ -37,7 +37,9 @@ type OnlineBookingsToolbarProps = {
   setSort: (value: SortKey) => void;
 };
 
-export default function OnlineBookingsToolbar(props: OnlineBookingsToolbarProps) {
+export default function OnlineBookingsToolbar(
+  props: OnlineBookingsToolbarProps,
+) {
   return (
     <div className="ks-online-bookings-toolbar">
       <SearchFilter {...props} />
@@ -70,7 +72,9 @@ function SearchIcon() {
   );
 }
 
-function SearchInput(props: Pick<OnlineBookingsToolbarProps, "q" | "t" | "setQ" | "setPage">) {
+function SearchInput(
+  props: Pick<OnlineBookingsToolbarProps, "q" | "t" | "setQ" | "setPage">,
+) {
   return (
     <input
       className="input input-with-icon__input"
@@ -85,23 +89,57 @@ function SearchInput(props: Pick<OnlineBookingsToolbarProps, "q" | "t" | "setQ" 
 function CourseFilter(props: OnlineBookingsToolbarProps) {
   const label = courseLabel(props.t, props.program);
   const ariaLabel = props.t("common.admin.onlineBookings.course.ariaLabel");
-  return <SelectFilter kind="select" label={label} ariaLabel={ariaLabel} menu={props.courseMenu} disabled={props.mutating}><CourseMenu {...props} /></SelectFilter>;
+  return (
+    <SelectFilter
+      kind="select"
+      label={label}
+      ariaLabel={ariaLabel}
+      menu={props.courseMenu}
+      disabled={props.mutating}
+    >
+      <CourseMenu {...props} />
+    </SelectFilter>
+  );
 }
 
 function StatusFilter(props: OnlineBookingsToolbarProps) {
   const ariaLabel = props.t("common.admin.onlineBookings.status.ariaLabel");
-  return <SelectFilter kind="select" label={props.computedStatusLabel} ariaLabel={ariaLabel} menu={props.statusMenu} disabled={props.mutating}><StatusMenu {...props} /></SelectFilter>;
+  return (
+    <SelectFilter
+      kind="select"
+      label={props.computedStatusLabel}
+      ariaLabel={ariaLabel}
+      menu={props.statusMenu}
+      disabled={props.mutating}
+    >
+      <StatusMenu {...props} />
+    </SelectFilter>
+  );
 }
 
 function SortFilter(props: OnlineBookingsToolbarProps) {
   const label = sortLabel(props.t, props.sort);
   const ariaLabel = props.t("common.admin.onlineBookings.sort.ariaLabel");
-  return <SelectFilter kind="sort" label={label} ariaLabel={ariaLabel} menu={props.sortMenu} disabled={props.mutating}><SortMenu {...props} /></SelectFilter>;
+  return (
+    <SelectFilter
+      kind="sort"
+      label={label}
+      ariaLabel={ariaLabel}
+      menu={props.sortMenu}
+      disabled={props.mutating}
+    >
+      <SortMenu {...props} />
+    </SelectFilter>
+  );
 }
 
 function SelectFilter(props: SelectFilterProps) {
   const className = `news-admin__filter ks-online-bookings-toolbar__${props.kind}`;
-  return <div className={className}><TrainingSelect {...props} /></div>;
+  return (
+    <div className={className}>
+      <TrainingSelect {...props} />
+    </div>
+  );
 }
 
 type SelectFilterProps = {
@@ -113,14 +151,43 @@ type SelectFilterProps = {
   children?: ReactNode;
 };
 
-function TrainingSelect({ label, menu, ariaLabel, disabled, children }: SelectFilterProps) {
-  const className = "ks-training-select" + (menu.open ? " ks-training-select--open" : "");
-  return <div className={className}><TrainingTrigger label={label} menu={menu} ariaLabel={ariaLabel} disabled={disabled} />{children}</div>;
+function TrainingSelect({
+  label,
+  menu,
+  ariaLabel,
+  disabled,
+  children,
+}: SelectFilterProps) {
+  const className =
+    "ks-training-select" + (menu.open ? " ks-training-select--open" : "");
+  return (
+    <div className={className}>
+      <TrainingTrigger
+        label={label}
+        menu={menu}
+        ariaLabel={ariaLabel}
+        disabled={disabled}
+      />
+      {children}
+    </div>
+  );
 }
 
-function TrainingTrigger({ label, menu, ariaLabel, disabled }: Omit<SelectFilterProps, "kind" | "children">) {
+function TrainingTrigger({
+  label,
+  menu,
+  ariaLabel,
+  disabled,
+}: Omit<SelectFilterProps, "kind" | "children">) {
   return (
-    <button type="button" ref={menu.triggerRef} className="ks-training-select__trigger" onClick={() => menu.setOpen((open) => !open)} disabled={disabled} aria-label={ariaLabel}>
+    <button
+      type="button"
+      ref={menu.triggerRef}
+      className="ks-training-select__trigger"
+      onClick={() => menu.setOpen((open) => !open)}
+      disabled={disabled}
+      aria-label={ariaLabel}
+    >
       <span className="ks-training-select__label">{label}</span>
       <span className="ks-training-select__chevron" aria-hidden="true" />
     </button>
@@ -129,61 +196,165 @@ function TrainingTrigger({ label, menu, ariaLabel, disabled }: Omit<SelectFilter
 
 function CourseMenu(props: OnlineBookingsToolbarProps) {
   if (!props.courseMenu.open) return null;
-  return <ul ref={props.courseMenu.menuRef} className="ks-training-select__menu ks-training-select__menu--grouped" role="listbox" aria-label={props.t("common.admin.onlineBookings.course.ariaLabel")}><CourseAllOption {...props} /><CourseGroupOptions {...props} /></ul>;
+  return (
+    <ul
+      ref={props.courseMenu.menuRef}
+      className="ks-training-select__menu ks-training-select__menu--grouped"
+      role="listbox"
+      aria-label={props.t("common.admin.onlineBookings.course.ariaLabel")}
+    >
+      <CourseAllOption {...props} />
+      <CourseGroupOptions {...props} />
+    </ul>
+  );
 }
 
 function CourseAllOption(props: OnlineBookingsToolbarProps) {
-  return <li><OptionButton selected={props.program === "all"} top onClick={() => applyProgram("all", props)}>{props.t("common.admin.onlineBookings.course.all")}</OptionButton></li>;
+  return (
+    <li>
+      <OptionButton
+        selected={props.program === "all"}
+        top
+        onClick={() => applyProgram("all", props)}
+      >
+        {props.t("common.admin.onlineBookings.course.all")}
+      </OptionButton>
+    </li>
+  );
 }
 
 function CourseGroupOptions(props: OnlineBookingsToolbarProps) {
   return (
     <li className="ks-training-select__group">
       <CourseGroupLabel {...props} />
-      <OptionButton selected={props.program === "camp"} onClick={() => applyProgram("camp", props)}>{props.t("common.admin.onlineBookings.course.camp")}</OptionButton>
-      <OptionButton selected={props.program === "power"} onClick={() => applyProgram("power", props)}>{props.t("common.admin.onlineBookings.course.power")}</OptionButton>
+      <OptionButton
+        selected={props.program === "camp"}
+        onClick={() => applyProgram("camp", props)}
+      >
+        {props.t("common.admin.onlineBookings.course.camp")}
+      </OptionButton>
+      <OptionButton
+        selected={props.program === "power"}
+        onClick={() => applyProgram("power", props)}
+      >
+        {props.t("common.admin.onlineBookings.course.power")}
+      </OptionButton>
     </li>
   );
 }
 
 function CourseGroupLabel({ t }: OnlineBookingsToolbarProps) {
-  return <div className="ks-training-select__group-label">{t("common.admin.onlineBookings.course.group.holidayPrograms")}</div>;
+  return (
+    <div className="ks-training-select__group-label">
+      {t("common.admin.onlineBookings.course.group.holidayPrograms")}
+    </div>
+  );
 }
 
 function StatusMenu(props: OnlineBookingsToolbarProps) {
   if (!props.statusMenu.open) return null;
-  return <ul ref={props.statusMenu.menuRef} className="ks-training-select__menu" role="listbox" aria-label={props.t("common.admin.onlineBookings.status.ariaLabel")}><StatusOption value="all" {...props} /><StatusOption value="confirmed" {...props} /><StatusOption value="cancelled" {...props} /><StatusOption value="deleted" {...props} /></ul>;
+  return (
+    <ul
+      ref={props.statusMenu.menuRef}
+      className="ks-training-select__menu"
+      role="listbox"
+      aria-label={props.t("common.admin.onlineBookings.status.ariaLabel")}
+    >
+      <StatusOption value="all" {...props} />
+      <StatusOption value="confirmed" {...props} />
+      <StatusOption value="cancelled" {...props} />
+      <StatusOption value="deleted" {...props} />
+    </ul>
+  );
 }
 
-function StatusOption(props: OnlineBookingsToolbarProps & { value: StatusOrAll }) {
-  return <li><OptionButton selected={props.status === props.value} onClick={() => applyStatus(props.value, props)}>{statusOptionLabel(props)}</OptionButton></li>;
+function StatusOption(
+  props: OnlineBookingsToolbarProps & { value: StatusOrAll },
+) {
+  return (
+    <li>
+      <OptionButton
+        selected={props.status === props.value}
+        onClick={() => applyStatus(props.value, props)}
+      >
+        {statusOptionLabel(props)}
+      </OptionButton>
+    </li>
+  );
 }
 
 function SortMenu(props: OnlineBookingsToolbarProps) {
   if (!props.sortMenu.open) return null;
-  return <ul ref={props.sortMenu.menuRef} className="ks-training-select__menu" role="listbox" aria-label={props.t("common.admin.onlineBookings.sort.ariaLabel")}><SortOption value="newest" {...props} /><SortOption value="oldest" {...props} /><SortOption value="name_asc" {...props} /><SortOption value="name_desc" {...props} /></ul>;
+  return (
+    <ul
+      ref={props.sortMenu.menuRef}
+      className="ks-training-select__menu"
+      role="listbox"
+      aria-label={props.t("common.admin.onlineBookings.sort.ariaLabel")}
+    >
+      <SortOption value="newest" {...props} />
+      <SortOption value="oldest" {...props} />
+      <SortOption value="name_asc" {...props} />
+      <SortOption value="name_desc" {...props} />
+    </ul>
+  );
 }
 
 function SortOption(props: OnlineBookingsToolbarProps & { value: SortKey }) {
-  return <li><OptionButton selected={props.sort === props.value} onClick={() => applySort(props.value, props)}>{sortLabel(props.t, props.value)}</OptionButton></li>;
+  return (
+    <li>
+      <OptionButton
+        selected={props.sort === props.value}
+        onClick={() => applySort(props.value, props)}
+      >
+        {sortLabel(props.t, props.value)}
+      </OptionButton>
+    </li>
+  );
 }
 
-function OptionButton({ selected, top, onClick, children }: { selected: boolean; top?: boolean; onClick: () => void; children?: ReactNode }) {
-  const className = "ks-training-select__option" + (top ? " ks-training-select__option--top" : "") + (selected ? " is-selected" : "");
-  return <button type="button" className={className} onClick={onClick}>{children}</button>;
+function OptionButton({
+  selected,
+  top,
+  onClick,
+  children,
+}: {
+  selected: boolean;
+  top?: boolean;
+  onClick: () => void;
+  children?: ReactNode;
+}) {
+  const className =
+    "ks-training-select__option" +
+    (top ? " ks-training-select__option--top" : "") +
+    (selected ? " is-selected" : "");
+  return (
+    <button type="button" className={className} onClick={onClick}>
+      {children}
+    </button>
+  );
 }
 
-function statusOptionLabel(props: OnlineBookingsToolbarProps & { value: StatusOrAll }) {
-  if (props.value === "all") return `${props.t("common.admin.onlineBookings.status.all")} (${props.totalAll ?? props.total})`;
+function statusOptionLabel(
+  props: OnlineBookingsToolbarProps & { value: StatusOrAll },
+) {
+  if (props.value === "all")
+    return `${props.t("common.admin.onlineBookings.status.all")} (${props.totalAll ?? props.total})`;
   return `${props.t(`common.admin.onlineBookings.status.${props.value}`)} (${props.counts[props.value] ?? 0})`;
 }
 
-function onSearchChange(value: string, props: Pick<OnlineBookingsToolbarProps, "setQ" | "setPage">) {
+function onSearchChange(
+  value: string,
+  props: Pick<OnlineBookingsToolbarProps, "setQ" | "setPage">,
+) {
   props.setQ(value);
   props.setPage(1);
 }
 
-function onSearchKeyDown(key: string, props: Pick<OnlineBookingsToolbarProps, "setQ" | "setPage">) {
+function onSearchKeyDown(
+  key: string,
+  props: Pick<OnlineBookingsToolbarProps, "setQ" | "setPage">,
+) {
   if (key === "Escape") onSearchChange("", props);
   if (key === "Enter") props.setPage(1);
 }

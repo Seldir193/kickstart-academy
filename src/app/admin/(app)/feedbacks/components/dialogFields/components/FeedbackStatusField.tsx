@@ -27,16 +27,24 @@ function useStatusState({ updateFeedback }: BaseFieldProps) {
   return { isOpen, setIsOpen, dropdownRef, pickStatus };
 }
 
-function StatusSelect(props: BaseFieldProps & ReturnType<typeof useStatusState> & { t: (key: string) => string }) {
+function StatusSelect(
+  props: BaseFieldProps &
+    ReturnType<typeof useStatusState> & { t: (key: string) => string },
+) {
   return (
     <div ref={props.dropdownRef} className={openSelectClass(props.isOpen)}>
-      <SelectTrigger onClick={() => props.setIsOpen((open) => !open)}>{statusLabel(props.draft.isActive, props.t)}</SelectTrigger>
+      <SelectTrigger onClick={() => props.setIsOpen((open) => !open)}>
+        {statusLabel(props.draft.isActive, props.t)}
+      </SelectTrigger>
       {props.isOpen ? <StatusPanel {...props} /> : null}
     </div>
   );
 }
 
-function StatusPanel(props: BaseFieldProps & ReturnType<typeof useStatusState> & { t: (key: string) => string }) {
+function StatusPanel(
+  props: BaseFieldProps &
+    ReturnType<typeof useStatusState> & { t: (key: string) => string },
+) {
   return (
     <div className="ks-selectbox__panel">
       <StatusOption active {...props} />
@@ -45,10 +53,20 @@ function StatusPanel(props: BaseFieldProps & ReturnType<typeof useStatusState> &
   );
 }
 
-function StatusOption(props: BaseFieldProps & ReturnType<typeof useStatusState> & { t: (key: string) => string; active: boolean }) {
+function StatusOption(
+  props: BaseFieldProps &
+    ReturnType<typeof useStatusState> & {
+      t: (key: string) => string;
+      active: boolean;
+    },
+) {
   const isActive = props.draft.isActive === props.active;
   return (
-    <button type="button" className={activeOptionClass(isActive)} onClick={() => props.pickStatus(props.active)}>
+    <button
+      type="button"
+      className={activeOptionClass(isActive)}
+      onClick={() => props.pickStatus(props.active)}
+    >
       {statusLabel(props.active, props.t)}
     </button>
   );

@@ -12,5 +12,12 @@ export function useCustomerFamilyDropdowns() {
     { ref: familyDropdownRef, close: () => setFamilyDropdownOpen(false) },
     { ref: selfDropdownRef, close: () => setSelfDropdownOpen(false) },
   ]);
-  return { familyDropdownOpen, selfDropdownOpen, setFamilyDropdownOpen, setSelfDropdownOpen, familyDropdownRef, selfDropdownRef };
+  return {
+    familyDropdownOpen,
+    selfDropdownOpen,
+    setFamilyDropdownOpen,
+    setSelfDropdownOpen,
+    familyDropdownRef,
+    selfDropdownRef,
+  };
 }

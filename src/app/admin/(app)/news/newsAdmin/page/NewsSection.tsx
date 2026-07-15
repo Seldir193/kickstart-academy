@@ -10,8 +10,15 @@ export default function NewsSection(props: NewsSectionProps) {
         <h2 className="news-admin__section-title">{t(props.titleKey)}</h2>
         <span className="news-admin__section-meta">{props.meta}</span>
       </div>
-      <div className="news-admin__box news-admin__box--scroll3">{props.children}</div>
-      <Pagination page={props.page} pages={props.pages} onPrev={props.onPrev} onNext={props.onNext} />
+      <div className="news-admin__box news-admin__box--scroll3">
+        {props.children}
+      </div>
+      <Pagination
+        page={props.page}
+        pages={props.pages}
+        onPrev={props.onPrev}
+        onNext={props.onNext}
+      />
     </section>
   );
 }

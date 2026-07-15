@@ -7,8 +7,17 @@ type Props = { busy: boolean; onOpen: () => void };
 export default function CreateCoachButton({ busy, onOpen }: Props) {
   const { t } = useTranslation();
   return (
-    <button className="btn" type="button" onClick={() => openWhenReady(busy, onOpen)}>
-      <img src="/icons/plus.svg" alt="" aria-hidden="true" className="btn__icon" />
+    <button
+      className="btn"
+      type="button"
+      onClick={() => openWhenReady(busy, onOpen)}
+    >
+      <img
+        src="/icons/plus.svg"
+        alt=""
+        aria-hidden="true"
+        className="btn__icon"
+      />
       {t("common.admin.coaches.page.newCoach")}
     </button>
   );

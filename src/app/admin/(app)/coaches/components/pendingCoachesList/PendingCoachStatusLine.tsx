@@ -15,7 +15,8 @@ export default function PendingCoachStatusLine({ c, t }: Props) {
       </span>
       <span className="pending-coaches__sep">•</span>
       <span>
-        {t("common.admin.coaches.pending.status")}: <b>{pendingReviewLabel(c, t)}</b>
+        {t("common.admin.coaches.pending.status")}:{" "}
+        <b>{pendingReviewLabel(c, t)}</b>
       </span>
     </div>
   );

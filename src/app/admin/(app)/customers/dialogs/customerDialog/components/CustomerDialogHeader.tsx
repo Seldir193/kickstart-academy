@@ -33,16 +33,6 @@ export default function CustomerDialogHeader(p: Props) {
               ? t("common.admin.customers.customerDialog.statusActive")
               : t("common.admin.customers.customerDialog.statusCancelled")}
           </span>
-          {/* 
-          {p.mode === "edit" && p.familyCreateMode !== "none" ? (
-            <span className="badge badge-info">
-              {p.familyCreateMode === "newChild"
-                ? t(
-                    "common.admin.customers.customerDialog.newChildWillBeCreated",
-                  )
-                : ""}
-            </span>
-          ) : null} */}
 
           {p.mode === "edit" && p.familyCreateMode !== "none" ? (
             <span className="badge badge-info">

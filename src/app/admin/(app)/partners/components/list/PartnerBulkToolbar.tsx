@@ -9,7 +9,8 @@ export default function PartnerBulkToolbar({
   props: PartnerListProps;
   selection: PartnerSelection;
 }) {
-  const deactivate = () => runBulkAction(props, selection, props.onBulkDeactivate);
+  const deactivate = () =>
+    runBulkAction(props, selection, props.onBulkDeactivate);
   const remove = () => runBulkAction(props, selection, props.onBulkDelete);
 
   return (

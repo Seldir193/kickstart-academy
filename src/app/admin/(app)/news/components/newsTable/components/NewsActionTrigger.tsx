@@ -3,7 +3,16 @@ import type { NewsAction } from "../types";
 import { blurTarget, onActionKey, stop } from "../lib/events";
 
 export function NewsActionTrigger({ action }: { action: NewsAction }) {
-  return <span {...triggerProps(action)}><img src={action.icon} alt="" aria-hidden="true" className={iconClass(action)} /></span>;
+  return (
+    <span {...triggerProps(action)}>
+      <img
+        src={action.icon}
+        alt=""
+        aria-hidden="true"
+        className={iconClass(action)}
+      />
+    </span>
+  );
 }
 
 function triggerProps(action: NewsAction) {
@@ -16,7 +25,8 @@ function triggerProps(action: NewsAction) {
     "aria-disabled": action.disabled ? true : undefined,
     ...tipProps(action),
     onClick: (event: MouseEvent) => onClick(event, action),
-    onKeyDown: (event: KeyboardEvent) => onActionKey(event, () => void action.run(), action.disabled),
+    onKeyDown: (event: KeyboardEvent) =>
+      onActionKey(event, () => void action.run(), action.disabled),
   };
 }
 

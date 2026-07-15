@@ -1,4 +1,3 @@
-// src/app/admin/franchise-locations/hooks/useSelection.ts
 "use client";
 
 import { useEffect, useMemo, useState } from "react";

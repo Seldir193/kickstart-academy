@@ -1,5 +1,10 @@
 import type { MouseEvent } from "react";
-import { blurTarget, onActionKey, stop, type Action } from "../LocationsTableList.helpers";
+import {
+  blurTarget,
+  onActionKey,
+  stop,
+  type Action,
+} from "../LocationsTableList.helpers";
 
 type Props = {
   action: Action;
@@ -7,8 +12,19 @@ type Props = {
 
 export default function LocationActionButton({ action }: Props) {
   return (
-    <span {...buttonProps(action)} onClick={(e) => clickAction(e, action)} onKeyDown={(e) => onActionKey(e, () => void action.run(), action.disabled)}>
-      <img src={action.icon} alt="" aria-hidden="true" className={iconClass(action)} />
+    <span
+      {...buttonProps(action)}
+      onClick={(e) => clickAction(e, action)}
+      onKeyDown={(e) =>
+        onActionKey(e, () => void action.run(), action.disabled)
+      }
+    >
+      <img
+        src={action.icon}
+        alt=""
+        aria-hidden="true"
+        className={iconClass(action)}
+      />
     </span>
   );
 }

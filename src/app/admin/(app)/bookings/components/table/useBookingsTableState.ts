@@ -3,7 +3,12 @@
 import { useEffect, useMemo, useRef } from "react";
 import { useSelection } from "@/app/admin/(app)/news/hooks/useSelection";
 import type { BookingsTableProps } from "./types";
-import { blurBulkRefs, focusClearOrCancel, idOf, restoreIds } from "./bookingRowUtils";
+import {
+  blurBulkRefs,
+  focusClearOrCancel,
+  idOf,
+  restoreIds,
+} from "./bookingRowUtils";
 
 export function useBookingsTableState(props: BookingsTableProps) {
   const selection = useBookingsSelection(props);
@@ -16,7 +21,10 @@ export function useBookingsTableState(props: BookingsTableProps) {
 }
 
 function useBookingsSelection(props: BookingsTableProps) {
-  const ids = useMemo(() => props.items.map(idOf).filter(Boolean), [props.items]);
+  const ids = useMemo(
+    () => props.items.map(idOf).filter(Boolean),
+    [props.items],
+  );
   return useSelection(ids);
 }
 
@@ -31,7 +39,11 @@ function useBulkRefs() {
 function useBulkBusy(props: BookingsTableProps) {
   const deleteBusy = props.busyBulkDelete === true;
   const restoreBusy = props.busyBulkRestore === true;
-  return { delete: deleteBusy, restore: restoreBusy, any: deleteBusy || restoreBusy };
+  return {
+    delete: deleteBusy,
+    restore: restoreBusy,
+    any: deleteBusy || restoreBusy,
+  };
 }
 
 function useBulkCounts(props: BookingsTableProps, selected: Set<string>) {
@@ -46,13 +58,17 @@ function useBulkFocus(
   count: number,
   refs: ReturnType<typeof useBulkRefs>,
 ) {
-  useEffect(() => focusClearOrCancel(
-    selectMode,
-    count,
-    refs.prevCountRef,
-    refs.clearBtnRef,
-    refs.cancelBtnRef,
-  ), [selectMode, count]);
+  useEffect(
+    () =>
+      focusClearOrCancel(
+        selectMode,
+        count,
+        refs.prevCountRef,
+        refs.clearBtnRef,
+        refs.cancelBtnRef,
+      ),
+    [selectMode, count],
+  );
 }
 
 function useBookingHandlers(

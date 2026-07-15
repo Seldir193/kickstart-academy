@@ -15,7 +15,13 @@ export default function PlacesTableRows({ props, selection, t }: Props) {
   return (
     <ul className="list list--bleed">
       {props.items.map((place) => (
-        <PlacesTableRow key={idOf(place)} place={place} props={props} selection={selection} t={t} />
+        <PlacesTableRow
+          key={idOf(place)}
+          place={place}
+          props={props}
+          selection={selection}
+          t={t}
+        />
       ))}
     </ul>
   );

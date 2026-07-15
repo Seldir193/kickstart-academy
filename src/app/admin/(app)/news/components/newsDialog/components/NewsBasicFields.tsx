@@ -20,8 +20,15 @@ export default function NewsBasicFields({ state, t }: DialogComponentProps) {
 function DateField({ state, t }: DialogComponentProps) {
   return (
     <div className="field">
-      <label className="dialog-label">{t("common.admin.news.dialog.date")}</label>
-      <KsDatePicker value={state.form.date} onChange={(value) => state.actions.update("date", value)} placeholder={t("common.admin.news.dialog.datePlaceholder")} disabled={false} />
+      <label className="dialog-label">
+        {t("common.admin.news.dialog.date")}
+      </label>
+      <KsDatePicker
+        value={state.form.date}
+        onChange={(value) => state.actions.update("date", value)}
+        placeholder={t("common.admin.news.dialog.datePlaceholder")}
+        disabled={false}
+      />
     </div>
   );
 }
@@ -29,8 +36,15 @@ function DateField({ state, t }: DialogComponentProps) {
 function CategoryField({ state, t }: DialogComponentProps) {
   return (
     <div className="field">
-      <label className="dialog-label">{t("common.admin.news.dialog.category")}</label>
-      <CategorySelect value={state.form.category} open={state.categoryOpen} onToggle={state.actions.toggleCategory} onPick={state.actions.pickCategory} />
+      <label className="dialog-label">
+        {t("common.admin.news.dialog.category")}
+      </label>
+      <CategorySelect
+        value={state.form.category}
+        open={state.categoryOpen}
+        onToggle={state.actions.toggleCategory}
+        onPick={state.actions.pickCategory}
+      />
     </div>
   );
 }
@@ -38,8 +52,15 @@ function CategoryField({ state, t }: DialogComponentProps) {
 function TitleField({ state, t }: DialogComponentProps) {
   return (
     <div className="field field--full">
-      <label className="dialog-label">{t("common.admin.news.dialog.title")}</label>
-      <input className="input" value={state.form.title} onChange={(event) => state.actions.update("title", event.target.value)} onBlur={state.actions.autoSlug} />
+      <label className="dialog-label">
+        {t("common.admin.news.dialog.title")}
+      </label>
+      <input
+        className="input"
+        value={state.form.title}
+        onChange={(event) => state.actions.update("title", event.target.value)}
+        onBlur={state.actions.autoSlug}
+      />
     </div>
   );
 }
@@ -47,8 +68,16 @@ function TitleField({ state, t }: DialogComponentProps) {
 function SlugField({ state, t }: DialogComponentProps) {
   return (
     <div className="field">
-      <label className="dialog-label">{t("common.admin.news.dialog.slug")}</label>
-      <input className="input" value={state.form.slug} onChange={(event) => state.actions.update("slug", safeSlug(event.target.value))} />
+      <label className="dialog-label">
+        {t("common.admin.news.dialog.slug")}
+      </label>
+      <input
+        className="input"
+        value={state.form.slug}
+        onChange={(event) =>
+          state.actions.update("slug", safeSlug(event.target.value))
+        }
+      />
     </div>
   );
 }
@@ -57,7 +86,13 @@ function SlugAction({ state, t }: DialogComponentProps) {
   return (
     <div className="field news-dialog__slug-actions">
       <label className="dialog-label">&nbsp;</label>
-      <button className="btn" type="button" onClick={() => state.actions.update("slug", safeSlug(state.form.title))}>{t("common.admin.news.dialog.generate")}</button>
+      <button
+        className="btn"
+        type="button"
+        onClick={() => state.actions.update("slug", safeSlug(state.form.title))}
+      >
+        {t("common.admin.news.dialog.generate")}
+      </button>
     </div>
   );
 }
@@ -65,8 +100,14 @@ function SlugAction({ state, t }: DialogComponentProps) {
 function TagsField({ state, t }: DialogComponentProps) {
   return (
     <div className="field field--full">
-      <label className="dialog-label">{t("common.admin.news.dialog.tags")}</label>
-      <input className="input" value={(state.form.tags || []).join(", ")} onChange={(event) => state.actions.setTagsFromText(event.target.value)} />
+      <label className="dialog-label">
+        {t("common.admin.news.dialog.tags")}
+      </label>
+      <input
+        className="input"
+        value={(state.form.tags || []).join(", ")}
+        onChange={(event) => state.actions.setTagsFromText(event.target.value)}
+      />
     </div>
   );
 }
@@ -74,8 +115,17 @@ function TagsField({ state, t }: DialogComponentProps) {
 function LeadField({ state, t }: DialogComponentProps) {
   return (
     <div className="field field--full">
-      <label className="dialog-label">{t("common.admin.news.dialog.lead")}</label>
-      <textarea className="input" rows={3} value={state.form.excerpt || ""} onChange={(event) => state.actions.update("excerpt", event.target.value)} />
+      <label className="dialog-label">
+        {t("common.admin.news.dialog.lead")}
+      </label>
+      <textarea
+        className="input"
+        rows={3}
+        value={state.form.excerpt || ""}
+        onChange={(event) =>
+          state.actions.update("excerpt", event.target.value)
+        }
+      />
     </div>
   );
 }

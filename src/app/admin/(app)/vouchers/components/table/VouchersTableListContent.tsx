@@ -8,10 +8,13 @@ import type { VouchersTableListProps } from "./vouchersTable.types";
 import { useVoucherBulkActions } from "./useVoucherBulkActions";
 import { useVouchersTableSelection } from "./useVouchersTableSelection";
 
-export default function VouchersTableListContent(props: VouchersTableListProps) {
+export default function VouchersTableListContent(
+  props: VouchersTableListProps,
+) {
   const state = useVouchersTableSelection(props.items, props.selectMode);
   const actions = useVoucherBulkActions(props, state.selection);
-  const onToggleMode = () => toggleMode(state.selection.clear, props.onToggleSelectMode);
+  const onToggleMode = () =>
+    toggleMode(state.selection.clear, props.onToggleSelectMode);
   const onToggleAll = () => toggleAll(state.selection);
   const onClear = () => clearSelection(state);
   const onRowClick = (item: VouchersTableListProps["items"][number]) => {
@@ -53,8 +56,14 @@ export default function VouchersTableListContent(props: VouchersTableListProps) 
 
 function EmptyVouchersList({ busy }: { busy: boolean }) {
   const { t } = useTranslation();
-  const key = busy ? "common.admin.vouchers.list.loading" : "common.admin.vouchers.list.empty";
-  return <section className="card"><div className="card__empty">{t(key)}</div></section>;
+  const key = busy
+    ? "common.admin.vouchers.list.loading"
+    : "common.admin.vouchers.list.empty";
+  return (
+    <section className="card">
+      <div className="card__empty">{t(key)}</div>
+    </section>
+  );
 }
 
 function toggleMode(clear: () => void, toggle: () => void) {

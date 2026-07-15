@@ -1,4 +1,3 @@
-// //src\app\admin\(app)\news\newsAdmin\helpers.ts
 import type { News } from "../types";
 import { WP_DETAIL_BASE } from "../constants";
 

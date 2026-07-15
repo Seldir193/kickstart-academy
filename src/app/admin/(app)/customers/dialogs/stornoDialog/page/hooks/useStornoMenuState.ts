@@ -15,7 +15,13 @@ function useStornoMenuRefs() {
   const menuRef = useRef<HTMLDivElement | null>(null);
   const statusDropdownRef = useRef<HTMLDivElement | null>(null);
   const sortDropdownRef = useRef<HTMLDivElement | null>(null);
-  return { courseDropdownRef, triggerRef, menuRef, statusDropdownRef, sortDropdownRef };
+  return {
+    courseDropdownRef,
+    triggerRef,
+    menuRef,
+    statusDropdownRef,
+    sortDropdownRef,
+  };
 }
 
 function useExtraMenus(refs: ReturnType<typeof useStornoMenuRefs>) {
@@ -26,7 +32,11 @@ function useExtraMenus(refs: ReturnType<typeof useStornoMenuRefs>) {
   return { isStatusOpen, setIsStatusOpen, isSortOpen, setIsSortOpen };
 }
 
-function useOutsideClose(ref: any, open: boolean, setOpen: (value: boolean) => void) {
+function useOutsideClose(
+  ref: any,
+  open: boolean,
+  setOpen: (value: boolean) => void,
+) {
   useEffect(() => {
     if (!open) return;
     const onDown = (e: MouseEvent) => closeIfOutside(e, ref, setOpen);
@@ -35,7 +45,11 @@ function useOutsideClose(ref: any, open: boolean, setOpen: (value: boolean) => v
   }, [ref, open, setOpen]);
 }
 
-function closeIfOutside(e: MouseEvent, ref: any, setOpen: (value: boolean) => void) {
+function closeIfOutside(
+  e: MouseEvent,
+  ref: any,
+  setOpen: (value: boolean) => void,
+) {
   const target = e.target as Node | null;
   if (target && ref.current && !ref.current.contains(target)) setOpen(false);
 }

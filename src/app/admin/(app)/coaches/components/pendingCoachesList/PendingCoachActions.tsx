@@ -15,9 +15,19 @@ function getActionItems(p: PendingCoachActionProps): ActionItem[] {
   const { c, t } = p;
 
   return [
-    { label: t("common.admin.coaches.pending.open"), onClick: () => p.onOpen(c) },
-    { label: t("common.admin.coaches.pending.approve"), onClick: () => p.onApprove(c) },
-    { label: t("common.admin.coaches.pending.reject"), danger: true, onClick: () => p.onReject(c) },
+    {
+      label: t("common.admin.coaches.pending.open"),
+      onClick: () => p.onOpen(c),
+    },
+    {
+      label: t("common.admin.coaches.pending.approve"),
+      onClick: () => p.onApprove(c),
+    },
+    {
+      label: t("common.admin.coaches.pending.reject"),
+      danger: true,
+      onClick: () => p.onReject(c),
+    },
   ];
 }
 
@@ -35,5 +45,9 @@ function renderAction(action: ActionItem, disabled: boolean) {
 export default function PendingCoachActions(p: PendingCoachActionProps) {
   const actions = getActionItems(p);
 
-  return <div className="pending-coaches__actions">{actions.map((action) => renderAction(action, p.disabled))}</div>;
+  return (
+    <div className="pending-coaches__actions">
+      {actions.map((action) => renderAction(action, p.disabled))}
+    </div>
+  );
 }

@@ -10,24 +10,52 @@ import type { CoachTableListProps, CoachTableHandlers } from "./types";
 
 type Selection = ReturnType<typeof useSelection>;
 type BulkRefs = ReturnType<typeof useBulkRefs>;
-type HandlerContext = { args: CoachTableListProps; selection: Selection; refs: BulkRefs };
+type HandlerContext = {
+  args: CoachTableListProps;
+  selection: Selection;
+  refs: BulkRefs;
+};
 
 export function useCoachTableState(args: CoachTableListProps) {
-  const idsOnPage = useMemo(() => args.items.map((item) => getSlug(item)).filter(Boolean) as string[], [args.items]);
+  const idsOnPage = useMemo(
+    () => args.items.map((item) => getSlug(item)).filter(Boolean) as string[],
+    [args.items],
+  );
   const selection = useSelection(idsOnPage);
   const refs = useBulkRefs();
   const count = selection.selected.size;
   const handlers = useCoachTableHandlers({ args, selection, refs });
-  useCoachTableFocus({ ...refs, toggleBtnRef: args.toggleBtnRef, selectMode: args.selectMode, count });
-  return { selection, refs, count, showClear: args.selectMode && count >= 2, handlers };
+  useCoachTableFocus({
+    ...refs,
+    toggleBtnRef: args.toggleBtnRef,
+    selectMode: args.selectMode,
+    count,
+  });
+  return {
+    selection,
+    refs,
+    count,
+    showClear: args.selectMode && count >= 2,
+    handlers,
+  };
 }
 
 function useBulkRefs() {
-  return { cancelBtnRef: useRef<HTMLButtonElement | null>(null), clearBtnRef: useRef<HTMLButtonElement | null>(null), prevCountRef: useRef(0) };
+  return {
+    cancelBtnRef: useRef<HTMLButtonElement | null>(null),
+    clearBtnRef: useRef<HTMLButtonElement | null>(null),
+    prevCountRef: useRef(0),
+  };
 }
 
 function useCoachTableHandlers(ctx: HandlerContext): CoachTableHandlers {
-  return { rowClick: createRowClick(ctx), toggleAll: createToggleAll(ctx), clearSelection: createClearSelection(ctx), deleteSelected: createDeleteSelected(ctx), toggleMode: createToggleMode(ctx) };
+  return {
+    rowClick: createRowClick(ctx),
+    toggleAll: createToggleAll(ctx),
+    clearSelection: createClearSelection(ctx),
+    deleteSelected: createDeleteSelected(ctx),
+    toggleMode: createToggleMode(ctx),
+  };
 }
 
 function createDeleteSelected({ args, selection }: HandlerContext) {
@@ -41,7 +69,8 @@ function createDeleteSelected({ args, selection }: HandlerContext) {
 }
 
 function createToggleAll({ selection }: HandlerContext) {
-  return () => selection.isAllSelected ? selection.removeAll() : selection.selectAll();
+  return () =>
+    selection.isAllSelected ? selection.removeAll() : selection.selectAll();
 }
 
 function createClearSelection(ctx: HandlerContext) {
@@ -66,7 +95,10 @@ function createToggleMode({ args, selection }: HandlerContext) {
   };
 }
 
-function blurSelectionRefs(refs: BulkRefs, toggleBtnRef?: RefObject<HTMLButtonElement | null>) {
+function blurSelectionRefs(
+  refs: BulkRefs,
+  toggleBtnRef?: RefObject<HTMLButtonElement | null>,
+) {
   refs.clearBtnRef.current?.blur();
   refs.cancelBtnRef.current?.blur();
   toggleBtnRef?.current?.blur();

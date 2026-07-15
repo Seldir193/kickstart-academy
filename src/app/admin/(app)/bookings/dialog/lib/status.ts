@@ -5,7 +5,9 @@ export function asStatus(s?: Booking["status"]): Status {
 }
 
 export function statusBadgeClass(status: Status) {
-  return status === "cancelled" || status === "deleted" ? "badge badge-muted" : "badge";
+  return status === "cancelled" || status === "deleted"
+    ? "badge badge-muted"
+    : "badge";
 }
 
 export function paymentBadgeClass(status?: Booking["paymentStatus"]) {

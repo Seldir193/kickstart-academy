@@ -14,9 +14,18 @@ type Props = {
 export default function PlacesToolbar({ model, t }: Props) {
   return (
     <div className="ks-places-toolbar ks-places-toolbar--compact">
-      <PlacesSearch value={model.q} onChange={model.changeQuery} onClear={model.clearQuery} t={t} />
+      <PlacesSearch
+        value={model.q}
+        onChange={model.changeQuery}
+        onClear={model.clearQuery}
+        t={t}
+      />
       <PlacesSort model={model} t={t} />
-      <PlacesCreateButton busy={model.busy} onCreate={model.dialog.create} t={t} />
+      <PlacesCreateButton
+        busy={model.busy}
+        onCreate={model.dialog.create}
+        t={t}
+      />
     </div>
   );
 }
@@ -25,9 +34,14 @@ function PlacesSort({ model, t }: Props) {
   return (
     <div className="ks-places-toolbar__sort">
       <PlacesSortSelect
-        sort={model.sort} open={model.sortOpen} busy={model.busy} t={t}
-        triggerRef={model.sortTriggerRef} menuRef={model.sortMenuRef}
-        setOpen={model.setSortOpen} onSortChange={model.changeSort}
+        sort={model.sort}
+        open={model.sortOpen}
+        busy={model.busy}
+        t={t}
+        triggerRef={model.sortTriggerRef}
+        menuRef={model.sortMenuRef}
+        setOpen={model.setSortOpen}
+        onSortChange={model.changeSort}
       />
     </div>
   );

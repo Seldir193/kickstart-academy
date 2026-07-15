@@ -4,7 +4,10 @@ import { useSelection } from "@/app/admin/(app)/news/hooks/useSelection";
 import type { Booking } from "../../../types";
 import { getRestoreIds, idOf } from "../lib/bookingRow";
 
-export function useBookingsTableSelection(items: Booking[], selectMode: boolean) {
+export function useBookingsTableSelection(
+  items: Booking[],
+  selectMode: boolean,
+) {
   const idsOnPage = useMemo(() => items.map(idOf).filter(Boolean), [items]);
   const sel = useSelection(idsOnPage);
   const cancelBtnRef = useRef<HTMLButtonElement | null>(null);
@@ -49,7 +52,13 @@ function buildSelectionState(
   cancelBtnRef: RefObject<HTMLButtonElement | null>,
   clearBtnRef: RefObject<HTMLButtonElement | null>,
 ) {
-  return { sel, count, restoreCount: getRestoreIds(items, sel.selected).length, cancelBtnRef, clearBtnRef };
+  return {
+    sel,
+    count,
+    restoreCount: getRestoreIds(items, sel.selected).length,
+    cancelBtnRef,
+    clearBtnRef,
+  };
 }
 
 function resetPrevious(prevCountRef: MutableRefObject<number>) {

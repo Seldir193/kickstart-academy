@@ -24,7 +24,10 @@ export function rowAriaLabel(
 ) {
   const key = selectMode ? "selectAria" : "openAria";
   const defaultValue = selectMode ? "Select: {{name}}" : "Open: {{name}}";
-  return t(`common.admin.places.row.${key}`, { defaultValue, name: safeText(place.name) });
+  return t(`common.admin.places.row.${key}`, {
+    defaultValue,
+    name: safeText(place.name),
+  });
 }
 
 export function toggleOrOpen(

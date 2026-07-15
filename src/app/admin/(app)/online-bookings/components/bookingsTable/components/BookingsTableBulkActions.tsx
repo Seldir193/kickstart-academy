@@ -22,8 +22,14 @@ function RestoreButton(props: Props) {
   if (!props.selectMode || !props.table.restoreCount) return null;
 
   return (
-    <button type="button" className="btn" disabled={props.busy} onClick={() => restoreSelected(props)}>
-      {props.t("common.admin.onlineBookings.bulk.restoreLabel")} ({props.table.restoreCount})
+    <button
+      type="button"
+      className="btn"
+      disabled={props.busy}
+      onClick={() => restoreSelected(props)}
+    >
+      {props.t("common.admin.onlineBookings.bulk.restoreLabel")} (
+      {props.table.restoreCount})
     </button>
   );
 }
@@ -96,7 +102,9 @@ function toggleSelectMode(props: Props) {
 }
 
 function toggleAll(props: Props) {
-  props.table.sel.isAllSelected ? props.table.sel.removeAll() : props.table.sel.selectAll();
+  props.table.sel.isAllSelected
+    ? props.table.sel.removeAll()
+    : props.table.sel.selectAll();
 }
 
 function clearSelection(props: Props) {

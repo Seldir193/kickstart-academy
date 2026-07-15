@@ -26,19 +26,54 @@ type VouchersListSectionProps = {
 };
 
 export default function VouchersListSection(props: VouchersListSectionProps) {
-  return <section className="news-admin__section"><ListCount t={props.t} total={props.total} /><TableBox {...props} /><Pager {...props} /></section>;
+  return (
+    <section className="news-admin__section">
+      <ListCount t={props.t} total={props.total} />
+      <TableBox {...props} />
+      <Pager {...props} />
+    </section>
+  );
 }
 
 function ListCount({ t, total }: { t: Translate; total: number }) {
-  const text = total ? `(${total} ${toastText(t, "common.admin.vouchers.count.items", "items")})` : "";
-  return <div className="news-admin__section-head-number"><span className="news-admin__section-meta">{text}</span></div>;
+  const text = total
+    ? `(${total} ${toastText(t, "common.admin.vouchers.count.items", "items")})`
+    : "";
+  return (
+    <div className="news-admin__section-head-number">
+      <span className="news-admin__section-meta">{text}</span>
+    </div>
+  );
 }
 
 function TableBox(props: VouchersListSectionProps) {
-  return <div className="news-admin__box news-admin__box--scroll3"><VouchersTableList items={props.items} selectMode={props.selectMode} busy={props.busy || props.loading} onToggleSelectMode={() => props.setSelectMode((prev) => !prev)} onOpen={props.onOpen} onDeleteMany={props.onDeleteMany} onActivateMany={props.onActivateMany} onDeactivateMany={props.onDeactivateMany} toggleBtnRef={props.toggleBtnRef} /></div>;
+  return (
+    <div className="news-admin__box news-admin__box--scroll3">
+      <VouchersTableList
+        items={props.items}
+        selectMode={props.selectMode}
+        busy={props.busy || props.loading}
+        onToggleSelectMode={() => props.setSelectMode((prev) => !prev)}
+        onOpen={props.onOpen}
+        onDeleteMany={props.onDeleteMany}
+        onActivateMany={props.onActivateMany}
+        onDeactivateMany={props.onDeactivateMany}
+        toggleBtnRef={props.toggleBtnRef}
+      />
+    </div>
+  );
 }
 
 function Pager(props: VouchersListSectionProps) {
   if (props.pages <= 1) return null;
-  return <div className="mt-3"><Pagination page={props.pageSafe} pages={props.pages} onPrev={() => props.setPage((page) => Math.max(1, page - 1))} onNext={() => props.setPage((page) => Math.min(props.pages, page + 1))} /></div>;
+  return (
+    <div className="mt-3">
+      <Pagination
+        page={props.pageSafe}
+        pages={props.pages}
+        onPrev={() => props.setPage((page) => Math.max(1, page - 1))}
+        onNext={() => props.setPage((page) => Math.min(props.pages, page + 1))}
+      />
+    </div>
+  );
 }

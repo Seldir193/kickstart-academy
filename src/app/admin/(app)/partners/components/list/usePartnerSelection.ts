@@ -12,9 +12,16 @@ export function usePartnerSelection(items: Partner[]) {
   const clearRef = useRef<HTMLButtonElement | null>(null);
   const prevCountRef = useRef(0);
   const ids = useMemo(() => items.map(getPartnerId).filter(Boolean), [items]);
-  const isAllSelected = ids.length > 0 && ids.every((id) => selectedIds.has(id));
+  const isAllSelected =
+    ids.length > 0 && ids.every((id) => selectedIds.has(id));
 
-  useSelectionFocus(selectMode, selectedIds.size, prevCountRef, clearRef, cancelRef);
+  useSelectionFocus(
+    selectMode,
+    selectedIds.size,
+    prevCountRef,
+    clearRef,
+    cancelRef,
+  );
 
   function toggleSelectMode() {
     setSelectedIds(new Set());

@@ -10,6 +10,21 @@ export default function ProviderRejectedSection(props: {
 }) {
   const { p, t, handlers } = props;
   return (
-    <TableLocationsSection title={viewLabelProvider("provider_rejected", t)} meta={countLabel(p.provRejectedAllCount, "provider_rejected", t)} items={p.pagProvRejected.items} rowMode="provider_rejected" selectMode={p.provRejectedSelectMode} onToggleSelectMode={p.toggleProvRejectedSelectMode} busy={false} onOpen={p.openEdit} onInfo={p.openInfo} onDeleteOne={handlers.openDeleteAdmin} onDeleteMany={p.deleteManyAdmin} toggleBtnRef={p.provRejectedToggleRef} pagination={provRejectedPagination(p)} p={p} />
+    <TableLocationsSection
+      title={viewLabelProvider("provider_rejected", t)}
+      meta={countLabel(p.provRejectedAllCount, "provider_rejected", t)}
+      items={p.pagProvRejected.items}
+      rowMode="provider_rejected"
+      selectMode={p.provRejectedSelectMode}
+      onToggleSelectMode={p.toggleProvRejectedSelectMode}
+      busy={false}
+      onOpen={p.openEdit}
+      onInfo={p.openInfo}
+      onDeleteOne={handlers.openDeleteAdmin}
+      onDeleteMany={p.deleteManyAdmin}
+      toggleBtnRef={p.provRejectedToggleRef}
+      pagination={provRejectedPagination(p)}
+      p={p}
+    />
   );
 }

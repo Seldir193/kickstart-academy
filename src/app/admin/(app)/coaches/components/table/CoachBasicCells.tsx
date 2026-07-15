@@ -7,13 +7,25 @@ type PositionProps = { coach: Coach; t: TFunction };
 type AuthorProps = PositionProps & { authorDash?: boolean; meLabel?: string };
 
 export function CoachPositionCell({ coach, t }: PositionProps) {
-  return <div className="coach-list__cell coach-list__cell--pos"><span className="coach-list__pill">{positionLabel(coach, t)}</span></div>;
+  return (
+    <div className="coach-list__cell coach-list__cell--pos">
+      <span className="coach-list__pill">{positionLabel(coach, t)}</span>
+    </div>
+  );
 }
 
 export function CoachSinceCell({ coach }: { coach: Coach }) {
-  return <div className="coach-list__cell coach-list__cell--since">{displaySince(coach)}</div>;
+  return (
+    <div className="coach-list__cell coach-list__cell--since">
+      {displaySince(coach)}
+    </div>
+  );
 }
 
 export function CoachAuthorCell(props: AuthorProps) {
-  return <div className="coach-list__cell coach-list__cell--author">{authorText(props.coach, props.t, props.authorDash, props.meLabel)}</div>;
+  return (
+    <div className="coach-list__cell coach-list__cell--author">
+      {authorText(props.coach, props.t, props.authorDash, props.meLabel)}
+    </div>
+  );
 }

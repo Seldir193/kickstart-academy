@@ -5,15 +5,27 @@ import { useSelection } from "@/app/admin/(app)/news/hooks/useSelection";
 import type { Voucher } from "../../types";
 import { voucherId } from "./vouchersTable.helpers";
 
-export function useVouchersTableSelection(items: Voucher[], selectMode: boolean) {
-  const idsOnPage = useMemo(() => items.map(voucherId).filter(Boolean), [items]);
+export function useVouchersTableSelection(
+  items: Voucher[],
+  selectMode: boolean,
+) {
+  const idsOnPage = useMemo(
+    () => items.map(voucherId).filter(Boolean),
+    [items],
+  );
   const selection = useSelection(idsOnPage);
   const cancelBtnRef = useRef<HTMLButtonElement | null>(null);
   const clearBtnRef = useRef<HTMLButtonElement | null>(null);
   const previousCountRef = useRef(0);
   const count = selection.selected.size;
 
-  useSelectionFocus(selectMode, count, previousCountRef, clearBtnRef, cancelBtnRef);
+  useSelectionFocus(
+    selectMode,
+    count,
+    previousCountRef,
+    clearBtnRef,
+    cancelBtnRef,
+  );
   return { selection, count, cancelBtnRef, clearBtnRef };
 }
 

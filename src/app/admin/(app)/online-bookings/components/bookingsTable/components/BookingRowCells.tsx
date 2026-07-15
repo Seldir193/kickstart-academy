@@ -18,11 +18,17 @@ export default function BookingRowCells({ booking, t, language }: Props) {
       <NameCell booking={booking} />
       <TextCell name="email" value={safeText(booking.email) || "—"} />
       <TextCell name="age bookings-mono" value={getAgeText(booking.age)} />
-      <TextCell name="date bookings-mono" value={formatDateOnlyDE(booking.date, language)} />
+      <TextCell
+        name="date bookings-mono"
+        value={formatDateOnlyDE(booking.date, language)}
+      />
       <TextCell name="program bookings-mono" value={programAbbr(booking)} />
       <TextCell name="status" value={renderStatus(t, booking.status)} />
       <TextCell name="payment" value={renderPayment(t, booking)} />
-      <TextCell name="created" value={formatDateOnlyDE(booking.createdAt, language)} />
+      <TextCell
+        name="created"
+        value={formatDateOnlyDE(booking.createdAt, language)}
+      />
     </>
   );
 }
@@ -38,5 +44,7 @@ function NameCell({ booking }: { booking: Booking }) {
 }
 
 function TextCell({ name, value }: { name: string; value: ReactNode }) {
-  return <div className={`news-list__cell news-list__cell--${name}`}>{value}</div>;
+  return (
+    <div className={`news-list__cell news-list__cell--${name}`}>{value}</div>
+  );
 }

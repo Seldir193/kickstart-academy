@@ -10,6 +10,20 @@ export default function MinePendingSection(props: {
 }) {
   const { p, t, handlers } = props;
   return (
-    <TableLocationsSection title={viewLabelMine("mine_pending", t)} meta={countLabel(p.minePendingAllCount, "mine_pending", t)} items={p.pagMinePending.items} rowMode="mine_pending" selectMode={p.minePendingSelectMode} onToggleSelectMode={p.toggleMinePendingSelectMode} busy={false} onOpen={p.openEdit} onDeleteOne={handlers.openDeleteMine} onDeleteMany={p.deleteManyMine} toggleBtnRef={p.minePendingToggleRef} pagination={minePendingPagination(p)} p={p} />
+    <TableLocationsSection
+      title={viewLabelMine("mine_pending", t)}
+      meta={countLabel(p.minePendingAllCount, "mine_pending", t)}
+      items={p.pagMinePending.items}
+      rowMode="mine_pending"
+      selectMode={p.minePendingSelectMode}
+      onToggleSelectMode={p.toggleMinePendingSelectMode}
+      busy={false}
+      onOpen={p.openEdit}
+      onDeleteOne={handlers.openDeleteMine}
+      onDeleteMany={p.deleteManyMine}
+      toggleBtnRef={p.minePendingToggleRef}
+      pagination={minePendingPagination(p)}
+      p={p}
+    />
   );
 }

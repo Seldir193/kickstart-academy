@@ -15,9 +15,26 @@ type Props = {
 };
 
 export default function CoachTableTopActions(props: Props) {
-  return <div className="coach-admin__top-actions"><BulkActions {...bulkProps(props)} /></div>;
+  return (
+    <div className="coach-admin__top-actions">
+      <BulkActions {...bulkProps(props)} />
+    </div>
+  );
 }
 
 function bulkProps(props: Props) {
-  return { toggleRef: props.toggleBtnRef as RefObject<HTMLButtonElement | null>, cancelRef: props.cancelBtnRef, clearRef: props.clearBtnRef, selectMode: props.selectMode, onToggleSelectMode: props.handlers.toggleMode, count: props.count, isAllSelected: props.isAllSelected, disabled: props.disabled, onToggleAll: props.handlers.toggleAll, onClear: props.handlers.clearSelection, showClear: props.showClear, onDelete: props.handlers.deleteSelected };
+  return {
+    toggleRef: props.toggleBtnRef as RefObject<HTMLButtonElement | null>,
+    cancelRef: props.cancelBtnRef,
+    clearRef: props.clearBtnRef,
+    selectMode: props.selectMode,
+    onToggleSelectMode: props.handlers.toggleMode,
+    count: props.count,
+    isAllSelected: props.isAllSelected,
+    disabled: props.disabled,
+    onToggleAll: props.handlers.toggleAll,
+    onClear: props.handlers.clearSelection,
+    showClear: props.showClear,
+    onDelete: props.handlers.deleteSelected,
+  };
 }

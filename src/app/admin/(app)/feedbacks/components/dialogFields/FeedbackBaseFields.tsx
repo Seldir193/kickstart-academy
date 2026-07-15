@@ -26,9 +26,15 @@ function FeedbackCategoryField(props: FeedbackBaseFieldsProps) {
   return (
     <div className="field">
       <label className="dialog-label">{t("admin.feedbacks.category")}</label>
-      <select className="input" value={props.draft.category} onChange={(event) => onChange(event.target.value)}>
+      <select
+        className="input"
+        value={props.draft.category}
+        onChange={(event) => onChange(event.target.value)}
+      >
         {FEEDBACK_CATEGORIES.map((category) => (
-          <option key={category} value={category}>{t(getFeedbackCategoryKey(category))}</option>
+          <option key={category} value={category}>
+            {t(getFeedbackCategoryKey(category))}
+          </option>
         ))}
       </select>
     </div>
@@ -42,7 +48,12 @@ function FeedbackSortField(props: FeedbackBaseFieldsProps) {
   return (
     <div className="field">
       <label className="dialog-label">{t("admin.feedbacks.sortOrder")}</label>
-      <input className="input" type="number" value={props.draft.sortOrder} onChange={(event) => onChange(event.target.value)} />
+      <input
+        className="input"
+        type="number"
+        value={props.draft.sortOrder}
+        onChange={(event) => onChange(event.target.value)}
+      />
     </div>
   );
 }
@@ -52,7 +63,12 @@ function FeedbackAuthorField(props: FeedbackBaseFieldsProps) {
   return (
     <div className="field">
       <label className="dialog-label">{t("admin.feedbacks.author")}</label>
-      <input className="input" value={props.draft.author} onChange={(event) => props.updateFeedback("author", event.target.value)} required />
+      <input
+        className="input"
+        value={props.draft.author}
+        onChange={(event) => props.updateFeedback("author", event.target.value)}
+        required
+      />
     </div>
   );
 }
@@ -63,7 +79,13 @@ function FeedbackStatusField(props: FeedbackBaseFieldsProps) {
   return (
     <div className="field">
       <label className="dialog-label">{t("admin.feedbacks.status")}</label>
-      <select className="input" value={value} onChange={(event) => props.updateFeedback("isActive", event.target.value === "active")}>
+      <select
+        className="input"
+        value={value}
+        onChange={(event) =>
+          props.updateFeedback("isActive", event.target.value === "active")
+        }
+      >
         <option value="active">{t("admin.feedbacks.active")}</option>
         <option value="inactive">{t("admin.feedbacks.inactive")}</option>
       </select>

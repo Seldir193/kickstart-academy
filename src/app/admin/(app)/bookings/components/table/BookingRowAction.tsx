@@ -19,11 +19,20 @@ export function BookingRowAction(props: ActionProps) {
 }
 
 function HiddenAction() {
-  return <div className="news-list__cell news-list__cell--action news-list__actions--hidden" aria-hidden="true" />;
+  return (
+    <div
+      className="news-list__cell news-list__cell--action news-list__actions--hidden"
+      aria-hidden="true"
+    />
+  );
 }
 
 function VisibleAction(props: VisibleProps) {
-  return <div {...visibleActionProps(props)}><EditTrigger rowBusy={props.rowBusy} t={props.t} /></div>;
+  return (
+    <div {...visibleActionProps(props)}>
+      <EditTrigger rowBusy={props.rowBusy} t={props.t} />
+    </div>
+  );
 }
 
 function visibleActionProps(props: VisibleProps) {
@@ -36,8 +45,19 @@ function visibleActionProps(props: VisibleProps) {
 
 function EditTrigger({ rowBusy, t }: { rowBusy: boolean; t: TFn }) {
   return (
-    <span className="edit-trigger" role="button" tabIndex={0} aria-label={t("common.admin.bookings.row.openAction")} aria-disabled={rowBusy ? true : undefined}>
-      <img src="/icons/edit.svg" alt="" aria-hidden="true" className="icon-img" />
+    <span
+      className="edit-trigger"
+      role="button"
+      tabIndex={0}
+      aria-label={t("common.admin.bookings.row.openAction")}
+      aria-disabled={rowBusy ? true : undefined}
+    >
+      <img
+        src="/icons/edit.svg"
+        alt=""
+        aria-hidden="true"
+        className="icon-img"
+      />
     </span>
   );
 }

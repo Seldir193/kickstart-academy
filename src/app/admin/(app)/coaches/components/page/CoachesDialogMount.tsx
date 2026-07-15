@@ -7,7 +7,11 @@ import CoachInfoDialogsMount from "./CoachInfoDialogsMount";
 import CoachRejectDialogMount from "./CoachRejectDialogMount";
 import type { CoachPageModel } from "./types";
 
-export default function CoachesDialogMount({ model }: { model: CoachPageModel }) {
+export default function CoachesDialogMount({
+  model,
+}: {
+  model: CoachPageModel;
+}) {
   return (
     <>
       <CoachCreateDialogMount model={model} />

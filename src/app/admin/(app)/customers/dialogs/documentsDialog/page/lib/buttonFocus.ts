@@ -1,7 +1,9 @@
 import type { ScopeButtonEvent } from "../types";
 
 export function rememberButtonFocusState(e: ScopeButtonEvent) {
-  e.currentTarget.dataset.wasFocused = String(document.activeElement === e.currentTarget);
+  e.currentTarget.dataset.wasFocused = String(
+    document.activeElement === e.currentTarget,
+  );
 }
 
 export function toggleButtonFocus(e: ScopeButtonEvent, action: () => void) {

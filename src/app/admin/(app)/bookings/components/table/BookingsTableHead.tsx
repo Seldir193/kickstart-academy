@@ -21,11 +21,17 @@ export function BookingsTableHead({ t }: { t: TFn }) {
 }
 
 function headCell(t: TFn, key: string) {
-  return <div key={key} className="news-list__h">{label(t, key)}</div>;
+  return (
+    <div key={key} className="news-list__h">
+      {label(t, key)}
+    </div>
+  );
 }
 
 function actionHeadCell(t: TFn) {
-  return <div className="news-list__h news-list__h--right">{label(t, "action")}</div>;
+  return (
+    <div className="news-list__h news-list__h--right">{label(t, "action")}</div>
+  );
 }
 
 function label(t: TFn, key: string) {

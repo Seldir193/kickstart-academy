@@ -11,6 +11,24 @@ export default function MineApprovedSection(props: {
 }) {
   const { p, t, handlers, showSubmit } = props;
   return (
-    <TableLocationsSection title={viewLabelMine("mine_approved", t)} meta={countLabel(p.mineApprovedAllCount, "mine_approved", t)} items={p.pagMineApproved.items} rowMode="mine_approved" selectMode={p.mineApprovedSelectMode} onToggleSelectMode={p.toggleMineApprovedSelectMode} busy={false} publishedBusyId={p.publishedBusyId} onTogglePublished={p.togglePublished} onOpen={p.openEdit} onInfo={p.openInfo} onSubmitForReview={showSubmit ? p.submitMine : undefined} onDeleteOne={handlers.openDeleteMine} onDeleteMany={p.deleteManyMine} toggleBtnRef={p.mineApprovedToggleRef} pagination={mineApprovedPagination(p)} p={p} />
+    <TableLocationsSection
+      title={viewLabelMine("mine_approved", t)}
+      meta={countLabel(p.mineApprovedAllCount, "mine_approved", t)}
+      items={p.pagMineApproved.items}
+      rowMode="mine_approved"
+      selectMode={p.mineApprovedSelectMode}
+      onToggleSelectMode={p.toggleMineApprovedSelectMode}
+      busy={false}
+      publishedBusyId={p.publishedBusyId}
+      onTogglePublished={p.togglePublished}
+      onOpen={p.openEdit}
+      onInfo={p.openInfo}
+      onSubmitForReview={showSubmit ? p.submitMine : undefined}
+      onDeleteOne={handlers.openDeleteMine}
+      onDeleteMany={p.deleteManyMine}
+      toggleBtnRef={p.mineApprovedToggleRef}
+      pagination={mineApprovedPagination(p)}
+      p={p}
+    />
   );
 }

@@ -16,18 +16,28 @@ const initialFlags: TypeFlags = {
 export function useDocumentTypes() {
   const [flags, setFlags] = useState<TypeFlags>(initialFlags);
   const selectedTypes = useMemo(() => selectedTypesFrom(flags), [flags]);
-  return { flags, selectedTypes, chipState: chipStateFrom(flags, setFlags), filterItems: (items: DocItem[]) => filterItems(items, flags) };
+  return {
+    flags,
+    selectedTypes,
+    chipState: chipStateFrom(flags, setFlags),
+    filterItems: (items: DocItem[]) => filterItems(items, flags),
+  };
 }
 
-function chipStateFrom(flags: TypeFlags, setFlags: Dispatch<SetStateAction<TypeFlags>>): TypeChipState {
+function chipStateFrom(
+  flags: TypeFlags,
+  setFlags: Dispatch<SetStateAction<TypeFlags>>,
+): TypeChipState {
   return { ...flags, ...typeSetters(setFlags) };
 }
 
 function typeSetters(setFlags: Dispatch<SetStateAction<TypeFlags>>) {
   return {
-    setParticipation: (value: boolean) => setFlag(setFlags, "participation", value),
+    setParticipation: (value: boolean) =>
+      setFlag(setFlags, "participation", value),
     setInvoice: (value: boolean) => setFlag(setFlags, "invoice", value),
-    setCancellation: (value: boolean) => setFlag(setFlags, "cancellation", value),
+    setCancellation: (value: boolean) =>
+      setFlag(setFlags, "cancellation", value),
     setStorno: (value: boolean) => setFlag(setFlags, "storno", value),
     setDunning: (value: boolean) => setFlag(setFlags, "dunning", value),
     setContract: (value: boolean) => setFlag(setFlags, "contract", value),
@@ -35,7 +45,11 @@ function typeSetters(setFlags: Dispatch<SetStateAction<TypeFlags>>) {
   };
 }
 
-function setFlag(setFlags: Dispatch<SetStateAction<TypeFlags>>, key: keyof TypeFlags, value: boolean) {
+function setFlag(
+  setFlags: Dispatch<SetStateAction<TypeFlags>>,
+  key: keyof TypeFlags,
+  value: boolean,
+) {
   setFlags((current) => ({ ...current, [key]: value }));
 }
 
@@ -56,7 +70,9 @@ function selectedTypesTail(selected: string[], flags: TypeFlags) {
 }
 
 function filterItems(items: DocItem[], flags: TypeFlags) {
-  return items.filter((item) => isTypeVisible(String(item.type || "").toLowerCase(), flags));
+  return items.filter((item) =>
+    isTypeVisible(String(item.type || "").toLowerCase(), flags),
+  );
 }
 
 function isTypeVisible(type: string, flags: TypeFlags) {

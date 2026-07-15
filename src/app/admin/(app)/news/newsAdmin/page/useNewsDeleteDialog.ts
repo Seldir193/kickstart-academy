@@ -11,7 +11,8 @@ export function useNewsDeleteDialog(p: NewsAdminViewModel) {
   const fallback = t("common.admin.news.page.thisPost");
   const closeDelete = () => closeDeleteState(setOpen, setTarget);
   const openDelete = (item: News) => openDeleteState(item, setOpen, setTarget);
-  const confirmDelete = () => confirmDeleteState(target, p.onDeleteById, closeDelete);
+  const confirmDelete = () =>
+    confirmDeleteState(target, p.onDeleteById, closeDelete);
   const deleteName = (item: News | null) => getDeleteName(item, fallback);
   return { open, target, openDelete, closeDelete, confirmDelete, deleteName };
 }
@@ -26,7 +27,11 @@ function closeDeleteState(setOpen: SetOpen, setTarget: SetTarget) {
   setTarget(null);
 }
 
-async function confirmDeleteState(target: News | null, onDelete: OnDelete, close: () => void) {
+async function confirmDeleteState(
+  target: News | null,
+  onDelete: OnDelete,
+  close: () => void,
+) {
   const id = target ? getId(target) : "";
   if (!id) return;
   await onDelete(id);

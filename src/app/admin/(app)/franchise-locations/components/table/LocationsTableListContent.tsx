@@ -12,8 +12,20 @@ export default function LocationsTableListContent(p: LocationsTableListProps) {
   if (!p.items.length) return <LocationsTableEmptyState t={t} />;
   return (
     <>
-      <LocationsBulkActionsBar {...p} {...state} cancelRef={state.refs.cancelBtnRef} clearRef={state.refs.clearBtnRef} onDelete={() => void state.deleteSelected()} />
-      <LocationsTableCard {...p} selection={state.selection} showSwitch={canShowSwitch(p.rowMode)} t={t} lang={i18n.language} />
+      <LocationsBulkActionsBar
+        {...p}
+        {...state}
+        cancelRef={state.refs.cancelBtnRef}
+        clearRef={state.refs.clearBtnRef}
+        onDelete={() => void state.deleteSelected()}
+      />
+      <LocationsTableCard
+        {...p}
+        selection={state.selection}
+        showSwitch={canShowSwitch(p.rowMode)}
+        t={t}
+        lang={i18n.language}
+      />
     </>
   );
 }

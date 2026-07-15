@@ -11,7 +11,12 @@ import { defaultI18n, defaultNewsForm, withI18nDefaults } from "./i18nDefaults";
 import { mergeDraftIntoItem } from "./newsDraft";
 import { applyInsert, templateText } from "./template";
 import { nextContent, nextI18n, tagsFromText } from "./formHelpers";
-import type { NewsDialogProps, NewsLanguage, TranslationField, Translate } from "./types";
+import type {
+  NewsDialogProps,
+  NewsLanguage,
+  TranslationField,
+  Translate,
+} from "./types";
 
 export function useNewsDialogState(props: NewsDialogProps, t: Translate) {
   const base = useNewsBaseState();
@@ -20,14 +25,23 @@ export function useNewsDialogState(props: NewsDialogProps, t: Translate) {
   const previewUrl = usePreviewUrl(form.slug);
   const i18n = defaultI18n(form.i18n);
   const metrics = useMemo(() => getMetrics(form, i18n), [form, i18n]);
-  const actions = useNewsActions({ props, t, refs: base.refs, state: base.state });
+  const actions = useNewsActions({
+    props,
+    t,
+    refs: base.refs,
+    state: base.state,
+  });
   return { ...base.values, i18n, previewUrl, metrics, actions };
 }
 
 function useNewsBaseState() {
   const refs = { coverRef: useRef<HTMLInputElement>(null) };
   const state = useNewsStateValues();
-  return { refs, state, values: { coverRef: refs.coverRef, ...stateValues(state) } };
+  return {
+    refs,
+    state,
+    values: { coverRef: refs.coverRef, ...stateValues(state) },
+  };
 }
 
 function useNewsStateValues() {
@@ -38,12 +52,43 @@ function useNewsStateValues() {
   const [error, setError] = useState<string | null>(null);
   const [categoryOpen, setCategoryOpen] = useState(false);
   const [coverFileName, setCoverFileName] = useState("");
-  return { form, setForm, busy, setBusy, translating, setTranslating, translationsOpen, setTranslationsOpen, error, setError, categoryOpen, setCategoryOpen, coverFileName, setCoverFileName };
+  return {
+    form,
+    setForm,
+    busy,
+    setBusy,
+    translating,
+    setTranslating,
+    translationsOpen,
+    setTranslationsOpen,
+    error,
+    setError,
+    categoryOpen,
+    setCategoryOpen,
+    coverFileName,
+    setCoverFileName,
+  };
 }
 
 function stateValues(state: NewsStateValues) {
-  const { form, busy, translating, translationsOpen, error, categoryOpen, coverFileName } = state;
-  return { form, busy, translating, translationsOpen, error, categoryOpen, coverFileName };
+  const {
+    form,
+    busy,
+    translating,
+    translationsOpen,
+    error,
+    categoryOpen,
+    coverFileName,
+  } = state;
+  return {
+    form,
+    busy,
+    translating,
+    translationsOpen,
+    error,
+    categoryOpen,
+    coverFileName,
+  };
 }
 
 function useDialogReset(props: NewsDialogProps, base: NewsBaseState) {
@@ -94,7 +139,11 @@ type ActionContext = {
 
 function useNewsActions(ctx: ActionContext) {
   const update = updateFactory(ctx.state.setForm);
-  return { ...formActions(ctx, update), ...asyncActions(ctx, update), ...uiActions(ctx, update) };
+  return {
+    ...formActions(ctx, update),
+    ...asyncActions(ctx, update),
+    ...uiActions(ctx, update),
+  };
 }
 
 function formActions(ctx: ActionContext, update: NewsUpdate) {
@@ -122,9 +171,11 @@ function uiActions(ctx: ActionContext, update: NewsUpdate) {
     togglePublished: () => update("published", !ctx.state.form.published),
     toggleTranslations: () => toggleTranslations(ctx.state.setTranslationsOpen),
     insertTemplate: () => insertTemplate(ctx.state.form, ctx.t, update),
-    insertSnippet: (snippet: string) => insertSnippet(ctx.state.form, update, snippet),
+    insertSnippet: (snippet: string) =>
+      insertSnippet(ctx.state.form, update, snippet),
     toggleCategory: () => toggleCategory(ctx.state.setCategoryOpen),
-    pickCategory: (category: News["category"]) => pickCategory(update, ctx.state.setCategoryOpen, category),
+    pickCategory: (category: News["category"]) =>
+      pickCategory(update, ctx.state.setCategoryOpen, category),
   };
 }
 
@@ -142,11 +193,19 @@ function updateI18nFactory(setForm: Dispatch<SetStateAction<News>>) {
   };
 }
 
-function buildI18nUpdate(news: News, language: NewsLanguage, field: TranslationField, value: string) {
+function buildI18nUpdate(
+  news: News,
+  language: NewsLanguage,
+  field: TranslationField,
+  value: string,
+) {
   const { currentI18n, nextValue } = nextI18n(news, field, value);
   return {
     ...news,
-    i18n: { ...currentI18n, [language]: { ...currentI18n[language], [field]: nextValue } },
+    i18n: {
+      ...currentI18n,
+      [language]: { ...currentI18n[language], [field]: nextValue },
+    },
   };
 }
 
@@ -168,13 +227,16 @@ async function saveNow(ctx: ActionContext) {
 
 async function saveFinal(ctx: ActionContext) {
   const final = finalizeNewsPayload(ctx.state.form);
-  if (!final.title) throw new Error(ctx.t("common.admin.news.dialog.errorTitleMissing"));
+  if (!final.title)
+    throw new Error(ctx.t("common.admin.news.dialog.errorTitleMissing"));
   await ctx.props.save(final);
   ctx.props.onClose();
 }
 
 function setSaveError(ctx: ActionContext, error: unknown) {
-  ctx.state.setError(toastErrorMessage(ctx.t, error, "common.admin.news.dialog.errorSaveFailed"));
+  ctx.state.setError(
+    toastErrorMessage(ctx.t, error, "common.admin.news.dialog.errorSaveFailed"),
+  );
 }
 
 async function translateNow(ctx: ActionContext) {
@@ -196,10 +258,20 @@ async function applyTranslation(ctx: ActionContext) {
 }
 
 function setTranslateError(ctx: ActionContext, error: unknown) {
-  ctx.state.setError(toastErrorMessage(ctx.t, error, "common.admin.news.dialog.errorTranslateFailed"));
+  ctx.state.setError(
+    toastErrorMessage(
+      ctx.t,
+      error,
+      "common.admin.news.dialog.errorTranslateFailed",
+    ),
+  );
 }
 
-async function uploadCover(ctx: ActionContext, update: NewsUpdate, file?: File) {
+async function uploadCover(
+  ctx: ActionContext,
+  update: NewsUpdate,
+  file?: File,
+) {
   if (!file || !validCover(ctx, file)) return;
   const uploaded = await ctx.props.upload(file, "news-cover");
   update("coverImage", uploaded.url);
@@ -223,18 +295,31 @@ function toggleTranslations(setOpen: Dispatch<SetStateAction<boolean>>) {
 }
 
 function insertTemplate(form: News, t: Translate, update: NewsUpdate) {
-  update("content", applyInsert(form.content || "", templateText(t)).slice(0, MAX_CONTENT_CHARS));
+  update(
+    "content",
+    applyInsert(form.content || "", templateText(t)).slice(
+      0,
+      MAX_CONTENT_CHARS,
+    ),
+  );
 }
 
 function insertSnippet(form: News, update: NewsUpdate, snippet: string) {
-  update("content", applyInsert(form.content || "", snippet).slice(0, MAX_CONTENT_CHARS));
+  update(
+    "content",
+    applyInsert(form.content || "", snippet).slice(0, MAX_CONTENT_CHARS),
+  );
 }
 
 function toggleCategory(setCategoryOpen: Dispatch<SetStateAction<boolean>>) {
   setCategoryOpen((current) => !current);
 }
 
-function pickCategory(update: NewsUpdate, setCategoryOpen: Dispatch<SetStateAction<boolean>>, category: News["category"]) {
+function pickCategory(
+  update: NewsUpdate,
+  setCategoryOpen: Dispatch<SetStateAction<boolean>>,
+  category: News["category"],
+) {
   update("category", category);
   setCategoryOpen(false);
 }

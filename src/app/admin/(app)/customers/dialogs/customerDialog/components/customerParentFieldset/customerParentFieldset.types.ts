@@ -11,7 +11,9 @@ export type CustomerParentFieldsetProps = {
   setForm: (value: any) => void;
   setErr: (value: string | null) => void;
   salutationOpen: boolean;
-  setSalutationOpen: (value: boolean | ((previous: boolean) => boolean)) => void;
+  setSalutationOpen: (
+    value: boolean | ((previous: boolean) => boolean),
+  ) => void;
   salutationDropdownRef: React.RefObject<HTMLDivElement | null>;
   mk: any;
   statusLabel: (status?: string, t?: (key: string) => string) => string;

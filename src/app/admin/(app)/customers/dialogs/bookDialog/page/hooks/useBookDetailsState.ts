@@ -17,7 +17,12 @@ function useBookTextDetails() {
 function useMainChildDetails() {
   const [mainTShirtSize, setMainTShirtSize] = useState("");
   const [mainGoalkeeperSchool, setMainGoalkeeperSchool] = useState(false);
-  return { mainTShirtSize, mainGoalkeeperSchool, setMainTShirtSize, setMainGoalkeeperSchool };
+  return {
+    mainTShirtSize,
+    mainGoalkeeperSchool,
+    setMainTShirtSize,
+    setMainGoalkeeperSchool,
+  };
 }
 
 function useSiblingDetails() {
@@ -33,5 +38,18 @@ function useSiblingFieldState() {
   const [siblingLastName, setSiblingLastName] = useState("");
   const [siblingTShirtSize, setSiblingTShirtSize] = useState("");
   const [siblingGoalkeeperSchool, setSiblingGoalkeeperSchool] = useState(false);
-  return { siblingGender, siblingBirthDate, siblingFirstName, siblingLastName, siblingTShirtSize, siblingGoalkeeperSchool, setSiblingGender, setSiblingBirthDate, setSiblingFirstName, setSiblingLastName, setSiblingTShirtSize, setSiblingGoalkeeperSchool };
+  return {
+    siblingGender,
+    siblingBirthDate,
+    siblingFirstName,
+    siblingLastName,
+    siblingTShirtSize,
+    siblingGoalkeeperSchool,
+    setSiblingGender,
+    setSiblingBirthDate,
+    setSiblingFirstName,
+    setSiblingLastName,
+    setSiblingTShirtSize,
+    setSiblingGoalkeeperSchool,
+  };
 }

@@ -11,9 +11,32 @@ export default function CoachTableListContent(props: CoachTableListProps) {
   const { t } = useTranslation();
   const state = useCoachTableState(props);
   if (!props.items.length) return <CoachTableEmpty t={t} />;
-  return <><CoachTableTopActions {...topActionProps(props, state)} /><CoachTableCard {...props} selected={state.selection.selected} rowClick={state.handlers.rowClick} t={t} /></>;
+  return (
+    <>
+      <CoachTableTopActions {...topActionProps(props, state)} />
+      <CoachTableCard
+        {...props}
+        selected={state.selection.selected}
+        rowClick={state.handlers.rowClick}
+        t={t}
+      />
+    </>
+  );
 }
 
-function topActionProps(props: CoachTableListProps, state: ReturnType<typeof useCoachTableState>) {
-  return { toggleBtnRef: props.toggleBtnRef, cancelBtnRef: state.refs.cancelBtnRef, clearBtnRef: state.refs.clearBtnRef, selectMode: props.selectMode, count: state.count, isAllSelected: state.selection.isAllSelected, disabled: props.items.length === 0, showClear: state.showClear, handlers: state.handlers };
+function topActionProps(
+  props: CoachTableListProps,
+  state: ReturnType<typeof useCoachTableState>,
+) {
+  return {
+    toggleBtnRef: props.toggleBtnRef,
+    cancelBtnRef: state.refs.cancelBtnRef,
+    clearBtnRef: state.refs.clearBtnRef,
+    selectMode: props.selectMode,
+    count: state.count,
+    isAllSelected: state.selection.isAllSelected,
+    disabled: props.items.length === 0,
+    showClear: state.showClear,
+    handlers: state.handlers,
+  };
 }

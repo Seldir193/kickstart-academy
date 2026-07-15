@@ -7,6 +7,22 @@ type Props = {
   className?: string;
 };
 
-export default function BookingActionButton({ busy, action, label, waitLabel, onClick, className = "btn" }: Props) {
-  return <button type="button" className={className} aria-disabled={busy ? true : undefined} onClick={onClick}>{busy === action ? waitLabel : label}</button>;
+export default function BookingActionButton({
+  busy,
+  action,
+  label,
+  waitLabel,
+  onClick,
+  className = "btn",
+}: Props) {
+  return (
+    <button
+      type="button"
+      className={className}
+      aria-disabled={busy ? true : undefined}
+      onClick={onClick}
+    >
+      {busy === action ? waitLabel : label}
+    </button>
+  );
 }

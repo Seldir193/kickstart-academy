@@ -29,4 +29,9 @@ export const statusOptions: StatusOrAll[] = [
   "deleted",
 ];
 
-export const sortOptions: SortKey[] = ["newest", "oldest", "nameAsc", "nameDesc"];
+export const sortOptions: SortKey[] = [
+  "newest",
+  "oldest",
+  "nameAsc",
+  "nameDesc",
+];

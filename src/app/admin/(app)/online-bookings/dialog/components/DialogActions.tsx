@@ -42,15 +42,32 @@ function ConfirmAction({ props, state }: ActionProps) {
 
 function ConfirmedActions({ props, state }: ActionProps) {
   if (state.flags.s !== "confirmed") return null;
-  return <>{resendAction(props, state)}{cancelConfirmedAction(props, state)}</>;
+  return (
+    <>
+      {resendAction(props, state)}
+      {cancelConfirmedAction(props, state)}
+    </>
+  );
 }
 
-function resendAction(props: OnlineBookingDialogProps, state: OnlineBookingDialogState) {
+function resendAction(
+  props: OnlineBookingDialogProps,
+  state: OnlineBookingDialogState,
+) {
   return actionButton("resend", "resend", () => props.onResend(), state);
 }
 
-function cancelConfirmedAction(props: OnlineBookingDialogProps, state: OnlineBookingDialogState) {
-  return actionButton("cancelConfirmed", "cancelConfirmedBooking", () => props.onCancelConfirmed(), state, "btn btn--danger");
+function cancelConfirmedAction(
+  props: OnlineBookingDialogProps,
+  state: OnlineBookingDialogState,
+) {
+  return actionButton(
+    "cancelConfirmed",
+    "cancelConfirmedBooking",
+    () => props.onCancelConfirmed(),
+    state,
+    "btn btn--danger",
+  );
 }
 
 function CancelAction({ props, state }: ActionProps) {
@@ -58,29 +75,72 @@ function CancelAction({ props, state }: ActionProps) {
   return <StatusAction action="cancelled" props={props} state={state} />;
 }
 
-function StatusAction({ action, props, state }: ActionProps & { action: Status }) {
+function StatusAction({
+  action,
+  props,
+  state,
+}: ActionProps & { action: Status }) {
   const label = action === "cancelled" ? "cancel" : action;
   return actionButton(action, label, () => props.onSetStatus(action), state);
 }
 
 function ApprovePaymentAction({ props, state }: ActionProps) {
   if (!state.flags.canShowPaymentApprove) return null;
-  return actionButton("approvePayment", "approvePayment", () => approvePayment(props), state, "btn btn--success");
+  return actionButton(
+    "approvePayment",
+    "approvePayment",
+    () => approvePayment(props),
+    state,
+    "btn btn--success",
+  );
 }
 
 function DeleteAction({ props, state }: ActionProps) {
   if (state.flags.s === "deleted") return null;
-  return actionButton("delete", "delete", () => props.onDelete(), state, "btn btn--danger");
+  return actionButton(
+    "delete",
+    "delete",
+    () => props.onDelete(),
+    state,
+    "btn btn--danger",
+  );
 }
 
-function actionButton(action: string, label: string, fn: () => Promise<unknown>, state: OnlineBookingDialogState, className = "btn") {
-  return <ActionButton action={action} busy={state.busy} className={className} labelKey={label} onClick={() => state.run(action, fn)} t={state.t} />;
+function actionButton(
+  action: string,
+  label: string,
+  fn: () => Promise<unknown>,
+  state: OnlineBookingDialogState,
+  className = "btn",
+) {
+  return (
+    <ActionButton
+      action={action}
+      busy={state.busy}
+      className={className}
+      labelKey={label}
+      onClick={() => state.run(action, fn)}
+      t={state.t}
+    />
+  );
 }
 
-function ActionButton({ action, busy, className = "btn", labelKey, onClick, t }: ButtonProps) {
+function ActionButton({
+  action,
+  busy,
+  className = "btn",
+  labelKey,
+  onClick,
+  t,
+}: ButtonProps) {
   const label = busy === action ? "pleaseWait" : labelKey;
   return (
-    <button type="button" className={className} aria-disabled={busy ? true : undefined} onClick={onClick}>
+    <button
+      type="button"
+      className={className}
+      aria-disabled={busy ? true : undefined}
+      onClick={onClick}
+    >
       {t(`common.admin.onlineBookings.dialog.action.${label}`)}
     </button>
   );

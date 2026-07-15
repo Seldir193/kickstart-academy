@@ -22,7 +22,12 @@ type Props = {
 };
 
 export function BookingsBulkActions(props: Props) {
-  return <div className="news-admin__top-actions"><CoreBulkActions {...props} />{props.selectMode ? <RestoreDeleteActions {...props} /> : null}</div>;
+  return (
+    <div className="news-admin__top-actions">
+      <CoreBulkActions {...props} />
+      {props.selectMode ? <RestoreDeleteActions {...props} /> : null}
+    </div>
+  );
 }
 
 function CoreBulkActions(props: Props) {
@@ -67,19 +72,50 @@ function bulkHandlers(props: Props) {
 }
 
 function RestoreDeleteActions(props: Props) {
-  return <div className="bookings-bulk-actions"><RestoreButton {...props} /><DeleteButton {...props} /></div>;
+  return (
+    <div className="bookings-bulk-actions">
+      <RestoreButton {...props} />
+      <DeleteButton {...props} />
+    </div>
+  );
 }
 
 function RestoreButton(props: Props) {
-  return bulkButton(props.t("common.admin.bookings.bulk.restoreLabel"), props.restoreCount, props.busyRestore || props.restoreCount === 0, props.onRestore);
+  return bulkButton(
+    props.t("common.admin.bookings.bulk.restoreLabel"),
+    props.restoreCount,
+    props.busyRestore || props.restoreCount === 0,
+    props.onRestore,
+  );
 }
 
 function DeleteButton(props: Props) {
-  return bulkButton(props.t("common.admin.bookings.bulk.deleteLabel"), props.count, props.busyDelete || props.count === 0, props.onDelete, "btn btn--danger");
+  return bulkButton(
+    props.t("common.admin.bookings.bulk.deleteLabel"),
+    props.count,
+    props.busyDelete || props.count === 0,
+    props.onDelete,
+    "btn btn--danger",
+  );
 }
 
-function bulkButton(label: string, count: number, disabled: boolean, onClick: () => void, className = "btn") {
-  return <button type="button" className={className} disabled={disabled} onClick={onClick}>{label} ({count})</button>;
+function bulkButton(
+  label: string,
+  count: number,
+  disabled: boolean,
+  onClick: () => void,
+  className = "btn",
+) {
+  return (
+    <button
+      type="button"
+      className={className}
+      disabled={disabled}
+      onClick={onClick}
+    >
+      {label} ({count})
+    </button>
+  );
 }
 
 function bulkLabels(t: TFn) {

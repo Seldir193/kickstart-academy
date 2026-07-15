@@ -12,7 +12,12 @@ export default function CoachesToolbar({ model }: { model: CoachPageModel }) {
       sort={model.state.sort}
       onChangeQ={(value) => changeQuery(model, value)}
       onChangeSort={(value) => changeSort(model, value)}
-      actionSlot={<CreateCoachButton busy={model.muts.mutating} onOpen={() => model.dialogs.setCreateOpen(true)} />}
+      actionSlot={
+        <CreateCoachButton
+          busy={model.muts.mutating}
+          onOpen={() => model.dialogs.setCreateOpen(true)}
+        />
+      }
     />
   );
 }

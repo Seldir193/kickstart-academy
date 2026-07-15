@@ -1,4 +1,3 @@
-//src\app\admin\(app)\customers\dialogs\customerDialog\components\CustomerNotesFieldset.tsx
 "use client";
 
 import React from "react";

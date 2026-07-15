@@ -1,5 +1,10 @@
 import type { News } from "../../../types";
-import type { NewsAction, NewsWithProvider, RowMode, Translate } from "../types";
+import type {
+  NewsAction,
+  NewsWithProvider,
+  RowMode,
+  Translate,
+} from "../types";
 import { canSubmitForReview } from "./review";
 export { blurTarget, onActionKey, stop } from "./events";
 export { canSubmitForReview } from "./review";
@@ -21,8 +26,10 @@ export function actionsFor(args: ActionArgs) {
   if (args.rowMode === "mine_pending") return minePendingActions(args);
   if (args.rowMode === "mine_approved") return mineApprovedActions(args);
   if (args.rowMode === "mine_rejected") return mineRejectedActions(args);
-  if (args.rowMode === "provider_approved") return providerApprovedActions(args);
-  if (args.rowMode === "provider_rejected") return providerRejectedActions(args);
+  if (args.rowMode === "provider_approved")
+    return providerApprovedActions(args);
+  if (args.rowMode === "provider_rejected")
+    return providerRejectedActions(args);
   return [buildOpenAction(args.n, args.busy, args.onOpen, args.t)];
 }
 
@@ -32,7 +39,13 @@ export function buildOpenAction(
   onOpen: (n: News) => void,
   t: Translate,
 ): NewsAction {
-  return action("open", "/icons/edit.svg", t("common.admin.news.table.edit"), busy, () => onOpen(n));
+  return action(
+    "open",
+    "/icons/edit.svg",
+    t("common.admin.news.table.edit"),
+    busy,
+    () => onOpen(n),
+  );
 }
 
 export function buildInfoAction(
@@ -41,7 +54,13 @@ export function buildInfoAction(
   onInfo: (n: News) => void,
   t: Translate,
 ): NewsAction {
-  return action("info", "/icons/info.svg", t("common.admin.news.table.info"), busy, () => onInfo(n));
+  return action(
+    "info",
+    "/icons/info.svg",
+    t("common.admin.news.table.info"),
+    busy,
+    () => onInfo(n),
+  );
 }
 
 export function buildRejectAction(
@@ -50,7 +69,9 @@ export function buildRejectAction(
   t: Translate,
   onAskReject?: (n: News) => void,
 ): NewsAction {
-  return leftAction("reject", t("common.admin.news.table.reject"), busy, () => onAskReject?.(n));
+  return leftAction("reject", t("common.admin.news.table.reject"), busy, () =>
+    onAskReject?.(n),
+  );
 }
 
 export function buildDeleteAction(
@@ -59,7 +80,13 @@ export function buildDeleteAction(
   t: Translate,
   onDeleteOne?: (n: News) => void,
 ): NewsAction {
-  return action("delete", "/icons/delete.svg", t("common.admin.news.table.delete"), busy, () => onDeleteOne?.(n));
+  return action(
+    "delete",
+    "/icons/delete.svg",
+    t("common.admin.news.table.delete"),
+    busy,
+    () => onDeleteOne?.(n),
+  );
 }
 
 export function buildResubmitAction(
@@ -68,7 +95,14 @@ export function buildResubmitAction(
   t: Translate,
   onResubmit?: (n: News) => void,
 ): NewsAction {
-  return submitAction("resubmit", t("common.admin.news.table.resubmit"), n, busy, t, () => onResubmit?.(n));
+  return submitAction(
+    "resubmit",
+    t("common.admin.news.table.resubmit"),
+    n,
+    busy,
+    t,
+    () => onResubmit?.(n),
+  );
 }
 
 export function buildSubmitForReviewAction(
@@ -77,7 +111,14 @@ export function buildSubmitForReviewAction(
   t: Translate,
   onSubmitForReview?: (n: News) => void,
 ): NewsAction {
-  return submitAction("submit", t("common.admin.news.table.submitForReview"), n, busy, t, () => onSubmitForReview?.(n));
+  return submitAction(
+    "submit",
+    t("common.admin.news.table.submitForReview"),
+    n,
+    busy,
+    t,
+    () => onSubmitForReview?.(n),
+  );
 }
 
 function minePendingActions(args: ActionArgs) {
@@ -88,21 +129,35 @@ function minePendingActions(args: ActionArgs) {
 
 function mineApprovedActions(args: ActionArgs) {
   const actions = infoOpen(args);
-  if (args.onSubmitForReview) actions.push(buildSubmitForReviewAction(args.n, args.busy, args.t, args.onSubmitForReview));
+  if (args.onSubmitForReview)
+    actions.push(
+      buildSubmitForReviewAction(
+        args.n,
+        args.busy,
+        args.t,
+        args.onSubmitForReview,
+      ),
+    );
   pushDelete(actions, args);
   return actions;
 }
 
 function mineRejectedActions(args: ActionArgs) {
   const actions = infoOpen(args);
-  if (args.onResubmit) actions.push(buildResubmitAction(args.n, args.busy, args.t, args.onResubmit));
+  if (args.onResubmit)
+    actions.push(
+      buildResubmitAction(args.n, args.busy, args.t, args.onResubmit),
+    );
   pushDelete(actions, args);
   return actions;
 }
 
 function providerApprovedActions(args: ActionArgs) {
   const actions = openInfo(args);
-  if (args.onAskReject) actions.push(buildRejectAction(args.n, args.busy, args.t, args.onAskReject));
+  if (args.onAskReject)
+    actions.push(
+      buildRejectAction(args.n, args.busy, args.t, args.onAskReject),
+    );
   pushDelete(actions, args);
   return actions;
 }
@@ -128,18 +183,45 @@ function openInfo(args: ActionArgs) {
 }
 
 function pushDelete(actions: NewsAction[], args: ActionArgs) {
-  if (args.onDeleteOne) actions.push(buildDeleteAction(args.n, args.busy, args.t, args.onDeleteOne));
+  if (args.onDeleteOne)
+    actions.push(
+      buildDeleteAction(args.n, args.busy, args.t, args.onDeleteOne),
+    );
 }
 
-function action(key: string, icon: string, title: string, disabled: boolean, run: () => void | Promise<void>) {
+function action(
+  key: string,
+  icon: string,
+  title: string,
+  disabled: boolean,
+  run: () => void | Promise<void>,
+) {
   return { key, icon, title, disabled, run };
 }
 
-function leftAction(key: string, title: string, disabled: boolean, run: () => void | Promise<void>) {
-  return { ...action(key, "/icons/arrow_right_alt.svg", title, disabled, run), left: true };
+function leftAction(
+  key: string,
+  title: string,
+  disabled: boolean,
+  run: () => void | Promise<void>,
+) {
+  return {
+    ...action(key, "/icons/arrow_right_alt.svg", title, disabled, run),
+    left: true,
+  };
 }
 
-function submitAction(key: string, title: string, n: NewsWithProvider, busy: boolean, t: Translate, run: () => void | Promise<void>) {
+function submitAction(
+  key: string,
+  title: string,
+  n: NewsWithProvider,
+  busy: boolean,
+  t: Translate,
+  run: () => void | Promise<void>,
+) {
   const ok = canSubmitForReview(n);
-  return { ...leftAction(key, title, busy || !ok, run), tip: ok ? undefined : t("common.admin.news.table.updateFirst") };
+  return {
+    ...leftAction(key, title, busy || !ok, run),
+    tip: ok ? undefined : t("common.admin.news.table.updateFirst"),
+  };
 }

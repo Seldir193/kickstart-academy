@@ -10,8 +10,14 @@ export function displayValue(value: unknown) {
 }
 
 export function ownerLabel(item: FranchiseLocation) {
-  const name = `${clean(item.licenseeFirstName)} ${clean(item.licenseeLastName)}`.trim();
-  return name || displayValue(item.ownerName) || displayValue(item.ownerEmail) || displayValue(item.ownerId || item.owner);
+  const name =
+    `${clean(item.licenseeFirstName)} ${clean(item.licenseeLastName)}`.trim();
+  return (
+    name ||
+    displayValue(item.ownerName) ||
+    displayValue(item.ownerEmail) ||
+    displayValue(item.ownerId || item.owner)
+  );
 }
 
 export function statusClass(status: string) {

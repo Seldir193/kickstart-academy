@@ -1,4 +1,3 @@
-// src/app/admin/news/components/RejectedNewsList.tsx
 "use client";
 
 import React from "react";

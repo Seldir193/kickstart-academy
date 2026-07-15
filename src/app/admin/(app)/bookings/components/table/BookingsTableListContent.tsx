@@ -17,23 +17,49 @@ export default function BookingsTableListContent(props: BookingsTableProps) {
   const state = useBookingsTableState(props);
   const ctx = buildRowContext({ props, state, t, lang: i18n.language });
   if (!props.items.length) return <BookingsEmptyState t={t} />;
-  return <BookingsTableLayout props={props} state={state} rowContext={ctx} t={t} />;
+  return (
+    <BookingsTableLayout props={props} state={state} rowContext={ctx} t={t} />
+  );
 }
 
 function BookingsTableLayout(args: LayoutArgs) {
-  return <div className="news-table"><BookingsBulkActions {...bulkProps(args)} /><BookingsTableShell items={args.props.items} rowContext={args.rowContext} t={args.t} /></div>;
+  return (
+    <div className="news-table">
+      <BookingsBulkActions {...bulkProps(args)} />
+      <BookingsTableShell
+        items={args.props.items}
+        rowContext={args.rowContext}
+        t={args.t}
+      />
+    </div>
+  );
 }
 
 function BookingsTableShell(props: ShellProps) {
-  return <div className="news-table__scroll"><BookingsCard {...props} /></div>;
+  return (
+    <div className="news-table__scroll">
+      <BookingsCard {...props} />
+    </div>
+  );
 }
 
 function BookingsCard(props: ShellProps) {
-  return <section className="card news-list"><div className="news-list__table"><BookingsTableHead t={props.t} /><BookingsRows {...props} /></div></section>;
+  return (
+    <section className="card news-list">
+      <div className="news-list__table">
+        <BookingsTableHead t={props.t} />
+        <BookingsRows {...props} />
+      </div>
+    </section>
+  );
 }
 
 function BookingsRows(props: RowsProps) {
-  return <ul className="list list--bleed">{props.items.map((b) => row(b, props.rowContext))}</ul>;
+  return (
+    <ul className="list list--bleed">
+      {props.items.map((b) => row(b, props.rowContext))}
+    </ul>
+  );
 }
 
 function row(b: Booking, rowContext: BookingRowContext) {
@@ -60,7 +86,12 @@ function onRowClick(b: Booking, props: BookingsTableProps, state: TableState) {
 }
 
 function bulkProps(args: LayoutArgs) {
-  return { ...bulkCore(args), ...bulkRefs(args), ...bulkHandlers(args), t: args.t };
+  return {
+    ...bulkCore(args),
+    ...bulkRefs(args),
+    ...bulkHandlers(args),
+    t: args.t,
+  };
 }
 
 function bulkCore(args: LayoutArgs) {
@@ -93,7 +124,17 @@ function bulkHandlers(args: LayoutArgs) {
   };
 }
 
-type LayoutArgs = { props: BookingsTableProps; state: TableState; rowContext: BookingRowContext; t: TFn };
-type ContextArgs = { props: BookingsTableProps; state: TableState; t: TFn; lang?: string };
+type LayoutArgs = {
+  props: BookingsTableProps;
+  state: TableState;
+  rowContext: BookingRowContext;
+  t: TFn;
+};
+type ContextArgs = {
+  props: BookingsTableProps;
+  state: TableState;
+  t: TFn;
+  lang?: string;
+};
 type ShellProps = { items: Booking[]; rowContext: BookingRowContext; t: TFn };
 type RowsProps = { items: Booking[]; rowContext: BookingRowContext };

@@ -43,7 +43,11 @@ export default function MemberActionCell(props: Props) {
   );
 }
 
-function MemberAction({ action }: { action: ReturnType<typeof actionsFor>[number] }) {
+function MemberAction({
+  action,
+}: {
+  action: ReturnType<typeof actionsFor>[number];
+}) {
   function runAction(event: React.MouseEvent<HTMLSpanElement>) {
     stop(event);
     blurTarget(event.currentTarget);
@@ -60,7 +64,9 @@ function MemberAction({ action }: { action: ReturnType<typeof actionsFor>[number
       aria-disabled={action.disabled ? true : undefined}
       {...(action.tip ? { "data-ks-tip": action.tip } : {})}
       onClick={runAction}
-      onKeyDown={(event) => onActionKey(event, () => void action.run(), action.disabled)}
+      onKeyDown={(event) =>
+        onActionKey(event, () => void action.run(), action.disabled)
+      }
     >
       <img src={action.icon} alt="" aria-hidden="true" className="icon-img" />
     </span>

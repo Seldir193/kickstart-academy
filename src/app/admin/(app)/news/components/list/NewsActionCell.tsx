@@ -26,17 +26,38 @@ export default function NewsActionCell({ news, hidden, onOpen, t }: Props) {
     event.stopPropagation();
     onOpen(news);
   };
-  const openKey = (event: KeyboardEvent) => handleActionKey(event, news, onOpen);
+  const openKey = (event: KeyboardEvent) =>
+    handleActionKey(event, news, onOpen);
   return (
-    <div className="list__actions news-list__cell news-list__cell--action" onClick={open} onMouseDown={stop}>
-      <span className="edit-trigger" role="button" tabIndex={0} aria-label={getLabel(news, t)} onClick={open} onKeyDown={openKey}>
-        <img src={isNewsRejected(news) ? "/icons/info.svg" : "/icons/edit.svg"} alt="" aria-hidden="true" className="icon-img" />
+    <div
+      className="list__actions news-list__cell news-list__cell--action"
+      onClick={open}
+      onMouseDown={stop}
+    >
+      <span
+        className="edit-trigger"
+        role="button"
+        tabIndex={0}
+        aria-label={getLabel(news, t)}
+        onClick={open}
+        onKeyDown={openKey}
+      >
+        <img
+          src={isNewsRejected(news) ? "/icons/info.svg" : "/icons/edit.svg"}
+          alt=""
+          aria-hidden="true"
+          className="icon-img"
+        />
       </span>
     </div>
   );
 }
 
-function handleActionKey(event: KeyboardEvent, news: News, onOpen: (news: News) => void) {
+function handleActionKey(
+  event: KeyboardEvent,
+  news: News,
+  onOpen: (news: News) => void,
+) {
   if (event.key !== "Enter" && event.key !== " ") return;
   event.preventDefault();
   event.stopPropagation();
@@ -44,5 +65,10 @@ function handleActionKey(event: KeyboardEvent, news: News, onOpen: (news: News) 
 }
 
 function HiddenActionCell() {
-  return <div className="list__actions news-list__cell news-list__cell--action news-list__actions--hidden" aria-hidden="true" />;
+  return (
+    <div
+      className="list__actions news-list__cell news-list__cell--action news-list__actions--hidden"
+      aria-hidden="true"
+    />
+  );
 }

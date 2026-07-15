@@ -16,16 +16,39 @@ export default function FeedbackUploadControl(props: UploadControlProps) {
 }
 
 function FeedbackUploadInput({ inputRef, onPickFile }: UploadControlProps) {
-  return <input ref={inputRef} type="file" accept="image/*" hidden onChange={(event) => onPickFile(event.target.files?.[0])} />;
+  return (
+    <input
+      ref={inputRef}
+      type="file"
+      accept="image/*"
+      hidden
+      onChange={(event) => onPickFile(event.target.files?.[0])}
+    />
+  );
 }
 
-function FeedbackUploadButton({ inputRef }: Pick<UploadControlProps, "inputRef">) {
+function FeedbackUploadButton({
+  inputRef,
+}: Pick<UploadControlProps, "inputRef">) {
   const { t } = useTranslation();
-  return <button type="button" className="btn" onClick={() => inputRef.current?.click()}>{t("admin.feedbacks.chooseFile")}</button>;
+  return (
+    <button
+      type="button"
+      className="btn"
+      onClick={() => inputRef.current?.click()}
+    >
+      {t("admin.feedbacks.chooseFile")}
+    </button>
+  );
 }
 
 function FeedbackUploadFileName({ fileName }: { fileName: string }) {
   const { t } = useTranslation();
-  const className = "feedback-dialog__file-name" + (!fileName ? " is-empty" : "");
-  return <span className={className}>{fileName || t("admin.feedbacks.noFileSelected")}</span>;
+  const className =
+    "feedback-dialog__file-name" + (!fileName ? " is-empty" : "");
+  return (
+    <span className={className}>
+      {fileName || t("admin.feedbacks.noFileSelected")}
+    </span>
+  );
 }

@@ -25,11 +25,25 @@ export function makeBlankCustomer(): Customer {
 }
 
 function blankChild(): ChildInfo {
-  return { uid: "", firstName: "", lastName: "", gender: "", birthDate: null, club: "" };
+  return {
+    uid: "",
+    firstName: "",
+    lastName: "",
+    gender: "",
+    birthDate: null,
+    club: "",
+  };
 }
 
 function blankParent(): ParentInfo {
-  return { salutation: "", firstName: "", lastName: "", email: "", phone: "", phone2: "" };
+  return {
+    salutation: "",
+    firstName: "",
+    lastName: "",
+    email: "",
+    phone: "",
+    phone2: "",
+  };
 }
 
 export function initCustomerForm(
@@ -46,11 +60,17 @@ export function initCustomerForm(
 
 function addLegacyParent(customer: FormCustomer) {
   if (!hasParentData(customer.parent)) return;
-  const exists = customer.parents.some((parent) => sameParent(parent, customer.parent));
+  const exists = customer.parents.some((parent) =>
+    sameParent(parent, customer.parent),
+  );
   if (!exists) customer.parents.push(normalizeParentInput(customer.parent));
 }
 
-export function applyCustomerUpdate(prev: Customer, path: string, value: unknown) {
+export function applyCustomerUpdate(
+  prev: Customer,
+  path: string,
+  value: unknown,
+) {
   const copy = structuredClone(prev) as unknown as CustomerRecord;
   const segments = path.split(".");
   const target = resolveTarget(copy, segments);
@@ -111,7 +131,9 @@ function nextChildrenFromForm(form: Customer, mode: FamilyCreateMode) {
   const children = normalizedChildren(form.children);
   const selected = normalizeSelectedChild(form);
   if (!hasChildData(selected)) return children;
-  return mode === "newChild" ? addNewChild(children, selected) : mergeChild(children, selected);
+  return mode === "newChild"
+    ? addNewChild(children, selected)
+    : mergeChild(children, selected);
 }
 
 function normalizedChildren(value: ChildInfo[] | undefined) {
@@ -125,12 +147,16 @@ function normalizeSelectedChild(form: Customer) {
 }
 
 function addNewChild(children: ChildInfo[], selected: ChildInfo) {
-  const exists = children.some((child) => safeText(child.uid) === safeText(selected.uid));
+  const exists = children.some(
+    (child) => safeText(child.uid) === safeText(selected.uid),
+  );
   return exists ? children : [...children, selected];
 }
 
 function mergeChild(children: ChildInfo[], selected: ChildInfo) {
-  const index = children.findIndex((child) => safeText(child.uid) === safeText(selected.uid));
+  const index = children.findIndex(
+    (child) => safeText(child.uid) === safeText(selected.uid),
+  );
   if (index < 0) return [...children, selected];
   children[index] = selected;
   return children;
@@ -161,13 +187,20 @@ function normalizeParentInput(parent?: ParentInfo | null): ParentInfo {
 function sameParent(first: ParentInfo, second: ParentInfo) {
   const a = normalizeParentInput(first);
   const b = normalizeParentInput(second);
-  const emails = [safeText(a.email).toLowerCase(), safeText(b.email).toLowerCase()];
+  const emails = [
+    safeText(a.email).toLowerCase(),
+    safeText(b.email).toLowerCase(),
+  ];
   return emails.every(Boolean) ? emails[0] === emails[1] : sameParentName(a, b);
 }
 
 function sameParentName(first: ParentInfo, second: ParentInfo) {
-  return safeText(first.firstName).toLowerCase() === safeText(second.firstName).toLowerCase()
-    && safeText(first.lastName).toLowerCase() === safeText(second.lastName).toLowerCase();
+  return (
+    safeText(first.firstName).toLowerCase() ===
+      safeText(second.firstName).toLowerCase() &&
+    safeText(first.lastName).toLowerCase() ===
+      safeText(second.lastName).toLowerCase()
+  );
 }
 
 function hasChildData(child: ChildInfo) {
@@ -175,8 +208,14 @@ function hasChildData(child: ChildInfo) {
 }
 
 function hasParentData(parent: ParentInfo) {
-  return [parent.salutation, parent.firstName, parent.lastName, parent.email, parent.phone, parent.phone2]
-    .some(safeText);
+  return [
+    parent.salutation,
+    parent.firstName,
+    parent.lastName,
+    parent.email,
+    parent.phone,
+    parent.phone2,
+  ].some(safeText);
 }
 
 function safeText(value: unknown) {
@@ -185,5 +224,8 @@ function safeText(value: unknown) {
 
 function nextUid() {
   const cryptoApi = globalThis.crypto;
-  return cryptoApi?.randomUUID?.() ?? `${Date.now()}-${Math.random().toString(16).slice(2)}`;
+  return (
+    cryptoApi?.randomUUID?.() ??
+    `${Date.now()}-${Math.random().toString(16).slice(2)}`
+  );
 }

@@ -11,9 +11,23 @@ export default function CoachRemoveAction(props: Props) {
 }
 
 function DeleteAction({ meta, busy, onDelete, t }: Props) {
-  return <CoachRowActionButton title={t("common.admin.coaches.table.delete")} icon="/icons/delete.svg" disabled={busy} onRun={() => onDelete?.(meta.raw)} />;
+  return (
+    <CoachRowActionButton
+      title={t("common.admin.coaches.table.delete")}
+      icon="/icons/delete.svg"
+      disabled={busy}
+      onRun={() => onDelete?.(meta.raw)}
+    />
+  );
 }
 
 function UnapproveAction({ meta, busy, onUnapprove, t }: Props) {
-  return <CoachRowActionButton title={t("common.admin.coaches.table.remove")} icon="/icons/delete.svg" disabled={busy} onRun={() => onUnapprove?.(meta.raw)} />;
+  return (
+    <CoachRowActionButton
+      title={t("common.admin.coaches.table.remove")}
+      icon="/icons/delete.svg"
+      disabled={busy}
+      onRun={() => onUnapprove?.(meta.raw)}
+    />
+  );
 }

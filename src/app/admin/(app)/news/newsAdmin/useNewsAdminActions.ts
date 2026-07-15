@@ -1,4 +1,3 @@
-//src\app\admin\(app)\news\newsAdmin\useNewsAdminActions.ts
 "use client";
 
 import { useCallback } from "react";

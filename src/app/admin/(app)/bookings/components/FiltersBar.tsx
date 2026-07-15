@@ -9,5 +9,12 @@ import type { FiltersBarProps } from "./filtersBar/filtersBar.types";
 
 export default function FiltersBar(props: FiltersBarProps) {
   const { t } = useTranslation();
-  return <div className="news-admin__filters"><SearchFilter {...props} /><ProgramFilterBox {...props} t={t} /><StatusFilterBox {...props} t={t} /><SortFilterBox {...props} t={t} /></div>;
+  return (
+    <div className="news-admin__filters">
+      <SearchFilter {...props} />
+      <ProgramFilterBox {...props} t={t} />
+      <StatusFilterBox {...props} t={t} />
+      <SortFilterBox {...props} t={t} />
+    </div>
+  );
 }

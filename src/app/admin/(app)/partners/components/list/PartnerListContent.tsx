@@ -11,8 +11,10 @@ export default function PartnerListContent(props: PartnerListProps) {
   const selection = usePartnerSelection(props.items);
   const hasItems = props.items.length > 0;
 
-  if (props.loading && !hasItems) return <Message text={t("admin.partners.loading")} />;
-  if (!props.loading && !hasItems) return <Message text={t("admin.partners.empty")} />;
+  if (props.loading && !hasItems)
+    return <Message text={t("admin.partners.loading")} />;
+  if (!props.loading && !hasItems)
+    return <Message text={t("admin.partners.empty")} />;
 
   return (
     <section className="news-admin__section">
@@ -35,7 +37,9 @@ function Message({ text }: { text: string }) {
 function PartnerCounter({ total }: { total: number }) {
   return (
     <div className="news-admin__section-head-number">
-      <span className="news-admin__section-meta">{total ? `(${total})` : ""}</span>
+      <span className="news-admin__section-meta">
+        {total ? `(${total})` : ""}
+      </span>
     </div>
   );
 }

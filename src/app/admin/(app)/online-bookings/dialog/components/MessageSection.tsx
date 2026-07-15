@@ -1,11 +1,23 @@
 import type { MessageRow, Translate } from "../types";
 
-export function MessageSection({ rows, t }: { rows: MessageRow[]; t: Translate }) {
+export function MessageSection({
+  rows,
+  t,
+}: {
+  rows: MessageRow[];
+  t: Translate;
+}) {
   return (
     <section className="dialog-section online-booking-dialog__section">
-      <SectionHead title={t("common.admin.onlineBookings.dialog.section.message")} />
+      <SectionHead
+        title={t("common.admin.onlineBookings.dialog.section.message")}
+      />
       <div className="dialog-section__body">
-        {rows.length ? <MessageList rows={rows} /> : <div className="dialog-value">—</div>}
+        {rows.length ? (
+          <MessageList rows={rows} />
+        ) : (
+          <div className="dialog-value">—</div>
+        )}
       </div>
     </section>
   );
@@ -14,7 +26,9 @@ export function MessageSection({ rows, t }: { rows: MessageRow[]; t: Translate }
 function SectionHead({ title }: { title: string }) {
   return (
     <div className="dialog-section__head">
-      <h3 className="dialog-section__title online-booking-dialog__section-title">{title}</h3>
+      <h3 className="dialog-section__title online-booking-dialog__section-title">
+        {title}
+      </h3>
     </div>
   );
 }
@@ -22,7 +36,9 @@ function SectionHead({ title }: { title: string }) {
 function MessageList({ rows }: { rows: MessageRow[] }) {
   return (
     <div className="online-booking-dialog__message-list">
-      {rows.map((row, i) => <MessageRowItem key={i} row={row} />)}
+      {rows.map((row, i) => (
+        <MessageRowItem key={i} row={row} />
+      ))}
     </div>
   );
 }

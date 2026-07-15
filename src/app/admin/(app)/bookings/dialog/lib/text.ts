@@ -31,7 +31,10 @@ export function toMessageLine(raw: string): MessageLine {
 
 export function messageToLines(msg: string | undefined, t: Translate) {
   if (!msg) return [];
-  return normalizeMessage(msg, t).split("\n").map((s) => s.trim()).filter(Boolean);
+  return normalizeMessage(msg, t)
+    .split("\n")
+    .map((s) => s.trim())
+    .filter(Boolean);
 }
 
 export function normalizeMessage(msg: string, t: Translate) {

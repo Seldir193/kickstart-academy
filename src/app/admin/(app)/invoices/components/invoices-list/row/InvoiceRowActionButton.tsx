@@ -32,7 +32,11 @@ function ActionIcon({ src }: { src: string }) {
   return <img src={src} alt="" width={18} height={18} />;
 }
 
-export function InvoiceRowActionButton({ action }: { action: InvoiceRowAction }) {
+export function InvoiceRowActionButton({
+  action,
+}: {
+  action: InvoiceRowAction;
+}) {
   return (
     <button type="button" {...actionButtonProps(action)}>
       <ActionIcon src={action.icon} />

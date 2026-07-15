@@ -6,10 +6,24 @@ export function useCustomersFiltersState() {
   const [newsletter, setNewsletter] = useState<NewsletterFilter>("all");
   const [tab, setTab] = useState<Tab>("customers");
   const [page, setPage] = useState(1);
-  return { q, tab, newsletter, page, setPage, setNewsletter, switchTab: switchTab(setTab, setNewsletter, setPage), onQueryChange: onQueryChange(setQ, setPage), resetSearch: resetSearch(setQ, setPage) };
+  return {
+    q,
+    tab,
+    newsletter,
+    page,
+    setPage,
+    setNewsletter,
+    switchTab: switchTab(setTab, setNewsletter, setPage),
+    onQueryChange: onQueryChange(setQ, setPage),
+    resetSearch: resetSearch(setQ, setPage),
+  };
 }
 
-function switchTab(setTab: (next: Tab) => void, setNewsletter: (next: NewsletterFilter) => void, setPage: (next: number) => void) {
+function switchTab(
+  setTab: (next: Tab) => void,
+  setNewsletter: (next: NewsletterFilter) => void,
+  setPage: (next: number) => void,
+) {
   return (next: Tab) => {
     setTab(next);
     setNewsletter("all");
@@ -17,14 +31,20 @@ function switchTab(setTab: (next: Tab) => void, setNewsletter: (next: Newsletter
   };
 }
 
-function onQueryChange(setQ: (next: string) => void, setPage: (next: number) => void) {
+function onQueryChange(
+  setQ: (next: string) => void,
+  setPage: (next: number) => void,
+) {
   return (next: string) => {
     setPage(1);
     setQ(next);
   };
 }
 
-function resetSearch(setQ: (next: string) => void, setPage: (next: number) => void) {
+function resetSearch(
+  setQ: (next: string) => void,
+  setPage: (next: number) => void,
+) {
   return () => {
     setQ("");
     setPage(1);

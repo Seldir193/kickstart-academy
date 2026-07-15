@@ -1,6 +1,9 @@
 "use client";
 
-import { getActiveVoucherIds, getInactiveVoucherIds } from "./vouchersTable.helpers";
+import {
+  getActiveVoucherIds,
+  getInactiveVoucherIds,
+} from "./vouchersTable.helpers";
 import type { VouchersTableListProps } from "./vouchersTable.types";
 
 type Selection = {
@@ -17,17 +20,20 @@ export function useVoucherBulkActions(
     props.onToggleSelectMode();
   };
 
-  const deleteSelected = () => runAction([...selection.selected], props.onDeleteMany, finish);
-  const activateSelected = () => runAction(
-    getInactiveVoucherIds(props.items, selection.selected),
-    props.onActivateMany,
-    finish,
-  );
-  const deactivateSelected = () => runAction(
-    getActiveVoucherIds(props.items, selection.selected),
-    props.onDeactivateMany,
-    finish,
-  );
+  const deleteSelected = () =>
+    runAction([...selection.selected], props.onDeleteMany, finish);
+  const activateSelected = () =>
+    runAction(
+      getInactiveVoucherIds(props.items, selection.selected),
+      props.onActivateMany,
+      finish,
+    );
+  const deactivateSelected = () =>
+    runAction(
+      getActiveVoucherIds(props.items, selection.selected),
+      props.onDeactivateMany,
+      finish,
+    );
 
   return { deleteSelected, activateSelected, deactivateSelected };
 }

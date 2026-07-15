@@ -11,11 +11,27 @@ type Props = {
 };
 
 export default function NewsDialogView({ props, state, t }: Props) {
-  return <div className="dialog-backdrop news-dialog" role="dialog" aria-modal="true"><BackdropHit props={props} t={t} /><DialogPanel props={props} state={state} t={t} /></div>;
+  return (
+    <div
+      className="dialog-backdrop news-dialog"
+      role="dialog"
+      aria-modal="true"
+    >
+      <BackdropHit props={props} t={t} />
+      <DialogPanel props={props} state={state} t={t} />
+    </div>
+  );
 }
 
 function BackdropHit({ props, t }: Pick<Props, "props" | "t">) {
-  return <button type="button" className="dialog-backdrop-hit news-dialog__backdrop-hit" aria-label={t("common.close")} onClick={props.onClose} />;
+  return (
+    <button
+      type="button"
+      className="dialog-backdrop-hit news-dialog__backdrop-hit"
+      aria-label={t("common.close")}
+      onClick={props.onClose}
+    />
+  );
 }
 
 function DialogPanel({ props, state, t }: Props) {

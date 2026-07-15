@@ -21,7 +21,10 @@ export function BookingNameCell({ b }: { b: Booking }) {
 }
 
 export function BookingEmailCell({ b, t }: { b: Booking; t: TFn }) {
-  return cell("email", safeText(b.email) || t("common.admin.bookings.row.empty"));
+  return cell(
+    "email",
+    safeText(b.email) || t("common.admin.bookings.row.empty"),
+  );
 }
 
 export function BookingAgeCell({ b }: { b: Booking }) {
@@ -37,7 +40,10 @@ export function BookingProgramCell({ b }: { b: Booking }) {
 }
 
 export function BookingStatusCell({ b, t }: { b: Booking; t: TFn }) {
-  return cell("status", t(`common.admin.bookings.status.${asStatus(b.status)}`));
+  return cell(
+    "status",
+    t(`common.admin.bookings.status.${asStatus(b.status)}`),
+  );
 }
 
 export function BookingCreatedCell({ b, lang }: { b: Booking; lang?: string }) {
@@ -51,13 +57,17 @@ export function BookingPaymentCell({ b, t }: { b: Booking; t: TFn }) {
 }
 
 function cell(mod: string, value: string) {
-  return <div className={`news-list__cell news-list__cell--${mod}`}>{value}</div>;
+  return (
+    <div className={`news-list__cell news-list__cell--${mod}`}>{value}</div>
+  );
 }
 
 function paymentBadge(p: string, t: TFn) {
   return (
     <div className="news-list__cell news-list__cell--payment">
-      <span className={paymentClass(p)}>{t(`common.admin.bookings.payment.${p}`)}</span>
+      <span className={paymentClass(p)}>
+        {t(`common.admin.bookings.payment.${p}`)}
+      </span>
     </div>
   );
 }

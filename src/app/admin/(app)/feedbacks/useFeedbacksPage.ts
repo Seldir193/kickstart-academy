@@ -27,9 +27,7 @@ export function useFeedbacksPage() {
   const [error, setError] = useState("");
   const [dialogMode, setDialogMode] = useState<FeedbackDialogMode | null>(null);
   const [dialogItem, setDialogItem] = useState<Feedback | null>(null);
-
   const sortedItems = useMemo(() => sortFeedbacks(items), [items]);
-
   async function refreshFeedbacks() {
     setItems(await fetchFeedbacks());
   }
@@ -85,17 +83,17 @@ export function useFeedbacksPage() {
     setDialogMode(null);
   }
 
-async function save(item: Feedback) {
-  validateUniqueFeedback(item);
+  async function save(item: Feedback) {
+    validateUniqueFeedback(item);
 
-  const id = getFeedbackId(item);
-  await runMutationTask(async () => saveFeedback(item), "errorSave", id);
-}
+    const id = getFeedbackId(item);
+    await runMutationTask(async () => saveFeedback(item), "errorSave", id);
+  }
 
-function validateUniqueFeedback(item: Feedback) {
-  if (!isDuplicateFeedback(items, item)) return;
-  throw new Error(toastText(t, "admin.feedbacks.errorDuplicate"));
-}
+  function validateUniqueFeedback(item: Feedback) {
+    if (!isDuplicateFeedback(items, item)) return;
+    throw new Error(toastText(t, "admin.feedbacks.errorDuplicate"));
+  }
 
   async function saveFeedback(item: Feedback) {
     const id = getFeedbackId(item);
@@ -191,9 +189,3 @@ function validateUniqueFeedback(item: Feedback) {
     uploadImage,
   };
 }
-
-
-
-
-
-

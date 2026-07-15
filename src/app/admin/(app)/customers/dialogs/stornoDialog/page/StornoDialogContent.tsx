@@ -13,6 +13,21 @@ export default function StornoDialogContent(props: StornoDialogProps) {
   const scope = useStornoFamilyScope(props.customer._id, t);
   const bookings = useStornoBookings(props.customer, scope, t);
   const menus = useStornoMenuState(bookings.filtered.length);
-  const submit = useStornoSubmit(props.customer, bookings, props.onClose, props.onChanged, t);
-  return <StornoDialogView {...props} t={t} scope={scope} menus={menus} bookings={bookings} submit={submit} />;
+  const submit = useStornoSubmit(
+    props.customer,
+    bookings,
+    props.onClose,
+    props.onChanged,
+    t,
+  );
+  return (
+    <StornoDialogView
+      {...props}
+      t={t}
+      scope={scope}
+      menus={menus}
+      bookings={bookings}
+      submit={submit}
+    />
+  );
 }

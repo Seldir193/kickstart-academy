@@ -38,7 +38,11 @@ export function pendingDate(news: PendingNews) {
   return pickFirst(news.date, news.createdAt, news.submittedAt, news.updatedAt);
 }
 
-export function pendingDateLabel(news: PendingNews, lang: string, t: TFunction) {
+export function pendingDateLabel(
+  news: PendingNews,
+  lang: string,
+  t: TFunction,
+) {
   const date = formatDateOnly(pendingDate(news), lang);
   if (!date) return "";
   const key = isUpdateReview(news)

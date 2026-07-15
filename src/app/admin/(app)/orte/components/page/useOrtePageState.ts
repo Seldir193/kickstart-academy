@@ -23,22 +23,50 @@ function usePlacesFilters() {
   const [sortOpen, setSortOpen] = useState(false);
   const sortTriggerRef = useRef<HTMLButtonElement | null>(null);
   const sortMenuRef = useRef<HTMLUListElement | null>(null);
-  return { page, setPage, q, setQ, qDebounced, sort, setSort, sortOpen, setSortOpen, sortTriggerRef, sortMenuRef };
+  return {
+    page,
+    setPage,
+    q,
+    setQ,
+    qDebounced,
+    sort,
+    setSort,
+    sortOpen,
+    setSortOpen,
+    sortTriggerRef,
+    sortMenuRef,
+  };
 }
 
 function useOrtePageData(filters: ReturnType<typeof usePlacesFilters>) {
   const dialog = usePlacesDialog();
-  const selection = usePlacesSelectionReset(filters.page, filters.qDebounced, filters.sort);
-  const list = usePlacesList({ page: filters.page, q: filters.qDebounced, sort: filters.sort });
+  const selection = usePlacesSelectionReset(
+    filters.page,
+    filters.qDebounced,
+    filters.sort,
+  );
+  const list = usePlacesList({
+    page: filters.page,
+    q: filters.qDebounced,
+    sort: filters.sort,
+  });
   const [mutating, setMutating] = useState(false);
-  const sortedItems = useMemo(() => sortPlaces(list.items, filters.sort), [list.items, filters.sort]);
+  const sortedItems = useMemo(
+    () => sortPlaces(list.items, filters.sort),
+    [list.items, filters.sort],
+  );
   return { dialog, selection, list, mutating, setMutating, sortedItems };
 }
 
 function createDeleteHandler(data: ReturnType<typeof useOrtePageData>) {
   return async (ids: string[]) => {
     if (!ids.length) return;
-    await mutatePlaces(ids, data.list.reload, data.setMutating, data.selection.close);
+    await mutatePlaces(
+      ids,
+      data.list.reload,
+      data.setMutating,
+      data.selection.close,
+    );
   };
 }
 
@@ -55,21 +83,41 @@ function createPageModel(
 }
 
 function pageStateValues(filters: ReturnType<typeof usePlacesFilters>) {
-  return { page: filters.page, q: filters.q, sort: filters.sort, sortOpen: filters.sortOpen, sortTriggerRef: filters.sortTriggerRef, sortMenuRef: filters.sortMenuRef };
+  return {
+    page: filters.page,
+    q: filters.q,
+    sort: filters.sort,
+    sortOpen: filters.sortOpen,
+    sortTriggerRef: filters.sortTriggerRef,
+    sortMenuRef: filters.sortMenuRef,
+  };
 }
 
 function pageDataValues(data: ReturnType<typeof useOrtePageData>) {
-  return { list: data.list, sortedItems: data.sortedItems, busy: data.mutating, dialog: data.dialog, selection: data.selection };
+  return {
+    list: data.list,
+    sortedItems: data.sortedItems,
+    busy: data.mutating,
+    dialog: data.dialog,
+    selection: data.selection,
+  };
 }
 
-function pageActions(filters: ReturnType<typeof usePlacesFilters>, data: ReturnType<typeof useOrtePageData>, handleDeleteMany: (ids: string[]) => Promise<void>) {
+function pageActions(
+  filters: ReturnType<typeof usePlacesFilters>,
+  data: ReturnType<typeof useOrtePageData>,
+  handleDeleteMany: (ids: string[]) => Promise<void>,
+) {
   return {
     setSortOpen: filters.setSortOpen,
-    changeQuery: (value: string) => updateQuery(value, filters.setQ, filters.setPage),
+    changeQuery: (value: string) =>
+      updateQuery(value, filters.setQ, filters.setPage),
     clearQuery: () => updateQuery("", filters.setQ, filters.setPage),
-    changeSort: (next: PlacesSortKey) => changeSort(next, filters.setSort, filters.setSortOpen, filters.setPage),
+    changeSort: (next: PlacesSortKey) =>
+      changeSort(next, filters.setSort, filters.setSortOpen, filters.setPage),
     previousPage: () => filters.setPage((current) => Math.max(1, current - 1)),
-    nextPage: () => filters.setPage((current) => Math.min(data.list.pageCount, current + 1)),
+    nextPage: () =>
+      filters.setPage((current) => Math.min(data.list.pageCount, current + 1)),
     handleDeleteMany,
   };
 }
@@ -109,7 +157,11 @@ function openPlaceDialog(
   setOpen(true);
 }
 
-function updateQuery(value: string, setQ: (value: string) => void, setPage: (page: number) => void) {
+function updateQuery(
+  value: string,
+  setQ: (value: string) => void,
+  setPage: (page: number) => void,
+) {
   setQ(value);
   setPage(1);
 }

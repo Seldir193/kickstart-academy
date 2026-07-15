@@ -12,10 +12,26 @@ export default function FranchiseLocationsPageContent() {
   const p = useFranchiseLocationsPage();
   const { t } = useTranslation();
   const deleteState = useLocationDeleteState(p);
-  return <div className="franchise-locations fl-admin ks"><main className="container"><FranchiseLocationsNotice p={p} /><FranchiseLocationsToolbar p={p} t={t} /><FranchiseLocationsStatusCards p={p} t={t} /><FranchiseLocationsSections p={p} t={t} handlers={deleteHandlers(deleteState.openDelete)} /></main><FranchiseLocationsDialogs p={p} t={t} deleteState={deleteState} /></div>;
+  return (
+    <div className="franchise-locations fl-admin ks">
+      <main className="container">
+        <FranchiseLocationsNotice p={p} />
+        <FranchiseLocationsToolbar p={p} t={t} />
+        <FranchiseLocationsStatusCards p={p} t={t} />
+        <FranchiseLocationsSections
+          p={p}
+          t={t}
+          handlers={deleteHandlers(deleteState.openDelete)}
+        />
+      </main>
+      <FranchiseLocationsDialogs p={p} t={t} deleteState={deleteState} />
+    </div>
+  );
 }
 
-function deleteHandlers(openDelete: (item: FranchiseLocation, mode: "mine" | "admin") => void) {
+function deleteHandlers(
+  openDelete: (item: FranchiseLocation, mode: "mine" | "admin") => void,
+) {
   return {
     openDeleteMine: (item: FranchiseLocation) => openDelete(item, "mine"),
     openDeleteAdmin: (item: FranchiseLocation) => openDelete(item, "admin"),

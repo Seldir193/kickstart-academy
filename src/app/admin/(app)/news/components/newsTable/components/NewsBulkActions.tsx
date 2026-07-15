@@ -11,7 +11,11 @@ type BulkProps = {
 };
 
 export function NewsBulkActions({ props, state, t }: BulkProps) {
-  return <div className="news-admin__top-actions"><BulkActions {...bulkProps(props, state, t)} /></div>;
+  return (
+    <div className="news-admin__top-actions">
+      <BulkActions {...bulkProps(props, state, t)} />
+    </div>
+  );
 }
 
 function bulkProps(props: Props, state: NewsTableState, t: Translate) {
@@ -78,7 +82,9 @@ function toggleSelectMode(props: Props, state: NewsTableState) {
 }
 
 function toggleAll(state: NewsTableState) {
-  state.selection.isAllSelected ? state.selection.removeAll() : state.selection.selectAll();
+  state.selection.isAllSelected
+    ? state.selection.removeAll()
+    : state.selection.selectAll();
 }
 
 function clearSelection(props: Props, state: NewsTableState) {

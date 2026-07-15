@@ -1,4 +1,3 @@
-//src\app\admin\(app)\news\newsAdmin\useNewsAdminState.ts
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";

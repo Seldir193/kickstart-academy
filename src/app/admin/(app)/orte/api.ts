@@ -56,7 +56,9 @@ export async function deletePlacesBulk(ids: string[]) {
   if (!failed.length) return;
 }
 
-async function readPlacesResponse(response: Response): Promise<PlacesApiResponse> {
+async function readPlacesResponse(
+  response: Response,
+): Promise<PlacesApiResponse> {
   return response.json().catch(() => ({}));
 }
 

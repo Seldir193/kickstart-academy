@@ -11,5 +11,15 @@ export default function BookingDialogContent(props: BookingDialogProps) {
   const { t, i18n } = useTranslation();
   const model = useBookingDialogModel(props.booking, t, i18n.language);
   const actions = useBookingDialogActions(props, t);
-  return <BookingDialogPortal><BookingDialogView {...props} actions={actions} model={model} t={t} lang={i18n.language} /></BookingDialogPortal>;
+  return (
+    <BookingDialogPortal>
+      <BookingDialogView
+        {...props}
+        actions={actions}
+        model={model}
+        t={t}
+        lang={i18n.language}
+      />
+    </BookingDialogPortal>
+  );
 }

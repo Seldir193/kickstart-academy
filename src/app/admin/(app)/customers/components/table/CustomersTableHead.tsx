@@ -13,7 +13,9 @@ const columns = [
 ];
 
 function headClass(column: string): string {
-  return column === "edit" ? "ks-customers-list__h ks-customers-list__h--right" : "ks-customers-list__h";
+  return column === "edit"
+    ? "ks-customers-list__h ks-customers-list__h--right"
+    : "ks-customers-list__h";
 }
 
 export default function CustomersTableHead({ t }: { t: TFunction }) {

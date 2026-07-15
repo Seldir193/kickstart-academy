@@ -10,7 +10,9 @@ export default function FranchiseLocationsSections(props: {
   const { p, t, handlers } = props;
   if (p.loading || p.err) return null;
   if (p.superAdmin) {
-    return <FranchiseLocationProviderSections p={p} t={t} handlers={handlers} />;
+    return (
+      <FranchiseLocationProviderSections p={p} t={t} handlers={handlers} />
+    );
   }
   return <FranchiseLocationMineSections p={p} t={t} handlers={handlers} />;
 }

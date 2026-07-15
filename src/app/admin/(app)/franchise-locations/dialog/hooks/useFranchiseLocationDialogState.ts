@@ -15,10 +15,7 @@ export function useFranchiseLocationDialogState(
 }
 
 function useDialogTitle(isEdit: boolean, t: TFunction) {
-  return useMemo(
-    () => getDialogTitle(isEdit, t),
-    [isEdit, t],
-  );
+  return useMemo(() => getDialogTitle(isEdit, t), [isEdit, t]);
 }
 
 function getDialogTitle(isEdit: boolean, t: TFunction) {
@@ -103,7 +100,9 @@ function validateLocation(
   t: TFunction,
 ) {
   if (!payload.country || !payload.city) {
-    setErr(t("common.admin.franchiseLocations.formDialog.errors.locationRequired"));
+    setErr(
+      t("common.admin.franchiseLocations.formDialog.errors.locationRequired"),
+    );
     return false;
   }
   return true;

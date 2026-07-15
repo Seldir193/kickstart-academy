@@ -15,7 +15,13 @@ export default function CoachesFeedbackCards({
   );
 }
 
-function FeedbackCard({ message, role }: { message: string; role: "alert" | "status" }) {
+function FeedbackCard({
+  message,
+  role,
+}: {
+  message: string;
+  role: "alert" | "status";
+}) {
   return (
     <div className="card" role={role}>
       <div className="text-red-600">{message}</div>

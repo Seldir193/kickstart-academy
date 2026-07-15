@@ -26,7 +26,9 @@ function SearchField({ value, onChange, onClear, t }: Props) {
         className="input input-with-icon__input"
         value={value}
         onChange={(event) => onChange(event.target.value)}
-        placeholder={t("common.admin.places.searchPlaceholder", { defaultValue: "Name, street, city, zip..." })}
+        placeholder={t("common.admin.places.searchPlaceholder", {
+          defaultValue: "Name, street, city, zip...",
+        })}
         onKeyDown={(event) => handleSearchKey(event, onClear)}
       />
     </div>
@@ -34,10 +36,20 @@ function SearchField({ value, onChange, onClear, t }: Props) {
 }
 
 function SearchIcon() {
-  return <img src="/icons/search.svg" alt="" aria-hidden="true" className="input-with-icon__icon" />;
+  return (
+    <img
+      src="/icons/search.svg"
+      alt=""
+      aria-hidden="true"
+      className="input-with-icon__icon"
+    />
+  );
 }
 
-function handleSearchKey(event: KeyboardEvent<HTMLInputElement>, onClear: () => void) {
+function handleSearchKey(
+  event: KeyboardEvent<HTMLInputElement>,
+  onClear: () => void,
+) {
   if (event.key !== "Escape") return;
   onClear();
 }

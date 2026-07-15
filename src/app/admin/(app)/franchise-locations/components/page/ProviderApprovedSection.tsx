@@ -10,6 +10,24 @@ export default function ProviderApprovedSection(props: {
 }) {
   const { p, t, handlers } = props;
   return (
-    <TableLocationsSection title={viewLabelProvider("provider_approved", t)} meta={countLabel(p.provApprovedAllCount, "provider_approved", t)} items={p.pagProvApproved.items} rowMode="provider_approved" selectMode={p.provApprovedSelectMode} onToggleSelectMode={p.toggleProvApprovedSelectMode} busy={false} publishedBusyId={p.publishedBusyId} onTogglePublished={p.togglePublished} onOpen={p.openEdit} onInfo={p.openInfo} onAskReject={p.openReject} onDeleteOne={handlers.openDeleteAdmin} onDeleteMany={p.deleteManyAdmin} toggleBtnRef={p.provApprovedToggleRef} pagination={provApprovedPagination(p)} p={p} />
+    <TableLocationsSection
+      title={viewLabelProvider("provider_approved", t)}
+      meta={countLabel(p.provApprovedAllCount, "provider_approved", t)}
+      items={p.pagProvApproved.items}
+      rowMode="provider_approved"
+      selectMode={p.provApprovedSelectMode}
+      onToggleSelectMode={p.toggleProvApprovedSelectMode}
+      busy={false}
+      publishedBusyId={p.publishedBusyId}
+      onTogglePublished={p.togglePublished}
+      onOpen={p.openEdit}
+      onInfo={p.openInfo}
+      onAskReject={p.openReject}
+      onDeleteOne={handlers.openDeleteAdmin}
+      onDeleteMany={p.deleteManyAdmin}
+      toggleBtnRef={p.provApprovedToggleRef}
+      pagination={provApprovedPagination(p)}
+      p={p}
+    />
   );
 }

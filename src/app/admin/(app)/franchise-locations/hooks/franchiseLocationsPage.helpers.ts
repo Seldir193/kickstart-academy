@@ -11,16 +11,33 @@ export function safeItems(data: unknown): FranchiseLocation[] {
 }
 
 function buildHaystack(item: FranchiseLocation) {
-  return [item.licenseeFirstName, item.licenseeLastName, item.country, item.city,
-    item.state, item.address, item.zip, item.website, item.emailPublic,
-    item.phonePublic, item.rejectionReason, item.status, item.ownerName,
-    item.ownerEmail, item.ownerUser?.fullName, item.ownerUser?.email]
-    .filter(Boolean).join(" | ");
+  return [
+    item.licenseeFirstName,
+    item.licenseeLastName,
+    item.country,
+    item.city,
+    item.state,
+    item.address,
+    item.zip,
+    item.website,
+    item.emailPublic,
+    item.phonePublic,
+    item.rejectionReason,
+    item.status,
+    item.ownerName,
+    item.ownerEmail,
+    item.ownerUser?.fullName,
+    item.ownerUser?.email,
+  ]
+    .filter(Boolean)
+    .join(" | ");
 }
 
 export function applySearch(items: FranchiseLocation[], queryText: string) {
   const query = clean(queryText);
-  return query ? items.filter((item) => includesText(buildHaystack(item), query)) : items;
+  return query
+    ? items.filter((item) => includesText(buildHaystack(item), query))
+    : items;
 }
 
 export async function loadView(view: string) {

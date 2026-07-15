@@ -10,12 +10,20 @@ export default function FeedbackImageFields(props: FeedbackDialogFieldsProps) {
   return (
     <>
       <FeedbackImageUrlField {...props} />
-      <FeedbackUploadControl inputRef={inputRef} fileName={fileName} onPickFile={onPickFile} />
+      <FeedbackUploadControl
+        inputRef={inputRef}
+        fileName={fileName}
+        onPickFile={onPickFile}
+      />
     </>
   );
 }
 
-function useUploadPicker(uploadImage: (file?: File) => Promise<void>, inputRef: React.RefObject<HTMLInputElement | null>, setFileName: (name: string) => void) {
+function useUploadPicker(
+  uploadImage: (file?: File) => Promise<void>,
+  inputRef: React.RefObject<HTMLInputElement | null>,
+  setFileName: (name: string) => void,
+) {
   return async (file?: File) => {
     setFileName(file?.name || "");
     await uploadImage(file);

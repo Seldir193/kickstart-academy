@@ -32,9 +32,10 @@ export default function RejectDialog({
 
   const heading = useMemo(() => {
     const text = clean(title);
-    return text ? t("common.admin.news.rejectDialog.headingWithTitle", { title: text })
+    return text
+      ? t("common.admin.news.rejectDialog.headingWithTitle", { title: text })
       : t("common.admin.news.rejectDialog.heading");
-  }, [t,title]);
+  }, [t, title]);
 
   useEffect(() => {
     if (!open) return;
@@ -45,7 +46,8 @@ export default function RejectDialog({
 
   async function submit() {
     const r = clean(reason);
-    if (!r)  return setError(t("common.admin.news.rejectDialog.errorEnterReason"));
+    if (!r)
+      return setError(t("common.admin.news.rejectDialog.errorEnterReason"));
     setError(null);
     setBusy(true);
     try {
@@ -75,7 +77,6 @@ export default function RejectDialog({
       <button
         type="button"
         className="dialog-backdrop-hit news-reject__backdrop-hit"
-       
         aria-label={t("common.close")}
         onClick={() => {
           if (!busy) onClose();
@@ -121,13 +122,17 @@ export default function RejectDialog({
           ) : null}
 
           <div className="field">
-            <label className="dialog-label">{t("common.admin.news.rejectDialog.reasonLabel")}</label>
+            <label className="dialog-label">
+              {t("common.admin.news.rejectDialog.reasonLabel")}
+            </label>
             <textarea
               className="input news-reject__textarea"
               value={reason}
               readOnly={!!readOnly}
               onChange={(e) => setReason(e.target.value)}
-              placeholder={t("common.admin.news.rejectDialog.reasonPlaceholder")}
+              placeholder={t(
+                "common.admin.news.rejectDialog.reasonPlaceholder",
+              )}
             />
           </div>
         </div>
@@ -142,7 +147,8 @@ export default function RejectDialog({
               }}
               disabled={busy}
             >
-              {busy ? t("common.admin.news.rejectDialog.rejecting")
+              {busy
+                ? t("common.admin.news.rejectDialog.rejecting")
                 : t("common.admin.news.rejectDialog.reject")}
             </button>
           </div>

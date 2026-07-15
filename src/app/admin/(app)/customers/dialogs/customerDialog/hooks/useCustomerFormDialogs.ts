@@ -11,7 +11,20 @@ export function useCustomerFormDialogs() {
   const [genderOpen, setGenderOpen] = useState(false);
   const salutationDropdownRef = useRef<HTMLDivElement | null>(null);
   const genderDropdownRef = useRef<HTMLDivElement | null>(null);
-  return { bookOpen, setBookOpen, cancelOpen, setCancelOpen, stornoOpen, setStornoOpen,
-    documentsOpen, setDocumentsOpen, salutationOpen, setSalutationOpen, genderOpen,
-    setGenderOpen, salutationDropdownRef, genderDropdownRef };
+  return {
+    bookOpen,
+    setBookOpen,
+    cancelOpen,
+    setCancelOpen,
+    stornoOpen,
+    setStornoOpen,
+    documentsOpen,
+    setDocumentsOpen,
+    salutationOpen,
+    setSalutationOpen,
+    genderOpen,
+    setGenderOpen,
+    salutationDropdownRef,
+    genderDropdownRef,
+  };
 }

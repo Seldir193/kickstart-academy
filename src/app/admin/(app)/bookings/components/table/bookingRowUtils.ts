@@ -1,4 +1,9 @@
-import type { KeyboardEvent, MutableRefObject, RefObject, SyntheticEvent } from "react";
+import type {
+  KeyboardEvent,
+  MutableRefObject,
+  RefObject,
+  SyntheticEvent,
+} from "react";
 import type { Booking } from "../../types";
 import { asStatus, formatDateOnly, programAbbr, safeText } from "../../utils";
 import type { TFn } from "./types";
@@ -45,7 +50,9 @@ export function paymentClass(status: string) {
 }
 
 export function paymentStatus(b: Booking) {
-  return String(b?.paymentStatus || "").trim().toLowerCase();
+  return String(b?.paymentStatus || "")
+    .trim()
+    .toLowerCase();
 }
 
 export function bookingAge(b: Booking) {

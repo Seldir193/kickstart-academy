@@ -13,9 +13,25 @@ type Props = {
 
 export default function PlacesEditCell({ place, onOpen, t }: Props) {
   return (
-    <div className="news-list__cell news-list__cell--action" onClick={(event) => openPlace(event, place, onOpen)} onMouseDown={stopPropagation}>
-      <span className="edit-trigger" role="button" tabIndex={0} aria-label={t("common.admin.places.row.editAria", { defaultValue: "Edit" })}>
-        <img src="/icons/edit.svg" alt="" aria-hidden="true" className="icon-img" />
+    <div
+      className="news-list__cell news-list__cell--action"
+      onClick={(event) => openPlace(event, place, onOpen)}
+      onMouseDown={stopPropagation}
+    >
+      <span
+        className="edit-trigger"
+        role="button"
+        tabIndex={0}
+        aria-label={t("common.admin.places.row.editAria", {
+          defaultValue: "Edit",
+        })}
+      >
+        <img
+          src="/icons/edit.svg"
+          alt=""
+          aria-hidden="true"
+          className="icon-img"
+        />
       </span>
     </div>
   );

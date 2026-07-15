@@ -28,11 +28,17 @@ function createHandler(
   setSaving: Dispatch<SetStateAction<boolean>>,
   setErr: Dispatch<SetStateAction<string | null>>,
 ) {
-  return async (onCreated?: () => void) => runAction(setSaving, setErr, async () => {
-    const created = await createCustomer(buildCustomerBody(form));
-    await syncNewsletterAfterCreate(created, setForm, t);
-    onCreated?.();
-  }, (error) => createError(t, error));
+  return async (onCreated?: () => void) =>
+    runAction(
+      setSaving,
+      setErr,
+      async () => {
+        const created = await createCustomer(buildCustomerBody(form));
+        await syncNewsletterAfterCreate(created, setForm, t);
+        onCreated?.();
+      },
+      (error) => createError(t, error),
+    );
 }
 
 function saveHandler(
@@ -51,10 +57,15 @@ function saveHandler(
   ) => {
     void baseCustomerId;
     if (mode !== "edit") return;
-    await runAction(setSaving, setErr, async () => {
-      await saveExisting(form, familyMode, setForm, reloadFamily);
-      onSaved?.();
-    }, (error) => saveError(t, error));
+    await runAction(
+      setSaving,
+      setErr,
+      async () => {
+        await saveExisting(form, familyMode, setForm, reloadFamily);
+        onSaved?.();
+      },
+      (error) => saveError(t, error),
+    );
   };
 }
 
@@ -104,19 +115,34 @@ async function syncNewsletterAfterCreate(
   try {
     setForm(await toggleNewsletter(created._id, true));
   } catch (error) {
-    console.warn("Newsletter sync after create failed:", newsletterError(t, error));
+    console.warn(
+      "Newsletter sync after create failed:",
+      newsletterError(t, error),
+    );
   }
 }
 
 function createError(t: TFunction, error: unknown) {
-  return toastErrorMessage(t, error, "common.admin.customers.customerDialog.errors.createFailed");
+  return toastErrorMessage(
+    t,
+    error,
+    "common.admin.customers.customerDialog.errors.createFailed",
+  );
 }
 
 function saveError(t: TFunction, error: unknown) {
   console.error("Customer save error", error);
-  return toastErrorMessage(t, error, "common.admin.customers.customerDialog.errors.saveFailed");
+  return toastErrorMessage(
+    t,
+    error,
+    "common.admin.customers.customerDialog.errors.saveFailed",
+  );
 }
 
 function newsletterError(t: TFunction, error: unknown) {
-  return toastErrorMessage(t, error, "common.admin.customers.customerDialog.errors.newsletterSyncFailed");
+  return toastErrorMessage(
+    t,
+    error,
+    "common.admin.customers.customerDialog.errors.newsletterSyncFailed",
+  );
 }

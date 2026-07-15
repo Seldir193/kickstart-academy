@@ -10,7 +10,8 @@ type TargetState = {
 
 function useTargetState() {
   const [state, setState] = useState<TargetState>(initialState());
-  const openDelete = (target: FranchiseLocation, mode: DeleteMode) => setState({ open: true, target, mode });
+  const openDelete = (target: FranchiseLocation, mode: DeleteMode) =>
+    setState({ open: true, target, mode });
   const close = () => setState(initialState());
   return { state, openDelete, close };
 }

@@ -19,7 +19,13 @@ export default function LocationStatusCell(p: Props) {
     <div className="news-list__cell news-list__cell--status">
       <div className="coach-statusline">
         <LocationStatusMain item={p.item} status={p.status} />
-        <LocationStatusSwitch {...p} item={p.item} show={p.showSwitch} disabled={p.switchDisabled} busy={p.switchBusy} />
+        <LocationStatusSwitch
+          {...p}
+          item={p.item}
+          show={p.showSwitch}
+          disabled={p.switchDisabled}
+          busy={p.switchBusy}
+        />
       </div>
     </div>
   );

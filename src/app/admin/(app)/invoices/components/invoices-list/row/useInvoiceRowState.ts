@@ -40,7 +40,8 @@ function actionFlags(
     showCollection: !isCreditNote && canShowCollection(row, rowBusyId),
     refundAllowed: canRefund(row, rowBusyId),
     withdrawAllowed: canWithdraw(row, rowBusyId),
-    sendDisabled: actionDisabled(row, rowBusyId) || isCreditNote || hasFinalDunning(row),
+    sendDisabled:
+      actionDisabled(row, rowBusyId) || isCreditNote || hasFinalDunning(row),
   };
 }
 

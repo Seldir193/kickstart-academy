@@ -77,7 +77,12 @@ export type CancelBookingsState = {
   statusLabel: string;
   sortLabel: string;
   selectedCourseLabel: string;
-  bookingTrigger: { title: string; invoice: string; venue: string; status: string };
+  bookingTrigger: {
+    title: string;
+    invoice: string;
+    venue: string;
+    status: string;
+  };
   courseValueIsNonCancelable: boolean;
   setErr: (value: string | null) => void;
   setCourseValue: (value: string) => void;

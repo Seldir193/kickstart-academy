@@ -6,7 +6,10 @@ import CustomersTableHead from "./CustomersTableHead";
 import type { CustomersTableProps } from "./types";
 
 function cardClass(showListLoading: boolean): string {
-  return "card admin-card p-0 ks-customers-card ks-customers-list" + (showListLoading ? " is-loading" : "");
+  return (
+    "card admin-card p-0 ks-customers-card ks-customers-list" +
+    (showListLoading ? " is-loading" : "")
+  );
 }
 
 export default function CustomersTableContent(props: CustomersTableProps) {

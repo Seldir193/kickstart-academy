@@ -10,7 +10,9 @@ type UploadProps = FeedbackDialogTextFieldsProps & {
   pickFile: (file?: File) => Promise<void>;
 };
 
-export default function FeedbackImageFields(props: FeedbackDialogTextFieldsProps) {
+export default function FeedbackImageFields(
+  props: FeedbackDialogTextFieldsProps,
+) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [fileName, setFileName] = useState("");
   const pickFile = createFilePicker(props, inputRef, setFileName);
@@ -41,7 +43,13 @@ function FeedbackImageUrlField(props: FeedbackDialogTextFieldsProps) {
   return (
     <div className="field field--full">
       <label className="dialog-label">{t("admin.feedbacks.imageUrl")}</label>
-      <input className="input" value={props.draft.imageUrl} onChange={(event) => props.updateFeedback("imageUrl", event.target.value)} />
+      <input
+        className="input"
+        value={props.draft.imageUrl}
+        onChange={(event) =>
+          props.updateFeedback("imageUrl", event.target.value)
+        }
+      />
     </div>
   );
 }
@@ -61,16 +69,36 @@ function FeedbackUploadField(props: UploadProps) {
 }
 
 function FeedbackUploadInput(props: UploadProps) {
-  return <input ref={props.inputRef} type="file" accept="image/*" hidden onChange={(event) => props.pickFile(event.target.files?.[0])} />;
+  return (
+    <input
+      ref={props.inputRef}
+      type="file"
+      accept="image/*"
+      hidden
+      onChange={(event) => props.pickFile(event.target.files?.[0])}
+    />
+  );
 }
 
 function FeedbackUploadButton({ inputRef }: Pick<UploadProps, "inputRef">) {
   const { t } = useTranslation();
-  return <button type="button" className="btn" onClick={() => inputRef.current?.click()}>{t("admin.feedbacks.chooseFile")}</button>;
+  return (
+    <button
+      type="button"
+      className="btn"
+      onClick={() => inputRef.current?.click()}
+    >
+      {t("admin.feedbacks.chooseFile")}
+    </button>
+  );
 }
 
 function FeedbackFileName({ fileName }: Pick<UploadProps, "fileName">) {
   const { t } = useTranslation();
   const className = `feedback-dialog__file-name${fileName ? "" : " is-empty"}`;
-  return <span className={className}>{fileName || t("admin.feedbacks.noFileSelected")}</span>;
+  return (
+    <span className={className}>
+      {fileName || t("admin.feedbacks.noFileSelected")}
+    </span>
+  );
 }

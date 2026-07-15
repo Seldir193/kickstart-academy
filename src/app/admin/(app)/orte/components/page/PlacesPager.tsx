@@ -11,11 +11,21 @@ type Props = {
 export default function PlacesPager({ model, t }: Props) {
   return (
     <div className="pager pager--arrows mt-3">
-      <PagerButton direction="previous" disabled={model.list.loading || model.page <= 1} onClick={model.previousPage} t={t} />
+      <PagerButton
+        direction="previous"
+        disabled={model.list.loading || model.page <= 1}
+        onClick={model.previousPage}
+        t={t}
+      />
       <div className="pager__count" aria-live="polite" aria-atomic="true">
         {model.page} / {model.list.pageCount}
       </div>
-      <PagerButton direction="next" disabled={model.list.loading || model.page >= model.list.pageCount} onClick={model.nextPage} t={t} />
+      <PagerButton
+        direction="next"
+        disabled={model.list.loading || model.page >= model.list.pageCount}
+        onClick={model.nextPage}
+        t={t}
+      />
     </div>
   );
 }
@@ -29,8 +39,19 @@ type ButtonProps = {
 
 function PagerButton({ direction, disabled, onClick, t }: ButtonProps) {
   return (
-    <button type="button" className="btn" aria-label={pagerLabel(direction, t)} disabled={disabled} onClick={onClick}>
-      <img src="/icons/arrow_right_alt.svg" alt="" aria-hidden="true" className={pagerIconClass(direction)} />
+    <button
+      type="button"
+      className="btn"
+      aria-label={pagerLabel(direction, t)}
+      disabled={disabled}
+      onClick={onClick}
+    >
+      <img
+        src="/icons/arrow_right_alt.svg"
+        alt=""
+        aria-hidden="true"
+        className={pagerIconClass(direction)}
+      />
     </button>
   );
 }

@@ -14,7 +14,11 @@ export function useOnlineBookingDialogState(props: OnlineBookingDialogProps) {
   return { t, i18n, busy, flags, messageRows, run };
 }
 
-function useDialogMessageRows(props: OnlineBookingDialogProps, t: Translate, lang: string) {
+function useDialogMessageRows(
+  props: OnlineBookingDialogProps,
+  t: Translate,
+  lang: string,
+) {
   return useMemo(
     () => buildHolidayRows(t, lang, props.booking),
     [t, lang, props.booking],
@@ -33,7 +37,13 @@ function useRunAction(
   };
 }
 
-async function executeAction(props: OnlineBookingDialogProps, t: Translate, action: string, fn: () => Promise<unknown>, setBusy: (value: string) => void) {
+async function executeAction(
+  props: OnlineBookingDialogProps,
+  t: Translate,
+  action: string,
+  fn: () => Promise<unknown>,
+  setBusy: (value: string) => void,
+) {
   try {
     setBusy(action);
     await fn();
@@ -45,13 +55,27 @@ async function executeAction(props: OnlineBookingDialogProps, t: Translate, acti
   }
 }
 
-function handleActionSuccess(props: OnlineBookingDialogProps, t: Translate, action: string) {
+function handleActionSuccess(
+  props: OnlineBookingDialogProps,
+  t: Translate,
+  action: string,
+) {
   props.notify(toastText(t, successMessageKey(action)));
   if (action === "delete") props.onClose();
 }
 
-function handleActionError(props: OnlineBookingDialogProps, t: Translate, error: unknown) {
-  props.notify(toastErrorMessage(t, error, "common.admin.onlineBookings.dialog.error.actionFailed"));
+function handleActionError(
+  props: OnlineBookingDialogProps,
+  t: Translate,
+  error: unknown,
+) {
+  props.notify(
+    toastErrorMessage(
+      t,
+      error,
+      "common.admin.onlineBookings.dialog.error.actionFailed",
+    ),
+  );
 }
 
 export async function approvePayment(props: OnlineBookingDialogProps) {
@@ -67,4 +91,6 @@ function approvedPaymentMeta(props: OnlineBookingDialogProps) {
   };
 }
 
-export type OnlineBookingDialogState = ReturnType<typeof useOnlineBookingDialogState>;
+export type OnlineBookingDialogState = ReturnType<
+  typeof useOnlineBookingDialogState
+>;

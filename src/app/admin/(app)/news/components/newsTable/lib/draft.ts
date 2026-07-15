@@ -10,13 +10,19 @@ export function draftLine(label: string, value: string) {
   };
 }
 
-export function titleDraftChanged(item: Record<string, unknown>, label: string) {
+export function titleDraftChanged(
+  item: Record<string, unknown>,
+  label: string,
+) {
   const { draftTitle } = getDraftDelta(item);
   if (!draftTitle || draftTitle === clean(item.title)) return null;
   return draftLine(label, draftTitle);
 }
 
-export function excerptDraftChanged(item: Record<string, unknown>, label: string) {
+export function excerptDraftChanged(
+  item: Record<string, unknown>,
+  label: string,
+) {
   const { draftExcerpt } = getDraftDelta(item);
   if (!draftExcerpt || draftExcerpt === clean(item.excerpt)) return null;
   return draftLine(label, draftExcerpt);

@@ -24,7 +24,8 @@ function onRowKeyDown(e: React.KeyboardEvent, open: () => void) {
 }
 
 function rowKeyDownHandler(props: InvoicesListRowProps) {
-  return (e: React.KeyboardEvent) => onRowKeyDown(e, () => props.openPdf(props.d));
+  return (e: React.KeyboardEvent) =>
+    onRowKeyDown(e, () => props.openPdf(props.d));
 }
 
 function InvoiceRowItem({ props, state, t }: RowItemProps) {
@@ -36,7 +37,12 @@ function InvoiceRowItem({ props, state, t }: RowItemProps) {
       tabIndex={0}
       onKeyDown={rowKeyDownHandler(props)}
     >
-      <InvoicesListRowBody doc={props.d} fmtDate={props.fmtDate} row={state.row} t={t} />
+      <InvoicesListRowBody
+        doc={props.d}
+        fmtDate={props.fmtDate}
+        row={state.row}
+        t={t}
+      />
       <InvoicesListRowActions props={props} state={state} t={t} />
     </li>
   );

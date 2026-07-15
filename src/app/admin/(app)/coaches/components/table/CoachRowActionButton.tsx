@@ -11,7 +11,25 @@ type Props = {
 };
 
 export default function CoachRowActionButton(props: Props) {
-  return <span className={actionClass(props.disabled)} role="button" tabIndex={0} title={props.title} data-ks-tip={props.tip} aria-disabled={props.disabled ? true : undefined} onClick={(e) => clickAction(e, props)} onKeyDown={(e) => onActionKey(e, () => props.onRun(), props.disabled)}><img src={props.icon} alt="" aria-hidden="true" className={props.iconClassName || "icon-img"} /></span>;
+  return (
+    <span
+      className={actionClass(props.disabled)}
+      role="button"
+      tabIndex={0}
+      title={props.title}
+      data-ks-tip={props.tip}
+      aria-disabled={props.disabled ? true : undefined}
+      onClick={(e) => clickAction(e, props)}
+      onKeyDown={(e) => onActionKey(e, () => props.onRun(), props.disabled)}
+    >
+      <img
+        src={props.icon}
+        alt=""
+        aria-hidden="true"
+        className={props.iconClassName || "icon-img"}
+      />
+    </span>
+  );
 }
 
 function actionClass(disabled: boolean) {

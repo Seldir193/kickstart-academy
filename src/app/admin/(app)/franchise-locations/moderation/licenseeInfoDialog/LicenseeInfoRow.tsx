@@ -7,7 +7,12 @@ type Props = {
   multiline?: boolean;
 };
 
-export default function LicenseeInfoRow({ label, value, mono, multiline }: Props) {
+export default function LicenseeInfoRow({
+  label,
+  value,
+  mono,
+  multiline,
+}: Props) {
   return (
     <div className={`fl-info__row ${multiline ? "is-multiline" : ""}`}>
       <div className="dialog-label">{label}</div>

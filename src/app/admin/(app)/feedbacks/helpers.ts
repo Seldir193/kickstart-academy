@@ -3,7 +3,6 @@ import { EMPTY_FEEDBACK } from "./constants";
 
 export type FeedbackCategoryFilter = FeedbackCategory | "all";
 
-
 export type FeedbackSortKey = "newest" | "oldest" | "aToZ" | "zToA";
 
 export function getFeedbackId(item: Feedback) {
@@ -100,11 +99,7 @@ function compareFilteredFeedbacks(
   return compareFeedbackDates(a, b, sort);
 }
 
-function compareFeedbackDates(
-  a: Feedback,
-  b: Feedback,
-  sort: FeedbackSortKey,
-) {
+function compareFeedbackDates(a: Feedback, b: Feedback, sort: FeedbackSortKey) {
   const diff = feedbackTimestamp(b) - feedbackTimestamp(a);
   return sort === "oldest" ? diff * -1 : diff;
 }
@@ -135,12 +130,16 @@ function isSameFeedback(item: Feedback, draft: Feedback) {
   if (itemId && draftId && itemId === draftId) return false;
 
   return (
-    normalizeFeedbackValue(item.author) === normalizeFeedbackValue(draft.author) &&
+    normalizeFeedbackValue(item.author) ===
+      normalizeFeedbackValue(draft.author) &&
     item.category === draft.category &&
-    normalizeFeedbackValue(item.quote.de) === normalizeFeedbackValue(draft.quote.de)
+    normalizeFeedbackValue(item.quote.de) ===
+      normalizeFeedbackValue(draft.quote.de)
   );
 }
 
 function normalizeFeedbackValue(value?: string) {
-  return String(value || "").trim().toLowerCase();
+  return String(value || "")
+    .trim()
+    .toLowerCase();
 }

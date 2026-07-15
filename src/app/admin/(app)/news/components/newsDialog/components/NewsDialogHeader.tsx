@@ -1,6 +1,10 @@
 import type { DialogHeaderProps } from "./types";
 
-export default function NewsDialogHeader({ props, state, t }: DialogHeaderProps) {
+export default function NewsDialogHeader({
+  props,
+  state,
+  t,
+}: DialogHeaderProps) {
   return (
     <div className="dialog-head news-dialog__head">
       <div className="news-dialog__head-left">
@@ -40,15 +44,32 @@ function NewsDialogTitleActions({ props, state, t }: DialogHeaderProps) {
 
 function PreviewLink({ props, state, t }: DialogHeaderProps) {
   if (props.mode !== "edit" || !state.previewUrl) return null;
-  return <a className="btn" href={state.previewUrl} target="_blank" rel="noreferrer">{t("common.admin.news.dialog.preview")}</a>;
+  return (
+    <a className="btn" href={state.previewUrl} target="_blank" rel="noreferrer">
+      {t("common.admin.news.dialog.preview")}
+    </a>
+  );
 }
 
-function NewsDialogCloseButton({ props, t }: Pick<DialogHeaderProps, "props" | "t">) {
+function NewsDialogCloseButton({
+  props,
+  t,
+}: Pick<DialogHeaderProps, "props" | "t">) {
   return (
     <div className="news-dialog__head-right">
       <div className="dialog-head__actions">
-        <button type="button" className="dialog-close modal__close" aria-label={t("common.close")} onClick={props.onClose}>
-          <img src="/icons/close.svg" alt="" aria-hidden="true" className="icon-img" />
+        <button
+          type="button"
+          className="dialog-close modal__close"
+          aria-label={t("common.close")}
+          onClick={props.onClose}
+        >
+          <img
+            src="/icons/close.svg"
+            alt=""
+            aria-hidden="true"
+            className="icon-img"
+          />
         </button>
       </div>
     </div>

@@ -1,4 +1,3 @@
-// src/app/admin/news/components/NewsDialog.helpers.ts
 "use client";
 
 import type { News } from "../types";

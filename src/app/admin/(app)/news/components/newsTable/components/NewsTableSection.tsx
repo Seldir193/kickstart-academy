@@ -13,12 +13,45 @@ type SectionProps = {
   showSwitch: boolean;
 };
 
-export function NewsTableSection({ props, state, t, lang, showSwitch }: SectionProps) {
-  return <section className={sectionClass(props.busy)}><div className="news-list__table"><NewsTableHead t={t} /><NewsRows props={props} state={state} t={t} lang={lang} showSwitch={showSwitch} /></div></section>;
+export function NewsTableSection({
+  props,
+  state,
+  t,
+  lang,
+  showSwitch,
+}: SectionProps) {
+  return (
+    <section className={sectionClass(props.busy)}>
+      <div className="news-list__table">
+        <NewsTableHead t={t} />
+        <NewsRows
+          props={props}
+          state={state}
+          t={t}
+          lang={lang}
+          showSwitch={showSwitch}
+        />
+      </div>
+    </section>
+  );
 }
 
 function NewsRows({ props, state, t, lang, showSwitch }: SectionProps) {
-  return <ul className="list list--bleed">{state.viewItems.map((item) => <NewsTableRow key={rowKey(item)} item={item} props={props} state={state} t={t} lang={lang} showSwitch={showSwitch} />)}</ul>;
+  return (
+    <ul className="list list--bleed">
+      {state.viewItems.map((item) => (
+        <NewsTableRow
+          key={rowKey(item)}
+          item={item}
+          props={props}
+          state={state}
+          t={t}
+          lang={lang}
+          showSwitch={showSwitch}
+        />
+      ))}
+    </ul>
+  );
 }
 
 function rowKey(item: unknown) {

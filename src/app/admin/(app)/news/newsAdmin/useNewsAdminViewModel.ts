@@ -1,4 +1,3 @@
-//src\app\admin\(app)\news\newsAdmin\useNewsAdminViewModel.ts
 "use client";
 
 import { useCallback, useMemo } from "react";

@@ -12,7 +12,9 @@ type Props = {
 export default function FranchiseLocationDialogBody({ model, t }: Props) {
   return (
     <div className="dialog-body fl-dialog__body">
-      {model.err ? <div className="error fl-dialog__error">{model.err}</div> : null}
+      {model.err ? (
+        <div className="error fl-dialog__error">{model.err}</div>
+      ) : null}
       <FieldsGrid form={model.form} setForm={model.setForm} t={t} />
     </div>
   );
@@ -26,9 +28,20 @@ function FieldsGrid({ form, setForm, t }: FieldGridProps) {
   );
 }
 
-function renderField(form: LocationForm, setForm: FieldSetter, field: FieldGridField, t: TFunction) {
+function renderField(
+  form: LocationForm,
+  setForm: FieldSetter,
+  field: FieldGridField,
+  t: TFunction,
+) {
   return (
-    <LocationTextField key={field.name} field={field} value={form[field.name]} onChange={updateField(form, setForm, field.name)} t={t} />
+    <LocationTextField
+      key={field.name}
+      field={field}
+      value={form[field.name]}
+      onChange={updateField(form, setForm, field.name)}
+      t={t}
+    />
   );
 }
 

@@ -37,5 +37,12 @@ export function useCustomerFamilyCollection(
     setFamilyMembers([]);
   }, [mode]);
 
-  return { familyMembers, setFamilyMembers, familyLoading, familyError, baseCustomerId, reloadFamily };
+  return {
+    familyMembers,
+    setFamilyMembers,
+    familyLoading,
+    familyError,
+    baseCustomerId,
+    reloadFamily,
+  };
 }

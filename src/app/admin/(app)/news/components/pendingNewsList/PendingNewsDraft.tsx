@@ -26,12 +26,18 @@ export default function PendingNewsDraft(props: Props) {
   const category = clean(draft.category);
   return (
     <div className="news-list__draft-wrap">
-      <DraftLine label={props.t("common.admin.news.pendingList.titleChange")}
-        value={title !== props.baseTitle ? title : ""} />
-      <DraftLine label={props.t("common.admin.news.pendingList.leadChange")}
-        value={excerpt !== props.baseExcerpt ? excerpt : ""} />
-      <DraftLine label={props.t("common.admin.news.pendingList.categoryChange")}
-        value={category !== props.baseCategory ? category : ""} />
+      <DraftLine
+        label={props.t("common.admin.news.pendingList.titleChange")}
+        value={title !== props.baseTitle ? title : ""}
+      />
+      <DraftLine
+        label={props.t("common.admin.news.pendingList.leadChange")}
+        value={excerpt !== props.baseExcerpt ? excerpt : ""}
+      />
+      <DraftLine
+        label={props.t("common.admin.news.pendingList.categoryChange")}
+        value={category !== props.baseCategory ? category : ""}
+      />
     </div>
   );
 }

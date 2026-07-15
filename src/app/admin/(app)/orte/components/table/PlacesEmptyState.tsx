@@ -16,6 +16,9 @@ export default function PlacesEmptyState({ busy, t }: Props) {
 }
 
 function emptyText(busy: boolean, t: TFunction) {
-  if (busy) return t("common.admin.places.list.loading", { defaultValue: "Loading..." });
+  if (busy)
+    return t("common.admin.places.list.loading", {
+      defaultValue: "Loading...",
+    });
   return t("common.admin.places.list.empty", { defaultValue: "No entries." });
 }

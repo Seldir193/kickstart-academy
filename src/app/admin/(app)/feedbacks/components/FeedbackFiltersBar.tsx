@@ -17,15 +17,9 @@ type Props = {
 export default function FeedbackFiltersBar(props: Props) {
   return (
     <div className="feedback-admin__filters">
-      <FeedbackSearchInput
-        value={props.query}
-        onChange={props.onQueryChange}
-      />
+      <FeedbackSearchInput value={props.query} onChange={props.onQueryChange} />
 
-      <FeedbackSortFilter
-        value={props.sort}
-        onChange={props.onSortChange}
-      />
+      <FeedbackSortFilter value={props.sort} onChange={props.onSortChange} />
 
       <FeedbackCategoryFilterBox
         value={props.category}

@@ -7,7 +7,11 @@ type Props = {
   t: TFunction;
 };
 
-export default function FranchiseLocationDialogHeader({ model, onClose, t }: Props) {
+export default function FranchiseLocationDialogHeader({
+  model,
+  onClose,
+  t,
+}: Props) {
   return (
     <div className="dialog-head fl-dialog__head">
       <HeaderText model={model} t={t} />
@@ -38,7 +42,15 @@ function StatusBadge({ isEdit, t }: { isEdit: boolean; t: TFunction }) {
   );
 }
 
-function HeaderActions({ busy, onClose, t }: { busy: boolean; onClose: () => void; t: TFunction }) {
+function HeaderActions({
+  busy,
+  onClose,
+  t,
+}: {
+  busy: boolean;
+  onClose: () => void;
+  t: TFunction;
+}) {
   return (
     <div className="fl-dialog__head-right">
       <div className="dialog-head__actions">
@@ -48,10 +60,29 @@ function HeaderActions({ busy, onClose, t }: { busy: boolean; onClose: () => voi
   );
 }
 
-function CloseButton({ busy, onClose, t }: { busy: boolean; onClose: () => void; t: TFunction }) {
+function CloseButton({
+  busy,
+  onClose,
+  t,
+}: {
+  busy: boolean;
+  onClose: () => void;
+  t: TFunction;
+}) {
   return (
-    <button type="button" className="dialog-close modal__close" aria-label={t("common.admin.franchiseLocations.formDialog.close")} onClick={onClose} disabled={busy}>
-      <img src="/icons/close.svg" alt="" aria-hidden="true" className="icon-img" />
+    <button
+      type="button"
+      className="dialog-close modal__close"
+      aria-label={t("common.admin.franchiseLocations.formDialog.close")}
+      onClick={onClose}
+      disabled={busy}
+    >
+      <img
+        src="/icons/close.svg"
+        alt=""
+        aria-hidden="true"
+        className="icon-img"
+      />
     </button>
   );
 }

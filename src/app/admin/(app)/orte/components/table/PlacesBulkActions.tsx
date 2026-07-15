@@ -56,12 +56,24 @@ function bulkHandlers(input: Props) {
 
 function bulkLabels(t: TFunction) {
   return {
-    toggleLabel: t("common.admin.places.bulk.toggle", { defaultValue: "Select locations" }),
-    selectedLabel: t("common.admin.places.bulk.selected", { defaultValue: "selected" }),
-    selectAllLabel: t("common.admin.places.bulk.selectAll", { defaultValue: "Select all" }),
-    clearAllLabel: t("common.admin.places.bulk.clearAll", { defaultValue: "Clear all" }),
-    deleteLabel: t("common.admin.places.bulk.delete", { defaultValue: "Delete" }),
-    cancelLabel: t("common.admin.places.bulk.cancel", { defaultValue: "Cancel" }),
+    toggleLabel: t("common.admin.places.bulk.toggle", {
+      defaultValue: "Select locations",
+    }),
+    selectedLabel: t("common.admin.places.bulk.selected", {
+      defaultValue: "selected",
+    }),
+    selectAllLabel: t("common.admin.places.bulk.selectAll", {
+      defaultValue: "Select all",
+    }),
+    clearAllLabel: t("common.admin.places.bulk.clearAll", {
+      defaultValue: "Clear all",
+    }),
+    deleteLabel: t("common.admin.places.bulk.delete", {
+      defaultValue: "Delete",
+    }),
+    cancelLabel: t("common.admin.places.bulk.cancel", {
+      defaultValue: "Cancel",
+    }),
   };
 }
 

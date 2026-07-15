@@ -1,13 +1,17 @@
 import type { Booking } from "../../types";
 
 export function successMessageKey(action: string) {
-  if (action === "confirm") return "common.admin.onlineBookings.notice.confirmedWithInvoice";
-  if (action === "resend") return "common.admin.onlineBookings.notice.confirmationResent";
+  if (action === "confirm")
+    return "common.admin.onlineBookings.notice.confirmedWithInvoice";
+  if (action === "resend")
+    return "common.admin.onlineBookings.notice.confirmationResent";
   if (action === "processing") return statusUpdatedKey();
   if (action === "cancelled") return statusUpdatedKey();
   if (action === "delete") return "common.admin.onlineBookings.notice.deleted";
-  if (action === "cancelConfirmed") return "common.admin.onlineBookings.notice.cancelledConfirmed";
-  if (action === "approvePayment") return "common.admin.onlineBookings.notice.paymentApproved";
+  if (action === "cancelConfirmed")
+    return "common.admin.onlineBookings.notice.cancelledConfirmed";
+  if (action === "approvePayment")
+    return "common.admin.onlineBookings.notice.paymentApproved";
   return "common.admin.onlineBookings.dialog.error.actionFailed";
 }
 
@@ -28,5 +32,8 @@ export function dialogFlags(booking: Booking) {
 }
 
 function canApprovePayment(booking: Booking, status: string) {
-  return !["cancelled", "deleted"].includes(status) && booking.paymentStatus !== "paid";
+  return (
+    !["cancelled", "deleted"].includes(status) &&
+    booking.paymentStatus !== "paid"
+  );
 }

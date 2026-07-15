@@ -1,7 +1,11 @@
 import type React from "react";
 
-export function rememberButtonFocusState(e: React.MouseEvent<HTMLButtonElement>) {
-  e.currentTarget.dataset.wasFocused = String(document.activeElement === e.currentTarget);
+export function rememberButtonFocusState(
+  e: React.MouseEvent<HTMLButtonElement>,
+) {
+  e.currentTarget.dataset.wasFocused = String(
+    document.activeElement === e.currentTarget,
+  );
 }
 
 export function toggleButtonFocus(

@@ -9,6 +9,11 @@ export default function ProviderPendingSection(props: {
 }) {
   const { p, t } = props;
   return (
-    <PendingProviderSection title={viewLabelProvider("provider_pending", t)} meta={countLabel(p.provPendingAllCount, "provider_pending", t)} p={p} pagination={provPendingPagination(p)} />
+    <PendingProviderSection
+      title={viewLabelProvider("provider_pending", t)}
+      meta={countLabel(p.provPendingAllCount, "provider_pending", t)}
+      p={p}
+      pagination={provPendingPagination(p)}
+    />
   );
 }

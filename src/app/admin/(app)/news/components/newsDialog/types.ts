@@ -1,8 +1,4 @@
-import type {
-  News,
-  NewsTranslation,
-  NewsUploadPurpose,
-} from "../../types";
+import type { News, NewsTranslation, NewsUploadPurpose } from "../../types";
 
 export type UploadResult = { url: string; mimetype: string };
 

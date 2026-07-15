@@ -13,7 +13,9 @@ function isApproved(item: FranchiseLocation) {
 }
 
 function isRejected(item: FranchiseLocation) {
-  return statusOf(item) === "rejected" || clean(item?.rejectionReason).length > 0;
+  return (
+    statusOf(item) === "rejected" || clean(item?.rejectionReason).length > 0
+  );
 }
 
 function isPublished(item: FranchiseLocation) {
@@ -39,7 +41,11 @@ function pendingMain(item: FranchiseLocation, rowMode: RowMode, t: TFn) {
   return t(`common.admin.franchiseLocations.status.${key}`);
 }
 
-function approvedParts(item: FranchiseLocation, rowMode: RowMode, t: TFn): StatusParts {
+function approvedParts(
+  item: FranchiseLocation,
+  rowMode: RowMode,
+  t: TFn,
+): StatusParts {
   if (rowMode === "mine_approved" && hasReviewChange(item)) {
     return parts(t("common.admin.franchiseLocations.status.underReview"));
   }
@@ -54,11 +60,18 @@ function parts(main: string, sub = "", hint = ""): StatusParts {
   return { main, sub, hint };
 }
 
-export function statusParts(item: FranchiseLocation, rowMode: RowMode, t: TFn): StatusParts {
+export function statusParts(
+  item: FranchiseLocation,
+  rowMode: RowMode,
+  t: TFn,
+): StatusParts {
   const hint = hintFor(item, rowMode, t);
-  if (rowMode.includes("pending")) return parts(pendingMain(item, rowMode, t), "", hint);
+  if (rowMode.includes("pending"))
+    return parts(pendingMain(item, rowMode, t), "", hint);
   if (rowMode.includes("rejected")) {
     return parts(t("common.admin.franchiseLocations.status.rejected"));
   }
-  return isApproved(item) ? approvedParts(item, rowMode, t) : parts(pendingMain(item, rowMode, t));
+  return isApproved(item)
+    ? approvedParts(item, rowMode, t)
+    : parts(pendingMain(item, rowMode, t));
 }

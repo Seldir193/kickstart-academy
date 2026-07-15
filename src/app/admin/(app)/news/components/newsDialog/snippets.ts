@@ -17,7 +17,9 @@ export function bulletSnippet(t: Translate) {
 }
 
 export function orderedSnippet(t: Translate) {
-  return [`1. ${itemText(t)}`, `2. ${itemText(t)}`, `3. ${itemText(t)}`].join("\n");
+  return [`1. ${itemText(t)}`, `2. ${itemText(t)}`, `3. ${itemText(t)}`].join(
+    "\n",
+  );
 }
 
 function item(t: Translate) {

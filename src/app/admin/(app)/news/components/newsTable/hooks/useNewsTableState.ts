@@ -15,12 +15,21 @@ export function useNewsTableState(
   toggleBtnRef?: RefObject<HTMLButtonElement | null>,
 ) {
   const viewItems = useViewItems(items, rowMode);
-  const idsOnPage = useMemo(() => viewItems.map(idOf).filter(Boolean), [viewItems]);
+  const idsOnPage = useMemo(
+    () => viewItems.map(idOf).filter(Boolean),
+    [viewItems],
+  );
   const selection = useSelection(idsOnPage);
   const refs = useNewsTableRefs(toggleBtnRef);
   const count = selection.selected.size;
   useNewsSelectionFocus(selectMode, count, refs);
-  return { viewItems, selection, refs, count, showClear: selectMode && count >= 2 };
+  return {
+    viewItems,
+    selection,
+    refs,
+    count,
+    showClear: selectMode && count >= 2,
+  };
 }
 
 function useViewItems(items: NewsWithProvider[], rowMode: RowMode) {

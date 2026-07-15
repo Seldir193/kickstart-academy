@@ -36,7 +36,9 @@ function updatedTime(offer: Offer) {
 
 export function offerFilterHref(offer: Offer) {
   const course = safeText(offer.sub_type || offer.type);
-  return course ? `/trainings?course=${encodeURIComponent(course)}` : "/trainings";
+  return course
+    ? `/trainings?course=${encodeURIComponent(course)}`
+    : "/trainings";
 }
 
 export function handleActivation(event: KeyboardEvent, action: () => void) {

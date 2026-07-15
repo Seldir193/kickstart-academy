@@ -6,7 +6,11 @@ export function stopEvent(e: React.SyntheticEvent) {
   e.stopPropagation();
 }
 
-export function onActionKey(e: React.KeyboardEvent, cb: () => void, disabled: boolean) {
+export function onActionKey(
+  e: React.KeyboardEvent,
+  cb: () => void,
+  disabled: boolean,
+) {
   if (disabled || !isActionKey(e.key)) return;
   stopEvent(e);
   cb();

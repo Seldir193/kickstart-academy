@@ -12,11 +12,15 @@ export function parentOptionId(memberId: string, idx: number) {
 }
 
 export function buildChildOptions(family: FamilyMember[] | null, t: TFunc) {
-  return membersOf(family).flatMap((member) => childOptionsForMember(member, t));
+  return membersOf(family).flatMap((member) =>
+    childOptionsForMember(member, t),
+  );
 }
 
 export function buildParentOptions(family: FamilyMember[] | null, t: TFunc) {
-  return membersOf(family).flatMap((member) => parentOptionsForMember(member, t));
+  return membersOf(family).flatMap((member) =>
+    parentOptionsForMember(member, t),
+  );
 }
 
 export function selectedParentFromFamily(
@@ -47,15 +51,32 @@ function membersOf(family: FamilyMember[] | null) {
 }
 
 function childOptionsForMember(member: FamilyMember, t: TFunc) {
-  return childrenOf(member).filter((child) => validChild(child, member)).map((child) => childOption(member, child, t));
+  return childrenOf(member)
+    .filter((child) => validChild(child, member))
+    .map((child) => childOption(member, child, t));
 }
 
-function childOption(member: FamilyMember, child: FamilyChild, t: TFunc): ChildOption {
-  return { uid: safeText(child.uid), label: childLabel(child, t), parentId: member._id, child };
+function childOption(
+  member: FamilyMember,
+  child: FamilyChild,
+  t: TFunc,
+): ChildOption {
+  return {
+    uid: safeText(child.uid),
+    label: childLabel(child, t),
+    parentId: member._id,
+    child,
+  };
 }
 
-function parentOptionsForMember(member: FamilyMember, t: TFunc): ParentOption[] {
-  return parentsOf(member).map((parent, idx) => ({ id: parentOptionId(member._id, idx), label: parentLabel(parent, t) }));
+function parentOptionsForMember(
+  member: FamilyMember,
+  t: TFunc,
+): ParentOption[] {
+  return parentsOf(member).map((parent, idx) => ({
+    id: parentOptionId(member._id, idx),
+    label: parentLabel(parent, t),
+  }));
 }
 
 function childrenOf(member: FamilyMember) {
@@ -63,7 +84,9 @@ function childrenOf(member: FamilyMember) {
 }
 
 function parentsOf(member: FamilyMember) {
-  return Array.isArray(member.parents) && member.parents.length ? member.parents : [member.parent];
+  return Array.isArray(member.parents) && member.parents.length
+    ? member.parents
+    : [member.parent];
 }
 
 function childLabel(child: FamilyChild, t: TFunc) {
@@ -71,7 +94,10 @@ function childLabel(child: FamilyChild, t: TFunc) {
 }
 
 function parentLabel(parent: any, t: TFunc) {
-  return `${safeText(parent?.firstName)} ${safeText(parent?.lastName)}`.trim() || t("common.admin.customers.stornoDialog.Parent");
+  return (
+    `${safeText(parent?.firstName)} ${safeText(parent?.lastName)}`.trim() ||
+    t("common.admin.customers.stornoDialog.Parent")
+  );
 }
 
 function validChild(child: FamilyChild, member: FamilyMember) {
@@ -87,7 +113,10 @@ function nameParts(person: any) {
   return { first, last, full: `${first} ${last}`.trim() };
 }
 
-function isParentLikeChild(child: ReturnType<typeof nameParts>, member: FamilyMember) {
+function isParentLikeChild(
+  child: ReturnType<typeof nameParts>,
+  member: FamilyMember,
+) {
   const parent = nameParts(member.parent);
   if (child.full === "kunde selbst") return true;
   if (child.full.includes("kunde selbst")) return true;
@@ -97,10 +126,17 @@ function isParentLikeChild(child: ReturnType<typeof nameParts>, member: FamilyMe
   return child.full === parent.full;
 }
 
-function selectedRawMember(family: FamilyMember[] | null, selfMemberId: string) {
+function selectedRawMember(
+  family: FamilyMember[] | null,
+  selfMemberId: string,
+) {
   if (!family?.length) return null;
   const baseId = baseMemberId(selfMemberId);
-  return family.find((m) => m._id === baseId) || family.find((m) => m._id === selfMemberId) || family[0];
+  return (
+    family.find((m) => m._id === baseId) ||
+    family.find((m) => m._id === selfMemberId) ||
+    family[0]
+  );
 }
 
 function baseMemberId(id: string) {
@@ -120,7 +156,9 @@ function parsedParentIndex(value: string) {
 }
 
 function withSelectedParent(rawMember: FamilyMember, selfMemberId: string) {
-  const selected = parentsOf(rawMember)[parentIndexFromMemberId(selfMemberId)] || rawMember.parent;
+  const selected =
+    parentsOf(rawMember)[parentIndexFromMemberId(selfMemberId)] ||
+    rawMember.parent;
   return { ...rawMember, parent: normalizedParent(selected) };
 }
 

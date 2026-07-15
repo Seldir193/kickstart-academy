@@ -9,7 +9,12 @@ type Props = {
   t: TFunction;
 };
 
-export default function LocationTextField({ field, value, onChange, t }: Props) {
+export default function LocationTextField({
+  field,
+  value,
+  onChange,
+  t,
+}: Props) {
   return (
     <div className={fieldClassName(field.full)}>
       <label className="dialog-label">{fieldLabel(field.labelKey, t)}</label>

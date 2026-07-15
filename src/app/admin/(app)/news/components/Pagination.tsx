@@ -1,4 +1,3 @@
-//src\app\admin\(app)\news\components\Pagination.tsx
 "use client";
 
 import { useTranslation } from "react-i18next";

@@ -1,6 +1,6 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
-import type { Feedback } from '../../types';
-import { getFeedbackId } from '../../helpers';
+import { useEffect, useMemo, useRef, useState } from "react";
+import type { Feedback } from "../../types";
+import { getFeedbackId } from "../../helpers";
 
 export default function useFeedbackSelection(items: Feedback[]) {
   const [selectMode, setSelectMode] = useState(false);
@@ -10,9 +10,16 @@ export default function useFeedbackSelection(items: Feedback[]) {
   const clearRef = useRef<HTMLButtonElement | null>(null);
   const prevCountRef = useRef(0);
   const ids = useMemo(() => items.map(getFeedbackId).filter(Boolean), [items]);
-  const isAllSelected = ids.length > 0 && ids.every((id) => selectedIds.has(id));
+  const isAllSelected =
+    ids.length > 0 && ids.every((id) => selectedIds.has(id));
 
-  useSelectionFocus(selectMode, selectedIds.size, prevCountRef, clearRef, cancelRef);
+  useSelectionFocus(
+    selectMode,
+    selectedIds.size,
+    prevCountRef,
+    clearRef,
+    cancelRef,
+  );
 
   function toggleSelectMode() {
     setSelectedIds(new Set());
@@ -33,7 +40,18 @@ export default function useFeedbackSelection(items: Feedback[]) {
     setSelectedIds((current) => toggleSelectedId(current, id));
   }
 
-  return { selectMode, selectedIds, toggleRef, cancelRef, clearRef, isAllSelected, toggleSelectMode, toggleAll, clearSelection, toggleOne };
+  return {
+    selectMode,
+    selectedIds,
+    toggleRef,
+    cancelRef,
+    clearRef,
+    isAllSelected,
+    toggleSelectMode,
+    toggleAll,
+    clearSelection,
+    toggleOne,
+  };
 }
 
 function useSelectionFocus(

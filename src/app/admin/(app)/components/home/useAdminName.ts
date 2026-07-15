@@ -5,7 +5,9 @@ export function useAdminName() {
   const [adminName, setAdminName] = useState("");
   useEffect(() => {
     let abort = false;
-    fetchAdminName().then((name) => !abort && setAdminName(name)).catch(() => undefined);
+    fetchAdminName()
+      .then((name) => !abort && setAdminName(name))
+      .catch(() => undefined);
     return () => {
       abort = true;
     };

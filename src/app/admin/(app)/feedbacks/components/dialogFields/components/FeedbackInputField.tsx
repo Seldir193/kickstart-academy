@@ -6,7 +6,11 @@ export default function FeedbackInputField(props: TextFieldProps) {
   return (
     <div className="field">
       <label className="dialog-label">{t(props.labelKey)}</label>
-      <input className="input" value={props.value} onChange={(event) => props.onChange(event.target.value)} />
+      <input
+        className="input"
+        value={props.value}
+        onChange={(event) => props.onChange(event.target.value)}
+      />
     </div>
   );
 }

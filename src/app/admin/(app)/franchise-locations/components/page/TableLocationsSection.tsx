@@ -4,7 +4,11 @@ import type { TableSectionProps } from "./types";
 
 export default function TableLocationsSection(props: TableSectionProps) {
   return (
-    <LocationsSectionShell title={props.title} meta={props.meta} pagination={props.pagination}>
+    <LocationsSectionShell
+      title={props.title}
+      meta={props.meta}
+      pagination={props.pagination}
+    >
       <div className="fl-admin__box fl-admin__box--scroll3">
         <LocationsTableList {...tableProps(props)} />
       </div>

@@ -14,7 +14,9 @@ import type {
   InvoiceRowState,
 } from "./types";
 
-export function invoiceRowActions(args: InvoiceRowActionFactoryArgs): InvoiceRowAction[] {
+export function invoiceRowActions(
+  args: InvoiceRowActionFactoryArgs,
+): InvoiceRowAction[] {
   return [
     openPdfAction(args),
     markPaidAction(args),
@@ -28,7 +30,10 @@ export function invoiceRowActions(args: InvoiceRowActionFactoryArgs): InvoiceRow
   ];
 }
 
-function openPdfAction({ props, t }: InvoiceRowActionFactoryArgs): InvoiceRowAction {
+function openPdfAction({
+  props,
+  t,
+}: InvoiceRowActionFactoryArgs): InvoiceRowAction {
   return {
     key: "open-pdf",
     icon: "/icons/eye.svg",
@@ -38,18 +43,30 @@ function openPdfAction({ props, t }: InvoiceRowActionFactoryArgs): InvoiceRowAct
   };
 }
 
-function markPaidAction({ props, state, t }: InvoiceRowActionFactoryArgs): InvoiceRowAction {
+function markPaidAction({
+  props,
+  state,
+  t,
+}: InvoiceRowActionFactoryArgs): InvoiceRowAction {
   return {
     key: "mark-paid",
     icon: "/icons/check_circle.svg",
     label: t("common.admin.invoices.actions.markAsPaid"),
-    title: paymentActionTitle(state, t("common.admin.invoices.actions.markAsPaid"), t),
+    title: paymentActionTitle(
+      state,
+      t("common.admin.invoices.actions.markAsPaid"),
+      t,
+    ),
     disabled: state.paymentDisabled,
     onClick: () => props.onMarkPaid?.(state.row),
   };
 }
 
-function returnedAction({ props, state, t }: InvoiceRowActionFactoryArgs): InvoiceRowAction {
+function returnedAction({
+  props,
+  state,
+  t,
+}: InvoiceRowActionFactoryArgs): InvoiceRowAction {
   return {
     key: "returned",
     icon: "/icons/undo.svg",
@@ -64,7 +81,11 @@ function returnedAction({ props, state, t }: InvoiceRowActionFactoryArgs): Invoi
   };
 }
 
-function refundAction({ props, state, t }: InvoiceRowActionFactoryArgs): InvoiceRowAction {
+function refundAction({
+  props,
+  state,
+  t,
+}: InvoiceRowActionFactoryArgs): InvoiceRowAction {
   return {
     key: "refund",
     icon: "/icons/credit_note.svg",
@@ -78,7 +99,11 @@ function refundAction({ props, state, t }: InvoiceRowActionFactoryArgs): Invoice
   };
 }
 
-function withdrawAction({ props, state, t }: InvoiceRowActionFactoryArgs): InvoiceRowAction {
+function withdrawAction({
+  props,
+  state,
+  t,
+}: InvoiceRowActionFactoryArgs): InvoiceRowAction {
   return {
     key: "withdraw",
     icon: "/icons/void.svg",
@@ -92,7 +117,11 @@ function withdrawAction({ props, state, t }: InvoiceRowActionFactoryArgs): Invoi
   };
 }
 
-function dunningAction({ props, state, t }: InvoiceRowActionFactoryArgs): InvoiceRowAction {
+function dunningAction({
+  props,
+  state,
+  t,
+}: InvoiceRowActionFactoryArgs): InvoiceRowAction {
   return {
     key: "dunning",
     icon: "/icons/mail_send.svg",
@@ -103,7 +132,11 @@ function dunningAction({ props, state, t }: InvoiceRowActionFactoryArgs): Invoic
   };
 }
 
-function quickSendAction({ props, state, t }: InvoiceRowActionFactoryArgs): InvoiceRowAction {
+function quickSendAction({
+  props,
+  state,
+  t,
+}: InvoiceRowActionFactoryArgs): InvoiceRowAction {
   return {
     key: "quick-send",
     icon: "/icons/resend.svg",
@@ -114,18 +147,27 @@ function quickSendAction({ props, state, t }: InvoiceRowActionFactoryArgs): Invo
   };
 }
 
-function voidDunningAction({ props, state, t }: InvoiceRowActionFactoryArgs): InvoiceRowAction {
+function voidDunningAction({
+  props,
+  state,
+  t,
+}: InvoiceRowActionFactoryArgs): InvoiceRowAction {
   return {
     key: "void-dunning",
     icon: "/icons/void.svg",
     label: t("common.admin.invoices.actions.voidDunningObsolete"),
     title: voidDunningTitle(state, t),
-    disabled: !isDunningRow(state.row) || state.busy || isVoidedDunningRow(state.row),
+    disabled:
+      !isDunningRow(state.row) || state.busy || isVoidedDunningRow(state.row),
     onClick: () => props.onVoidDunning?.(state.row),
   };
 }
 
-function collectionAction({ props, state, t }: InvoiceRowActionFactoryArgs): InvoiceRowAction {
+function collectionAction({
+  props,
+  state,
+  t,
+}: InvoiceRowActionFactoryArgs): InvoiceRowAction {
   return {
     key: "collection",
     icon: "/icons/collection.svg",
@@ -139,7 +181,11 @@ function collectionAction({ props, state, t }: InvoiceRowActionFactoryArgs): Inv
   };
 }
 
-function paymentActionTitle(state: InvoiceRowState, base: string, t: TFunction) {
+function paymentActionTitle(
+  state: InvoiceRowState,
+  base: string,
+  t: TFunction,
+) {
   if (state.isCreditNote) {
     return t("common.admin.invoices.actions.notAvailableForCreditNotes");
   }
@@ -147,7 +193,8 @@ function paymentActionTitle(state: InvoiceRowState, base: string, t: TFunction) 
 }
 
 function voidDunningTitle(state: InvoiceRowState, t: TFunction) {
-  if (!isDunningRow(state.row)) return t("common.admin.invoices.actions.dunningOnly");
+  if (!isDunningRow(state.row))
+    return t("common.admin.invoices.actions.dunningOnly");
   if (isVoidedDunningRow(state.row)) {
     return t("common.admin.invoices.actions.alreadyVoided");
   }

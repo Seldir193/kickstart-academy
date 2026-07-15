@@ -44,7 +44,13 @@ function FeedbackTextareaField(props: FieldProps) {
   return (
     <div className="field field--full">
       <label className="dialog-label">{t(props.labelKey)}</label>
-      <textarea className="input" rows={3} value={props.value} required={props.required} onChange={(event) => props.onChange(event.target.value)} />
+      <textarea
+        className="input"
+        rows={3}
+        value={props.value}
+        required={props.required}
+        onChange={(event) => props.onChange(event.target.value)}
+      />
     </div>
   );
 }
@@ -54,7 +60,11 @@ function FeedbackInputField(props: FieldProps) {
   return (
     <div className="field">
       <label className="dialog-label">{t(props.labelKey)}</label>
-      <input className="input" value={props.value} onChange={(event) => props.onChange(event.target.value)} />
+      <input
+        className="input"
+        value={props.value}
+        onChange={(event) => props.onChange(event.target.value)}
+      />
     </div>
   );
 }

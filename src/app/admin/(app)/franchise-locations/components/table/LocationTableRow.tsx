@@ -1,11 +1,19 @@
 import type { KeyboardEvent, PointerEvent } from "react";
 import type { FranchiseLocation } from "../../types";
 import type { RowMode } from "../LocationsTableList.helpers";
-import { buildLocationRowState, activateRow, handleRowKey } from "./locationRowState";
+import {
+  buildLocationRowState,
+  activateRow,
+  handleRowKey,
+} from "./locationRowState";
 import LocationActionsCell from "./LocationActionsCell";
 import LocationStatusCell from "./LocationStatusCell";
 import LocationTitleCell from "./LocationTitleCell";
-import { LocationCityCell, LocationCountryCell, LocationUpdatedCell } from "./LocationValueCells";
+import {
+  LocationCityCell,
+  LocationCountryCell,
+  LocationUpdatedCell,
+} from "./LocationValueCells";
 import type { RowCallbacks, SelectionState } from "./types";
 
 export type LocationTableRowProps = RowCallbacks & {
@@ -26,10 +34,22 @@ export default function LocationTableRow(p: LocationTableRowProps) {
   const s = buildLocationRowState(p);
   return (
     <li {...rowProps(p, s.id)}>
-      <LocationTitleCell item={p.item} showHint={p.showHint} hint={s.status.hint} />
+      <LocationTitleCell
+        item={p.item}
+        showHint={p.showHint}
+        hint={s.status.hint}
+      />
       <LocationCountryCell item={p.item} />
       <LocationCityCell item={p.item} />
-      <LocationStatusCell item={p.item} status={s.status} showSwitch={p.showSwitch} published={s.published} switchBusy={s.switchBusy} switchDisabled={s.switchDisabled} onTogglePublished={p.onTogglePublished} />
+      <LocationStatusCell
+        item={p.item}
+        status={s.status}
+        showSwitch={p.showSwitch}
+        published={s.published}
+        switchBusy={s.switchBusy}
+        switchDisabled={s.switchDisabled}
+        onTogglePublished={p.onTogglePublished}
+      />
       <LocationUpdatedCell item={p.item} lang={p.lang} />
       <LocationActionsCell hideActions={s.hideActions} actions={s.actions} />
     </li>

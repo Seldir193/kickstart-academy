@@ -13,6 +13,21 @@ export default function CancelDialogContent(props: CancelDialogProps) {
   const scope = useCancelFamilyScope(props.customer._id, t);
   const menus = useCancelMenus();
   const bookings = useCancelBookings(props.customer, scope, t);
-  const submit = useCancelSubmit(props.customer, bookings, props.onClose, props.onChanged, t);
-  return <CancelDialogView {...props} t={t} scope={scope} menus={menus} bookings={bookings} submit={submit} />;
+  const submit = useCancelSubmit(
+    props.customer,
+    bookings,
+    props.onClose,
+    props.onChanged,
+    t,
+  );
+  return (
+    <CancelDialogView
+      {...props}
+      t={t}
+      scope={scope}
+      menus={menus}
+      bookings={bookings}
+      submit={submit}
+    />
+  );
 }

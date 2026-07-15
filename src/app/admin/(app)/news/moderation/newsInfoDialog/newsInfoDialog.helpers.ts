@@ -16,8 +16,10 @@ function getTitle(item: News, t: TFunction) {
 }
 
 function getStatus(item: News) {
-  if (clean(item.rejectionReason)) return "common.admin.news.infoDialog.statusRejected";
-  if (clean(item.submittedAt)) return "common.admin.news.infoDialog.statusPending";
+  if (clean(item.rejectionReason))
+    return "common.admin.news.infoDialog.statusRejected";
+  if (clean(item.submittedAt))
+    return "common.admin.news.infoDialog.statusPending";
   return item.published
     ? "common.admin.news.infoDialog.statusPublished"
     : "common.admin.news.infoDialog.statusOffline";
@@ -38,7 +40,11 @@ export function getStatusClass(status: string) {
   return "dialog-status--success";
 }
 
-export function buildNewsInfoData(item: News, t: TFunction, language: string): NewsInfoDialogData {
+export function buildNewsInfoData(
+  item: News,
+  t: TFunction,
+  language: string,
+): NewsInfoDialogData {
   return {
     title: getTitle(item, t),
     status: getStatus(item),

@@ -10,6 +10,22 @@ export default function MineRejectedSection(props: {
 }) {
   const { p, t, handlers } = props;
   return (
-    <TableLocationsSection title={viewLabelMine("mine_rejected", t)} meta={countLabel(p.mineRejectedAllCount, "mine_rejected", t)} items={p.pagMineRejected.items} rowMode="mine_rejected" selectMode={p.mineRejectedSelectMode} onToggleSelectMode={p.toggleMineRejectedSelectMode} busy={false} onOpen={p.openEdit} onInfo={p.openInfo} onResubmit={p.submitMine} onDeleteOne={handlers.openDeleteMine} onDeleteMany={p.deleteManyMine} toggleBtnRef={p.mineRejectedToggleRef} pagination={mineRejectedPagination(p)} p={p} />
+    <TableLocationsSection
+      title={viewLabelMine("mine_rejected", t)}
+      meta={countLabel(p.mineRejectedAllCount, "mine_rejected", t)}
+      items={p.pagMineRejected.items}
+      rowMode="mine_rejected"
+      selectMode={p.mineRejectedSelectMode}
+      onToggleSelectMode={p.toggleMineRejectedSelectMode}
+      busy={false}
+      onOpen={p.openEdit}
+      onInfo={p.openInfo}
+      onResubmit={p.submitMine}
+      onDeleteOne={handlers.openDeleteMine}
+      onDeleteMany={p.deleteManyMine}
+      toggleBtnRef={p.mineRejectedToggleRef}
+      pagination={mineRejectedPagination(p)}
+      p={p}
+    />
   );
 }

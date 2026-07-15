@@ -3,7 +3,11 @@ import { useTranslation } from "react-i18next";
 import type { FeedbackCategory } from "../../../types";
 import { FEEDBACK_CATEGORIES } from "../../../constants";
 import { useCloseOnOutsideClick } from "../hooks/useCloseOnOutsideClick";
-import { activeOptionClass, categoryLabel, openSelectClass } from "../lib/labels";
+import {
+  activeOptionClass,
+  categoryLabel,
+  openSelectClass,
+} from "../lib/labels";
 import type { BaseFieldProps } from "../types";
 import SelectTrigger from "./SelectTrigger";
 
@@ -29,7 +33,10 @@ function useCategoryState({ updateFeedback }: BaseFieldProps) {
   return { isOpen, setIsOpen, dropdownRef, pickCategory };
 }
 
-function CategorySelect(props: BaseFieldProps & ReturnType<typeof useCategoryState> & { t: (key: string) => string }) {
+function CategorySelect(
+  props: BaseFieldProps &
+    ReturnType<typeof useCategoryState> & { t: (key: string) => string },
+) {
   return (
     <div ref={props.dropdownRef} className={openSelectClass(props.isOpen)}>
       <SelectTrigger onClick={() => props.setIsOpen((open) => !open)}>
@@ -40,18 +47,33 @@ function CategorySelect(props: BaseFieldProps & ReturnType<typeof useCategorySta
   );
 }
 
-function CategoryPanel(props: BaseFieldProps & ReturnType<typeof useCategoryState> & { t: (key: string) => string }) {
+function CategoryPanel(
+  props: BaseFieldProps &
+    ReturnType<typeof useCategoryState> & { t: (key: string) => string },
+) {
   return (
     <div className="ks-selectbox__panel">
-      {FEEDBACK_CATEGORIES.map((category) => <CategoryOption key={category} category={category} {...props} />)}
+      {FEEDBACK_CATEGORIES.map((category) => (
+        <CategoryOption key={category} category={category} {...props} />
+      ))}
     </div>
   );
 }
 
-function CategoryOption(props: BaseFieldProps & ReturnType<typeof useCategoryState> & { t: (key: string) => string; category: FeedbackCategory }) {
+function CategoryOption(
+  props: BaseFieldProps &
+    ReturnType<typeof useCategoryState> & {
+      t: (key: string) => string;
+      category: FeedbackCategory;
+    },
+) {
   const isActive = props.draft.category === props.category;
   return (
-    <button type="button" className={activeOptionClass(isActive)} onClick={() => props.pickCategory(props.category)}>
+    <button
+      type="button"
+      className={activeOptionClass(isActive)}
+      onClick={() => props.pickCategory(props.category)}
+    >
       {categoryLabel(props.category, props.t)}
     </button>
   );

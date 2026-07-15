@@ -78,7 +78,12 @@ export type StornoBookingsState = {
   statusLabel: string;
   sortLabel: string;
   selectedCourseLabel: string;
-  bookingTrigger: { title: string; invoice: string; venue: string; status: string };
+  bookingTrigger: {
+    title: string;
+    invoice: string;
+    venue: string;
+    status: string;
+  };
   setErr: (value: string | null) => void;
   setCourseValue: (value: string) => void;
   setStatusFilter: (value: StatusFilter) => void;

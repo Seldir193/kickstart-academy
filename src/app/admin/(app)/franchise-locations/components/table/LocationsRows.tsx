@@ -1,6 +1,8 @@
 import { idOf } from "../LocationsTableList.helpers";
 import { isMineRow } from "./locationTableState";
-import LocationTableRow, { type LocationTableRowProps } from "./LocationTableRow";
+import LocationTableRow, {
+  type LocationTableRowProps,
+} from "./LocationTableRow";
 import type { LocationsTableListProps, SelectionState } from "./types";
 
 type Props = LocationsTableListProps & {
@@ -12,14 +14,22 @@ type Props = LocationsTableListProps & {
 
 export default function LocationsRows(p: Props) {
   const showHint = !isMineRow(p.rowMode);
-  return <ul className="list list--bleed">{p.items.map((item) => renderRow(p, item, showHint))}</ul>;
+  return (
+    <ul className="list list--bleed">
+      {p.items.map((item) => renderRow(p, item, showHint))}
+    </ul>
+  );
 }
 
 function renderRow(p: Props, item: Props["items"][number], showHint: boolean) {
   return <LocationTableRow key={idOf(item)} {...rowProps(p, item, showHint)} />;
 }
 
-function rowProps(p: Props, item: Props["items"][number], showHint: boolean): LocationTableRowProps {
+function rowProps(
+  p: Props,
+  item: Props["items"][number],
+  showHint: boolean,
+): LocationTableRowProps {
   return {
     item,
     ...rowStateProps(p, item, showHint),
@@ -28,12 +38,28 @@ function rowProps(p: Props, item: Props["items"][number], showHint: boolean): Lo
   };
 }
 
-function rowStateProps(p: Props, item: Props["items"][number], showHint: boolean) {
-  return { busy: p.busy, selectMode: p.selectMode, selected: p.selection.selected.has(idOf(item)), showHint };
+function rowStateProps(
+  p: Props,
+  item: Props["items"][number],
+  showHint: boolean,
+) {
+  return {
+    busy: p.busy,
+    selectMode: p.selectMode,
+    selected: p.selection.selected.has(idOf(item)),
+    showHint,
+  };
 }
 
 function rowContextProps(p: Props) {
-  return { rowMode: p.rowMode, showSwitch: p.showSwitch, publishedBusyId: p.publishedBusyId, selection: p.selection, t: p.t, lang: p.lang };
+  return {
+    rowMode: p.rowMode,
+    showSwitch: p.showSwitch,
+    publishedBusyId: p.publishedBusyId,
+    selection: p.selection,
+    t: p.t,
+    lang: p.lang,
+  };
 }
 
 function rowCallbacks(p: Props) {

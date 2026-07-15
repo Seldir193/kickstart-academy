@@ -7,7 +7,11 @@ export default function FranchiseLocationsStatusCards(props: {
   const { p, t } = props;
   return (
     <>
-      {p.loading ? <div className="card">{t("common.admin.franchiseLocations.loading")}</div> : null}
+      {p.loading ? (
+        <div className="card">
+          {t("common.admin.franchiseLocations.loading")}
+        </div>
+      ) : null}
       {p.err ? <div className="card text-red-600">{p.err}</div> : null}
     </>
   );

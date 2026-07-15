@@ -11,5 +11,7 @@ const successKeys: Record<string, string> = {
 };
 
 export function successMessageKey(action: string) {
-  return successKeys[action] || "common.admin.bookings.dialog.error.actionFailed";
+  return (
+    successKeys[action] || "common.admin.bookings.dialog.error.actionFailed"
+  );
 }

@@ -2,10 +2,19 @@ import { fetchCustomer } from "./customerPageApi";
 import type { CustomersDialogsState, CustomersListState } from "./types";
 import type { Customer } from "../../types";
 
-type Args = { dialogs: CustomersDialogsState & { setEditing: (customer: Customer | null) => void }; list: CustomersListState };
+type Args = {
+  dialogs: CustomersDialogsState & {
+    setEditing: (customer: Customer | null) => void;
+  };
+  list: CustomersListState;
+};
 
 export function useCustomersPageActions({ dialogs, list }: Args) {
-  return { openEditCustomer: openEditCustomer(dialogs), afterCreate: afterCreate(dialogs, list), afterEditClose: afterEditClose(dialogs, list) };
+  return {
+    openEditCustomer: openEditCustomer(dialogs),
+    afterCreate: afterCreate(dialogs, list),
+    afterEditClose: afterEditClose(dialogs, list),
+  };
 }
 
 function openEditCustomer(dialogs: Args["dialogs"]) {

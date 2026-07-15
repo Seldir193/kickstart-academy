@@ -9,9 +9,24 @@ type Props = {
 };
 
 export default function BulkActionsInactive(props: Props) {
-  return <div className="actions coach-admin__actions"><StartButton {...props} /></div>;
+  return (
+    <div className="actions coach-admin__actions">
+      <StartButton {...props} />
+    </div>
+  );
 }
 
 function StartButton({ toggleRef, disabled, onToggleSelectMode, t }: Props) {
-  return <button ref={toggleRef} type="button" className="btn btn--select-toggle" onMouseDown={(event) => event.preventDefault()} onClick={onToggleSelectMode} disabled={disabled}>{t("common.admin.coaches.bulk.select")}</button>;
+  return (
+    <button
+      ref={toggleRef}
+      type="button"
+      className="btn btn--select-toggle"
+      onMouseDown={(event) => event.preventDefault()}
+      onClick={onToggleSelectMode}
+      disabled={disabled}
+    >
+      {t("common.admin.coaches.bulk.select")}
+    </button>
+  );
 }

@@ -7,12 +7,24 @@ type Refs = {
   toggleBtnRef?: RefObject<HTMLButtonElement | null>;
 };
 
-export function useNewsSelectionFocus(selectMode: boolean, count: number, refs: Refs) {
+export function useNewsSelectionFocus(
+  selectMode: boolean,
+  count: number,
+  refs: Refs,
+) {
   const prevCountRef = useRef(0);
-  useEffect(() => updateFocus(selectMode, count, prevCountRef, refs), [selectMode, count, refs.cancelBtnRef, refs.clearBtnRef, refs.toggleBtnRef]);
+  useEffect(
+    () => updateFocus(selectMode, count, prevCountRef, refs),
+    [selectMode, count, refs.cancelBtnRef, refs.clearBtnRef, refs.toggleBtnRef],
+  );
 }
 
-function updateFocus(selectMode: boolean, count: number, prev: { current: number }, refs: Refs) {
+function updateFocus(
+  selectMode: boolean,
+  count: number,
+  prev: { current: number },
+  refs: Refs,
+) {
   if (!selectMode) return resetPrev(prev);
   const previous = prev.current;
   prev.current = count;

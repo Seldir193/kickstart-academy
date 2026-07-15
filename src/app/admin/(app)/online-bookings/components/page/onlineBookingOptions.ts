@@ -59,8 +59,10 @@ function nameKey(booking: Booking) {
 
 export function sortBookings(items: Booking[], sort: SortKey) {
   const arr = [...items];
-  if (sort === "newest") return arr.sort((a, b) => tsOf(b.createdAt) - tsOf(a.createdAt));
-  if (sort === "oldest") return arr.sort((a, b) => tsOf(a.createdAt) - tsOf(b.createdAt));
+  if (sort === "newest")
+    return arr.sort((a, b) => tsOf(b.createdAt) - tsOf(a.createdAt));
+  if (sort === "oldest")
+    return arr.sort((a, b) => tsOf(a.createdAt) - tsOf(b.createdAt));
   if (sort === "name_asc") return arr.sort((a, b) => compareNames(a, b));
   return arr.sort((a, b) => compareNames(b, a));
 }
