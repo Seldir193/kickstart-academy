@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import type { Dispatch, SetStateAction } from "react";
 import type { RevenueResponse, SourceMode, YearlyRow } from "../types";
 import {
   buildHeaders,
@@ -11,6 +12,8 @@ import {
   getRecentFiveYears,
   getRevenueUrl,
 } from "../utils";
+
+type StateSetter<T> = Dispatch<SetStateAction<T>>;
 
 export function useRevenueData(source: SourceMode, year: number) {
   const [data, setData] = useState<RevenueResponse | null>(null);
@@ -32,8 +35,8 @@ export function useRevenueData(source: SourceMode, year: number) {
 function loadCurrentYear(
   base: string,
   year: number,
-  setData: any,
-  setLoading: any,
+  setData: StateSetter<RevenueResponse | null>,
+  setLoading: StateSetter<boolean>,
 ) {
   const pid = getProviderId();
   const url = getRevenueUrl(base, year, pid);
@@ -45,7 +48,10 @@ function loadCurrentYear(
     .finally(() => setLoading(false));
 }
 
-function loadYearlyTotals(base: string, setYearlyTotals: any) {
+function loadYearlyTotals(
+  base: string,
+  setYearlyTotals: StateSetter<YearlyRow[]>,
+) {
   const years = getRecentFiveYears();
   const pid = getProviderId();
   Promise.all(years.map((year) => fetchYear(base, year, pid))).then((rows) => {
