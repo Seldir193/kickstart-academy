@@ -17,6 +17,14 @@ type MenuState<T extends HTMLElement> = {
   menuRef: RefObject<T | null>;
 };
 
+type TrainingSelectProps = {
+  label: string;
+  menu: MenuState<HTMLUListElement>;
+  ariaLabel: string;
+  disabled: boolean;
+  children?: ReactNode;
+};
+
 type VouchersToolbarProps = {
   t: Translate;
   q: string;
@@ -83,18 +91,12 @@ function SearchInput({ q, t, setQ }: VouchersToolbarProps) {
 }
 
 function StatusFilter(props: VouchersToolbarProps) {
-  const label = statusLabel(props.t, props.status, props.total);
-  const ariaLabel = toastText(
-    props.t,
-    "common.admin.vouchers.aria.status",
-    "Status",
-  );
   return (
     <FilterShell kind="select">
       <TrainingSelect
-        label={label}
+        label={statusLabel(props.t, props.status, props.total)}
         menu={props.statusMenu}
-        ariaLabel={ariaLabel}
+        ariaLabel={statusAriaLabel(props.t)}
         disabled={props.busy}
       >
         <StatusMenu {...props} />
@@ -104,17 +106,12 @@ function StatusFilter(props: VouchersToolbarProps) {
 }
 
 function SortFilter(props: VouchersToolbarProps) {
-  const ariaLabel = toastText(
-    props.t,
-    "common.admin.vouchers.aria.sorting",
-    "Sorting",
-  );
   return (
     <FilterShell kind="sort">
       <TrainingSelect
         label={sortLabel(props.t, props.sort)}
         menu={props.sortMenu}
-        ariaLabel={ariaLabel}
+        ariaLabel={sortAriaLabel(props.t)}
         disabled={props.busy}
       >
         <SortMenu {...props} />
@@ -137,52 +134,48 @@ function FilterShell({
   );
 }
 
-function TrainingSelect({
-  label,
-  menu,
-  ariaLabel,
-  disabled,
-  children,
-}: {
-  label: string;
-  menu: MenuState<HTMLUListElement>;
-  ariaLabel: string;
-  disabled: boolean;
-  children?: ReactNode;
-}) {
-  const className =
-    "ks-training-select" + (menu.open ? " ks-training-select--open" : "");
+function TrainingSelect({ children, ...props }: TrainingSelectProps) {
   return (
-    <div className={className}>
-      <button
-        type="button"
-        ref={menu.triggerRef}
-        className="ks-training-select__trigger"
-        onClick={() => menu.setOpen((open) => !open)}
-        disabled={disabled}
-        aria-label={ariaLabel}
-      >
-        <span className="ks-training-select__label">{label}</span>
-        <span className="ks-training-select__chevron" />
-      </button>
+    <div className={trainingSelectClass(props.menu.open)}>
+      <TrainingSelectTrigger {...props} />
       {children}
     </div>
   );
 }
 
-function StatusMenu(props: VouchersToolbarProps) {
-  const ariaLabel = toastText(
-    props.t,
-    "common.admin.vouchers.aria.status",
-    "Status",
+function TrainingSelectTrigger({
+  label,
+  menu,
+  ariaLabel,
+  disabled,
+}: TrainingSelectProps) {
+  return (
+    <button
+      type="button"
+      ref={menu.triggerRef}
+      className="ks-training-select__trigger"
+      onClick={() => menu.setOpen((open) => !open)}
+      disabled={disabled}
+      aria-label={ariaLabel}
+    >
+      <span className="ks-training-select__label">{label}</span>
+      <span className="ks-training-select__chevron" />
+    </button>
   );
+}
+
+function trainingSelectClass(open: boolean) {
+  return "ks-training-select" + (open ? " ks-training-select--open" : "");
+}
+
+function StatusMenu(props: VouchersToolbarProps) {
   if (!props.statusMenu.open) return null;
   return (
     <ul
       ref={props.statusMenu.menuRef}
       className="ks-training-select__menu"
       role="listbox"
-      aria-label={ariaLabel}
+      aria-label={statusAriaLabel(props.t)}
     >
       <StatusOption value="all" {...props} />
       <StatusOption value="active" {...props} />
@@ -205,18 +198,13 @@ function StatusOption(props: VouchersToolbarProps & { value: VoucherStatus }) {
 }
 
 function SortMenu(props: VouchersToolbarProps) {
-  const ariaLabel = toastText(
-    props.t,
-    "common.admin.vouchers.aria.sorting",
-    "Sorting",
-  );
   if (!props.sortMenu.open) return null;
   return (
     <ul
       ref={props.sortMenu.menuRef}
       className="ks-training-select__menu"
       role="listbox"
-      aria-label={ariaLabel}
+      aria-label={sortAriaLabel(props.t)}
     >
       <SortOption value="newest" {...props} />
       <SortOption value="oldest" {...props} />
@@ -266,16 +254,30 @@ function CreateAction({ busy, openCreateDialog, t }: VouchersToolbarProps) {
         onClick={openCreateDialog}
         disabled={busy}
       >
-        <img
-          src="/icons/plus.svg"
-          alt=""
-          aria-hidden="true"
-          className="btn__icon"
-        />
+        <PlusIcon />
         {toastText(t, "common.admin.vouchers.newVoucher", "New voucher")}
       </button>
     </div>
   );
+}
+
+function PlusIcon() {
+  return (
+    <img
+      src="/icons/plus.svg"
+      alt=""
+      aria-hidden="true"
+      className="btn__icon"
+    />
+  );
+}
+
+function statusAriaLabel(t: Translate) {
+  return toastText(t, "common.admin.vouchers.aria.status", "Status");
+}
+
+function sortAriaLabel(t: Translate) {
+  return toastText(t, "common.admin.vouchers.aria.sorting", "Sorting");
 }
 
 function statusOptionLabel(
