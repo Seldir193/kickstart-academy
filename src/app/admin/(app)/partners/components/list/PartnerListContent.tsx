@@ -20,13 +20,19 @@ export default function PartnerListContent(props: PartnerListProps) {
     <section className="news-admin__section">
       <PartnerCounter total={props.total} />
       <PartnerTable props={props} selection={selection} />
-      <PartnerPagination
-        page={props.page}
-        totalPages={props.totalPages}
-        onPrev={props.onPrev}
-        onNext={props.onNext}
-      />
+      {renderPagination(props)}
     </section>
+  );
+}
+
+function renderPagination(props: PartnerListProps) {
+  return (
+    <PartnerPagination
+      page={props.page}
+      totalPages={props.totalPages}
+      onPrev={props.onPrev}
+      onNext={props.onNext}
+    />
   );
 }
 
