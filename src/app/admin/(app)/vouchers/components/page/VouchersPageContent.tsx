@@ -7,52 +7,25 @@ import VouchersListSection from "./VouchersListSection";
 import VouchersToolbar from "./VouchersToolbar";
 import { useVouchersPageState } from "./useVouchersPageState";
 
+type PageState = ReturnType<typeof useVouchersPageState>;
+type Translate = (key: string) => string;
+
 export default function VouchersPageContent() {
   const page = useVouchersPageState();
   const { t } = useTranslation();
   return <VouchersPageView page={page} t={t} />;
 }
 
-function VouchersPageView({
-  page,
-  t,
-}: {
-  page: ReturnType<typeof useVouchersPageState>;
-  t: (key: string) => string;
-}) {
+function VouchersPageView({ page, t }: { page: PageState; t: Translate }) {
   return (
     <div className="news-admin ks vouchers-admin">
       <AdminNotice notice={page.notice} />
       <main className="container">
         <VouchersToolbar {...page} t={t} total={page.list.items.length} />
         <ErrorCard error={page.list.error} />
-        <VouchersListSection
-          t={t}
-          items={page.pagedItems}
-          total={page.list.items.length}
-          pages={page.pages}
-          pageSafe={page.pageSafe}
-          busy={page.busy}
-          loading={page.list.loading}
-          selectMode={page.selectMode}
-          toggleBtnRef={page.toggleBtnRef}
-          setPage={page.setPage}
-          setSelectMode={page.setSelectMode}
-          onOpen={page.openEditDialog}
-          onDeleteMany={page.handleDeleteMany}
-          onActivateMany={page.handleActivateMany}
-          onDeactivateMany={page.handleDeactivateMany}
-        />
+        <VouchersListSection {...listProps(page, t)} />
       </main>
-      <VoucherDialog
-        voucher={page.sel}
-        open={page.dialogOpen}
-        busy={page.busy}
-        onClose={page.closeDialogs}
-        onCreate={page.handleCreate}
-        onUpdate={page.handleUpdate}
-        onDelete={page.handleDelete}
-      />
+      <VoucherDialog {...dialogProps(page)} />
     </div>
   );
 }
@@ -64,4 +37,48 @@ function ErrorCard({ error }: { error: string | null }) {
       <div className="text-red-600">{error}</div>
     </div>
   );
+}
+
+function listProps(page: PageState, t: Translate) {
+  return {
+    t,
+    ...listData(page),
+    ...listHandlers(page),
+  };
+}
+
+function listData(page: PageState) {
+  return {
+    items: page.pagedItems,
+    total: page.list.items.length,
+    pages: page.pages,
+    pageSafe: page.pageSafe,
+    busy: page.busy,
+    loading: page.list.loading,
+    selectMode: page.selectMode,
+    toggleBtnRef: page.toggleBtnRef,
+  };
+}
+
+function listHandlers(page: PageState) {
+  return {
+    setPage: page.setPage,
+    setSelectMode: page.setSelectMode,
+    onOpen: page.openEditDialog,
+    onDeleteMany: page.handleDeleteMany,
+    onActivateMany: page.handleActivateMany,
+    onDeactivateMany: page.handleDeactivateMany,
+  };
+}
+
+function dialogProps(page: PageState) {
+  return {
+    voucher: page.sel,
+    open: page.dialogOpen,
+    busy: page.busy,
+    onClose: page.closeDialogs,
+    onCreate: page.handleCreate,
+    onUpdate: page.handleUpdate,
+    onDelete: page.handleDelete,
+  };
 }

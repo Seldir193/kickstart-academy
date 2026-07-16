@@ -2,6 +2,20 @@ import FeedbackInputField from "./FeedbackInputField";
 import FeedbackTextareaField from "./FeedbackTextareaField";
 import type { FeedbackDialogFieldsProps } from "../types";
 
+type Lang = "de" | "en" | "tr";
+
+const QUOTE_FIELDS: { lang: Lang; labelKey: string; required: boolean }[] = [
+  { lang: "de", labelKey: "admin.feedbacks.quoteDe", required: true },
+  { lang: "en", labelKey: "admin.feedbacks.quoteEn", required: false },
+  { lang: "tr", labelKey: "admin.feedbacks.quoteTr", required: false },
+];
+
+const META_FIELDS: { lang: Lang; labelKey: string }[] = [
+  { lang: "de", labelKey: "admin.feedbacks.metaDe" },
+  { lang: "en", labelKey: "admin.feedbacks.metaEn" },
+  { lang: "tr", labelKey: "admin.feedbacks.metaTr" },
+];
+
 export default function FeedbackLocalizedFields(
   props: FeedbackDialogFieldsProps,
 ) {
@@ -17,26 +31,17 @@ function FeedbackQuoteFields({
   draft,
   updateLocalizedText,
 }: FeedbackDialogFieldsProps) {
-  const update = (lang: "de" | "en" | "tr") => (value: string) =>
-    updateLocalizedText("quote", lang, value);
   return (
     <>
-      <FeedbackTextareaField
-        labelKey="admin.feedbacks.quoteDe"
-        value={draft.quote.de}
-        required
-        onChange={update("de")}
-      />
-      <FeedbackTextareaField
-        labelKey="admin.feedbacks.quoteEn"
-        value={draft.quote.en}
-        onChange={update("en")}
-      />
-      <FeedbackTextareaField
-        labelKey="admin.feedbacks.quoteTr"
-        value={draft.quote.tr}
-        onChange={update("tr")}
-      />
+      {QUOTE_FIELDS.map((field) => (
+        <FeedbackTextareaField
+          key={field.lang}
+          labelKey={field.labelKey}
+          value={draft.quote[field.lang]}
+          required={field.required}
+          onChange={(value) => updateLocalizedText("quote", field.lang, value)}
+        />
+      ))}
     </>
   );
 }
@@ -45,25 +50,16 @@ function FeedbackMetaFields({
   draft,
   updateLocalizedText,
 }: FeedbackDialogFieldsProps) {
-  const update = (lang: "de" | "en" | "tr") => (value: string) =>
-    updateLocalizedText("meta", lang, value);
   return (
     <>
-      <FeedbackInputField
-        labelKey="admin.feedbacks.metaDe"
-        value={draft.meta.de}
-        onChange={update("de")}
-      />
-      <FeedbackInputField
-        labelKey="admin.feedbacks.metaEn"
-        value={draft.meta.en}
-        onChange={update("en")}
-      />
-      <FeedbackInputField
-        labelKey="admin.feedbacks.metaTr"
-        value={draft.meta.tr}
-        onChange={update("tr")}
-      />
+      {META_FIELDS.map((field) => (
+        <FeedbackInputField
+          key={field.lang}
+          labelKey={field.labelKey}
+          value={draft.meta[field.lang]}
+          onChange={(value) => updateLocalizedText("meta", field.lang, value)}
+        />
+      ))}
     </>
   );
 }

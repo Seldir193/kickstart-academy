@@ -1,3 +1,4 @@
+import type { LiHTMLAttributes } from "react";
 import type { AdminMember } from "../../api";
 import {
   roleClass,
@@ -24,28 +25,23 @@ export default function MemberTableRow(props: Props) {
   const openRole = () => props.onRole(member);
 
   return (
-    <li
-      className="list__item chip members-list__row is-fullhover is-interactive"
-      tabIndex={0}
-      role="button"
-      onClick={openRole}
-      onKeyDown={(event) => handleRowKey(event, openRole)}
-    >
+    <li {...rowAttrs(openRole)}>
       <MemberIdentity member={member} />
       <MemberStatus member={member} t={props.t} />
       <MemberRole member={member} t={props.t} />
-      <MemberActionCell
-        member={member}
-        busy={props.busy}
-        canEditRoles={props.canEditRoles}
-        canEditActive={props.canEditActive}
-        t={props.t}
-        onInfo={props.onInfo}
-        onRole={props.onRole}
-        onActive={props.onActive}
-      />
+      <MemberActionCell {...props} />
     </li>
   );
+}
+
+function rowAttrs(openRole: () => void): LiHTMLAttributes<HTMLLIElement> {
+  return {
+    className: "list__item chip members-list__row is-fullhover is-interactive",
+    tabIndex: 0,
+    role: "button",
+    onClick: openRole,
+    onKeyDown: (event) => handleRowKey(event, openRole),
+  };
 }
 
 function handleRowKey(event: React.KeyboardEvent, run: () => void) {

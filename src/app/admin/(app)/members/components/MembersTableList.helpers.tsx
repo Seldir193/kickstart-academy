@@ -67,7 +67,7 @@ function isActive(u: AdminMember) {
   return Boolean((u as any)?.isActive);
 }
 
-export function actionsFor(args: {
+type ActionArgs = {
   t: (key: string) => string;
   u: AdminMember;
   busy: boolean;
@@ -76,61 +76,63 @@ export function actionsFor(args: {
   onInfo: (u: AdminMember) => void;
   onEditRole: (u: AdminMember) => void;
   onEditActive: (u: AdminMember) => void;
-}) {
-  const {
-    t,
-    u,
-    busy,
-    canEditRoles,
-    canEditActive,
-    onInfo,
-    onEditRole,
-    onEditActive,
-  } = args;
+};
 
+export function actionsFor(args: ActionArgs) {
+  return [infoAction(args), roleAction(args), activeAction(args)] as Action[];
+}
+
+function infoAction({ t, u, busy, onInfo }: ActionArgs) {
+  return {
+    key: "info",
+    icon: "/icons/info.svg",
+    title: t("common.admin.members.actions.info"),
+    disabled: busy,
+    run: () => onInfo(u),
+  };
+}
+
+function roleAction({ t, u, busy, canEditRoles, onEditRole }: ActionArgs) {
   const locked = Boolean(u?.isOwner);
-  const disabledRole = busy || !canEditRoles || locked;
-  const disabledActive = busy || !canEditActive || locked;
+  return {
+    key: "role",
+    icon: "/icons/edit.svg",
+    title: t("common.admin.members.actions.changeRole"),
+    disabled: busy || !canEditRoles || locked,
+    tip: lockTip(t, canEditRoles, locked, "role"),
+    run: () => onEditRole(u),
+  };
+}
 
-  const tipRole = !canEditRoles
-    ? t("common.admin.members.locked.roleOwnerOnly")
-    : locked
-      ? t("common.admin.members.locked.ownerRole")
-      : undefined;
+function activeAction({ t, u, busy, canEditActive, onEditActive }: ActionArgs) {
+  const locked = Boolean(u?.isOwner);
+  return {
+    key: "active",
+    icon: "/icons/block.svg",
+    title: activeTitle(t, u),
+    disabled: busy || !canEditActive || locked,
+    tip: lockTip(t, canEditActive, locked, "active"),
+    run: () => onEditActive(u),
+  };
+}
 
-  const tipActive = !canEditActive
-    ? t("common.admin.members.locked.activeOwnerOnly")
-    : locked
-      ? t("common.admin.members.locked.ownerActive")
-      : undefined;
-
-  const titleActive = isActive(u)
+function activeTitle(t: (key: string) => string, u: AdminMember) {
+  return isActive(u)
     ? t("common.admin.members.actions.deactivate")
     : t("common.admin.members.actions.reactivate");
+}
 
-  return [
-    {
-      key: "info",
-      icon: "/icons/info.svg",
-      title: t("common.admin.members.actions.info"),
-      disabled: busy,
-      run: () => onInfo(u),
-    },
-    {
-      key: "role",
-      icon: "/icons/edit.svg",
-      title: t("common.admin.members.actions.changeRole"),
-      disabled: disabledRole,
-      tip: tipRole,
-      run: () => onEditRole(u),
-    },
-    {
-      key: "active",
-      icon: "/icons/block.svg",
-      title: titleActive,
-      disabled: disabledActive,
-      tip: tipActive,
-      run: () => onEditActive(u),
-    },
-  ] as Action[];
+function lockTip(
+  t: (key: string) => string,
+  allowed: boolean,
+  locked: boolean,
+  kind: "role" | "active",
+) {
+  if (!allowed) return t(`common.admin.members.locked.${kind}OwnerOnly`);
+  if (locked) return t(`common.admin.members.locked.owner${capitalize(kind)}`);
+  return undefined;
+}
+
+function capitalize(value: string) {
+  return `${value.charAt(0).toUpperCase()}${value.slice(1)}`;
 }

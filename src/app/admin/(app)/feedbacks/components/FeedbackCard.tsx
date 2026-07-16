@@ -1,6 +1,6 @@
 "use client";
 
-import type { KeyboardEvent, MouseEvent } from "react";
+import type { KeyboardEvent, LiHTMLAttributes, MouseEvent } from "react";
 import { useTranslation } from "react-i18next";
 import type { Feedback } from "../types";
 import { getFeedbackCategoryKey, getFeedbackId } from "../helpers";
@@ -29,31 +29,38 @@ export default function FeedbackCard(props: Props) {
   const isBusy = props.busyItemId === id;
 
   return (
-    <li
-      className={getRowClass(props)}
-      role="button"
-      tabIndex={0}
-      aria-label={props.item.author || "Feedback"}
-      onMouseDown={(event) =>
-        preventRowFocusInSelectMode(event, props.selectMode)
-      }
-      aria-pressed={props.selectMode ? props.selected : undefined}
-      onClick={() => handleRowClick(props, id)}
-      onKeyDown={(event) => activateRow(event, () => handleRowClick(props, id))}
-    >
+    <li {...rowAttrs(props, id)}>
       <FeedbackPreview imageUrl={props.item.imageUrl} />
       <FeedbackAuthor item={props.item} />
       <FeedbackCategory item={props.item} />
       <FeedbackOrder item={props.item} />
       <FeedbackStatusBadge active={props.item.isActive} />
       <FeedbackUpdated item={props.item} />
-      <FeedbackCardActions
-        item={props.item}
-        isBusy={isBusy}
-        onEdit={props.onEdit}
-      />
+      <FeedbackCardActions {...actionProps(props, isBusy)} />
     </li>
   );
+}
+
+function rowAttrs(props: Props, id: string): LiHTMLAttributes<HTMLLIElement> {
+  return {
+    className: getRowClass(props),
+    role: "button",
+    tabIndex: 0,
+    "aria-label": props.item.author || "Feedback",
+    onMouseDown: (event) =>
+      preventRowFocusInSelectMode(event, props.selectMode),
+    "aria-pressed": props.selectMode ? props.selected : undefined,
+    onClick: () => handleRowClick(props, id),
+    onKeyDown: (event) => activateRow(event, () => handleRowClick(props, id)),
+  };
+}
+
+function actionProps(props: Props, isBusy: boolean): ActionProps {
+  return {
+    item: props.item,
+    isBusy,
+    onEdit: props.onEdit,
+  };
 }
 
 function FeedbackPreview({ imageUrl }: { imageUrl: string }) {
@@ -125,13 +132,14 @@ function FeedbackEditButton(props: ActionProps) {
       aria-disabled={props.isBusy}
       onClick={(event) => runAction(event, () => openFeedbackEdit(props))}
     >
-      <img
-        src="/icons/edit.svg"
-        alt=""
-        aria-hidden="true"
-        className="icon-img"
-      />
+      <EditIcon />
     </button>
+  );
+}
+
+function EditIcon() {
+  return (
+    <img src="/icons/edit.svg" alt="" aria-hidden="true" className="icon-img" />
   );
 }
 
