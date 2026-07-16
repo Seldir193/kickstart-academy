@@ -19,6 +19,8 @@ type SelectOption<T extends string> = {
   label: string;
 };
 
+type Translate = ReturnType<typeof useTranslation>["t"];
+
 function useCloseOnOutsideClick(
   ref: RefObject<HTMLDivElement | null>,
   close: () => void,
@@ -69,21 +71,24 @@ function PartnerSortSelect(props: {
   onChange: (value: PartnerSortKey) => void;
 }) {
   const { t } = useTranslation();
-  const options: SelectOption<PartnerSortKey>[] = [
-    { value: "newest", label: t("admin.partners.sort.newest") },
-    { value: "oldest", label: t("admin.partners.sort.oldest") },
-    { value: "aToZ", label: t("admin.partners.sort.aToZ") },
-    { value: "zToA", label: t("admin.partners.sort.zToA") },
-  ];
 
   return (
     <PartnerSelect
       className="partner-admin__select"
       value={props.value}
-      options={options}
+      options={sortOptions(t)}
       onChange={props.onChange}
     />
   );
+}
+
+function sortOptions(t: Translate): SelectOption<PartnerSortKey>[] {
+  return [
+    { value: "newest", label: t("admin.partners.sort.newest") },
+    { value: "oldest", label: t("admin.partners.sort.oldest") },
+    { value: "aToZ", label: t("admin.partners.sort.aToZ") },
+    { value: "zToA", label: t("admin.partners.sort.zToA") },
+  ];
 }
 
 function PartnerStatusSelect(props: {
@@ -91,21 +96,35 @@ function PartnerStatusSelect(props: {
   onChange: (value: PartnerStatusFilter) => void;
 }) {
   const { t } = useTranslation();
-  const options: SelectOption<PartnerStatusFilter>[] = [
-    { value: "all", label: t("admin.partners.filter.all") },
-    { value: "active", label: t("admin.partners.active") },
-    { value: "inactive", label: t("admin.partners.inactive") },
-  ];
 
   return (
     <PartnerSelect
       className="partner-admin__select"
       value={props.value}
-      options={options}
+      options={statusOptions(t)}
       onChange={props.onChange}
     />
   );
 }
+
+function statusOptions(t: Translate): SelectOption<PartnerStatusFilter>[] {
+  return [
+    { value: "all", label: t("admin.partners.filter.all") },
+    { value: "active", label: t("admin.partners.active") },
+    { value: "inactive", label: t("admin.partners.inactive") },
+  ];
+}
+
+type SelectView<T extends string> = {
+  className: string;
+  value: T;
+  options: SelectOption<T>[];
+  isOpen: boolean;
+  dropdownRef: RefObject<HTMLDivElement | null>;
+  label: string;
+  toggle: () => void;
+  pick: (value: T) => void;
+};
 
 function PartnerSelect<T extends string>(props: {
   className: string;
@@ -116,49 +135,91 @@ function PartnerSelect<T extends string>(props: {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const active = props.options.find((option) => option.value === props.value);
-
   useCloseOnOutsideClick(dropdownRef, () => setIsOpen(false));
+  const view: SelectView<T> = {
+    ...props,
+    isOpen,
+    dropdownRef,
+    label: active?.label || "",
+    toggle: () => setIsOpen((open) => !open),
+    pick: (value) => pickOption(props.onChange, setIsOpen, value),
+  };
+  return <SelectBox {...view} />;
+}
 
-  function pick(value: T) {
-    props.onChange(value);
-    setIsOpen(false);
-  }
-
+function SelectBox<T extends string>(view: SelectView<T>) {
   return (
     <div
-      ref={dropdownRef}
-      className={`${props.className} ks-selectbox${
-        isOpen ? " ks-selectbox--open" : ""
-      }`}
+      ref={view.dropdownRef}
+      className={selectClass(view.className, view.isOpen)}
     >
-      <button
-        type="button"
-        className="ks-selectbox__trigger"
-        onClick={() => setIsOpen((open) => !open)}
-      >
-        <span className="ks-selectbox__label">{active?.label || ""}</span>
-        <span className="ks-selectbox__chevron" aria-hidden="true" />
-      </button>
+      <SelectTrigger label={view.label} toggle={view.toggle} />
 
-      {isOpen ? (
-        <div className="ks-selectbox__panel">
-          {props.options.map((option) => (
-            <button
-              key={option.value}
-              type="button"
-              className={
-                "ks-selectbox__option" +
-                (props.value === option.value
-                  ? " ks-selectbox__option--active"
-                  : "")
-              }
-              onClick={() => pick(option.value)}
-            >
-              {option.label}
-            </button>
-          ))}
-        </div>
-      ) : null}
+      {view.isOpen ? <SelectPanel {...view} /> : null}
     </div>
   );
+}
+
+function SelectTrigger(props: { label: string; toggle: () => void }) {
+  return (
+    <button
+      type="button"
+      className="ks-selectbox__trigger"
+      onClick={props.toggle}
+    >
+      <span className="ks-selectbox__label">{props.label}</span>
+      <span className="ks-selectbox__chevron" aria-hidden="true" />
+    </button>
+  );
+}
+
+function SelectPanel<T extends string>({
+  options,
+  value,
+  pick,
+}: SelectView<T>) {
+  return (
+    <div className="ks-selectbox__panel">
+      {options.map((option) => (
+        <SelectOptionButton
+          key={option.value}
+          option={option}
+          active={value === option.value}
+          onPick={pick}
+        />
+      ))}
+    </div>
+  );
+}
+
+function SelectOptionButton<T extends string>(props: {
+  option: SelectOption<T>;
+  active: boolean;
+  onPick: (value: T) => void;
+}) {
+  return (
+    <button
+      type="button"
+      className={
+        "ks-selectbox__option" +
+        (props.active ? " ks-selectbox__option--active" : "")
+      }
+      onClick={() => props.onPick(props.option.value)}
+    >
+      {props.option.label}
+    </button>
+  );
+}
+
+function selectClass(className: string, isOpen: boolean) {
+  return `${className} ks-selectbox${isOpen ? " ks-selectbox--open" : ""}`;
+}
+
+function pickOption<T extends string>(
+  onChange: (value: T) => void,
+  setIsOpen: (open: boolean) => void,
+  value: T,
+) {
+  onChange(value);
+  setIsOpen(false);
 }
