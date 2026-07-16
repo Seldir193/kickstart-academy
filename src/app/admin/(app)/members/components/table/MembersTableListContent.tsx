@@ -7,63 +7,35 @@ import MembersTable from "./MembersTable";
 import type { MembersTableProps } from "./membersTable.types";
 import { useMembersTableDialogs } from "./useMembersTableDialogs";
 
+type Dialogs = ReturnType<typeof useMembersTableDialogs>;
+type Translate = ReturnType<typeof useTranslation>["t"];
+type SectionProps = MembersTableProps & { t: Translate; dialogs: Dialogs };
+
 export default function MembersTableListContent(props: MembersTableProps) {
   const { t } = useTranslation();
   const dialogs = useMembersTableDialogs();
 
   if (!props.items.length) return <EmptyMembers t={t} />;
 
-  const roleItem = dialogs.roleItem;
-  const activeItem = dialogs.activeItem;
-  const canEditRole = roleItem
-    ? canEdit(roleItem, props.busy, props.canEditRoles)
-    : false;
-  const canEditActive = activeItem
-    ? canEdit(activeItem, props.busy, props.canEditActive)
-    : false;
-
   return (
     <>
-      <section className={`card members-list ${props.busy ? "is-busy" : ""}`}>
-        <MembersTable
-          {...props}
-          t={t}
-          onInfo={dialogs.openInfo}
-          onRole={dialogs.openRole}
-          onActive={dialogs.openActive}
-        />
-      </section>
-      <MemberDialogs
-        infoItem={dialogs.infoItem}
-        roleItem={roleItem}
-        roleNext={dialogs.roleNext}
-        activeItem={activeItem}
-        activeNext={dialogs.activeNext}
-        canEditRole={canEditRole}
-        canEditActive={canEditActive}
-        roleLockedReason={lockedReason(
-          t,
-          roleItem,
-          props.busy,
-          props.canEditRoles,
-          "role",
-        )}
-        activeLockedReason={lockedReason(
-          t,
-          activeItem,
-          props.busy,
-          props.canEditActive,
-          "active",
-        )}
-        onCloseInfo={dialogs.closeInfo}
-        onCloseRole={dialogs.closeRole}
-        onCloseActive={dialogs.closeActive}
-        onConfirmRole={() => confirmRole(props, roleItem, dialogs.roleNext)}
-        onConfirmActive={() =>
-          confirmActive(props, activeItem, dialogs.activeNext)
-        }
-      />
+      <MembersSection {...props} t={t} dialogs={dialogs} />
+      <MemberDialogs {...dialogProps(props, dialogs, t)} />
     </>
+  );
+}
+
+function MembersSection({ t, dialogs, ...props }: SectionProps) {
+  return (
+    <section className={`card members-list ${props.busy ? "is-busy" : ""}`}>
+      <MembersTable
+        {...props}
+        t={t}
+        onInfo={dialogs.openInfo}
+        onRole={dialogs.openRole}
+        onActive={dialogs.openActive}
+      />
+    </section>
   );
 }
 
@@ -75,8 +47,58 @@ function EmptyMembers({ t }: { t: (key: string) => string }) {
   );
 }
 
-function canEdit(member: AdminMember, busy: boolean, allowed: boolean) {
-  return !busy && allowed && !member.isOwner;
+function dialogProps(props: MembersTableProps, dialogs: Dialogs, t: Translate) {
+  return {
+    ...dialogItems(dialogs),
+    ...dialogPermissions(props, dialogs, t),
+    ...dialogHandlers(props, dialogs),
+  };
+}
+
+function dialogItems(dialogs: Dialogs) {
+  return {
+    infoItem: dialogs.infoItem,
+    roleItem: dialogs.roleItem,
+    roleNext: dialogs.roleNext,
+    activeItem: dialogs.activeItem,
+    activeNext: dialogs.activeNext,
+  };
+}
+
+function dialogPermissions(
+  props: MembersTableProps,
+  dialogs: Dialogs,
+  t: Translate,
+) {
+  const { roleItem, activeItem } = dialogs;
+  const { busy, canEditRoles, canEditActive } = props;
+  return {
+    canEditRole: canEdit(roleItem, busy, canEditRoles),
+    canEditActive: canEdit(activeItem, busy, canEditActive),
+    roleLockedReason: lockedReason(t, roleItem, busy, canEditRoles, "role"),
+    activeLockedReason: lockedReason(
+      t,
+      activeItem,
+      busy,
+      canEditActive,
+      "active",
+    ),
+  };
+}
+
+function dialogHandlers(props: MembersTableProps, dialogs: Dialogs) {
+  return {
+    onCloseInfo: dialogs.closeInfo,
+    onCloseRole: dialogs.closeRole,
+    onCloseActive: dialogs.closeActive,
+    onConfirmRole: () => confirmRole(props, dialogs.roleItem, dialogs.roleNext),
+    onConfirmActive: () =>
+      confirmActive(props, dialogs.activeItem, dialogs.activeNext),
+  };
+}
+
+function canEdit(member: AdminMember | null, busy: boolean, allowed: boolean) {
+  return !!member && !busy && allowed && !member.isOwner;
 }
 
 function lockedReason(
