@@ -17,14 +17,20 @@ export default function FeedbackPageHeader(props: Props) {
       aria-disabled={props.busy}
       onClick={() => handleCreate(props)}
     >
-      <img
-        src="/icons/plus.svg"
-        alt=""
-        aria-hidden="true"
-        className="btn__icon"
-      />
+      {renderPlusIcon()}
       {t("admin.feedbacks.create")}
     </button>
+  );
+}
+
+function renderPlusIcon() {
+  return (
+    <img
+      src="/icons/plus.svg"
+      alt=""
+      aria-hidden="true"
+      className="btn__icon"
+    />
   );
 }
 
