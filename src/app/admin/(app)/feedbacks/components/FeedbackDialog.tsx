@@ -17,6 +17,8 @@ type Props = {
   onUpload: (file: File) => Promise<string>;
 };
 
+type Translate = ReturnType<typeof useTranslation>["t"];
+
 export default function FeedbackDialog(props: Props) {
   const { mode, item, busy, onClose, onSave, onUpload } = props;
   const [draft, setDraft] = useState<Feedback>(() => cloneFeedback(item));
@@ -102,39 +104,62 @@ function FeedbackDialogHead(props: {
   onClose: () => void;
 }) {
   const { t } = useTranslation();
-  const { mode, onClose } = props;
 
   return (
     <div className="dialog-head feedback-dialog__head">
-      <div className="feedback-dialog__head-left">
-        <div className="dialog-title feedback-dialog__title">
-          {mode === "create"
-            ? t("admin.feedbacks.create")
-            : t("admin.feedbacks.edit")}
-        </div>
-        <div className="dialog-subtitle feedback-dialog__subtitle">
-          {t("admin.feedbacks.subtitle")}
-        </div>
-      </div>
+      <HeadLeft mode={props.mode} t={t} />
 
-      <div className="feedback-dialog__head-right">
-        <div className="dialog-head__actions">
-          <button
-            type="button"
-            className="dialog-close modal__close"
-            aria-label={t("common.close")}
-            onClick={onClose}
-          >
-            <img
-              src="/icons/close.svg"
-              alt=""
-              aria-hidden="true"
-              className="icon-img"
-            />
-          </button>
-        </div>
+      <HeadRight onClose={props.onClose} t={t} />
+    </div>
+  );
+}
+
+function HeadLeft({ mode, t }: { mode: FeedbackDialogMode; t: Translate }) {
+  return (
+    <div className="feedback-dialog__head-left">
+      <div className="dialog-title feedback-dialog__title">
+        {mode === "create"
+          ? t("admin.feedbacks.create")
+          : t("admin.feedbacks.edit")}
+      </div>
+      <div className="dialog-subtitle feedback-dialog__subtitle">
+        {t("admin.feedbacks.subtitle")}
       </div>
     </div>
+  );
+}
+
+function HeadRight({ onClose, t }: { onClose: () => void; t: Translate }) {
+  return (
+    <div className="feedback-dialog__head-right">
+      <div className="dialog-head__actions">
+        <CloseButton onClose={onClose} t={t} />
+      </div>
+    </div>
+  );
+}
+
+function CloseButton({ onClose, t }: { onClose: () => void; t: Translate }) {
+  return (
+    <button
+      type="button"
+      className="dialog-close modal__close"
+      aria-label={t("common.close")}
+      onClick={onClose}
+    >
+      <CloseIcon />
+    </button>
+  );
+}
+
+function CloseIcon() {
+  return (
+    <img
+      src="/icons/close.svg"
+      alt=""
+      aria-hidden="true"
+      className="icon-img"
+    />
   );
 }
 
@@ -144,32 +169,42 @@ function FeedbackDialogFooter(props: {
   error: string;
 }) {
   const { t } = useTranslation();
-  const { busy, mode, error } = props;
-  const buttonLabel = getSubmitButtonLabel(t, busy, mode);
-
-  function handleClick(event: MouseEvent<HTMLButtonElement>) {
-    if (!busy) return;
-    event.preventDefault();
-  }
+  const buttonLabel = getSubmitButtonLabel(t, props.busy, props.mode);
 
   return (
     <div className="dialog-footer feedback-dialog__footer">
-      {error ? (
-        <p className="error feedback-dialog__message" role="alert">
-          {error}
-        </p>
-      ) : null}
+      <FooterError error={props.error} />
 
-      <button
-        className="btn"
-        type="submit"
-        aria-disabled={busy}
-        onClick={handleClick}
-      >
-        {buttonLabel}
-      </button>
+      <SubmitButton busy={props.busy} label={buttonLabel} />
     </div>
   );
+}
+
+function FooterError({ error }: { error: string }) {
+  if (!error) return null;
+  return (
+    <p className="error feedback-dialog__message" role="alert">
+      {error}
+    </p>
+  );
+}
+
+function SubmitButton({ busy, label }: { busy: boolean; label: string }) {
+  return (
+    <button
+      className="btn"
+      type="submit"
+      aria-disabled={busy}
+      onClick={(event) => guardSubmit(busy, event)}
+    >
+      {label}
+    </button>
+  );
+}
+
+function guardSubmit(busy: boolean, event: MouseEvent<HTMLButtonElement>) {
+  if (!busy) return;
+  event.preventDefault();
 }
 
 function getSubmitError(error: unknown) {
