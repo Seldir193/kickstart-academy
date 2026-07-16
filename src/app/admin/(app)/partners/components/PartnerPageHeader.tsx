@@ -7,11 +7,7 @@ type Props = {
 
 export default function PartnerPageHeader({ busy, onCreate }: Props) {
   const { t } = useTranslation();
-
-  function handleCreate() {
-    if (busy) return;
-    onCreate();
-  }
+  const handleCreate = () => runCreate(busy, onCreate);
 
   return (
     <button
@@ -20,13 +16,24 @@ export default function PartnerPageHeader({ busy, onCreate }: Props) {
       aria-disabled={busy}
       onClick={handleCreate}
     >
-      <img
-        src="/icons/plus.svg"
-        alt=""
-        aria-hidden="true"
-        className="btn__icon"
-      />
+      {renderPlusIcon()}
       {t("admin.partners.create")}
     </button>
   );
+}
+
+function renderPlusIcon() {
+  return (
+    <img
+      src="/icons/plus.svg"
+      alt=""
+      aria-hidden="true"
+      className="btn__icon"
+    />
+  );
+}
+
+function runCreate(busy: boolean, onCreate: () => void) {
+  if (busy) return;
+  onCreate();
 }
