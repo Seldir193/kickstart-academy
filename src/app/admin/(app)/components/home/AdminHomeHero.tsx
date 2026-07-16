@@ -11,24 +11,36 @@ export default function AdminHomeHero({ adminName, t, onQuickOpen }: Props) {
   return (
     <section className="hero">
       <div className="hero-content">
-        <h1>
-          {dayGreeting(new Date(), "en-US")}{" "}
-          {adminName ? `${firstNameOf(adminName)}` : ""}
-          {adminName ? "!" : ""}
-        </h1>
+        {renderGreeting(adminName)}
         <p>{t("common.admin.home.hero.subtitle")}</p>
-        <div className="hero-actions">
-          <Link href="/admin/trainings" className="btn">
-            {t("common.admin.home.hero.createCourse")}
-          </Link>
-          <Link href="/admin/orte" className="btn">
-            {t("common.admin.home.hero.createPlace")}
-          </Link>
-          <button className="btn" onClick={onQuickOpen} type="button">
-            {t("common.admin.home.hero.createBooking")}
-          </button>
-        </div>
+        {renderHeroActions(t, onQuickOpen)}
       </div>
     </section>
+  );
+}
+
+function renderGreeting(adminName: string) {
+  return (
+    <h1>
+      {dayGreeting(new Date(), "en-US")}{" "}
+      {adminName ? `${firstNameOf(adminName)}` : ""}
+      {adminName ? "!" : ""}
+    </h1>
+  );
+}
+
+function renderHeroActions(t: Props["t"], onQuickOpen: Props["onQuickOpen"]) {
+  return (
+    <div className="hero-actions">
+      <Link href="/admin/trainings" className="btn">
+        {t("common.admin.home.hero.createCourse")}
+      </Link>
+      <Link href="/admin/orte" className="btn">
+        {t("common.admin.home.hero.createPlace")}
+      </Link>
+      <button className="btn" onClick={onQuickOpen} type="button">
+        {t("common.admin.home.hero.createBooking")}
+      </button>
+    </div>
   );
 }
