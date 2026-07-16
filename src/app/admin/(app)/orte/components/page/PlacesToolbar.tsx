@@ -21,12 +21,18 @@ export default function PlacesToolbar({ model, t }: Props) {
         t={t}
       />
       <PlacesSort model={model} t={t} />
-      <PlacesCreateButton
-        busy={model.busy}
-        onCreate={model.dialog.create}
-        t={t}
-      />
+      {renderCreateButton({ model, t })}
     </div>
+  );
+}
+
+function renderCreateButton({ model, t }: Props) {
+  return (
+    <PlacesCreateButton
+      busy={model.busy}
+      onCreate={model.dialog.create}
+      t={t}
+    />
   );
 }
 
