@@ -11,9 +11,13 @@ type Props = {
   onConfirm: () => Promise<void> | void;
 };
 
-export default function DeleteFeedbackDialog(props: Props) {
+export default function DeleteFeedbackDialog({
+  open,
+  feedbackName,
+  onClose,
+  onConfirm,
+}: Props) {
   const { t } = useTranslation();
-  const { open, feedbackName, onClose, onConfirm } = props;
 
   return (
     <ConfirmDialog
