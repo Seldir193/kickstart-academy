@@ -33,11 +33,17 @@ function SortTrigger(props: PlacesSortSelectProps) {
       disabled={props.busy}
       aria-label={sortAria(props)}
     >
-      <span className="ks-training-select__label">
-        {getPlaceSortLabel(props.sort, props.t)}
-      </span>
+      {renderSortTriggerLabel(props)}
       <span className="ks-training-select__chevron" aria-hidden="true" />
     </button>
+  );
+}
+
+function renderSortTriggerLabel(props: PlacesSortSelectProps) {
+  return (
+    <span className="ks-training-select__label">
+      {getPlaceSortLabel(props.sort, props.t)}
+    </span>
   );
 }
 
@@ -49,17 +55,21 @@ function SortMenu(props: PlacesSortSelectProps) {
       role="listbox"
       aria-label={sortAria(props)}
     >
-      {PLACE_SORT_OPTIONS.map((option) => (
-        <PlacesSortOption
-          key={option.value}
-          option={option}
-          active={props.sort === option.value}
-          t={props.t}
-          onSelect={props.onSortChange}
-        />
-      ))}
+      {renderSortOptions(props)}
     </ul>
   );
+}
+
+function renderSortOptions(props: PlacesSortSelectProps) {
+  return PLACE_SORT_OPTIONS.map((option) => (
+    <PlacesSortOption
+      key={option.value}
+      option={option}
+      active={props.sort === option.value}
+      t={props.t}
+      onSelect={props.onSortChange}
+    />
+  ));
 }
 
 function sortAria({ t }: PlacesSortSelectProps) {
