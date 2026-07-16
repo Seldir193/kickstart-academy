@@ -5,39 +5,37 @@ import type { Voucher } from "../../types";
 import { formatDateOnly } from "../../utils/dateFormat";
 import { formatVoucherAmount } from "./vouchersTable.helpers";
 
-export default function VoucherTableRow(props: {
+type Translate = ReturnType<typeof useTranslation>["t"];
+
+type VoucherRowProps = {
   item: Voucher;
   selectMode: boolean;
   checked: boolean;
   onOpen: (item: Voucher) => void;
   onRowClick: (item: Voucher) => void;
-}) {
+};
+
+type RowCellsView = VoucherRowProps & { t: Translate; language: string };
+
+export default function VoucherTableRow(props: VoucherRowProps) {
   const { t, i18n } = useTranslation();
-  const { item, selectMode, checked } = props;
-  const hideEdit = selectMode || checked;
 
   return (
-    <li
-      className={rowClassName(checked, selectMode)}
-      onClick={() => props.onRowClick(item)}
-      onKeyDown={(event) =>
-        handleRowKeyDown(event, () => props.onRowClick(item))
-      }
-      tabIndex={0}
-      role="button"
-      aria-pressed={selectMode ? checked : undefined}
-      aria-label={rowLabel(t, item, selectMode)}
-    >
-      <VoucherCodeCell item={item} />
-      <div className="news-list__cell bookings-mono">
-        {formatVoucherAmount(item.amount)}
-      </div>
-      <div className="news-list__cell">{statusText(t, item.active)}</div>
-      <div className="news-list__cell">
-        {formatDateOnly(item.createdAt, i18n.language)}
-      </div>
-      <VoucherActionCell hidden={hideEdit} item={item} onOpen={props.onOpen} />
+    <li {...rowAttrs(props, t)}>
+      <RowCells {...props} t={t} language={i18n.language} />
     </li>
+  );
+}
+
+function RowCells(view: RowCellsView) {
+  return (
+    <>
+      <VoucherCodeCell item={view.item} />
+      <AmountCell item={view.item} />
+      <StatusCell item={view.item} t={view.t} />
+      <CreatedCell item={view.item} language={view.language} />
+      <VoucherActionCell {...actionProps(view)} />
+    </>
   );
 }
 
@@ -46,6 +44,26 @@ function VoucherCodeCell({ item }: { item: Voucher }) {
     <div className="news-list__cell">
       <div className="news-list__title">{item.code}</div>
       <div className="news-list__excerpt is-empty">—</div>
+    </div>
+  );
+}
+
+function AmountCell({ item }: { item: Voucher }) {
+  return (
+    <div className="news-list__cell bookings-mono">
+      {formatVoucherAmount(item.amount)}
+    </div>
+  );
+}
+
+function StatusCell({ item, t }: { item: Voucher; t: Translate }) {
+  return <div className="news-list__cell">{statusText(t, item.active)}</div>;
+}
+
+function CreatedCell({ item, language }: { item: Voucher; language: string }) {
+  return (
+    <div className="news-list__cell">
+      {formatDateOnly(item.createdAt, language)}
     </div>
   );
 }
@@ -64,20 +82,27 @@ function VoucherActionCell(props: {
       onClick={(event) => openFromAction(event, props)}
       onMouseDown={(event) => event.stopPropagation()}
     >
-      <span
-        className="edit-trigger"
-        role="button"
-        tabIndex={0}
-        aria-label={t("common.admin.vouchers.row.edit")}
-      >
-        <img
-          src="/icons/edit.svg"
-          alt=""
-          aria-hidden="true"
-          className="icon-img"
-        />
-      </span>
+      <EditTrigger t={t} />
     </div>
+  );
+}
+
+function EditTrigger({ t }: { t: Translate }) {
+  return (
+    <span
+      className="edit-trigger"
+      role="button"
+      tabIndex={0}
+      aria-label={t("common.admin.vouchers.row.edit")}
+    >
+      <EditIcon />
+    </span>
+  );
+}
+
+function EditIcon() {
+  return (
+    <img src="/icons/edit.svg" alt="" aria-hidden="true" className="icon-img" />
   );
 }
 
@@ -88,6 +113,30 @@ function HiddenActionCell() {
       aria-hidden="true"
     />
   );
+}
+
+function rowAttrs(
+  props: VoucherRowProps,
+  t: Translate,
+): React.LiHTMLAttributes<HTMLLIElement> {
+  const { item, selectMode, checked } = props;
+  return {
+    className: rowClassName(checked, selectMode),
+    onClick: () => props.onRowClick(item),
+    onKeyDown: (event) => handleRowKeyDown(event, () => props.onRowClick(item)),
+    tabIndex: 0,
+    role: "button",
+    "aria-pressed": selectMode ? checked : undefined,
+    "aria-label": rowLabel(t, item, selectMode),
+  };
+}
+
+function actionProps(view: RowCellsView) {
+  return {
+    hidden: view.selectMode || view.checked,
+    item: view.item,
+    onOpen: view.onOpen,
+  };
 }
 
 function openFromAction(
