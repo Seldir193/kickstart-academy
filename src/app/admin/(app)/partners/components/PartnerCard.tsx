@@ -1,6 +1,6 @@
 "use client";
 
-import type { KeyboardEvent, MouseEvent } from "react";
+import type { KeyboardEvent, LiHTMLAttributes, MouseEvent } from "react";
 import { useTranslation } from "react-i18next";
 import type { Partner } from "../types";
 import { getPartnerId } from "../helpers";
@@ -31,33 +31,40 @@ export default function PartnerCard(props: Props) {
   const isBusy = props.busyItemId === id;
 
   return (
-    <li
-      className={getRowClass(props)}
-      role="button"
-      tabIndex={0}
-      aria-label={props.item.name || "Partner"}
-      onMouseDown={(event) =>
-        preventRowFocusInSelectMode(event, props.selectMode)
-      }
-      aria-pressed={props.selectMode ? props.selected : undefined}
-      onClick={() => handleRowClick(props, id)}
-      onKeyDown={(event) => activateRow(event, () => handleRowClick(props, id))}
-    >
+    <li {...rowAttrs(props, id)}>
       <PartnerPreview logoUrl={props.item.logoUrl} />
       <PartnerName item={props.item} />
       <PartnerUrl item={props.item} />
       <PartnerOrder item={props.item} />
       <PartnerStatusBadge active={props.item.isActive} />
       <PartnerUpdated item={props.item} />
-      <PartnerCardActions
-        item={props.item}
-        isBusy={isBusy}
-        onEdit={props.onEdit}
-        onDelete={props.onDelete}
-        onToggle={props.onToggle}
-      />
+      <PartnerCardActions {...actionProps(props, isBusy)} />
     </li>
   );
+}
+
+function rowAttrs(props: Props, id: string): LiHTMLAttributes<HTMLLIElement> {
+  return {
+    className: getRowClass(props),
+    role: "button",
+    tabIndex: 0,
+    "aria-label": props.item.name || "Partner",
+    onMouseDown: (event) =>
+      preventRowFocusInSelectMode(event, props.selectMode),
+    "aria-pressed": props.selectMode ? props.selected : undefined,
+    onClick: () => handleRowClick(props, id),
+    onKeyDown: (event) => activateRow(event, () => handleRowClick(props, id)),
+  };
+}
+
+function actionProps(props: Props, isBusy: boolean): ActionProps {
+  return {
+    item: props.item,
+    isBusy,
+    onEdit: props.onEdit,
+    onDelete: props.onDelete,
+    onToggle: props.onToggle,
+  };
 }
 
 function PartnerPreview({ logoUrl }: { logoUrl: string }) {
@@ -124,13 +131,14 @@ function PartnerEditButton(props: ActionProps) {
       aria-disabled={props.isBusy}
       onClick={(event) => runAction(event, () => openPartnerEdit(props))}
     >
-      <img
-        src="/icons/edit.svg"
-        alt=""
-        aria-hidden="true"
-        className="icon-img"
-      />
+      <EditIcon />
     </button>
+  );
+}
+
+function EditIcon() {
+  return (
+    <img src="/icons/edit.svg" alt="" aria-hidden="true" className="icon-img" />
   );
 }
 
