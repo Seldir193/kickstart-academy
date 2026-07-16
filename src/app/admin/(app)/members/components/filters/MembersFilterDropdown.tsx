@@ -9,6 +9,18 @@ type Props<T extends string> = {
   onChange: (value: T) => void;
 };
 
+type Dropdown = ReturnType<typeof useFilterDropdown>;
+
+type BoxProps<T extends string> = Props<T> & {
+  dropdown: Dropdown;
+  label: string;
+};
+
+type OptionsProps<T extends string> = Props<T> & {
+  close: () => void;
+  menuRef: React.RefObject<HTMLUListElement | null>;
+};
+
 export default function MembersFilterDropdown<T extends string>(
   props: Props<T>,
 ) {
@@ -17,20 +29,26 @@ export default function MembersFilterDropdown<T extends string>(
     props.options.find((option) => option.value === props.value)?.label ?? "";
   return (
     <div className={props.className ?? "members-filters__dd"}>
-      <div className={selectClass(dropdown.open)}>
-        <Trigger
-          label={label}
-          ariaLabel={props.ariaLabel}
-          dropdown={dropdown}
+      <SelectBox {...props} dropdown={dropdown} label={label} />
+    </div>
+  );
+}
+
+function SelectBox<T extends string>({
+  dropdown,
+  label,
+  ...props
+}: BoxProps<T>) {
+  return (
+    <div className={selectClass(dropdown.open)}>
+      <Trigger label={label} ariaLabel={props.ariaLabel} dropdown={dropdown} />
+      {dropdown.open && (
+        <Options
+          {...props}
+          close={() => dropdown.setOpen(false)}
+          menuRef={dropdown.menuRef}
         />
-        {dropdown.open && (
-          <Options
-            {...props}
-            close={() => dropdown.setOpen(false)}
-            menuRef={dropdown.menuRef}
-          />
-        )}
-      </div>
+      )}
     </div>
   );
 }
@@ -38,7 +56,7 @@ export default function MembersFilterDropdown<T extends string>(
 function Trigger(props: {
   label: string;
   ariaLabel: string;
-  dropdown: ReturnType<typeof useFilterDropdown>;
+  dropdown: Dropdown;
 }) {
   return (
     <button
@@ -54,12 +72,7 @@ function Trigger(props: {
   );
 }
 
-function Options<T extends string>(
-  props: Props<T> & {
-    close: () => void;
-    menuRef: React.RefObject<HTMLUListElement | null>;
-  },
-) {
+function Options<T extends string>(props: OptionsProps<T>) {
   return (
     <ul
       ref={props.menuRef}
@@ -67,6 +80,14 @@ function Options<T extends string>(
       role="listbox"
       aria-label={props.ariaLabel}
     >
+      <OptionItems {...props} />
+    </ul>
+  );
+}
+
+function OptionItems<T extends string>(props: OptionsProps<T>) {
+  return (
+    <>
       {props.options.map((option) => (
         <Option
           key={option.value || "all"}
@@ -75,7 +96,7 @@ function Options<T extends string>(
           onSelect={() => selectOption(option.value, props)}
         />
       ))}
-    </ul>
+    </>
   );
 }
 
