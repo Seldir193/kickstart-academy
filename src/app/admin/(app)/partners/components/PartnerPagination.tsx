@@ -1,5 +1,6 @@
 "use client";
 
+import type { TFunction } from "i18next";
 import { useTranslation } from "react-i18next";
 
 type Props = {
@@ -12,18 +13,23 @@ type Props = {
 export default function PartnerPagination(props: Props) {
   return (
     <div className="pager pager--arrows news-pager">
-      <PartnerPageButton
-        direction="prev"
-        disabled={props.page <= 1}
-        onClick={props.onPrev}
-      />
+      {renderPartnerPageButton(props, "prev")}
       <PartnerPageCount page={props.page} totalPages={props.totalPages} />
-      <PartnerPageButton
-        direction="next"
-        disabled={props.page >= props.totalPages}
-        onClick={props.onNext}
-      />
+      {renderPartnerPageButton(props, "next")}
     </div>
+  );
+}
+
+type Direction = "prev" | "next";
+
+function renderPartnerPageButton(props: Props, direction: Direction) {
+  const isPrev = direction === "prev";
+  return (
+    <PartnerPageButton
+      direction={direction}
+      disabled={isPrev ? props.page <= 1 : props.page >= props.totalPages}
+      onClick={isPrev ? props.onPrev : props.onNext}
+    />
   );
 }
 
@@ -36,15 +42,13 @@ function PartnerPageCount(props: { page: number; totalPages: number }) {
 }
 
 function PartnerPageButton(props: {
-  direction: "prev" | "next";
+  direction: Direction;
   disabled: boolean;
   onClick: () => void;
 }) {
   const { t } = useTranslation();
   const isPrev = props.direction === "prev";
-  const label = isPrev
-    ? t("admin.partners.pagination.previousPage")
-    : t("admin.partners.pagination.nextPage");
+  const label = pageButtonLabel(isPrev, t);
 
   return (
     <button
@@ -54,12 +58,24 @@ function PartnerPageButton(props: {
       disabled={props.disabled}
       onClick={props.onClick}
     >
-      <img
-        src="/icons/arrow_right_alt.svg"
-        alt=""
-        aria-hidden="true"
-        className={isPrev ? "icon-img icon-img--left" : "icon-img"}
-      />
+      {renderPageButtonIcon(isPrev)}
     </button>
+  );
+}
+
+function pageButtonLabel(isPrev: boolean, t: TFunction) {
+  return isPrev
+    ? t("admin.partners.pagination.previousPage")
+    : t("admin.partners.pagination.nextPage");
+}
+
+function renderPageButtonIcon(isPrev: boolean) {
+  return (
+    <img
+      src="/icons/arrow_right_alt.svg"
+      alt=""
+      aria-hidden="true"
+      className={isPrev ? "icon-img icon-img--left" : "icon-img"}
+    />
   );
 }
