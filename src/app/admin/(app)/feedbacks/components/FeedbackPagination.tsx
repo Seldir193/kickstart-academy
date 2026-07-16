@@ -1,5 +1,6 @@
 "use client";
 
+import type { TFunction } from "i18next";
 import { useTranslation } from "react-i18next";
 
 type Props = {
@@ -23,23 +24,40 @@ export default function FeedbackPagination(props: Props) {
 
   return (
     <div className="pager pager--arrows news-pager">
-      <PaginationButton
-        disabled={page <= 1}
-        label={t("admin.feedbacks.pagination.previousPage")}
-        reverse
-        onClick={props.onPrev}
-      />
+      {renderPreviousButton(page, props, t)}
 
       <div className="pager__count" aria-live="polite" aria-atomic="true">
         {page} / {totalPages}
       </div>
 
-      <PaginationButton
-        disabled={page >= totalPages}
-        label={t("admin.feedbacks.pagination.nextPage")}
-        onClick={props.onNext}
-      />
+      {renderNextButton(page, totalPages, props, t)}
     </div>
+  );
+}
+
+function renderPreviousButton(page: number, props: Props, t: TFunction) {
+  return (
+    <PaginationButton
+      disabled={page <= 1}
+      label={t("admin.feedbacks.pagination.previousPage")}
+      reverse
+      onClick={props.onPrev}
+    />
+  );
+}
+
+function renderNextButton(
+  page: number,
+  totalPages: number,
+  props: Props,
+  t: TFunction,
+) {
+  return (
+    <PaginationButton
+      disabled={page >= totalPages}
+      label={t("admin.feedbacks.pagination.nextPage")}
+      onClick={props.onNext}
+    />
   );
 }
 
@@ -57,12 +75,18 @@ function PaginationButton(props: {
       disabled={props.disabled}
       onClick={props.onClick}
     >
-      <img
-        alt=""
-        aria-hidden="true"
-        className={`icon-img ${props.reverse ? "icon-img--left" : ""}`}
-        src="/icons/arrow_right_alt.svg"
-      />
+      {renderPaginationIcon(props.reverse)}
     </button>
+  );
+}
+
+function renderPaginationIcon(reverse?: boolean) {
+  return (
+    <img
+      alt=""
+      aria-hidden="true"
+      className={`icon-img ${reverse ? "icon-img--left" : ""}`}
+      src="/icons/arrow_right_alt.svg"
+    />
   );
 }
