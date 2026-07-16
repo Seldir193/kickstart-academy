@@ -5,13 +5,17 @@ import type { Voucher } from "../../types";
 import VoucherTableRow from "./VoucherTableRow";
 import { voucherId } from "./vouchersTable.helpers";
 
-export default function VouchersTable(props: {
+type VouchersTableProps = {
   items: Voucher[];
   selectMode: boolean;
   selected: Set<string>;
   onOpen: (item: Voucher) => void;
   onRowClick: (item: Voucher) => void;
-}) {
+};
+
+const HEAD_KEYS = ["code", "amount", "status", "created", "action"];
+
+export default function VouchersTable(props: VouchersTableProps) {
   return (
     <div className="news-table__scroll">
       <section className="card news-list">
@@ -26,41 +30,50 @@ export default function VouchersTable(props: {
 
 function VoucherTableHead() {
   const { t } = useTranslation();
-  const keys = ["code", "amount", "status", "created", "action"];
 
   return (
     <div className="news-list__head" aria-hidden="true">
-      {keys.map((key, index) => (
-        <div key={key} className={`news-list__h${index === 4 ? " news-list__h--right" : ""}`}>
-          {t(`common.admin.vouchers.table.${key}`)}
-        </div>
+      {HEAD_KEYS.map((key, index) => (
+        <HeadCell
+          key={key}
+          label={t(`common.admin.vouchers.table.${key}`)}
+          right={index === 4}
+        />
       ))}
     </div>
   );
 }
 
-function VoucherRows(props: {
-  items: Voucher[];
-  selectMode: boolean;
-  selected: Set<string>;
-  onOpen: (item: Voucher) => void;
-  onRowClick: (item: Voucher) => void;
-}) {
+function HeadCell({ label, right }: { label: string; right: boolean }) {
+  return (
+    <div className={`news-list__h${right ? " news-list__h--right" : ""}`}>
+      {label}
+    </div>
+  );
+}
+
+function VoucherRows(props: VouchersTableProps) {
   return (
     <ul className="list list--bleed">
-      {props.items.map((item) => {
-        const id = voucherId(item);
-        return (
-          <VoucherTableRow
-            key={id}
-            item={item}
-            selectMode={props.selectMode}
-            checked={props.selected.has(id)}
-            onOpen={props.onOpen}
-            onRowClick={props.onRowClick}
-          />
-        );
-      })}
+      {props.items.map((item) => (
+        <VoucherRow key={voucherId(item)} item={item} {...props} />
+      ))}
     </ul>
+  );
+}
+
+function VoucherRow({
+  item,
+  ...props
+}: VouchersTableProps & { item: Voucher }) {
+  const id = voucherId(item);
+  return (
+    <VoucherTableRow
+      item={item}
+      selectMode={props.selectMode}
+      checked={props.selected.has(id)}
+      onOpen={props.onOpen}
+      onRowClick={props.onRowClick}
+    />
   );
 }
