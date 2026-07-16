@@ -12,9 +12,13 @@ export function formatVoucherAmount(value: number) {
 }
 
 export function getInactiveVoucherIds(items: Voucher[], ids: Set<string>) {
-  return items.filter((item) => ids.has(item._id) && !item.active).map(voucherId);
+  return items
+    .filter((item) => ids.has(item._id) && !item.active)
+    .map(voucherId);
 }
 
 export function getActiveVoucherIds(items: Voucher[], ids: Set<string>) {
-  return items.filter((item) => ids.has(item._id) && item.active).map(voucherId);
+  return items
+    .filter((item) => ids.has(item._id) && item.active)
+    .map(voucherId);
 }
