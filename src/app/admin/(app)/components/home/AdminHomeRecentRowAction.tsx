@@ -9,22 +9,34 @@ export default function AdminHomeRecentRowAction({ onNavigate, t }: Props) {
       onClick={(e) => e.stopPropagation()}
       onMouseDown={(e) => e.stopPropagation()}
     >
-      <span
-        className="edit-trigger ks-filter-open"
-        role="button"
-        tabIndex={0}
-        title={t("common.admin.home.actions.filterByThisCourse")}
-        aria-label={t("common.admin.home.actions.filterByThisCourse")}
-        onClick={onNavigate}
-        onKeyDown={(e) => handleActivation(e, onNavigate)}
-      >
-        <img
-          src="/icons/filter.svg"
-          alt=""
-          aria-hidden="true"
-          className="icon-img"
-        />
-      </span>
+      {renderFilterTrigger(onNavigate, t)}
     </div>
+  );
+}
+
+function renderFilterTrigger(onNavigate: Props["onNavigate"], t: Props["t"]) {
+  return (
+    <span
+      className="edit-trigger ks-filter-open"
+      role="button"
+      tabIndex={0}
+      title={t("common.admin.home.actions.filterByThisCourse")}
+      aria-label={t("common.admin.home.actions.filterByThisCourse")}
+      onClick={onNavigate}
+      onKeyDown={(e) => handleActivation(e, onNavigate)}
+    >
+      {renderFilterIcon()}
+    </span>
+  );
+}
+
+function renderFilterIcon() {
+  return (
+    <img
+      src="/icons/filter.svg"
+      alt=""
+      aria-hidden="true"
+      className="icon-img"
+    />
   );
 }
