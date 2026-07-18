@@ -11,15 +11,21 @@ export default function PartnerTable({ props, selection }: PartnerTableProps) {
         <div className="news-admin__top-actions">
           <PartnerBulkToolbar props={props} selection={selection} />
         </div>
-        <div className="news-table__scroll">
-          <section className="card news-list">
-            <div className="news-list__table">
-              <PartnerTableHead />
-              <PartnerRows props={props} selection={selection} />
-            </div>
-          </section>
-        </div>
+        {renderScrollSection({ props, selection })}
       </div>
+    </div>
+  );
+}
+
+function renderScrollSection({ props, selection }: PartnerTableProps) {
+  return (
+    <div className="news-table__scroll">
+      <section className="card news-list">
+        <div className="news-list__table">
+          <PartnerTableHead />
+          <PartnerRows props={props} selection={selection} />
+        </div>
+      </section>
     </div>
   );
 }
@@ -27,23 +33,29 @@ export default function PartnerTable({ props, selection }: PartnerTableProps) {
 function PartnerRows({ props, selection }: PartnerTableProps) {
   return (
     <ul className="list list--bleed partner-admin__list">
-      {props.items.map((item) => {
-        const id = getPartnerId(item);
-        return (
-          <PartnerCard
-            key={id}
-            item={item}
-            busyItemId={props.busyItemId}
-            selectMode={selection.selectMode}
-            selected={selection.selectedIds.has(id)}
-            onEdit={props.onEdit}
-            onDelete={props.onDelete}
-            onToggle={props.onToggle}
-            onSelect={selection.toggleOne}
-          />
-        );
-      })}
+      {props.items.map((item) => renderPartnerCard(item, props, selection))}
     </ul>
+  );
+}
+
+function renderPartnerCard(
+  item: PartnerTableProps["props"]["items"][number],
+  props: PartnerTableProps["props"],
+  selection: PartnerTableProps["selection"],
+) {
+  const id = getPartnerId(item);
+  return (
+    <PartnerCard
+      key={id}
+      item={item}
+      busyItemId={props.busyItemId}
+      selectMode={selection.selectMode}
+      selected={selection.selectedIds.has(id)}
+      onEdit={props.onEdit}
+      onDelete={props.onDelete}
+      onToggle={props.onToggle}
+      onSelect={selection.toggleOne}
+    />
   );
 }
 
