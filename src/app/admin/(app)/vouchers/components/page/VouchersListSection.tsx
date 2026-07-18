@@ -49,18 +49,24 @@ function ListCount({ t, total }: { t: Translate; total: number }) {
 function TableBox(props: VouchersListSectionProps) {
   return (
     <div className="news-admin__box news-admin__box--scroll3">
-      <VouchersTableList
-        items={props.items}
-        selectMode={props.selectMode}
-        busy={props.busy || props.loading}
-        onToggleSelectMode={() => props.setSelectMode((prev) => !prev)}
-        onOpen={props.onOpen}
-        onDeleteMany={props.onDeleteMany}
-        onActivateMany={props.onActivateMany}
-        onDeactivateMany={props.onDeactivateMany}
-        toggleBtnRef={props.toggleBtnRef}
-      />
+      {renderVouchersTable(props)}
     </div>
+  );
+}
+
+function renderVouchersTable(props: VouchersListSectionProps) {
+  return (
+    <VouchersTableList
+      items={props.items}
+      selectMode={props.selectMode}
+      busy={props.busy || props.loading}
+      onToggleSelectMode={() => props.setSelectMode((prev) => !prev)}
+      onOpen={props.onOpen}
+      onDeleteMany={props.onDeleteMany}
+      onActivateMany={props.onActivateMany}
+      onDeactivateMany={props.onDeactivateMany}
+      toggleBtnRef={props.toggleBtnRef}
+    />
   );
 }
 

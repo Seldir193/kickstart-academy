@@ -1,5 +1,6 @@
 "use client";
 
+import type { TFunction } from "i18next";
 import { useTranslation } from "react-i18next";
 import type { FeedbackCategory } from "../../types";
 import { FEEDBACK_CATEGORIES } from "../../constants";
@@ -26,18 +27,28 @@ function FeedbackCategoryField(props: FeedbackBaseFieldsProps) {
   return (
     <div className="field">
       <label className="dialog-label">{t("admin.feedbacks.category")}</label>
-      <select
-        className="input"
-        value={props.draft.category}
-        onChange={(event) => onChange(event.target.value)}
-      >
-        {FEEDBACK_CATEGORIES.map((category) => (
-          <option key={category} value={category}>
-            {t(getFeedbackCategoryKey(category))}
-          </option>
-        ))}
-      </select>
+      {renderCategorySelect(props.draft.category, onChange, t)}
     </div>
+  );
+}
+
+function renderCategorySelect(
+  value: FeedbackCategory,
+  onChange: (value: string) => void,
+  t: TFunction,
+) {
+  return (
+    <select
+      className="input"
+      value={value}
+      onChange={(event) => onChange(event.target.value)}
+    >
+      {FEEDBACK_CATEGORIES.map((category) => (
+        <option key={category} value={category}>
+          {t(getFeedbackCategoryKey(category))}
+        </option>
+      ))}
+    </select>
   );
 }
 
@@ -79,16 +90,26 @@ function FeedbackStatusField(props: FeedbackBaseFieldsProps) {
   return (
     <div className="field">
       <label className="dialog-label">{t("admin.feedbacks.status")}</label>
-      <select
-        className="input"
-        value={value}
-        onChange={(event) =>
-          props.updateFeedback("isActive", event.target.value === "active")
-        }
-      >
-        <option value="active">{t("admin.feedbacks.active")}</option>
-        <option value="inactive">{t("admin.feedbacks.inactive")}</option>
-      </select>
+      {renderStatusSelect(value, props.updateFeedback, t)}
     </div>
+  );
+}
+
+function renderStatusSelect(
+  value: string,
+  updateFeedback: FeedbackBaseFieldsProps["updateFeedback"],
+  t: TFunction,
+) {
+  return (
+    <select
+      className="input"
+      value={value}
+      onChange={(event) =>
+        updateFeedback("isActive", event.target.value === "active")
+      }
+    >
+      <option value="active">{t("admin.feedbacks.active")}</option>
+      <option value="inactive">{t("admin.feedbacks.inactive")}</option>
+    </select>
   );
 }

@@ -18,13 +18,19 @@ export default function FeedbackListContent(props: FeedbackListProps) {
     <section className="news-admin__section">
       <FeedbackCounter total={props.total} />
       <FeedbackTable props={props} selection={selection} />
-      <FeedbackPagination
-        page={props.page}
-        totalPages={props.totalPages}
-        onPrev={props.onPrev}
-        onNext={props.onNext}
-      />
+      {renderPagination(props)}
     </section>
+  );
+}
+
+function renderPagination(props: FeedbackListProps) {
+  return (
+    <FeedbackPagination
+      page={props.page}
+      totalPages={props.totalPages}
+      onPrev={props.onPrev}
+      onNext={props.onNext}
+    />
   );
 }
 
