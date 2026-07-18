@@ -1,5 +1,6 @@
 "use client";
 
+import type { TFunction } from "i18next";
 import { useTranslation } from "react-i18next";
 import { cleanStr, getSlug } from "../../utils";
 import PendingCoachesEmptyState from "./PendingCoachesEmptyState";
@@ -24,16 +25,19 @@ export default function PendingCoachesListContent(
   return (
     <section className="card">
       <div className="card__body pending-coaches">
-        {props.items.map((c) => (
-          <PendingCoachRow
-            key={coachKey(c)}
-            {...props}
-            c={c}
-            t={t}
-            lang={i18n.language}
-          />
-        ))}
+        {props.items.map((c) => renderPendingRow(props, c, t, i18n.language))}
       </div>
     </section>
+  );
+}
+
+function renderPendingRow(
+  props: PendingCoachesListProps,
+  c: PendingCoachesListProps["items"][number],
+  t: TFunction,
+  lang: string,
+) {
+  return (
+    <PendingCoachRow key={coachKey(c)} {...props} c={c} t={t} lang={lang} />
   );
 }
