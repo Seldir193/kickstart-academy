@@ -30,18 +30,32 @@ export default function CoachTableRow(props: Props) {
       role="button"
       aria-pressed={props.selectMode ? props.meta.checked : undefined}
     >
+      {renderCells(props)}
+    </li>
+  );
+}
+
+function renderCells(props: Props) {
+  return (
+    <>
       <CoachNameCell coach={props.meta.displayCoach} t={props.t} />
       <CoachPositionCell coach={props.meta.displayCoach} t={props.t} />
       <CoachSinceCell coach={props.meta.displayCoach} />
       <CoachStatusCell {...props} />
-      <CoachAuthorCell
-        coach={props.meta.raw}
-        t={props.t}
-        authorDash={props.authorDash}
-        meLabel={props.meLabel}
-      />
+      {renderAuthorCell(props)}
       <CoachRowActions {...props} />
-    </li>
+    </>
+  );
+}
+
+function renderAuthorCell(props: Props) {
+  return (
+    <CoachAuthorCell
+      coach={props.meta.raw}
+      t={props.t}
+      authorDash={props.authorDash}
+      meLabel={props.meLabel}
+    />
   );
 }
 
