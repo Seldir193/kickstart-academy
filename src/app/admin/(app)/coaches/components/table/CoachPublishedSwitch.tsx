@@ -43,9 +43,15 @@ function SwitchButton(props: Props) {
       onKeyDown={(e) => switchKey(e, props)}
       title={switchTitle(props)}
     >
-      <span className="coach-switch__track">
-        <span className="coach-switch__thumb" />
-      </span>
+      {renderSwitchTrack()}
+    </span>
+  );
+}
+
+function renderSwitchTrack() {
+  return (
+    <span className="coach-switch__track">
+      <span className="coach-switch__thumb" />
     </span>
   );
 }
