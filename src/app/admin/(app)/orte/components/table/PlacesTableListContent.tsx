@@ -17,16 +17,25 @@ export default function PlacesTableListContent(props: PlacesTableProps) {
 
   return (
     <div className="news-table">
-      <PlacesBulkActions
-        props={props}
-        selection={model.selection}
-        count={model.count}
-        cancelRef={model.cancelRef}
-        clearRef={model.clearRef}
-        t={model.t}
-      />
+      {renderBulkActions(props, model)}
       <PlacesTable props={props} selection={model.selection} t={model.t} />
     </div>
+  );
+}
+
+function renderBulkActions(
+  props: PlacesTableProps,
+  model: ReturnType<typeof usePlacesTableContent>,
+) {
+  return (
+    <PlacesBulkActions
+      props={props}
+      selection={model.selection}
+      count={model.count}
+      cancelRef={model.cancelRef}
+      clearRef={model.clearRef}
+      t={model.t}
+    />
   );
 }
 
