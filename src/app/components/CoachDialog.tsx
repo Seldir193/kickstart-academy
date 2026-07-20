@@ -86,16 +86,6 @@ export default function CoachDialog({
     }
   }
 
-  function readFileAsDataURL(file: File) {
-    return new Promise<string>((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onerror = () =>
-        reject(new Error(t("common.admin.coaches.dialog.readError")));
-      reader.onload = () => resolve(String(reader.result || ""));
-      reader.readAsDataURL(file);
-    });
-  }
-
   function clearPhoto() {
     set("photoUrl", "");
     setFileName("");
