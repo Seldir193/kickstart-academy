@@ -304,7 +304,6 @@ export function useOfferCreateDialog({
       ...f,
       placeId,
       location: p?.city ? p.city : "",
-      // location: p ? `${p.name} — ${p.address}, ${p.zip} ${p.city}` : "",
     }));
   }
 

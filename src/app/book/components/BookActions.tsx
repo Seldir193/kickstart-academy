@@ -21,22 +21,6 @@ export function BookActions({
 
   return (
     <>
-      {/* <div className="book-actions">
-       
-        {submitLabel && (
-          <button className="btn" disabled={isSubmitDisabled}>
-            {submitLabel}
-          </button>
-        )}
-        {status === "success" && (
-          <span className="ok">{t("actions.success")}</span>
-        )}
-        {status === "error" && (
-          <span className="error">{t("actions.error")}</span>
-        )}
-        {errors.offerId && <span className="error">{errors.offerId}</span>}
-      </div>  */}
-
       <div className="book-actions">
         {status === "success" && (
           <span className="ok">{t("actions.success")}</span>

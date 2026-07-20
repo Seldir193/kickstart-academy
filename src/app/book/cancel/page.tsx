@@ -31,28 +31,3 @@ export default function BookCancelPage() {
     </main>
   );
 }
-// "use client";
-
-// import Link from "next/link";
-
-// export default function BookCancelPage() {
-//   return (
-//     <main className="book-status-page">
-//       <section className="book-status-card">
-//         <h1>Zahlung abgebrochen</h1>
-//         <p>
-//           Die Zahlung wurde abgebrochen. Deine Buchung ist noch nicht bezahlt.
-//         </p>
-//         <p>
-//           Du kannst den Buchungsvorgang erneut starten und die Zahlung später
-//           abschließen.
-//         </p>
-
-//         <div className="book-status-actions">
-//           <Link href="/book">Zur Buchung zurück</Link>
-//           <Link href="/">Zur Startseite</Link>
-//         </div>
-//       </section>
-//     </main>
-//   );
-// }
