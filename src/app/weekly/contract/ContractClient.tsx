@@ -105,17 +105,6 @@ function validateDraft(d: ContractDraft, t: TFunction) {
   return errors;
 }
 
-// function contractScheduleLine(init: ContractInitOk | null) {
-//   const scheduleLine = safeText(init?.scheduleLine);
-//   if (scheduleLine) return scheduleLine;
-
-//   const scheduleLabel = safeText(init?.scheduleLabel);
-//   const dayLabel = safeText(init?.dayLabel);
-//   const timeLabel = safeText(init?.timeLabel);
-
-//   return [scheduleLabel || dayLabel, timeLabel].filter(Boolean).join(" · ");
-// }
-
 function cleanRegularCourseLine(value: unknown) {
   return safeText(value).replace(/^jeden\s+/i, "");
 }
