@@ -116,19 +116,12 @@ export default function TrainingResults(props: Props) {
     const prev = prevCountRef.current;
     prevCountRef.current = count;
 
-    // if (count >= 2) {
-    //   requestAnimationFrame(() => clearBtnRef.current?.focus());
-    //   return;
-    // }
-
     if (prev < 2 && count >= 2) {
       requestAnimationFrame(() => clearBtnRef.current?.focus());
       return;
     }
 
     if (prev >= 2 && count < 2) {
-      // requestAnimationFrame(() => cancelBtnRef.current?.focus());
-
       requestAnimationFrame(() => {
         clearBtnRef.current?.blur();
         cancelBtnRef.current?.blur();
@@ -173,7 +166,6 @@ export default function TrainingResults(props: Props) {
   function clearSelection() {
     sel.clear();
     syncExternalSelection([]);
-    // requestAnimationFrame(() => cancelBtnRef.current?.focus());
   }
 
   function onToggleSelectMode() {
