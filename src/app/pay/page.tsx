@@ -1,5 +1,3 @@
-// import PayClient from "./PayClient";
-
 import PayClient from "./PayClient";
 
 export const dynamic = "force-dynamic";
