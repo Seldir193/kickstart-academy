@@ -27,7 +27,7 @@ export async function GET(req: NextRequest) {
       cache: "no-store",
     });
 
-    return passthroughUpstream(r);
+    return await passthroughUpstream(r);
   } catch (e: any) {
     return NextResponse.json(
       { ok: false, error: "Proxy failed", detail: String(e?.message ?? e) },
