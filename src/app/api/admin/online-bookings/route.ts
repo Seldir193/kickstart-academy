@@ -3,11 +3,33 @@ export const dynamic = "force-dynamic";
 
 import { NextRequest, NextResponse } from "next/server";
 
+type BookingRecord = {
+  offerType?: unknown;
+  offerTitle?: unknown;
+  level?: unknown;
+  program?: unknown;
+  message?: unknown;
+  meta?: { holidayType?: unknown; holidayLabel?: unknown } | null;
+  source?: unknown;
+  status?: unknown;
+  createdAt?: unknown;
+  firstName?: unknown;
+  lastName?: unknown;
+};
+
+type ListQuery = {
+  page: number;
+  limit: number;
+  status: string;
+  program: string;
+  sort: string;
+};
+
 function safeText(v: unknown): string {
   return String(v ?? "").trim();
 }
 
-function bookingProgramText(b: any): string {
+function bookingProgramText(b: BookingRecord): string {
   return [
     b.offerType,
     b.offerTitle,
@@ -22,15 +44,15 @@ function bookingProgramText(b: any): string {
     .toLowerCase();
 }
 
-function holidayTypeOf(b: any): string {
+function holidayTypeOf(b: BookingRecord): string {
   return safeText(b?.meta?.holidayType).toLowerCase();
 }
 
-function offerText(b: any): string {
+function offerText(b: BookingRecord): string {
   return [b?.offerType, b?.offerTitle].filter(Boolean).join(" ").toLowerCase();
 }
 
-function isExcludedNonHolidayBooking(b: any): boolean {
+function isExcludedNonHolidayBooking(b: BookingRecord): boolean {
   const text = offerText(b);
   return (
     text.includes("clubprogram") ||
@@ -49,12 +71,12 @@ function isExcludedNonHolidayBooking(b: any): boolean {
   );
 }
 
-function isHolidaySource(b: any): boolean {
+function isHolidaySource(b: BookingRecord): boolean {
   const source = safeText(b?.source).toLowerCase();
   return source === "online_request" || source === "admin_booking";
 }
 
-function isHolidayBooking(b: any): boolean {
+function isHolidayBooking(b: BookingRecord): boolean {
   if (!b || !isHolidaySource(b)) return false;
   if (isExcludedNonHolidayBooking(b)) return false;
 
@@ -77,7 +99,7 @@ function isHolidayBooking(b: any): boolean {
   );
 }
 
-function isCampBooking(b: any): boolean {
+function isCampBooking(b: BookingRecord): boolean {
   if (isExcludedNonHolidayBooking(b)) return false;
 
   const holidayType = holidayTypeOf(b);
@@ -96,7 +118,7 @@ function isCampBooking(b: any): boolean {
   return hasCamp && !hasPower;
 }
 
-function isPowerBooking(b: any): boolean {
+function isPowerBooking(b: BookingRecord): boolean {
   if (isExcludedNonHolidayBooking(b)) return false;
 
   const holidayType = holidayTypeOf(b);
@@ -112,13 +134,13 @@ function tsOf(v: unknown): number {
   return Number.isFinite(t) ? t : 0;
 }
 
-function nameKey(b: any): string {
+function nameKey(b: BookingRecord): string {
   return `${safeText(b?.firstName)} ${safeText(b?.lastName)}`
     .trim()
     .toLowerCase();
 }
 
-function sortBookings(items: any[], sort: string): any[] {
+function sortBookings(items: BookingRecord[], sort: string): BookingRecord[] {
   const list = [...items];
 
   if (sort === "oldest") {
@@ -144,123 +166,154 @@ function sortBookings(items: any[], sort: string): any[] {
   return list.sort((a, b) => tsOf(b?.createdAt) - tsOf(a?.createdAt));
 }
 
-function isVisibleOnlineStatus(b: any): boolean {
+function isVisibleOnlineStatus(b: BookingRecord): boolean {
   const status = safeText(b?.status).toLowerCase();
   return (
     status === "confirmed" || status === "cancelled" || status === "deleted"
   );
 }
 
+function parseListQuery(search: URLSearchParams): ListQuery {
+  const pageRaw = parseInt(search.get("page") || "1", 10);
+  const limitRaw = parseInt(search.get("limit") || "10", 10);
+
+  return {
+    page: Number.isFinite(pageRaw) && pageRaw > 0 ? pageRaw : 1,
+    limit: Number.isFinite(limitRaw) && limitRaw > 0 ? limitRaw : 10,
+    status: safeText(search.get("status") || "all").toLowerCase(),
+    program: safeText(search.get("program") || "all").toLowerCase(),
+    sort: safeText(search.get("sort") || "newest").toLowerCase(),
+  };
+}
+
+function buildUpstreamUrl(origin: string, search: URLSearchParams): URL {
+  const upstreamUrl = new URL(`${origin}/api/admin/bookings`);
+
+  search.forEach((value, key) => {
+    if (
+      key === "page" ||
+      key === "limit" ||
+      key === "includeHoliday" ||
+      key === "status" ||
+      key === "program" ||
+      key === "sort"
+    ) {
+      return;
+    }
+    upstreamUrl.searchParams.set(key, value);
+  });
+
+  upstreamUrl.searchParams.set("includeHoliday", "1");
+  upstreamUrl.searchParams.set("page", "1");
+  upstreamUrl.searchParams.set("limit", "10000");
+
+  return upstreamUrl;
+}
+
+async function fetchUpstreamBookings(req: NextRequest, upstreamUrl: URL) {
+  const upstream = await fetch(upstreamUrl.toString(), {
+    method: "GET",
+    headers: {
+      cookie: req.headers.get("cookie") ?? "",
+      accept: "application/json",
+    },
+    cache: "no-store",
+  });
+
+  const text = await upstream.text();
+  let data: any;
+
+  try {
+    data = JSON.parse(text);
+  } catch {
+    data = text;
+  }
+
+  return { upstream, data };
+}
+
+function upstreamFailedResponse(status: number, data: any) {
+  return NextResponse.json(
+    {
+      ok: false,
+      error: data?.error || `Upstream /api/admin/bookings failed (${status})`,
+    },
+    { status },
+  );
+}
+
+function extractBookingList(data: any): BookingRecord[] {
+  return Array.isArray(data)
+    ? data
+    : Array.isArray(data.bookings)
+      ? data.bookings
+      : Array.isArray(data.items)
+        ? data.items
+        : [];
+}
+
+function filterByProgram(holiday: BookingRecord[], program: string) {
+  if (program === "camp") return holiday.filter(isCampBooking);
+  if (program === "power") return holiday.filter(isPowerBooking);
+  return holiday;
+}
+
+function countVisibleStatuses(list: BookingRecord[]) {
+  const statusCounts: Record<string, number> = {
+    confirmed: 0,
+    cancelled: 0,
+    deleted: 0,
+  };
+
+  for (const b of list) {
+    const s = safeText(b.status).toLowerCase();
+    if (s in statusCounts) statusCounts[s] += 1;
+  }
+
+  return statusCounts;
+}
+
+function filterByStatus(list: BookingRecord[], status: string) {
+  if (status === "all") return list;
+
+  const normalized = status === "canceled" ? "cancelled" : status;
+  return list.filter((b) => safeText(b.status).toLowerCase() === normalized);
+}
+
+function paginate(list: BookingRecord[], page: number, limit: number) {
+  const total = list.length;
+  const pages = Math.max(1, Math.ceil(total / limit));
+  const safePage = Math.min(page, pages);
+  const start = (safePage - 1) * limit;
+
+  return {
+    total,
+    pages,
+    safePage,
+    pageItems: list.slice(start, start + limit),
+  };
+}
+
 export async function GET(req: NextRequest) {
   try {
     const reqUrl = new URL(req.url);
-    const origin = reqUrl.origin;
-    const search = reqUrl.searchParams;
+    const query = parseListQuery(reqUrl.searchParams);
+    const upstreamUrl = buildUpstreamUrl(reqUrl.origin, reqUrl.searchParams);
 
-    const pageRaw = parseInt(search.get("page") || "1", 10);
-    const limitRaw = parseInt(search.get("limit") || "10", 10);
-    const page = Number.isFinite(pageRaw) && pageRaw > 0 ? pageRaw : 1;
-    const limit = Number.isFinite(limitRaw) && limitRaw > 0 ? limitRaw : 10;
+    const { upstream, data } = await fetchUpstreamBookings(req, upstreamUrl);
+    if (!upstream.ok) return upstreamFailedResponse(upstream.status, data);
 
-    const status = safeText(search.get("status") || "all").toLowerCase();
-    const program = safeText(search.get("program") || "all").toLowerCase();
-    const sort = safeText(search.get("sort") || "newest").toLowerCase();
-
-    const upstreamUrl = new URL(`${origin}/api/admin/bookings`);
-
-    search.forEach((value, key) => {
-      if (
-        key === "page" ||
-        key === "limit" ||
-        key === "includeHoliday" ||
-        key === "status" ||
-        key === "program" ||
-        key === "sort"
-      ) {
-        return;
-      }
-      upstreamUrl.searchParams.set(key, value);
-    });
-
-    upstreamUrl.searchParams.set("includeHoliday", "1");
-    upstreamUrl.searchParams.set("page", "1");
-    upstreamUrl.searchParams.set("limit", "10000");
-
-    const upstream = await fetch(upstreamUrl.toString(), {
-      method: "GET",
-      headers: {
-        cookie: req.headers.get("cookie") ?? "",
-        accept: "application/json",
-      },
-      cache: "no-store",
-    });
-
-    const text = await upstream.text();
-    let data: any;
-
-    try {
-      data = JSON.parse(text);
-    } catch {
-      data = text;
-    }
-
-    if (!upstream.ok) {
-      return NextResponse.json(
-        {
-          ok: false,
-          error:
-            data?.error ||
-            `Upstream /api/admin/bookings failed (${upstream.status})`,
-        },
-        { status: upstream.status },
-      );
-    }
-
-    const list: any[] = Array.isArray(data)
-      ? data
-      : Array.isArray(data.bookings)
-        ? data.bookings
-        : Array.isArray(data.items)
-          ? data.items
-          : [];
-
-    const holiday = list.filter(isHolidayBooking);
-
-    let programFiltered = holiday;
-    if (program === "camp") {
-      programFiltered = holiday.filter(isCampBooking);
-    } else if (program === "power") {
-      programFiltered = holiday.filter(isPowerBooking);
-    }
-
+    const holiday = extractBookingList(data).filter(isHolidayBooking);
+    const programFiltered = filterByProgram(holiday, query.program);
     const visibleList = programFiltered.filter(isVisibleOnlineStatus);
-
-    const statusCounts: Record<string, number> = {
-      confirmed: 0,
-      cancelled: 0,
-      deleted: 0,
-    };
-
-    for (const b of visibleList) {
-      const s = safeText(b.status).toLowerCase();
-      if (s in statusCounts) statusCounts[s] += 1;
-    }
-
-    let finalList = visibleList;
-    if (status !== "all") {
-      const normalized = status === "canceled" ? "cancelled" : status;
-      finalList = visibleList.filter(
-        (b) => safeText(b.status).toLowerCase() === normalized,
-      );
-    }
-
-    const sortedList = sortBookings(finalList, sort);
-    const total = sortedList.length;
-    const pages = Math.max(1, Math.ceil(total / limit));
-    const safePage = Math.min(page, pages);
-    const start = (safePage - 1) * limit;
-    const end = start + limit;
-    const pageItems = sortedList.slice(start, end);
+    const statusCounts = countVisibleStatuses(visibleList);
+    const finalList = filterByStatus(visibleList, query.status);
+    const sortedList = sortBookings(finalList, query.sort);
+    const { total, pages, safePage, pageItems } = paginate(
+      sortedList,
+      query.page,
+      query.limit,
+    );
 
     return NextResponse.json(
       {
@@ -269,7 +322,7 @@ export async function GET(req: NextRequest) {
         total,
         page: safePage,
         pages,
-        limit,
+        limit: query.limit,
         counts: statusCounts,
       },
       { status: 200 },
