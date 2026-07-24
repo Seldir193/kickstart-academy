@@ -636,8 +636,6 @@ body.embed-mode .book-form {
   border-color: transparent;
 }
 
-//
-
 .news-admin.bookings-admin {
   overflow-x: clip;
 
@@ -748,12 +746,6 @@ body.embed-mode .book-form {
     align-items: flex-start;
     flex-direction: column;
   }
-
-  // body.embed-mode .book-scroll,
-  // body.embed-mode .book-actions {
-  //   padding-left: 20px;
-  //   padding-right: 20px;
-  // }
 }
 
 @media (prefers-reduced-motion: reduce) {

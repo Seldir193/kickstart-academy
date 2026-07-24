@@ -1,4 +1,3 @@
-// src/app/components/TrainingCard.tsx
 "use client";
 
 import React, { useEffect, useMemo, useRef, useState } from "react";

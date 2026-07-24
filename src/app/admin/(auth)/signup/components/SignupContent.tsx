@@ -7,5 +7,11 @@ export default function SignupContent() {
   const router = useRouter();
   const state = useSignupState(useSearchParams(), router);
   useAdminAuthBodyClass();
-  return <SignupForm {...state} onBack={(href) => router.push(href)} onLogin={() => router.push("/admin/login")} />;
+  return (
+    <SignupForm
+      {...state}
+      onBack={(href) => router.push(href)}
+      onLogin={() => router.push("/admin/login")}
+    />
+  );
 }

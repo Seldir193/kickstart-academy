@@ -1,5 +1,3 @@
-//src\app\styles\admin-forms.scss
-
 input.input,
 select.input,
 textarea.input,
@@ -213,10 +211,6 @@ input.input[type="date"]::-webkit-calendar-picker-indicator {
   height: 0;
   border-left: 5px solid transparent;
   border-right: 5px solid transparent;
-  // border-top: 6px solid #5b6472;
-  // transition:
-  //   transform 0.18s ease,
-  //   border-top-color 0.18s ease;
 }
 
 .ks-selectbox__panel {
@@ -767,8 +761,6 @@ button.input[aria-haspopup="listbox"] {
 .ks-selectbox__option--active .ks-selectbox__opt-meta {
   color: inherit;
 }
-
-//neu
 
 .admin-scope {
   .admin-card {

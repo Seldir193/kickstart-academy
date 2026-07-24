@@ -1,4 +1,3 @@
-// // //src\app\components\training-card\ui\TrainingResults.tsx
 "use client";
 
 import type { RefObject } from "react";

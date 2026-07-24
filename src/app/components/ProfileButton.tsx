@@ -1,4 +1,3 @@
-//src\app\components\ProfileButton.tsx
 "use client";
 
 import * as React from "react";

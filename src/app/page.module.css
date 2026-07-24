@@ -1,5 +1,3 @@
-/* app/page-module.scss (bereinigt & gescoped) */
-
 .page {
   --gray-rgb: 0, 0, 0;
   --gray-alpha-200: rgba(var(--gray-rgb), 0.08);
@@ -63,7 +61,6 @@
   gap: 16px;
 }
 
-/* CTA-Links sind jetzt nur in .page gültig */
 .page .ctas a {
   appearance: none;
   border-radius: 128px;
@@ -110,7 +107,6 @@
   flex-shrink: 0;
 }
 
-/* Enable hover only on non-touch devices */
 @media (hover: hover) and (pointer: fine) {
   .page a.primary:hover {
     background: var(--button-primary-hover);
@@ -168,12 +164,3 @@
     filter: invert();
   }
 }
-
-
-
-
-
-
-
-
-

@@ -8,39 +8,78 @@ import { validateLogin, validateLoginField } from "../lib/validation";
 
 const ADMIN_HOME = "/admin";
 
-export default function useAdminLoginState(searchParams: ReadonlyURLSearchParams) {
-  const [values, setValues] = useState<LoginValues>({ email: "", password: "" });
+export default function useAdminLoginState(
+  searchParams: ReadonlyURLSearchParams,
+) {
+  const [values, setValues] = useState<LoginValues>({
+    email: "",
+    password: "",
+  });
   const [errors, setErrors] = useState<LoginErrors>({});
   const [formError, setFormError] = useState("");
   const [loading, setLoading] = useState(false);
   const [showPw, setShowPw] = useState(false);
   useLoginEmailParam(searchParams, setValues);
-  const submitLogin = useLoginSubmit(values, loading, setLoading, setFormError, setErrors);
-  return { blurField: createBlurField(values, setErrors), errors, formError, loading, setShowPw, showPw, submitLogin, updateField: createUpdateField(setValues, setErrors), values };
+  const submitLogin = useLoginSubmit(
+    values,
+    loading,
+    setLoading,
+    setFormError,
+    setErrors,
+  );
+  return {
+    blurField: createBlurField(values, setErrors),
+    errors,
+    formError,
+    loading,
+    setShowPw,
+    showPw,
+    submitLogin,
+    updateField: createUpdateField(setValues, setErrors),
+    values,
+  };
 }
 
-function useLoginEmailParam(searchParams: ReadonlyURLSearchParams, setValues: Dispatch<SetStateAction<LoginValues>>) {
+function useLoginEmailParam(
+  searchParams: ReadonlyURLSearchParams,
+  setValues: Dispatch<SetStateAction<LoginValues>>,
+) {
   useEffect(() => {
     const email = searchParams.get("email") || "";
     if (email) setValues((prev) => ({ ...prev, email }));
   }, [searchParams, setValues]);
 }
 
-function createBlurField(values: LoginValues, setErrors: Dispatch<SetStateAction<LoginErrors>>) {
+function createBlurField(
+  values: LoginValues,
+  setErrors: Dispatch<SetStateAction<LoginErrors>>,
+) {
   return (field: LoginField) => {
     const errors = validateLogin(values);
     setErrors((previous) => ({ ...previous, [field]: errors[field] }));
   };
 }
 
-function createUpdateField(setValues: Dispatch<SetStateAction<LoginValues>>, setErrors: Dispatch<SetStateAction<LoginErrors>>) {
+function createUpdateField(
+  setValues: Dispatch<SetStateAction<LoginValues>>,
+  setErrors: Dispatch<SetStateAction<LoginErrors>>,
+) {
   return (field: LoginField, value: string) => {
     setValues((prev) => ({ ...prev, [field]: value }));
-    setErrors((prev) => ({ ...prev, [field]: validateLoginField(field, value) }));
+    setErrors((prev) => ({
+      ...prev,
+      [field]: validateLoginField(field, value),
+    }));
   };
 }
 
-function useLoginSubmit(values: LoginValues, loading: boolean, setLoading: (value: boolean) => void, setFormError: (value: string) => void, setErrors: (value: LoginErrors) => void) {
+function useLoginSubmit(
+  values: LoginValues,
+  loading: boolean,
+  setLoading: (value: boolean) => void,
+  setFormError: (value: string) => void,
+  setErrors: (value: LoginErrors) => void,
+) {
   return async (event: FormEvent) => {
     event.preventDefault();
     if (loading) return;
@@ -52,10 +91,17 @@ function useLoginSubmit(values: LoginValues, loading: boolean, setLoading: (valu
   };
 }
 
-async function submitValidLogin(values: LoginValues, setLoading: (value: boolean) => void, setFormError: (value: string) => void) {
+async function submitValidLogin(
+  values: LoginValues,
+  setLoading: (value: boolean) => void,
+  setFormError: (value: string) => void,
+) {
   setLoading(true);
   try {
-    await handleLoginResponse(await requestLogin(values.email, values.password), setFormError);
+    await handleLoginResponse(
+      await requestLogin(values.email, values.password),
+      setFormError,
+    );
   } catch {
     setFormError("Network error");
   } finally {
@@ -63,7 +109,10 @@ async function submitValidLogin(values: LoginValues, setLoading: (value: boolean
   }
 }
 
-async function handleLoginResponse(response: Response, setFormError: (value: string) => void) {
+async function handleLoginResponse(
+  response: Response,
+  setFormError: (value: string) => void,
+) {
   if (!response.ok) return setFormError(await readLoginError(response));
   const data = await response.json().catch(() => ({}));
   await seedAvatarCacheFromLogin(data);

@@ -19,14 +19,13 @@ function safeJsonParse(text: string): unknown {
   }
 }
 
-// POST /api/admin/customers/:id/bookings/:bid/cancel[?silent=1&force=1]
 export async function POST(req: NextRequest, ctx: Ctx) {
   try {
     const pid = await getProviderIdFromCookies();
     if (!pid) {
       return NextResponse.json(
         { ok: false, error: "Unauthorized: missing provider" },
-        { status: 401 }
+        { status: 401 },
       );
     }
 
@@ -58,7 +57,7 @@ export async function POST(req: NextRequest, ctx: Ctx) {
     const msg = e instanceof Error ? e.message : String(e);
     return NextResponse.json(
       { ok: false, error: "Proxy failed", detail: msg },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

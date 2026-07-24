@@ -1,4 +1,3 @@
-//src\app\api\admin\customers\[id]\bookings\route.ts
 import { NextResponse, type NextRequest } from "next/server";
 import { getProviderIdFromCookies } from "@/app/api/lib/auth";
 

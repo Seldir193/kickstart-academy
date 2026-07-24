@@ -10,6 +10,27 @@ type Props = InputHTMLAttributes<HTMLInputElement> & {
 };
 
 export default function AuthInputField(props: Props) {
-  const { error, icon, inputClassName = "input auth-input", label, ...inputProps } = props;
-  return <div className="auth-field"><label htmlFor={inputProps.id} className="auth-label">{label}</label><div className="auth-control"><AuthIcon src={icon} /><input {...inputProps} className={inputClassName} aria-invalid={Boolean(error)} /></div><AuthErrorSlot error={error} /></div>;
+  const {
+    error,
+    icon,
+    inputClassName = "input auth-input",
+    label,
+    ...inputProps
+  } = props;
+  return (
+    <div className="auth-field">
+      <label htmlFor={inputProps.id} className="auth-label">
+        {label}
+      </label>
+      <div className="auth-control">
+        <AuthIcon src={icon} />
+        <input
+          {...inputProps}
+          className={inputClassName}
+          aria-invalid={Boolean(error)}
+        />
+      </div>
+      <AuthErrorSlot error={error} />
+    </div>
+  );
 }

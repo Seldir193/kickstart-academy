@@ -1,4 +1,3 @@
-// src/app/admin/new-password/page.tsx
 import { Suspense } from "react";
 import NewPasswordClient from "./NewPasswordClient";
 

@@ -1,4 +1,3 @@
-// src/app/api/franchise-locations/route.ts
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
@@ -16,7 +15,6 @@ function apiBase() {
   return b.replace(/\/+$/, "");
 }
 
-// GET /api/franchise-locations → GET {BASE}/franchise-locations
 export async function GET(_req: NextRequest) {
   const pid = await getProviderIdFromCookies();
   const token = await getAdminTokenFromCookies();
@@ -46,8 +44,6 @@ export async function GET(_req: NextRequest) {
     },
   });
 }
-
-// POST /api/franchise-locations → POST {BASE}/franchise-locations
 export async function POST(req: NextRequest) {
   const pid = await getProviderIdFromCookies();
   const token = await getAdminTokenFromCookies();

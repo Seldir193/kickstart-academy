@@ -1,4 +1,3 @@
-// app/api/admin/customers/[id]/documents.csv/route.ts
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
@@ -18,7 +17,7 @@ export async function GET(req: NextRequest, ctx: Ctx) {
     if (!pid) {
       return NextResponse.json(
         { ok: false, error: "Unauthorized: missing provider" },
-        { status: 401 }
+        { status: 401 },
       );
     }
 
@@ -26,7 +25,7 @@ export async function GET(req: NextRequest, ctx: Ctx) {
 
     const qs = req.nextUrl.searchParams.toString();
     const url = `${apiBase()}/customers/${encodeURIComponent(
-      id
+      id,
     )}/documents.csv${qs ? `?${qs}` : ""}`;
 
     const upstream = await fetch(url, {
@@ -47,19 +46,19 @@ export async function GET(req: NextRequest, ctx: Ctx) {
           error: "Upstream failed",
           detail: text.slice(0, 2000),
         },
-        { status: upstream.status }
+        { status: upstream.status },
       );
     }
 
     const headers = new Headers();
     headers.set(
       "Content-Type",
-      upstream.headers.get("content-type") || "text/csv; charset=utf-8"
+      upstream.headers.get("content-type") || "text/csv; charset=utf-8",
     );
     headers.set(
       "Content-Disposition",
       upstream.headers.get("content-disposition") ||
-        'attachment; filename="documents.csv"'
+        'attachment; filename="documents.csv"',
     );
     headers.set("Cache-Control", "no-store");
     headers.set("Content-Encoding", "identity");
@@ -82,7 +81,7 @@ export async function GET(req: NextRequest, ctx: Ctx) {
     const msg = e instanceof Error ? e.message : String(e);
     return NextResponse.json(
       { ok: false, error: "Proxy failed", detail: msg },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

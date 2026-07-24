@@ -1,4 +1,3 @@
-// src/app/components/training-card/ui/TrainingFilters.tsx
 "use client";
 
 import React from "react";

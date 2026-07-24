@@ -1,4 +1,3 @@
-// src/app/lib/courseOptions.ts
 export type CourseOption =
   | { mode: "type"; value: string; label: string }
   | {
@@ -93,8 +92,6 @@ export const GROUPED_COURSE_OPTIONS = GROUPS;
 export const ALL_COURSE_OPTIONS: CourseOption[] = GROUPS.flatMap(
   (g) => g.items,
 );
-
-/* ====================== Matching-Logik ====================== */
 
 type OfferLike = {
   _id: string;
@@ -205,7 +202,6 @@ export function offerMatchesCourse(
   }
 }
 
-/** Snapshot-first: Wert für Kurs-Dropdown aus einer Buchung ableiten */
 export function courseValueFromBooking(
   booking: any,
   offersById: Map<string, any>,

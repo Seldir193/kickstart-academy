@@ -1,4 +1,3 @@
-//src\app\components\offer-create-dialog\utils.ts
 export function clsx(...xs: Array<string | false | undefined | null>) {
   return xs.filter(Boolean).join(" ");
 }

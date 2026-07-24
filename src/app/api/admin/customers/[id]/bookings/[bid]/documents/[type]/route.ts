@@ -1,4 +1,3 @@
-// app/api/admin/customers/[id]/bookings/[bid]/documents/[type]/route.ts
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
@@ -13,15 +12,12 @@ function apiBase() {
 type DocType = "participation" | "cancellation" | "storno";
 type Ctx = { params: Promise<{ id: string; bid: string; type: DocType }> };
 
-// GET -> proxied POST to backend that returns a PDF
 export async function GET(req: NextRequest, ctx: Ctx) {
   try {
     const { id, bid, type } = await ctx.params;
 
-    // 1) Try cookie
     let pid = await getProviderIdFromCookies();
 
-    // 2) Fallback: ?pid=... for cases where new-tab nav doesn't bring cookie
     if (!pid) {
       const fromQS = req.nextUrl.searchParams.get("pid");
       if (fromQS) pid = fromQS;
@@ -49,7 +45,6 @@ export async function GET(req: NextRequest, ctx: Ctx) {
       cache: "no-store",
     });
 
-    // If backend failed, forward text to help debug (viewer will still show error)
     if (!r.ok) {
       const txt = await r.text();
       return new NextResponse(txt || `Upstream error ${r.status}`, {

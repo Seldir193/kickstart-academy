@@ -1,10 +1,3 @@
-/* src/app/styles/imprint.scss
-   Legal Pages (Impressum / Datenschutz / AGB)
-   ✅ Breite folgt dem globalen .container (max-width: 1440px)
-   ✅ Content-Card ist FULL-WIDTH im Container (kein 1100px-Center)
-*/
-
-/* === Shared spacing for legal sections === */
 .ks-impressum,
 .ks-privacy,
 .ks-agb {
@@ -12,7 +5,6 @@
   padding: 28px 0;
 }
 
-/* === Head / Title === */
 .ks-impressum__head,
 .ks-privacy__head,
 .ks-agb__head {
@@ -29,13 +21,12 @@
   color: #111;
 }
 
-/* === Content Card (FULL WIDTH inside .container) === */
 .ks-impressum__content,
 .ks-privacy__content,
 .ks-agb__content {
   width: 100%;
-  max-width: none; /* ✅ wichtig: nicht 1100px */
-  margin: 0; /* ✅ wichtig: nicht zentriert/auto */
+  max-width: none;
+  margin: 0;
 
   background: #fff;
   border: 1px solid rgba(0, 0, 0, 0.08);
@@ -45,7 +36,6 @@
   color: #222;
 }
 
-/* Headings */
 .ks-impressum__content h2,
 .ks-privacy__content h2,
 .ks-agb__content h2 {
@@ -55,7 +45,6 @@
   color: #111;
 }
 
-/* Optional: falls h3/h4 vorkommen (z. B. Datenschutz) */
 .ks-impressum__content h3,
 .ks-privacy__content h3,
 .ks-agb__content h3 {
@@ -74,7 +63,6 @@
   color: #111;
 }
 
-/* Text */
 .ks-impressum__content p,
 .ks-privacy__content p,
 .ks-agb__content p {
@@ -82,7 +70,6 @@
   color: #374151;
 }
 
-/* Lists */
 .ks-impressum__content ul,
 .ks-privacy__content ul,
 .ks-agb__content ul {
@@ -97,7 +84,6 @@
   margin: 6px 0;
 }
 
-/* Links */
 .ks-impressum__content a,
 .ks-privacy__content a,
 .ks-agb__content a {
@@ -120,14 +106,12 @@
   border-radius: 6px;
 }
 
-/* HR (falls vorhanden, z. B. Datenschutz) */
 .ks-privacy__hr {
   border: 0;
   border-top: 1px solid rgba(0, 0, 0, 0.12);
   margin: 18px 0;
 }
 
-/* Mobile */
 @media (max-width: 700px) {
   .ks-impressum__content,
   .ks-privacy__content,

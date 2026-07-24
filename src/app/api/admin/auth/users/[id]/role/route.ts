@@ -1,4 +1,3 @@
-// src/app/api/admin/auth/users/[id]/role/route.ts
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 

@@ -19,14 +19,13 @@ function safeJsonParse(text: string): unknown {
   }
 }
 
-// POST /api/admin/customers/:id/bookings/:bid/email/storno[?force=1]
 export async function POST(req: NextRequest, ctx: Ctx) {
   try {
     const pid = await getProviderIdFromCookies();
     if (!pid) {
       return NextResponse.json(
         { ok: false, error: "Unauthorized: missing provider" },
-        { status: 401 }
+        { status: 401 },
       );
     }
 
@@ -34,7 +33,6 @@ export async function POST(req: NextRequest, ctx: Ctx) {
 
     const body = await req.json().catch(() => ({}));
 
-    // Query-String (z. B. ?force=1) unverändert weiterreichen
     const qs = req.nextUrl.searchParams.toString();
     const url =
       `${apiBase()}/customers/${encodeURIComponent(id)}` +
@@ -45,7 +43,7 @@ export async function POST(req: NextRequest, ctx: Ctx) {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "x-provider-id": pid, // einheitlich klein; Express ist case-insensitiv
+        "x-provider-id": pid,
       },
       cache: "no-store",
       body: JSON.stringify(body),
@@ -59,7 +57,7 @@ export async function POST(req: NextRequest, ctx: Ctx) {
     const msg = e instanceof Error ? e.message : String(e);
     return NextResponse.json(
       { ok: false, error: "Proxy failed", detail: msg },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

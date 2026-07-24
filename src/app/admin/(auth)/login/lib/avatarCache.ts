@@ -5,7 +5,11 @@ type CacheData = {
 };
 
 function cacheFromUser(user: any): CacheData {
-  return { avatarUrl: user?.avatarUrl ?? null, fullName: user?.fullName ?? null, userId: user?.id || user?._id || user?.providerId || null };
+  return {
+    avatarUrl: user?.avatarUrl ?? null,
+    fullName: user?.fullName ?? null,
+    userId: user?.id || user?._id || user?.providerId || null,
+  };
 }
 
 function needsProfile(data: CacheData) {
@@ -13,7 +17,10 @@ function needsProfile(data: CacheData) {
 }
 
 async function fetchProfileCache(current: CacheData) {
-  const response = await fetch("/api/admin/auth/profile", { credentials: "include", cache: "no-store" });
+  const response = await fetch("/api/admin/auth/profile", {
+    credentials: "include",
+    cache: "no-store",
+  });
   const data = await response.json().catch(() => ({}));
   if (!response.ok || !(data?.ok ?? response.ok)) return current;
   const profile = cacheFromUser(data?.user);
@@ -21,7 +28,11 @@ async function fetchProfileCache(current: CacheData) {
 }
 
 function mergeCache(current: CacheData, next: CacheData) {
-  return { avatarUrl: current.avatarUrl ?? next.avatarUrl, fullName: current.fullName ?? next.fullName, userId: current.userId ?? next.userId };
+  return {
+    avatarUrl: current.avatarUrl ?? next.avatarUrl,
+    fullName: current.fullName ?? next.fullName,
+    userId: current.userId ?? next.userId,
+  };
 }
 
 function setOrRemove(key: string, value: string | null) {

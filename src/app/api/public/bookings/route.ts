@@ -1,4 +1,3 @@
-// client/src/app/api/public/bookings/route.ts
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 

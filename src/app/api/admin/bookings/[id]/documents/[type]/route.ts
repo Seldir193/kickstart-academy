@@ -1,4 +1,3 @@
-// app/api/admin/bookings/[id]/documents/[type]/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import { getProviderId } from "@/app/api/lib/auth";
 
@@ -21,7 +20,6 @@ export async function GET(req: NextRequest, ctx: Ctx) {
   const BASE = baseFromEnv();
   const { id, type } = await ctx.params;
 
-  // nur erlaubte Dokumenttypen
   const ALLOWED = new Set([
     "participation",
     "cancellation",
@@ -35,7 +33,6 @@ export async function GET(req: NextRequest, ctx: Ctx) {
     );
   }
 
-  // 🔐 ProviderId ausschließlich aus HttpOnly-JWT
   const providerId = await getProviderId(req);
   if (!providerId) {
     return NextResponse.json(
@@ -44,7 +41,6 @@ export async function GET(req: NextRequest, ctx: Ctx) {
     );
   }
 
-  // Upstream-URL
   const url = `${BASE}/admin/customers/bookings/${encodeURIComponent(
     id,
   )}/documents/${encodeURIComponent(type)}`;
@@ -60,7 +56,6 @@ export async function GET(req: NextRequest, ctx: Ctx) {
       redirect: "follow",
     });
 
-    // Stream direkt durchreichen; Header übernehmen/fallbacken
     const res = new NextResponse(upstream.body, {
       status: upstream.status,
       headers: {

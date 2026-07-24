@@ -7,5 +7,11 @@ export default function AdminLoginContent() {
   const router = useRouter();
   const state = useAdminLoginState(useSearchParams());
   useAdminAuthBodyClass();
-  return <AdminLoginForm {...state} onSubmit={state.submitLogin} onCreateAccount={() => router.push("/admin/signup")} />;
+  return (
+    <AdminLoginForm
+      {...state}
+      onSubmit={state.submitLogin}
+      onCreateAccount={() => router.push("/admin/signup")}
+    />
+  );
 }

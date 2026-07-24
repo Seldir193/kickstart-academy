@@ -1,4 +1,3 @@
-// src/app/styles/globals.base.scss
 body {
   overflow-y: auto;
   scrollbar-gutter: auto;
@@ -582,15 +581,11 @@ tr:focus-within .ks-row-action {
   }
 }
 
-/* === Edit-Icon: nur bei Hover / Focus sichtbar (Mobile: immer sichtbar) === */
-
-/* Standard: verstecken */
 .edit-trigger {
   opacity: 0;
   pointer-events: none;
 }
 
-/* Sichtbar, wenn die Zeile gehovt wird ODER Fokus irgendwo in der Zeile ist */
 .is-fullhover:hover .edit-trigger,
 .is-fullhover:focus .edit-trigger,
 .is-fullhover:focus-within .edit-trigger {
@@ -598,14 +593,12 @@ tr:focus-within .ks-row-action {
   pointer-events: auto;
 }
 
-/* Tastatur: wenn direkt auf dem Icon Fokus ist */
 .edit-trigger:focus,
 .edit-trigger:focus-visible {
   opacity: 1;
   pointer-events: auto;
 }
 
-/* Mobile/Touch: kein Hover → Icon immer sichtbar */
 @media (hover: none) {
   .edit-trigger {
     opacity: 1;
@@ -613,49 +606,25 @@ tr:focus-within .ks-row-action {
   }
 }
 
-/* === Coaches: Edit-Icon nur bei Hover/Focus sichtbar === */
 .coach-table__actions .edit-trigger {
   opacity: 0;
   pointer-events: none;
   transition: opacity 160ms ease;
 }
 
-/* sichtbar, wenn die ganze Zeile gehovt wird */
 .coach-table__row:hover .coach-table__actions .edit-trigger,
 .coach-table__row:focus-within .coach-table__actions .edit-trigger {
   opacity: 1;
   pointer-events: auto;
 }
 
-/* Mobile/Touch: kein Hover → Icon immer sichtbar */
 @media (hover: none) {
   .coach-table__actions .edit-trigger {
     opacity: 1;
     pointer-events: auto;
   }
 }
-/* === Customers: Edit-Icon nur bei Hover/Focus sichtbar (wie Trainings/Coaches) === */
-// .ks-customers-admin .ks-row-actions .edit-trigger {
-//   opacity: 0;
-//   pointer-events: none;
-//   transition: opacity 160ms ease;
-// }
 
-// .ks-customers-admin tr:hover .ks-row-actions .edit-trigger,
-// .ks-customers-admin tr:focus-within .ks-row-actions .edit-trigger {
-//   opacity: 1;
-//   pointer-events: auto;
-// }
-
-// /* Mobile/Touch: kein Hover → Icon immer sichtbar */
-// @media (hover: none) {
-//   .ks-customers-admin .ks-row-actions .edit-trigger {
-//     opacity: 1;
-//     pointer-events: auto;
-//   }
-// }
-
-/* Row Actions: Edit Icon nur bei Hover/Focus sichtbar */
 .tr.is-row-action .edit-trigger {
   opacity: 0;
   transform: translateY(1px);
@@ -672,13 +641,10 @@ tr:focus-within .ks-row-action {
   pointer-events: auto;
 }
 
-/* Optional: sichtbarer Focus-Ring auf der Zeile */
 .tr.is-row-action:focus-visible {
   outline: 2px solid rgba(59, 130, 246, 0.35);
   outline-offset: -2px;
 }
-
-/* === NewsDialog: File-Upload "Datei auswählen" wie Buttons ================= */
 
 .news-dialog__file {
   display: flex;
@@ -716,7 +682,6 @@ tr:focus-within .ks-row-action {
   opacity: 0.65;
 }
 
-/* Mobile: Button oben, Name darunter */
 @media (max-width: 520px) {
   .news-dialog__file {
     flex-direction: column;
@@ -724,25 +689,12 @@ tr:focus-within .ks-row-action {
   }
 }
 
-/* File Picker – wiederverwendbar (Cover + Media) */
 .ks-file {
   display: flex;
   align-items: center;
   gap: 12px;
   flex-wrap: wrap;
 }
-
-// .ks-file__input {
-//   position: absolute;
-//   width: 1px;
-//   height: 1px;
-//   padding: 0;
-//   margin: -1px;
-//   overflow: hidden;
-//   clip: rect(0 0 0 0);
-//   white-space: nowrap;
-//   border: 0;
-// }
 
 .offer-create-dialog .ks-file__input {
   display: none;

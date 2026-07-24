@@ -1,4 +1,3 @@
-//src\app\components\training-card\utils.ts
 import { ALL_COURSE_OPTIONS } from "@/app/lib/courseOptions";
 import type { Offer, TrainingSortKey } from "./types";
 

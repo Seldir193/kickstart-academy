@@ -131,7 +131,6 @@ export async function PATCH(req: NextRequest, ctx: Ctx) {
   const auth = await requireSuper(req);
   if (!auth.ok) return json({ ok: false, error: auth.error }, auth.status);
 
-  // const payload = toObject(await readJson(req));
   const payload = normalizeFeedbackPayload(await readJson(req));
   const result = await proxy(
     await feedbackPath(ctx),

@@ -1,4 +1,3 @@
-// src/app/api/bookings/[id]/withdraw/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import { getProviderId } from "@/app/api/lib/auth";
 

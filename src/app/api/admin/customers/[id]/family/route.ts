@@ -1,5 +1,3 @@
-// family/route.ts
-
 import { NextRequest, NextResponse } from "next/server";
 import { getProviderIdFromCookies } from "@/app/api/lib/auth";
 
@@ -18,7 +16,7 @@ export async function GET(_req: NextRequest, { params }: Ctx) {
   if (!pid) {
     return NextResponse.json(
       { ok: false, error: "Unauthorized" },
-      { status: 401 }
+      { status: 401 },
     );
   }
 
@@ -33,7 +31,7 @@ export async function GET(_req: NextRequest, { params }: Ctx) {
         Accept: "application/json",
       },
       cache: "no-store",
-    }
+    },
   );
 
   const body = await r.text();

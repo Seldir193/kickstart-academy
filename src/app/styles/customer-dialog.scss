@@ -1,7 +1,3 @@
-/* CustomerDialog – ausgelagert (ohne inline styles)
-   Hinweis: Thin scrollbar ist zentral auf dem echten Scroll-Container (.ks-panel / .ks-panel-lg).
-*/
-
 .ks-modal {
   position: fixed;
   inset: 0;
@@ -71,7 +67,6 @@
     }
   }
 
-  /* ersetzt style={{ marginTop: 12 }} */
   .ks-fs--mt {
     margin-top: 12px;
   }
@@ -222,19 +217,13 @@
   }
 }
 
-/* =========================
-   Thin Scrollbars – Customer Dialog
-   (auf den echten Scroll-Containern)
-========================= */
-
 .ks-modal .ks-panel,
 .ks-panel,
 .ks-panel-lg {
-  scrollbar-width: thin; /* Firefox */
+  scrollbar-width: thin;
   scrollbar-color: rgba(0, 0, 0, 0.28) transparent;
 }
 
-/* Webkit (Chrome, Edge, Safari) */
 .ks-modal .ks-panel::-webkit-scrollbar,
 .ks-panel::-webkit-scrollbar,
 .ks-panel-lg::-webkit-scrollbar {

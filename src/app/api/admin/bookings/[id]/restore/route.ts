@@ -1,4 +1,3 @@
-// app/api/admin/bookings/[id]/restore/route.ts
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
@@ -13,8 +12,6 @@ function apiBase() {
   return raw.replace(/\/+$/, "");
 }
 
-// POST /api/admin/bookings/:id/restore
-// -> backend POST /bookings/:id/restore
 type Ctx = { params: Promise<{ id: string }> };
 
 export async function POST(req: NextRequest, ctx: Ctx) {
@@ -22,13 +19,12 @@ export async function POST(req: NextRequest, ctx: Ctx) {
   if (!pid) {
     return NextResponse.json(
       { ok: false, error: "Unauthorized" },
-      { status: 401 }
+      { status: 401 },
     );
   }
 
   const { id } = await ctx.params;
 
-  // falls du später Query-Params brauchst (?foo=bar)
   const qs = new URL(req.url).search;
 
   const r = await fetch(
@@ -39,7 +35,7 @@ export async function POST(req: NextRequest, ctx: Ctx) {
         "X-Provider-Id": pid,
       },
       cache: "no-store",
-    }
+    },
   );
 
   const text = await r.text();

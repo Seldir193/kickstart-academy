@@ -1,4 +1,3 @@
-// src/app/orte/page.tsx
 import { redirect } from "next/navigation";
 
 type OrteRedirectProps = {

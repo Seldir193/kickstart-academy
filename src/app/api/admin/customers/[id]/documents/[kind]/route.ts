@@ -1,4 +1,3 @@
-//src\app\api\admin\customers\[id]\documents\[kind]\route.ts
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
@@ -41,7 +40,6 @@ async function readBody(req: NextRequest): Promise<BodyObject> {
       return {};
     }
 
-    // GET: optionale Parameter aus Query übernehmen (z. B. amount, currency)
     const out: BodyObject = {};
     const sp = req.nextUrl.searchParams;
     for (const k of sp.keys()) out[k] = sp.get(k);
@@ -53,13 +51,13 @@ async function readBody(req: NextRequest): Promise<BodyObject> {
 
 async function forwardToBackendAsPost(
   req: NextRequest,
-  p: { id: string; bid: string; kind: string }
+  p: { id: string; bid: string; kind: string },
 ) {
   const pid = await getProviderIdFromCookies();
   if (!pid) {
     return NextResponse.json(
       { ok: false, error: "Unauthorized: missing provider" },
-      { status: 401 }
+      { status: 401 },
     );
   }
 
@@ -68,7 +66,7 @@ async function forwardToBackendAsPost(
   const url =
     `${apiBase()}/customers/${encodeURIComponent(p.id)}` +
     `/bookings/${encodeURIComponent(p.bid)}/documents/${encodeURIComponent(
-      p.kind
+      p.kind,
     )}`;
 
   const upstream = await fetch(url, {
@@ -93,13 +91,11 @@ async function forwardToBackendAsPost(
   });
 }
 
-// GET → an Backend-POST weiterleiten (für „im neuen Tab öffnen“)
 export async function GET(req: NextRequest, ctx: DocCtx) {
   const params = await ctx.params;
   return forwardToBackendAsPost(req, params);
 }
 
-// POST → ebenfalls weiterleiten (falls du irgendwo per POST öffnest)
 export async function POST(req: NextRequest, ctx: DocCtx) {
   const params = await ctx.params;
   return forwardToBackendAsPost(req, params);

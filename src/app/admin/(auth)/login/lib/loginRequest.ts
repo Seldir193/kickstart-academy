@@ -1,5 +1,11 @@
 export async function requestLogin(email: string, password: string) {
-  return fetch("/api/admin/auth/login", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ email, password }), credentials: "include", cache: "no-store" });
+  return fetch("/api/admin/auth/login", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, password }),
+    credentials: "include",
+    cache: "no-store",
+  });
 }
 
 export async function readLoginError(response: Response) {

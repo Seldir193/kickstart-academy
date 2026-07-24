@@ -48,68 +48,68 @@ body,
   @include ks_scroll_thin;
 }
 :where(
-    .book-embed,
-    .book-embed
-      :is(
-        [style*="overflow"],
-        [style*="overflow-y"],
-        [class*="body"],
-        [class*="content"],
-        [class*="scroll"],
-        [class*="panel"],
-        [class*="form"]
-      )
-  ) {
+  .book-embed,
+  .book-embed
+    :is(
+      [style*="overflow"],
+      [style*="overflow-y"],
+      [class*="body"],
+      [class*="content"],
+      [class*="scroll"],
+      [class*="panel"],
+      [class*="form"]
+    )
+) {
   scrollbar-width: thin;
   scrollbar-color: var(--ks-scrollbar-thumb) var(--ks-scrollbar-track);
 }
 
 :where(
-    .book-embed,
-    .book-embed
-      :is(
-        [style*="overflow"],
-        [style*="overflow-y"],
-        [class*="body"],
-        [class*="content"],
-        [class*="scroll"],
-        [class*="panel"],
-        [class*="form"]
-      )
-  )::-webkit-scrollbar {
+  .book-embed,
+  .book-embed
+    :is(
+      [style*="overflow"],
+      [style*="overflow-y"],
+      [class*="body"],
+      [class*="content"],
+      [class*="scroll"],
+      [class*="panel"],
+      [class*="form"]
+    )
+)::-webkit-scrollbar {
   width: var(--ks-scrollbar-size);
   height: var(--ks-scrollbar-size);
 }
 
 :where(
-    .book-embed,
-    .book-embed
-      :is(
-        [style*="overflow"],
-        [style*="overflow-y"],
-        [class*="body"],
-        [class*="content"],
-        [class*="scroll"],
-        [class*="panel"],
-        [class*="form"]
-      )
-  )::-webkit-scrollbar-track {
+  .book-embed,
+  .book-embed
+    :is(
+      [style*="overflow"],
+      [style*="overflow-y"],
+      [class*="body"],
+      [class*="content"],
+      [class*="scroll"],
+      [class*="panel"],
+      [class*="form"]
+    )
+)::-webkit-scrollbar-track {
   background: var(--ks-scrollbar-track);
 }
 
 :where(
-    .book-embed,
-    .book-embed
-      :is(
-        [style*="overflow"],
-        [style*="overflow-y"],
-        [class*="body"],
-        [class*="content"],
-        [class*="scroll"],
-        [class*="panel"],
-        [class*="form"]
-      )
-  )::-webkit-scrollbar-thumb {
+  .book-embed,
+  .book-embed
+    :is(
+      [style*="overflow"],
+      [style*="overflow-y"],
+      [class*="body"],
+      [class*="content"],
+      [class*="scroll"],
+      [class*="panel"],
+      [class*="form"]
+    )
+)::-webkit-scrollbar-thumb {
   background: var(--ks-scrollbar-thumb);
   border-radius: 999px;
   border: 2px solid transparent;

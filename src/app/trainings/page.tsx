@@ -1,4 +1,3 @@
-// src/app/trainings/page.tsx
 import { redirect } from "next/navigation";
 
 type TrainingsRedirectProps = {

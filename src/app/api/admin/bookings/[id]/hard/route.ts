@@ -1,4 +1,3 @@
-// app/api/admin/bookings/[id]/hard/route.ts
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
@@ -13,8 +12,6 @@ function apiBase() {
   return raw.replace(/\/+$/, "");
 }
 
-// DELETE /api/admin/bookings/:id/hard
-// -> backend DELETE /bookings/:id/hard
 type Ctx = { params: Promise<{ id: string }> };
 
 export async function DELETE(req: NextRequest, ctx: Ctx) {
@@ -22,7 +19,7 @@ export async function DELETE(req: NextRequest, ctx: Ctx) {
   if (!pid) {
     return NextResponse.json(
       { ok: false, error: "Unauthorized" },
-      { status: 401 }
+      { status: 401 },
     );
   }
 
@@ -37,7 +34,7 @@ export async function DELETE(req: NextRequest, ctx: Ctx) {
         "X-Provider-Id": pid,
       },
       cache: "no-store",
-    }
+    },
   );
 
   const text = await r.text();

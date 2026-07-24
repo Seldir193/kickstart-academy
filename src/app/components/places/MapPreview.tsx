@@ -1,4 +1,3 @@
-// src/app/components/places/MapPreview.tsx
 "use client";
 
 import React, { useEffect, useRef } from "react";

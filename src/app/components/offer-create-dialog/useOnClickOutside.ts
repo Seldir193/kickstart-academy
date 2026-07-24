@@ -1,4 +1,3 @@
-//src\app\components\offer-create-dialog\useOnClickOutside.ts
 "use client";
 
 import { useEffect } from "react";

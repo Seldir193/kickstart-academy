@@ -1,4 +1,3 @@
-// src/app/book/cancel/page.tsx
 "use client";
 
 import Link from "next/link";

@@ -1,4 +1,3 @@
-//src\app\pay\PayClient.tsx
 "use client";
 
 import { useEffect, useState } from "react";

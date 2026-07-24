@@ -1,4 +1,3 @@
-// src/app/api/franchise-locations/[id]/route.ts
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
@@ -24,7 +23,7 @@ export async function PATCH(req: NextRequest, ctx: Ctx) {
   if (!pid || !token)
     return NextResponse.json(
       { ok: false, error: "Unauthorized" },
-      { status: 401 }
+      { status: 401 },
     );
 
   const body = await req.json().catch(() => ({}));
@@ -62,7 +61,7 @@ export async function DELETE(_req: NextRequest, ctx: Ctx) {
   if (!pid || !token)
     return NextResponse.json(
       { ok: false, error: "Unauthorized" },
-      { status: 401 }
+      { status: 401 },
     );
 
   const { id } = await ctx.params;

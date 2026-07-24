@@ -352,8 +352,6 @@ export default function PlaceDialog({
                 </div>
 
                 <div className="form__actions place-dialog__actions">
-                  
-
                   <button
                     type="button"
                     className={clsx(

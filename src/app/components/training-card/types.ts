@@ -1,4 +1,3 @@
-//src\app\components\training-card\types.ts
 export type Offer = {
   _id: string;
   title?: string;

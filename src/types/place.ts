@@ -1,7 +1,6 @@
-// src/types/place.ts
 export type Place = {
   _id: string;
-  name: string;        // club or ground name
+  name: string;
   address: string;
   zip: string;
   city: string;

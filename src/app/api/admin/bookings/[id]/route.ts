@@ -1,4 +1,3 @@
-// app/api/admin/bookings/[id]/route.ts
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
@@ -15,13 +14,12 @@ function apiBase() {
 
 type Ctx = { params: Promise<{ id: string }> };
 
-// Optional: GET /api/admin/bookings/:id -> backend /bookings/:id
 export async function GET(_req: NextRequest, ctx: Ctx) {
   const pid = await getProviderIdFromCookies();
   if (!pid) {
     return NextResponse.json(
       { ok: false, error: "Unauthorized" },
-      { status: 401 }
+      { status: 401 },
     );
   }
 
@@ -41,13 +39,12 @@ export async function GET(_req: NextRequest, ctx: Ctx) {
   });
 }
 
-// DELETE /api/admin/bookings/:id -> backend DELETE /bookings/:id
 export async function DELETE(_req: NextRequest, ctx: Ctx) {
   const pid = await getProviderIdFromCookies();
   if (!pid) {
     return NextResponse.json(
       { ok: false, error: "Unauthorized" },
-      { status: 401 }
+      { status: 401 },
     );
   }
 

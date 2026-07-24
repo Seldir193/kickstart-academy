@@ -1,4 +1,3 @@
-// app/api/admin/bookings/[id]/status/route.ts
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
@@ -15,20 +14,19 @@ function apiBase() {
 
 type Ctx = { params: Promise<{ id: string }> };
 
-// PATCH /api/admin/bookings/:id/status -> backend PATCH /bookings/:id/status
 export async function PATCH(req: NextRequest, ctx: Ctx) {
   const pid = await getProviderIdFromCookies();
   if (!pid) {
     return NextResponse.json(
       { ok: false, error: "Unauthorized" },
-      { status: 401 }
+      { status: 401 },
     );
   }
 
   const { id } = await ctx.params;
 
   const body = await req.json().catch(() => ({}));
-  const qs = new URL(req.url).search; // ?force=1 etc. weiterreichen
+  const qs = new URL(req.url).search;
 
   const r = await fetch(
     `${apiBase()}/bookings/${encodeURIComponent(id)}/status${qs}`,
@@ -37,7 +35,7 @@ export async function PATCH(req: NextRequest, ctx: Ctx) {
       headers: { "Content-Type": "application/json", "X-Provider-Id": pid },
       body: JSON.stringify(body),
       cache: "no-store",
-    }
+    },
   );
 
   const text = await r.text();

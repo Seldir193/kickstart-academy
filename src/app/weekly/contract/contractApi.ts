@@ -1,4 +1,3 @@
-//src\app\weekly\contract\contractApi.ts
 import type {
   ContractDraft,
   ContractInitErr,

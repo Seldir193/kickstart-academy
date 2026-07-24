@@ -1,4 +1,3 @@
-// src/app/book/page.tsx
 import { Suspense } from "react";
 import BookClient from "./BookClient";
 

@@ -55,11 +55,7 @@ export default function NewPasswordClient() {
         <h2>Neues Passwort setzen</h2>
         <p>Bitte neues Passwort eingeben und bestätigen.</p>
 
-        {formError && (
-          <div className="error error--top-space">
-            {formError}
-          </div>
-        )}
+        {formError && <div className="error error--top-space">{formError}</div>}
 
         <form className="form" onSubmit={onSubmit} noValidate>
           <div className="field">

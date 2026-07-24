@@ -1,4 +1,3 @@
-// src/app/admin/signup/page.tsx
 import { Suspense } from "react";
 import SignupClient from "./SignupClient";
 

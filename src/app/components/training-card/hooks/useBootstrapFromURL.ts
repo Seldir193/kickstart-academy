@@ -1,4 +1,3 @@
-//src\app\components\training-card\hooks\useBootstrapFromURL.ts
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";

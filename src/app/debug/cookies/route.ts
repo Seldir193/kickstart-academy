@@ -1,4 +1,3 @@
-// client/src/app/api/debug/cookies/route.ts
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 

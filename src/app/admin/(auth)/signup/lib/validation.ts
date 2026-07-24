@@ -7,7 +7,8 @@ export function isValidEmail(value: string) {
 export function validateSignup(form: SignupForm) {
   const errors: SignupErrors = {};
   if (!form.fullName.trim()) errors.fullName = "Please fill in this field";
-  if (!isValidEmail(form.email)) errors.email = "*Please fill out the email field";
+  if (!isValidEmail(form.email))
+    errors.email = "*Please fill out the email field";
   if (form.password.length < 6) errors.password = "Min. 6 characters";
   setConfirmError(form, errors);
   if (!form.terms) errors.terms = "Please accept the terms to continue";
@@ -16,5 +17,6 @@ export function validateSignup(form: SignupForm) {
 
 function setConfirmError(form: SignupForm, errors: SignupErrors) {
   if (form.confirm.length < 6) errors.confirm = "Min. 6 characters";
-  else if (form.password !== form.confirm) errors.confirm = "Passwords do not match";
+  else if (form.password !== form.confirm)
+    errors.confirm = "Passwords do not match";
 }

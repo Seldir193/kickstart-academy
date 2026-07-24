@@ -1,4 +1,4 @@
-//src\app\components\training-card\hooks\useCities.ts
+
 "use client";
 
 import { useEffect } from "react";

@@ -1,4 +1,3 @@
-// app/api/admin/bookings/[id]/confirm/resend/route.ts
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
@@ -20,22 +19,21 @@ export async function POST(req: NextRequest, ctx: Ctx) {
   if (!BASE) {
     return NextResponse.json(
       { ok: false, error: "NEXT_BACKEND_API_BASE is missing" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 
-  // 🔐 Provider ausschließlich aus HttpOnly-JWT lesen
   const pid = await getProviderId(req);
   if (!pid) {
     return NextResponse.json(
       { ok: false, error: "Unauthorized" },
-      { status: 401 }
+      { status: 401 },
     );
   }
 
   const { id } = await ctx.params;
   const url = `${BASE}/admin/bookings/${encodeURIComponent(
-    id
+    id,
   )}/confirm?resend=1`;
 
   try {
@@ -59,7 +57,7 @@ export async function POST(req: NextRequest, ctx: Ctx) {
     const detail = e instanceof Error ? e.message : String(e);
     return NextResponse.json(
       { ok: false, error: "Proxy failed", detail },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

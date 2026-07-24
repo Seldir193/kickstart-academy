@@ -1,5 +1,3 @@
-//src\app\api\admin\franchise-locations\route.ts//
-
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
@@ -78,11 +76,6 @@ function stripProviderCreateFields(body: unknown) {
 
   return next;
 }
-
-// function buildProviderCreatePayload(body: unknown) {
-//   const base = stripProviderCreateFields(body);
-//   return { ...base };
-// }
 
 function buildProviderCreatePayload(body: unknown) {
   return stripProviderCreateFields(body);
@@ -172,53 +165,3 @@ export async function POST(req: NextRequest) {
   );
   return json(result.data, result.status);
 }
-
-// // src/app/api/admin/franchise-locations/route.ts
-// export const runtime = "nodejs";
-// export const dynamic = "force-dynamic";
-
-// import { NextRequest, NextResponse } from "next/server";
-// import { requireSuperAdmin } from "@/app/api/lib/auth";
-
-// function apiBase() {
-//   const b =
-//     process.env.NEXT_BACKEND_API_BASE ||
-//     process.env.NEXT_PUBLIC_API_URL ||
-//     "http://127.0.0.1:5000/api";
-//   return b.replace(/\/+$/, "");
-// }
-
-// async function passthroughJson(r: Response) {
-//   const text = await r.text();
-//   let data: any;
-//   try {
-//     data = JSON.parse(text);
-//   } catch {
-//     data = { ok: false, raw: text };
-//   }
-//   return NextResponse.json(data, { status: r.status });
-// }
-
-// export async function GET(req: NextRequest) {
-//   const guard = await requireSuperAdmin();
-//   if (!guard.ok) {
-//     return NextResponse.json(
-//       { ok: false, error: guard.error },
-//       { status: guard.status },
-//     );
-//   }
-
-//   const qs = req.nextUrl.search; // ?status=pending|approved|rejected
-
-//   const r = await fetch(`${apiBase()}/admin/franchise-locations${qs}`, {
-//     method: "GET",
-//     headers: {
-//       accept: "application/json",
-//       "x-provider-id": guard.claims.id,
-//       "x-admin-role": "super",
-//     },
-//     cache: "no-store",
-//   });
-
-//   return passthroughJson(r);
-// }

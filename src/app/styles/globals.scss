@@ -60,7 +60,6 @@
 @use "./invoices/invoices-dialog.scss" as *;
 @use "./training-card.scss" as *;
 @use "./admin-home.scss" as *;
-@use "./public/weekly-start.scss" as *;
 @use "./public/book-status.scss" as *;
 @use "./public/contract.scss" as *;
 @use "./weekly-cancel.scss" as *;
@@ -81,6 +80,5 @@
 :root {
   --brand-navy: #0f1e2e;
   --text: #222;
-  /* optional, falls du auch --brand brauchst */
   --brand: #0ea5e9;
 }

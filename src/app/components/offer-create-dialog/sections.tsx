@@ -1,15 +1,10 @@
-//src\app\components\offer-create-dialog\sections.tsx
 "use client";
 
 import React from "react";
 import { useTranslation } from "react-i18next";
 import type { Place } from "@/types/place";
 import type { CategoryKey } from "./types";
-import {
-  // CATEGORY_LABEL,
-  CATEGORY_ORDER,
-  HOLIDAY_WEEK_PRESETS,
-} from "./constants";
+import { CATEGORY_ORDER, HOLIDAY_WEEK_PRESETS } from "./constants";
 import { clsx } from "./utils";
 
 function categoryLabel(key: CategoryKey, t: (key: string) => string) {

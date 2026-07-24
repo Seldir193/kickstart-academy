@@ -19,14 +19,13 @@ function safeJsonParse(text: string): unknown {
   }
 }
 
-// POST -> setzt den Booking-Status auf "cancelled" (keine Mail hier!)
 export async function POST(req: NextRequest, ctx: Ctx) {
   try {
     const pid = await getProviderIdFromCookies();
     if (!pid) {
       return NextResponse.json(
         { ok: false, error: "Unauthorized: missing provider" },
-        { status: 401 }
+        { status: 401 },
       );
     }
 
@@ -35,7 +34,7 @@ export async function POST(req: NextRequest, ctx: Ctx) {
 
     const r = await fetch(
       `${apiBase()}/customers/${encodeURIComponent(
-        id
+        id,
       )}/bookings/${encodeURIComponent(bid)}/storno`,
       {
         method: "POST",
@@ -45,7 +44,7 @@ export async function POST(req: NextRequest, ctx: Ctx) {
         },
         cache: "no-store",
         body: JSON.stringify(body),
-      }
+      },
     );
 
     const text = await r.text();
@@ -55,7 +54,7 @@ export async function POST(req: NextRequest, ctx: Ctx) {
     const msg = e instanceof Error ? e.message : String(e);
     return NextResponse.json(
       { ok: false, error: "Proxy failed", detail: msg },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

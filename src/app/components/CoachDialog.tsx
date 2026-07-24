@@ -1,4 +1,3 @@
-//src\app\components\CoachDialog.tsx
 "use client";
 
 import React from "react";

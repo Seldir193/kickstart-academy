@@ -1,4 +1,3 @@
-//src\app\components\OfferCreateDialog.tsx
 "use client";
 
 import React from "react";

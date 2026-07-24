@@ -1,4 +1,3 @@
-//src\app\api\offers\[id]\route.ts
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 

@@ -1,5 +1,3 @@
-// src/app/styles/components/news-dialog.scss
-
 .news-info {
   .news-info__dialog {
     width: min(820px, calc(100% - 24px));
@@ -275,8 +273,6 @@
   .news-reject__footer {
     justify-content: flex-end;
   }
-
-  //
 
   .news-dialog__translation-actions {
     display: grid;
