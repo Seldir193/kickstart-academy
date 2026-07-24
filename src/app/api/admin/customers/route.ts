@@ -12,23 +12,37 @@ function baseFromEnv() {
   return raw.replace(/\/$/, "");
 }
 
+function missingBaseResponse() {
+  console.error("[customers-proxy] NEXT_BACKEND_API_BASE missing");
+  return NextResponse.json(
+    { ok: false, error: "NEXT_BACKEND_API_BASE missing" },
+    { status: 500 },
+  );
+}
+
+function unauthorizedResponse() {
+  return NextResponse.json(
+    { ok: false, error: "Unauthorized" },
+    { status: 401 },
+  );
+}
+
+async function passthrough(r: Response) {
+  const body = await r.text();
+  return new NextResponse(body, {
+    status: r.status,
+    headers: {
+      "content-type": r.headers.get("content-type") || "application/json",
+    },
+  });
+}
+
 export async function GET(req: NextRequest) {
   const BASE = baseFromEnv();
-  if (!BASE) {
-    console.error("[customers-proxy] NEXT_BACKEND_API_BASE missing");
-    return NextResponse.json(
-      { ok: false, error: "NEXT_BACKEND_API_BASE missing" },
-      { status: 500 },
-    );
-  }
+  if (!BASE) return missingBaseResponse();
 
   const providerId = await getProviderIdFromCookies();
-  if (!providerId) {
-    return NextResponse.json(
-      { ok: false, error: "Unauthorized" },
-      { status: 401 },
-    );
-  }
+  if (!providerId) return unauthorizedResponse();
 
   const qs = req.nextUrl.searchParams.toString();
   const url = `${BASE}/customers${qs ? `?${qs}` : ""}`;
@@ -43,13 +57,7 @@ export async function GET(req: NextRequest) {
       cache: "no-store",
     });
 
-    const body = await r.text();
-    return new NextResponse(body, {
-      status: r.status,
-      headers: {
-        "content-type": r.headers.get("content-type") || "application/json",
-      },
-    });
+    return await passthrough(r);
   } catch (e: any) {
     console.error("[customers-proxy] error:", e?.message || e);
     return NextResponse.json(
@@ -61,23 +69,12 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   const BASE = baseFromEnv();
-  if (!BASE) {
-    console.error("[customers-proxy] NEXT_BACKEND_API_BASE missing");
-    return NextResponse.json(
-      { ok: false, error: "NEXT_BACKEND_API_BASE missing" },
-      { status: 500 },
-    );
-  }
+  if (!BASE) return missingBaseResponse();
 
   const providerId = await getProviderIdFromCookies();
-  if (!providerId) {
-    return NextResponse.json(
-      { ok: false, error: "Unauthorized" },
-      { status: 401 },
-    );
-  }
+  if (!providerId) return unauthorizedResponse();
 
-  let body: any = {};
+  let body: unknown = {};
   try {
     body = await req.json();
   } catch {}
@@ -94,13 +91,7 @@ export async function POST(req: NextRequest) {
       cache: "no-store",
     });
 
-    const text = await r.text();
-    return new NextResponse(text, {
-      status: r.status,
-      headers: {
-        "content-type": r.headers.get("content-type") || "application/json",
-      },
-    });
+    return await passthrough(r);
   } catch (e: any) {
     console.error("[customers-proxy:POST] error:", e?.message || e);
     return NextResponse.json(
