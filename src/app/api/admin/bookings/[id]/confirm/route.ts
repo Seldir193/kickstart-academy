@@ -1,32 +1,19 @@
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-import { NextResponse, type NextRequest } from "next/server";
+import { type NextRequest } from "next/server";
 import { getProviderIdFromCookies } from "@/app/api/lib/auth";
-
-function apiBase() {
-  const raw =
-    process.env.NEXT_BACKEND_API_BASE ||
-    process.env.NEXT_PUBLIC_API_URL ||
-    "http://127.0.0.1:5000/api";
-  return raw.replace(/\/+$/, "");
-}
+import {
+  apiBase,
+  passthroughUpstream,
+  unauthorizedResponse,
+} from "@/app/api/admin/bookings/proxy.helpers";
 
 type Ctx = {
   params: Promise<{ id: string }>;
 };
 
-export async function POST(req: NextRequest, ctx: Ctx) {
-  const pid = await getProviderIdFromCookies();
-  if (!pid) {
-    return NextResponse.json(
-      { ok: false, error: "Unauthorized" },
-      { status: 401 },
-    );
-  }
-
-  const { id } = await ctx.params;
-
+function confirmQueryString(req: NextRequest) {
   const resend = req.nextUrl.searchParams.get("resend") === "1";
   const manual = req.nextUrl.searchParams.get("manual") === "1";
 
@@ -34,7 +21,15 @@ export async function POST(req: NextRequest, ctx: Ctx) {
   if (resend) params.set("resend", "1");
   if (manual) params.set("manual", "1");
 
-  const qs = params.toString() ? `?${params.toString()}` : "";
+  return params.toString() ? `?${params.toString()}` : "";
+}
+
+export async function POST(req: NextRequest, ctx: Ctx) {
+  const pid = await getProviderIdFromCookies();
+  if (!pid) return unauthorizedResponse();
+
+  const { id } = await ctx.params;
+  const qs = confirmQueryString(req);
 
   const r = await fetch(
     `${apiBase()}/bookings/${encodeURIComponent(id)}/confirm${qs}`,
@@ -45,11 +40,5 @@ export async function POST(req: NextRequest, ctx: Ctx) {
     },
   );
 
-  const text = await r.text();
-  return new NextResponse(text, {
-    status: r.status,
-    headers: {
-      "content-type": r.headers.get("content-type") || "application/json",
-    },
-  });
+  return passthroughUpstream(r);
 }

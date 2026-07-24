@@ -3,14 +3,10 @@ export const dynamic = "force-dynamic";
 
 import { NextRequest, NextResponse } from "next/server";
 import { getProviderId } from "@/app/api/lib/auth";
-
-function apiBase() {
-  const b =
-    process.env.NEXT_BACKEND_API_BASE ||
-    process.env.NEXT_PUBLIC_API_URL ||
-    "http://127.0.0.1:5000/api";
-  return b.replace(/\/+$/, "");
-}
+import {
+  apiBase,
+  unauthorizedResponse,
+} from "@/app/api/admin/bookings/proxy.helpers";
 
 type Ctx = { params: Promise<{ id: string }> };
 
@@ -24,12 +20,7 @@ export async function POST(req: NextRequest, ctx: Ctx) {
   }
 
   const pid = await getProviderId(req);
-  if (!pid) {
-    return NextResponse.json(
-      { ok: false, error: "Unauthorized" },
-      { status: 401 },
-    );
-  }
+  if (!pid) return unauthorizedResponse();
 
   const { id } = await ctx.params;
   const url = `${BASE}/admin/bookings/${encodeURIComponent(

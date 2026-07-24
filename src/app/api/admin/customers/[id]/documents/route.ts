@@ -11,6 +11,42 @@ function apiBase() {
 
 type Ctx = { params: Promise<{ id: string }> };
 
+function upstreamFailedResponse(upstream: Response, text: string) {
+  let detail: unknown = text;
+
+  try {
+    detail = JSON.parse(text);
+  } catch {}
+
+  return NextResponse.json(
+    {
+      ok: false,
+      status: upstream.status,
+      error: "Upstream failed",
+      detail,
+    },
+    { status: upstream.status },
+  );
+}
+
+function jsonOrTextResponse(text: string, status: number) {
+  try {
+    const data = JSON.parse(text);
+    return NextResponse.json(data, {
+      status,
+      headers: { "Cache-Control": "no-store" },
+    });
+  } catch {
+    return new NextResponse(text, {
+      status,
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+        "Cache-Control": "no-store",
+      },
+    });
+  }
+}
+
 export async function GET(req: NextRequest, { params }: Ctx) {
   try {
     const pid = await getProviderIdFromCookies();
@@ -37,38 +73,10 @@ export async function GET(req: NextRequest, { params }: Ctx) {
     const text = await upstream.text().catch(() => "");
 
     if (!upstream.ok) {
-      let detail: unknown = text;
-
-      try {
-        detail = JSON.parse(text);
-      } catch {}
-
-      return NextResponse.json(
-        {
-          ok: false,
-          status: upstream.status,
-          error: "Upstream failed",
-          detail,
-        },
-        { status: upstream.status },
-      );
+      return upstreamFailedResponse(upstream, text);
     }
 
-    try {
-      const data = JSON.parse(text);
-      return NextResponse.json(data, {
-        status: upstream.status,
-        headers: { "Cache-Control": "no-store" },
-      });
-    } catch {
-      return new NextResponse(text, {
-        status: upstream.status,
-        headers: {
-          "Content-Type": "application/json; charset=utf-8",
-          "Cache-Control": "no-store",
-        },
-      });
-    }
+    return jsonOrTextResponse(text, upstream.status);
   } catch (e: unknown) {
     const msg = e instanceof Error ? e.message : String(e);
 

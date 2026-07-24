@@ -7,26 +7,27 @@ function apiBase() {
   return base.replace(/\/+$/, "");
 }
 
+function base64UrlToUtf8(payload: string) {
+  const b64 =
+    payload.replace(/-/g, "+").replace(/_/g, "/") +
+    "===".slice((payload.length + 3) % 4);
+
+  const binary =
+    typeof atob === "function"
+      ? atob(b64)
+      : Buffer.from(b64, "base64").toString("binary");
+
+  const bytes = new Uint8Array(binary.length);
+  for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+
+  return new TextDecoder().decode(bytes);
+}
+
 function decodeJwtPayload<T = any>(token: string): T | null {
   try {
     const parts = token.split(".");
     if (parts.length < 2) return null;
-    const payload = parts[1];
-
-    const b64 =
-      payload.replace(/-/g, "+").replace(/_/g, "/") +
-      "===".slice((payload.length + 3) % 4);
-
-    const binary =
-      typeof atob === "function"
-        ? atob(b64)
-        : Buffer.from(b64, "base64").toString("binary");
-
-    const bytes = new Uint8Array(binary.length);
-    for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
-
-    const json = new TextDecoder().decode(bytes);
-    return JSON.parse(json) as T;
+    return JSON.parse(base64UrlToUtf8(parts[1])) as T;
   } catch {
     return null;
   }
@@ -51,6 +52,17 @@ async function getProviderIdFromCookies(): Promise<string | null> {
   return uid || null;
 }
 
+async function jsonPassthrough(r: Response) {
+  const txt = await r.text();
+  let data: unknown;
+  try {
+    data = JSON.parse(txt);
+  } catch {
+    data = { ok: false, raw: txt };
+  }
+  return NextResponse.json(data, { status: r.status });
+}
+
 export async function GET(req: NextRequest) {
   const target = new URL(`${apiBase()}/admin/auth/profile`);
   const q = req.nextUrl.searchParams;
@@ -69,14 +81,7 @@ export async function GET(req: NextRequest) {
     cache: "no-store",
   });
 
-  const txt = await r.text();
-  let data: any;
-  try {
-    data = JSON.parse(txt);
-  } catch {
-    data = { ok: false, raw: txt };
-  }
-  return NextResponse.json(data, { status: r.status });
+  return jsonPassthrough(r);
 }
 
 export async function POST(req: NextRequest) {
@@ -94,12 +99,5 @@ export async function POST(req: NextRequest) {
     cache: "no-store",
   });
 
-  const txt = await r.text();
-  let data: any;
-  try {
-    data = JSON.parse(txt);
-  } catch {
-    data = { ok: false, raw: txt };
-  }
-  return NextResponse.json(data, { status: r.status });
+  return jsonPassthrough(r);
 }
