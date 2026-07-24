@@ -1,33 +1,14 @@
-import { NextResponse } from "next/server";
 import { getProviderIdFromCookies } from "@/app/api/lib/auth";
-
-function apiBase() {
-  const b = process.env.NEXT_BACKEND_API_BASE || "http://127.0.0.1:5000/api";
-  return b.replace(/\/+$/, "");
-}
-
-function sanitizeOfferBody(body: any) {
-  const next = body && typeof body === "object" ? { ...body } : {};
-  const category = String(next.category || "").trim();
-  const subType = String(next.sub_type || "").trim();
-  const type = String(next.type || "").trim();
-
-  const isPowertraining =
-    category === "Holiday" &&
-    (subType === "Powertraining" || type === "AthleticTraining");
-
-  if (isPowertraining) next.days = [];
-  return next;
-}
+import {
+  apiBase,
+  jsonPassthrough,
+  sanitizeOfferBody,
+  unauthorizedResponse,
+} from "@/app/api/admin/offers/proxy.helpers";
 
 export async function GET(req: Request) {
   const pid = await getProviderIdFromCookies();
-  if (!pid) {
-    return NextResponse.json(
-      { ok: false, error: "Unauthorized" },
-      { status: 401 },
-    );
-  }
+  if (!pid) return unauthorizedResponse();
 
   const qs = new URL(req.url).search;
   const r = await fetch(`${apiBase()}/offers${qs}`, {
@@ -35,24 +16,12 @@ export async function GET(req: Request) {
     cache: "no-store",
   });
 
-  const text = await r.text();
-  let data: any;
-  try {
-    data = JSON.parse(text);
-  } catch {
-    data = { ok: false, raw: text };
-  }
-  return NextResponse.json(data, { status: r.status });
+  return jsonPassthrough(r);
 }
 
 export async function POST(req: Request) {
   const pid = await getProviderIdFromCookies();
-  if (!pid) {
-    return NextResponse.json(
-      { ok: false, error: "Unauthorized" },
-      { status: 401 },
-    );
-  }
+  if (!pid) return unauthorizedResponse();
 
   const rawBody = await req.json().catch(() => ({}));
   const body = sanitizeOfferBody(rawBody);
@@ -67,12 +36,5 @@ export async function POST(req: Request) {
     cache: "no-store",
   });
 
-  const text = await r.text();
-  let data: any;
-  try {
-    data = JSON.parse(text);
-  } catch {
-    data = { ok: false, raw: text };
-  }
-  return NextResponse.json(data, { status: r.status });
+  return jsonPassthrough(r);
 }
