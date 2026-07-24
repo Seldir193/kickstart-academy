@@ -11,22 +11,18 @@ function apiBase() {
 
 type Ctx = { params: Promise<{ id: string }> };
 
-export async function GET(_req: NextRequest, { params }: Ctx) {
-  const pid = await getProviderIdFromCookies();
-  if (!pid) {
-    return NextResponse.json(
-      { ok: false, error: "Unauthorized" },
-      { status: 401 },
-    );
-  }
+function customerUrl(id: string) {
+  return `${apiBase()}/customers/${encodeURIComponent(id)}`;
+}
 
-  const { id } = await params;
+function unauthorizedResponse() {
+  return NextResponse.json(
+    { ok: false, error: "Unauthorized" },
+    { status: 401 },
+  );
+}
 
-  const r = await fetch(`${apiBase()}/customers/${encodeURIComponent(id)}`, {
-    headers: { "X-Provider-Id": pid, Accept: "application/json" },
-    cache: "no-store",
-  });
-
+async function passthrough(r: Response) {
   const body = await r.text();
   return new NextResponse(body, {
     status: r.status,
@@ -36,19 +32,28 @@ export async function GET(_req: NextRequest, { params }: Ctx) {
   });
 }
 
+export async function GET(_req: NextRequest, { params }: Ctx) {
+  const pid = await getProviderIdFromCookies();
+  if (!pid) return unauthorizedResponse();
+
+  const { id } = await params;
+
+  const r = await fetch(customerUrl(id), {
+    headers: { "X-Provider-Id": pid, Accept: "application/json" },
+    cache: "no-store",
+  });
+
+  return passthrough(r);
+}
+
 export async function PUT(req: NextRequest, { params }: Ctx) {
   const pid = await getProviderIdFromCookies();
-  if (!pid) {
-    return NextResponse.json(
-      { ok: false, error: "Unauthorized" },
-      { status: 401 },
-    );
-  }
+  if (!pid) return unauthorizedResponse();
 
   const bodyIn = await req.json().catch(() => ({}));
   const { id } = await params;
 
-  const r = await fetch(`${apiBase()}/customers/${encodeURIComponent(id)}`, {
+  const r = await fetch(customerUrl(id), {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
@@ -59,37 +64,20 @@ export async function PUT(req: NextRequest, { params }: Ctx) {
     cache: "no-store",
   });
 
-  const body = await r.text();
-  return new NextResponse(body, {
-    status: r.status,
-    headers: {
-      "content-type": r.headers.get("content-type") || "application/json",
-    },
-  });
+  return passthrough(r);
 }
 
 export async function DELETE(_req: NextRequest, { params }: Ctx) {
   const pid = await getProviderIdFromCookies();
-  if (!pid) {
-    return NextResponse.json(
-      { ok: false, error: "Unauthorized" },
-      { status: 401 },
-    );
-  }
+  if (!pid) return unauthorizedResponse();
 
   const { id } = await params;
 
-  const r = await fetch(`${apiBase()}/customers/${encodeURIComponent(id)}`, {
+  const r = await fetch(customerUrl(id), {
     method: "DELETE",
     headers: { "X-Provider-Id": pid, Accept: "application/json" },
     cache: "no-store",
   });
 
-  const body = await r.text();
-  return new NextResponse(body, {
-    status: r.status,
-    headers: {
-      "content-type": r.headers.get("content-type") || "application/json",
-    },
-  });
+  return passthrough(r);
 }
